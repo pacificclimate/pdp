@@ -1,0 +1,95 @@
+fieldset {
+    border: 1px solid #69a1ba;
+    padding: 0 10px 10px 10px;
+    margin-bottom: 15px;	
+}
+
+legend {
+    font-size: 1.0em;
+    color: #69a1ba;
+}
+
+#date-range input {
+    width: 80px;
+}
+
+
+/* hide dialog content divs */
+#variables-defs,
+#network-defs,
+#frequency-defs,
+#format-defs,
+#nodelist {
+    display: none;
+}
+
+#network-defs table {
+    border-collapse: collapse;
+}
+
+#network-defs tr {
+    border: none;
+    margin-bottom: 5px;
+}
+
+#network-defs th, td {
+    padding: 2px 10px 2px 2px;
+}
+
+#network-defs td {
+    vertical-align: top;
+}
+
+#network-defs th {
+    text-align: left;
+}
+
+#network-defs table tr.odd {
+    background-color: #e8edef !important;
+}
+
+#with-climatology {
+	margin-bottom: 10px;
+}
+
+#with-climatology input,
+#cliptodate input {
+	float: left;
+	width: 10%;
+}
+
+#with-climatology label,
+#cliptodate label {
+    float: right;
+    width: 90%;
+}
+
+#infobox {
+    margin-top: 3px;
+    height: 80px;
+    width: 100%;
+    border: 1px solid #c8c8c8;
+    color: #004360;
+    overflow: auto;
+}
+
+#nodelist #metadata-format,
+#nodelist .download-buttons,
+#nodelist #metadata-format label {
+    float: left;
+    margin-right: 5px;
+}
+
+#nodelist input {
+    position: relative;
+    bottom: 5px;
+}
+
+span.helplink {
+	float: right;
+	font-size: 1.2em;
+}
+
+form div {
+    margin-top: 20px;
+}

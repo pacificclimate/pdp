@@ -1,0 +1,157 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    font-family: Arial, Verdana, sans-serif;
+    font-size: 100%;
+    line-height: 1.0;
+    color: #000;
+    background-color: #fff;
+    padding: 10px;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-weight: normal;
+}
+
+p {
+    margin-bottom: 10px;
+}
+
+img {
+    border: none;
+}
+
+a {
+    color: #004360;
+}
+
+a:link, a:visited {
+    color: #004360;
+}
+
+a:hover, a:active {
+    text-decoration: none;
+    color: #000;
+}
+
+dt {
+    font-weight: bold;  
+}
+
+dd {
+    margin-left: 1em;
+    margin-bottom: 1em;
+}
+
+fieldset {
+	border: none;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #000;
+}
+
+select, input[type=text] {
+    border: 1px solid #c8c8c8;
+    background-color: #fff;
+    color: #004360;
+    font-size: 0.95em;
+}
+
+input[type="checkbox"] {
+    border: none;
+}
+
+input[type=button], input[type=reset] {
+    border: 1px solid #69a1ba;
+    color: #fff;
+    background-color: #69a1ba;
+    padding: 1px;
+    font-size: 12px;
+    text-align: center;
+    margin: 5px auto;
+    width: 100px;
+}
+
+input[type=button]:hover, input[type=reset]:hover {
+    border: 1px solid #69a1ba;
+    color: #004360;
+    background-color: #fff;
+}
+
+select {
+    width: 80%;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+/* Top level page items */
+
+#header, #main, #footer {
+    position: absolute;
+    min-width: 1000px;
+    max-width: 1900px;
+    margin: 5px 1.5%;
+    left: 0px;
+    right: 0px;
+}
+
+#header {
+    margin-top: 15px;
+    height: 80px;
+    top:0px;
+    bottom: 0px;
+}
+
+#main {
+    top: 80px;
+    bottom: 26px;
+}
+
+#footer {
+    height: 24px;
+    bottom: 0px;
+    margin-bottom: 2px;
+}
+
+#map-wrapper {
+    /* display: inline-block; */
+    position: relative;
+    float: left;
+    height: 100%;
+    width: 77%;
+    min-height: 450px;
+    max-height: 1000px;
+    min-width: 520px;
+    max-width: 2000px;
+}
+
+#pdp-map {
+    position:absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+#pdp-controls {
+    float: left;
+    width: 20%;
+    padding-left: 1.25%;
+    min-width: 200px;
+    max-width: 300px;
+}
+
+#login-div {
+    margin-top: 10px;
+    font-size: 0.8em;
+    float: right;
+    margin-left: 10px;
+}

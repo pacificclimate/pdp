@@ -1,0 +1,209 @@
+/* Map Elements */
+
+#location {
+    position: absolute;
+    bottom: -1.6em;
+    right: 0;
+    font-size: 0.8em;
+    margin-left: 10px;
+}
+
+#map-buttons {
+    position: absolute;
+    top: 2px;
+    right: 100px;
+    z-index: 10000;
+}
+
+#map-title {
+    position: absolute;
+    bottom: 1em;
+    right: 0;
+    margin-left: 5em;
+    padding-right: 16px;
+    font-size: 0.8em;
+    line-height: 1em;
+
+/* Options for readable text on map are background, outlined letters, or dropshadow... */
+
+/* background */
+    padding: 5px 5px 5px 5px;
+    background-color: white;
+    -webkit-border-top-left-radius: 10px;
+    -khtml-border-radius-topleft: 10px;
+    -moz-border-radius-topleft: 10px;
+    border-top-left-radius: 10px;
+    -webkit-border-bottom-left-radius: 10px;
+    -khtml-border-radius-bottomleft: 10px;
+    -moz-border-radius-bottomleft: 10px;
+    border-bottom-left-radius: 10px;
+
+/* shadow */
+/*    text-shadow: white 0.1em 0.1em 0.2em;
+*/
+
+/* outlined */
+/*    color: white;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+*/
+}
+
+div.olPopup {
+    -moz-border-radius: 1em 0 0 0;
+    -webkit-border-radius: 7px;
+    -khtml-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+    -moz-box-shadow: 3px 3px 5px #888;
+    -webkit-box-shadow: 3px 3px 5px #888;
+    box-shadow: 3px 3px 5px #888;
+}
+
+#map-buttons input {
+    margin-right: 3px;
+    border-color: #fff;
+}
+
+#map-wrapper #loading {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -50px 0 0 -50px;
+    padding-top: 1em;
+    background: white;
+    opacity:0.4;
+    filter:alpha(opacity=40);
+    -webkit-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+#map-wrapper #loading p {
+    padding-top: 1em;
+}
+
+div.olMapViewport {
+    background-image: url(../images/water.png);
+}
+
+div.olPopupContent {
+    padding:5px;
+    overflow: auto;
+    padding-bottom:0px;
+}
+
+.olControlOpacitySliderContainer {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    font-size:0.8em;
+}
+
+.olControlOpacitySliderElement {
+    padding: 10px 10px 10px 18px;
+    background-color: #000080;
+    opacity:0.75;
+    -webkit-border-top-right-radius: 10px;
+    -khtml-border-radius-topright: 10px;
+    -moz-border-radius-topright: 10px;
+    border-top-right-radius: 10px;
+    -webkit-border-bottom-right-radius: 10px;
+    -khtml-border-radius-bottomright: 10px;
+    -moz-border-radius-bottomright: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.olControlOpacitySliderMinimizeButton {
+    left: 0;
+    bottom: 30px;
+    cursor: pointer;
+}
+
+.olControlOpacitySliderMaximizeButton {
+    left: 0;
+    bottom: 30px;
+    cursor: pointer;
+}
+
+.opacitySliderText {
+    padding-bottom:8px;
+    padding-left:4px;
+    color:white;
+}
+
+table.featureInfo, table.featureInfo td, table.featureInfo th {
+    border-collapse:collapse;
+    margin:0;
+    padding:0;
+    font-size: 90%;
+    padding:0.2em 0.2em;
+}
+table.featureInfo td.attribute{
+    vertical-align:top;
+    font-weight:bold;
+}
+table.featureInfo td.varList{
+    vertical-align:top;
+}
+
+table.featureInfo ul {
+    margin-left:15px;
+}
+table.featureInfo th{
+    border-collapse:collapse;
+    padding:0.2em 0.2em;
+    text-transform:uppercase;
+    font-weight:bold;
+    background:#69A1BA;
+    color:white;
+}
+table.featureInfo caption{
+    text-align:left;
+    border-collapse:collapse;
+    font-size:100%;
+    font-weight:bold;
+    text-transform:uppercase;
+    padding:0.2em 0.2em;
+}
+table.featureInfo tr:nth-child(odd) {
+    border-collapse:collapse;
+    background-color:#E8EDEF;
+}
+
+table.metafeatureInfo, table.metafeatureInfo td, table.metafeatureInfo th {
+    border-collapse:collapse;
+    margin:0;
+    margin-top:5px;
+    padding:0;
+    font-size: 95%;
+    padding:0.4em 0.4em;
+}
+table.metafeatureInfo td.attribute{
+    font-weight:bold;
+    vertical-align:top;
+}
+table.metafeatureInfo td.varList{
+    vertical-align:top;
+}
+table.metafeatureInfo ul {
+    margin-left:15px;
+}
+table.metafeatureInfo th{
+    border-collapse:collapse;
+    padding:0.2em 0.2em;
+    font-weight:bold;
+}
+table.metafeatureInfo caption{
+    text-align:left;
+    border-collapse:collapse;
+    font-size:100%;
+    padding:0.2em 0.2em;
+}
+
+table.metafeatureInfo tr:nth-child(odd) {
+    border-collapse:collapse;
+    background-color:#E8EDEF;
+}

@@ -1,0 +1,40 @@
+#login-button {
+    text-decoration: underline;
+}
+#login-button:hover, #login-button:active {
+    text-decoration: none;
+    color: #000;
+}
+
+#login-form {
+    z-index: 100;
+    position: fixed;
+    width: 30%;
+    top: 30%;
+    left: 30%;
+    background-color: white;
+    padding: 0px;
+    visibility: hidden;
+    border: 1px solid #69a1ba;
+}
+
+#login-form fieldset {
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 5px;
+}
+
+#login-or-signup div, label {
+    text-align: center;
+    margin-top: 0px;
+}
+
+#login-form input[type="button"] {
+    width: auto;
+}
+
+#close-login {
+    text-align: right;
+    margin-top: 2px;
+    margin-right: 2px;
+}

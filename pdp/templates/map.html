@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://genshi.edgewall.org/" xml:lang="en" lang="en">
+  <head>
+    <title>${title}</title>
+
+    <link type="text/css" href="${app_root}/css/main.css" rel="stylesheet" />
+    <link type="text/css" href="${app_root}/css/accordionmenu.css" rel="stylesheet" />
+    <py:for each="entry in css_files">
+      <link type="text/css" href="${app_root}/${entry}" rel="stylesheet" />
+    </py:for>
+      
+    <script type="text/javascript">
+      var app_root = '${app_root}';
+    </script>
+
+    <py:for each="entry in js_files">
+      <script type="text/javascript" src="${app_root}/${entry}"></script>
+    </py:for>
+  </head>
+
+  <body>
+    <div id="header">
+      <a href="http://pacificclimate.org"><img src="${app_root}/images/banner.png" alt="PCIC Logo" /></a>
+      <h1>${title}</h1>
+
+      <div id="topnav">
+      <!-- TODO: populate from js -->        
+        <ul class="menu">
+          <li><a href="http://pacificclimate.org">PCIC Home</a></li>
+          <li><a href="http://pacificclimate.org/tools-and-data/">Back to Tools and Data</a></li>
+          <li><a href="${app_root}/auth/pydap/pcds/">Catalogue</a></li>
+          <li><a href="http://pacificclimate.org/pcds-faq/" target="_blank">FAQ</a></li>
+        </ul>
+	    <div id="login-div"></div>
+      </div><!-- /topnav -->
+    </div><!-- /header -->
+
+    <div id="main">
+      <div id="map-wrapper">
+        <div id="pdp-map"></div>
+        <div id="map-title"></div>
+        <div id="location"></div>
+      </div>
+      <div id="pdp-controls"></div>
+    </div><!-- /main -->
+    
+    <div id="footer">
+      <!-- TODO: populate with js -->
+        <ul class="menu">
+          <li>PCIC Data Portal version ${version}</li>
+          <li><a href="http://www.pacificclimate.org/tools-and-data/pcds-disclaimer/">Disclaimer</a></li>
+          <li><a href="http://www.pacificclimate.org/terms-of-use/">Terms of Use</a></li>
+        </ul>
+    </div><!-- /footer -->
+    
+  </body>
+</html>

@@ -1,0 +1,23 @@
+/* corrections for IE nonsense */
+
+#map-wrapper {
+	position: absolute;
+	top: 0;
+    left: 0;
+    right: 290px;
+    bottom: 130px;    
+}
+
+#pcds_map {
+    position: absolute;
+    width: 100%;
+    height: 100%;   
+}
+
+#filter {
+	margin-top: -5px;
+}
+
+#nodelist input {
+    padding: 0;
+}
