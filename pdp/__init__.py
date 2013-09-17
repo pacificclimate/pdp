@@ -45,7 +45,7 @@ pcds_dsn = 'postgresql://httpd@monsoon.pcic/crmp'
 # }
 
 global_config = {
-    'app_root': 'http://medusa.pcic.uvic.ca/basil_crmp',
+    'app_root': 'http://basalt.pcic.uvic.ca',
     'title': "CRMP Network Data",
     'css_files': [
         'css/jquery-ui-1.10.2.custom.css',
@@ -70,7 +70,7 @@ global_config = {
         'js/pdp_filters.js',
         'js/pdp_map.js'
         ],
-    'gs_url': 'http://medusa.pcic.uvic.ca/geoserver/',
+    'geoserver_url': 'http://medusa.pcic.uvic.ca/geoserver/',
     'ncwms_url': 'http://medusa.pcic.uvic.ca/ncwms/',
     'templates': os.path.join(here, 'pdp', 'templates'),
     'session_dir': mkdtemp(),
@@ -112,7 +112,7 @@ def wrap_auth(app, required=True):
 check_auth = wrap_auth(check_authorized_return_email, required=False)
 
 pcds_map_config = updateConfig(global_config, map_config)
-pcds_map = wrap_auth(MapApp(**pcds_map_config))
+pcds_map = wrap_auth(MapApp(**pcds_map_config), required=False)
 
 
 zip_app = wrap_auth(PcdsZipApp(pcds_dsn), required=True)
@@ -189,9 +189,9 @@ main = PathDispatcher('', [
     ('^/apps/.*$', apps),
     ('^/ensemble_datasets.json.*$', lister),
     #('^/data/.*$', raster_server),
-    ('^/(css|js|images)/.*$', static_app)
-#    ('^/$', map_app)
+    ('^/(css|js|images)/.*$', static_app),
+    ('^/$', pcds_map)
     ],
-#default=map_app
+#    default=pcds_map
 )
 # main

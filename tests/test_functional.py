@@ -162,18 +162,18 @@ def test_clip_to_date_one(pcic_data_portal, authorized_session_id):
         assert exp[0] == actual
 
 # FIXME: These next two aren't actually going to work w/o firing up an http server with reverse proxy
-from pdp import global_config
-@pytest.mark.parametrize('url', ['/' + global_config['ol_path'], '/' + global_config['proj_path']])
-def notest_can_access_static_resources(url, pcic_data_portal):
-    req = Request.blank(url)
-    resp = req.get_response(pcic_data_portal)
-    assert resp.status == '200 OK'
+# from pdp import global_config
+# @pytest.mark.parametrize('url', ['/' + global_config['ol_path'], '/' + global_config['proj_path']])
+# def notest_can_access_static_resources(url, pcic_data_portal):
+#     req = Request.blank(url)
+#     resp = req.get_response(pcic_data_portal)
+#     assert resp.status == '200 OK'
 
-@pytest.mark.parametrize('url', [global_config['geoserver_url'], global_config['ncwms_url']])
-def notest_can_access_external_resources(url, pcic_data_portal):
-    req = Request.blank(url)
-    resp = req.get_response(pcic_data_portal)
-    assert resp.status == '200 OK'
+# @pytest.mark.parametrize('url', [global_config['geoserver_url'], global_config['ncwms_url']])
+# def notest_can_access_external_resources(url, pcic_data_portal):
+#     req = Request.blank(url)
+#     resp = req.get_response(pcic_data_portal)
+#     assert resp.status == '200 OK'
 
 @pytest.mark.parametrize(('filters', 'expected'), [
     ({'network-name': 'EC_raw'}, 4),
