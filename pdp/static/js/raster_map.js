@@ -4,7 +4,7 @@
 
 var gs_url='http://medusa.pcic.uvic.ca/geoserver/'
 var ncwms_url='http://medusa.pcic.uvic.ca/ncWMS/wms'
-var pcds_map;
+var map;
 var selectionLayer;
 var current_dataset;
 var catalog;
@@ -22,7 +22,7 @@ function init_raster_map() {
     mapControls.push(panelControls);
 
     options.controls = mapControls    
-    pcds_map = new OpenLayers.Map('pcds-map', options);
+    map = new OpenLayers.Map('pdp-map', options);
 
     var tiles4 = new OpenLayers.Layer.XYZ(
         "TileCache mod_python DiscCache",
@@ -37,7 +37,7 @@ function init_raster_map() {
         gs_url,
         "Canada Basemap",
         "canada_map_wms_proxy",
-        getProjection(4326)
+        mapControls.projection
     );
     
     defaults = {
@@ -76,19 +76,19 @@ function init_raster_map() {
     getNCWMSLayerCapabilities(ncwmsCapabilities, ncwms_url, defaults.dataset); // async save into global var ncwmsCapabilities
     current_dataset = params.layers;
 
-    pcds_map.addLayers(
+    map.addLayers(
         [
             ncwms,
             selectionLayer,
-            basemap,
-            tiles4
+            tiles4,
+            basemap
         ]
     );
 
     slider = getSlider(ncwms);
-    pcds_map.addControl(slider);
+    map.addControl(slider);
     addLoadingIcon(ncwms);
-    pcds_map.zoomToMaxExtent();
+    map.zoomToMaxExtent();
 
     function download(extension) {
             // Check input
@@ -114,5 +114,5 @@ function init_raster_map() {
 
     $("#timeseries").click(function(){download($('select[name="data-format"]')[0].value);});
 
+    return map
 };
-$(document).ready(init_raster_map);

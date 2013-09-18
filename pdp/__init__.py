@@ -18,31 +18,21 @@ from pdp_util.legend import LegendApp
 from pdp_util.agg import PcdsZipApp
 from pdp_util.pcds_dispatch import PcdsDispatcher
 
+def updateConfig(d1, d2):
+    # standard dict update with the exception of joining lists
+    res = d1.copy()
+    for k, v in d2.items():
+        if k in d1 and type(v) == list:
+            # join any config lists
+            res[k] = d1[k] + d2[k]
+        else: # overwrite or add anything else
+            res[k] = v
+            return res
 
 here = os.getcwd()
 
 dsn = 'postgresql://pcic_meta@monsoon.pcic/pcic_meta'
 pcds_dsn = 'postgresql://httpd@monsoon.pcic/crmp'
-
-# global_config = {'app_root': 'http://basalt.pcic.uvic.ca',
-#           'ol_path': 'js/OL/OpenLayers.js',
-#           'proj_path': 'js/proj4js-compressed.js',
-#           'geoserver_url': '/geoserver/',
-#           'ncwms_url': '/ncwms/wms',
-#           'version': '2.0.0',
-#           'session_dir': '/tmp/testing',
-#           'footer' : [{'ref':"http://www.pacificclimate.org/pcds-disclaimer/", 'name': 'Disclaimer'},
-#                       {'ref':"http://www.pacificclimate.org/terms-of-use/", 'name': 'Terms of Use'}],
-# }
-
-# map_config = {
-#             'title': 'Downscaled Data',
-#             'header_block': '',
-#             'map_div': 'canada_map',
-#             'ensemble_name': 'canada_map',
-#             'buttons': [],
-#             'options': FilterOptions(ensemble='canada_map') # TODO: remove this
-# }
 
 global_config = {
     'app_root': 'http://basalt.pcic.uvic.ca',
@@ -74,11 +64,10 @@ global_config = {
     'ncwms_url': 'http://medusa.pcic.uvic.ca/ncwms/',
     'templates': os.path.join(here, 'pdp', 'templates'),
     'session_dir': mkdtemp(),
-#    'session_dir': '/tmp/testing',
     'version': get_distribution('pdp').version
     }
 
-map_config = {
+pcds_config = {
     'title': 'CRMP Network Data',
     'js_files' : [
         'js/pdp_vector_map.js',
@@ -90,16 +79,18 @@ map_config = {
         ]
     }
 
-def updateConfig(d1, d2):
-    # standard dict update with the exception of joining lists
-    res = d1.copy()
-    for k, v in d2.items():
-        if k in d1 and type(v) == list:
-            # join any config lists
-            res[k] = d1[k] + d2[k]
-        else: # overwrite or add anything else
-            res[k] = v
-            return res
+raster_config = {
+    'title': 'Raster Data',
+    'js_files' : [
+        'js/pdp_raster_map.js',
+        'js/raster_map.js',
+        ## TODO: add raster specific controls/download
+#        'js/raster_controls.js',
+#        'js/raster_download.js',
+#        'js/raster_filters.js',
+        'js/raster_app.js'
+        ]
+    }
 
 # auth wrappers
 def wrap_auth(app, required=True):
@@ -111,9 +102,11 @@ def wrap_auth(app, required=True):
 
 check_auth = wrap_auth(check_authorized_return_email, required=False)
 
-pcds_map_config = updateConfig(global_config, map_config)
+pcds_map_config = updateConfig(global_config, pcds_config)
 pcds_map = wrap_auth(MapApp(**pcds_map_config), required=False)
 
+raster_map_config = updateConfig(global_config, raster_config)
+raster_map = wrap_auth(MapApp(**raster_map_config), required=False)
 
 zip_app = wrap_auth(PcdsZipApp(pcds_dsn), required=True)
 
@@ -185,6 +178,7 @@ main = PathDispatcher('', [
     ('^/images/legend/.*\.png$', legend_app),
     ('^/check_auth_app/?$', check_auth),
     ('^/pcds_map/.*$', pcds_map),
+    ('^/raster_map/.*$', raster_map),
     ('^/auth.*$', auth),
     ('^/apps/.*$', apps),
     ('^/ensemble_datasets.json.*$', lister),
