@@ -21,14 +21,10 @@ function getBC3005Resolutions() {
 
 function BC3005_map_options() {
     bounds = getBC3005Bounds()
-    resolutions = getBC3005Resolutions()
 
     var options = {
-        maxExtent: bounds,
         restrictedExtent: bounds,
         displayProjection: getProjection(4326),
-        maxResolution: resolutions[0],
-        resolutions: resolutions,
         projection: getProjection(3005),
         units: 'Meter'
     };
@@ -51,7 +47,7 @@ function na4326_map_options() {
 }
 
 function world4326_map_options() {
-    bounds = getWorld4326Bounds
+    bounds = getWorld4326Bounds()
     projection = getProjection(4326)
 
     var options = {
@@ -73,7 +69,10 @@ function getGSBaseLayer(gs_url, displayname, layername) {
             layers: layername,
             transparent: true
         },{
-            isBaseLayer:true
+            isBaseLayer:true,
+            restrictedExtent: new OpenLayers.Bounds(-236114,41654.75,2204236,1947346.25),
+            maxExtent: new OpenLayers.Bounds(-236114,41654.75,2204236,1947346.25),
+            resolutions: [2218.5, 1109.25, 554.625, 277.3125, 138.6562, 69.32812, 34.66406]
         }
     );
 }
@@ -88,6 +87,21 @@ function getTileBaseLayer(tilesurl, displayname, layername, proj) {
             zoomOffset:4
         }
     );
+}
+
+function getBC3005OsmBaseLayer(wmsurl, displayname, layername) {
+    return new OpenLayers.Layer.WMS(
+        displayname,
+        wmsurl,
+        {
+            layers: layername
+        },
+        {
+            maxExtent: new OpenLayers.Bounds(-1000000,-1000000,3000000,3000000),
+            restrictedExtent: new OpenLayers.Bounds(-236114,41654.75,2204236,1947346.25),
+            maxResolution: 7812.5,
+            numZoomLevels: 12
+        })
 }
 
 function getBasicControls() {

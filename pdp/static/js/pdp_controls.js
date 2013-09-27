@@ -26,9 +26,60 @@ function getDateRange() {
     return rangeDiv;
 }
 
+function getAccordionMenu(menuId) {
+    var amenuOptions = {
+    menuId: menuId, 
+    linkIdToMenuHtml: null,
+    expand: "single",
+    license: "mylicense"
+    };
+    
+    return new McAcdnMenu(amenuOptions);
+}
+
+function createAJAXAccordionMenu(divId, request_location) {
+    var div = createDiv(divId);
+    var amenu = getAccordionMenu(divId);
+
+    // Retrieve a tree of available datasets and fill out the selection menu
+    $.ajax({'url': request_location,
+        'type': 'GET',
+        'dataType': 'json',
+        'success': function(data, textStatus, jqXHR) {
+        ensemble_datasets = data;
+        
+        function get_menu_tree(subtree) {
+            var ul = $("<ul/>")
+            $.each(Object.keys(subtree), function(index, stuff) {
+            var li = $('<li/>');
+            if(subtree[stuff] instanceof Object) {
+                li.append($('<a/>').text(stuff)).append(get_menu_tree(subtree[stuff]));
+            } else {
+                var newlayer = subtree[stuff] + "/" + stuff;
+                li.attr('id', newlayer);
+                $('<a/>').text(stuff).click(function() {
+                    ncwms.params.LAYERS = newlayer;
+                    ncwms.redraw();
+                dst_selection = newlayer;
+                getNCWMSLayerCapabilities(ncwmsCapabilities, ncwms_url, subtree[stuff]);
+                $('#map-title').text(newlayer);
+                }).appendTo(li);
+            }
+            li.appendTo(ul);
+            });
+            return ul;
+        };
+        var menu_tree = get_menu_tree(data).attr('id', 'ds-menu');
+        
+        $("#" + divId).append(menu_tree);
+        amenu.init();
+        }});
+
+    return div;
+}
 
 function getRasterAccordionMenu(ensembleName) {
     var divId = "acdnmenu";
-    return createAJAXAccordionMenu(divId, 'http://tools.pacificclimate.org/data_portal/' + '/ensemble_datasets.json?ensemble_name=' + ensembleName);
+    return createAJAXAccordionMenu(divId, app_root + '/ensemble_datasets.json?ensemble_name=' + ensembleName);
 }
 

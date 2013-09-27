@@ -1,0 +1,100 @@
+//var pcds_map; // global so that it's accessible across documents
+// NOTE: variables 'gs_url' is expected to be set before this is call
+// Do this in the sourcing html
+
+var gs_url='http://medusa.pcic.uvic.ca/geoserver/';
+var ncwms_url='http://medusa.pcic.uvic.ca/ncWMS/wms';
+var tilecache_url='http://medusa.pcic.uvic.ca/tilecache/tilecache.py';
+var map;
+var selectionLayer;
+var current_dataset;
+
+function init_prism_map() {
+    var ncwmsCapabilities;
+
+    // Map Config
+    options = BC3005_map_options();
+
+    // Map Controls
+    mapControls = getBasicControls();
+    selectionLayer = getBoxLayer();
+    panelControls = getEditingToolbar([getHandNav(), getBoxEditor(selectionLayer)]);
+    mapControls.push(panelControls);
+
+    options.controls = mapControls
+    map = new OpenLayers.Map('pdp-map', options);
+    
+    defaults = {
+        dataset: "bcprism_ppt_review_14",
+        variable: "Band1"
+    }
+    
+    params = {
+        layers: defaults.dataset + "/" + defaults.variable,
+        transparent: 'true',
+        styles: "boxfill/rainbow",
+        numcolorbands: 254,
+        logscale: false,
+        version: '1.1.1',
+        srs: 'EPSG:3005'
+    };
+
+    ncwms =  new OpenLayers.Layer.WMS(
+        "Climate raster",
+        ncwms_url,
+        params,
+        {
+            maxExtent: getBC3005Bounds(),
+            buffer: 1,
+            ratio: 1.5,
+            opacity: 0.7
+        }
+    );
+
+    $('#map-title').text(params.layers);
+    getNCWMSLayerCapabilities(ncwmsCapabilities, ncwms_url, defaults.dataset); // async save into global var ncwmsCapabilities
+    current_dataset = params.layers;
+
+    map.addLayers(
+        [
+            ncwms,
+            selectionLayer,
+            getBC3005OsmBaseLayer(tilecache_url, 'BC OpenStreeMap', 'bc_osm')
+        ]
+    );
+
+    slider = getSlider(ncwms);
+    map.addControl(slider);
+    addLoadingIcon(ncwms);
+    map.zoomToExtent(new OpenLayers.Bounds(-236114,41654.75,2204236,1947346.25), true);
+
+
+    function download(extension) {
+            // Check input
+        if (selectionBbox == undefined) {
+            alert("You need to first select a rectangle of data to download (use the polygon tool in the top, right corner of the map.");
+            return;
+        };
+        if (ncwmsCapabilities == undefined) {
+            alert("I'm still trying to determine the geographic bounds of the selected layer.  Try again in a few seconds.");
+            return;
+        };
+        rasterBbox = getRasterBbox();
+        if (selectionBbox.toGeometry().getArea == 0) {
+            alert("Selection area must be of non-zero area (i.e. have extent)");
+            return;
+        };
+        if (! rasterBbox.intersectsBounds(selectionBbox)) {
+            alert('Selection area must intersect the raster area');
+            return;
+        };
+        rasterBBoxToIndicies(raster_map, current_dataset, intersection(rasterBbox, selectionBbox), extension);
+    };
+
+
+    
+    
+    $("#timeseries").click(function(){download($('select[name="data-format"]')[0].value);});
+
+    return map
+};

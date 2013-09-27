@@ -79,16 +79,23 @@ pcds_config = {
         ]
     }
 
-raster_config = {
+canada_ex_config = {
     'title': 'Raster Data',
     'js_files' : [
         'js/pdp_raster_map.js',
-        'js/raster_map.js',
-        ## TODO: add raster specific controls/download
-#        'js/raster_controls.js',
-#        'js/raster_download.js',
-#        'js/raster_filters.js',
-        'js/raster_app.js'
+        'js/canada_ex_map.js',
+        'js/canada_ex_controls.js',
+        'js/canada_ex_app.js'
+        ]
+    }
+
+bc_prism_config = {
+    'title': 'BC PRISM Raster Portal',
+    'js_files' : [
+        'js/pdp_raster_map.js',
+        'js/prism_demo_map.js',
+        'js/prism_demo_controls.js',
+        'js/prism_demo_app.js'
         ]
     }
 
@@ -105,8 +112,11 @@ check_auth = wrap_auth(check_authorized_return_email, required=False)
 pcds_map_config = updateConfig(global_config, pcds_config)
 pcds_map = wrap_auth(MapApp(**pcds_map_config), required=False)
 
-raster_map_config = updateConfig(global_config, raster_config)
-raster_map = wrap_auth(MapApp(**raster_map_config), required=False)
+canada_ex_map_config = updateConfig(global_config, canada_ex_config)
+canada_ex_map = wrap_auth(MapApp(**canada_ex_map_config), required=False)
+
+bc_prism_map_config = updateConfig(global_config, bc_prism_config)
+bc_prism_map = wrap_auth(MapApp(**bc_prism_map_config), required=False)
 
 zip_app = wrap_auth(PcdsZipApp(pcds_dsn), required=True)
 
@@ -178,7 +188,8 @@ main = PathDispatcher('', [
     ('^/images/legend/.*\.png$', legend_app),
     ('^/check_auth_app/?$', check_auth),
     ('^/pcds_map/.*$', pcds_map),
-    ('^/raster_map/.*$', raster_map),
+    ('^/canada_map/.*$', canada_ex_map),
+    ('^/bc_prism/.*$', bc_prism_map),
     ('^/auth.*$', auth),
     ('^/apps/.*$', apps),
     ('^/ensemble_datasets.json.*$', lister),

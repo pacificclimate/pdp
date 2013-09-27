@@ -21,7 +21,7 @@ function init_raster_map() {
     panelControls = getEditingToolbar([getHandNav(), getBoxEditor(selectionLayer)]);
     mapControls.push(panelControls);
 
-    options.controls = mapControls    
+    options.controls = mapControls
     map = new OpenLayers.Map('pdp-map', options);
 
     var tiles4 = new OpenLayers.Layer.XYZ(
@@ -47,7 +47,6 @@ function init_raster_map() {
     
     params = {
         layers: defaults.dataset + "/" + defaults.variable,
-        //time: $("#display-date")[0].value.replace(/\//g, '-') + "T00:00:00.000Z",
         transparent: 'true',
         styles: "boxfill/rainbow",
         numcolorbands: 254,
@@ -112,6 +111,9 @@ function init_raster_map() {
         rasterBBoxToIndicies(raster_map, current_dataset, intersection(rasterBbox, selectionBbox), extension);
     };
 
+
+    
+    
     $("#timeseries").click(function(){download($('select[name="data-format"]')[0].value);});
 
     return map
