@@ -25,8 +25,8 @@ function init_prism_map() {
     map = new OpenLayers.Map('pdp-map', options);
     
     defaults = {
-        dataset: "bcprism_ppt_review_14",
-        variable: "Band1"
+        dataset: "bcprism_tmin_review_01",
+        variable: "tmin"
     }
     
     params = {
@@ -91,10 +91,6 @@ function init_prism_map() {
         rasterBBoxToIndicies(raster_map, current_dataset, intersection(rasterBbox, selectionBbox), extension);
     };
 
-
-    
-    
-    $("#timeseries").click(function(){download($('select[name="data-format"]')[0].value);});
-
+    $("#download-timeseries").click(function(){download($('select[name="data-format"]')[0].value);});
     return map
 };
