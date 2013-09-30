@@ -61,7 +61,8 @@ global_config = {
         'js/pdp_map.js'
         ],
     'geoserver_url': 'http://medusa.pcic.uvic.ca/geoserver/',
-    'ncwms_url': 'http://medusa.pcic.uvic.ca/ncwms/',
+    'ncwms_url': 'http://medusa.pcic.uvic.ca/ncWMS/wms',
+    'tilecache_url': 'http://medusa.pcic.uvic.ca/tilecache/tilecache.py',
     'templates': os.path.join(here, 'pdp', 'templates'),
     'session_dir': mkdtemp(),
     'version': get_distribution('pdp').version
@@ -90,7 +91,7 @@ canada_ex_config = {
     }
 
 bc_prism_config = {
-    'title': 'BC PRISM Raster Portal',
+    'title': 'BC PRISM Raster Portal (DEVELOPMENT)',
     'js_files' : [
         'js/pdp_raster_map.js',
         'js/prism_demo_map.js',

@@ -1,11 +1,6 @@
-//var pcds_map; // global so that it's accessible across documents
-// NOTE: variables 'gs_url' is expected to be set before this is call
+// NOTE: variables 'gs_url', 'ncwms_url', 'tilecache_url' is expected to be set before this is call
 // Do this in the sourcing html
 
-var gs_url='http://medusa.pcic.uvic.ca/geoserver/';
-var ncwms_url='http://medusa.pcic.uvic.ca/ncWMS/wms';
-var tilecache_url='http://medusa.pcic.uvic.ca/tilecache/tilecache.py';
-var map;
 var selectionLayer;
 var current_dataset;
 
