@@ -23,13 +23,12 @@ function createMetadataFormatOptions() {
     return getSelector('Output Format', 'metadata-format', "metadata-format", undefined, undefined, mdFormatData);
 }
 
-
 function createDownloadButtons(id, divClass, buttons) {
     var downloadDiv = createDiv(id);
     downloadDiv.className = divClass;
     $.each(buttons, function(idx, val) {
-	downloadDiv.appendChild(createInputElement("button", undefined, idx, idx, val))
-	downloadDiv.appendChild(document.createTextNode(" "));
+	   downloadDiv.appendChild(createInputElement("button", undefined, idx, idx, val))
+	   downloadDiv.appendChild(document.createTextNode(" "));
     });
     return downloadDiv;
 }

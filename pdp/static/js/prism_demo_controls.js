@@ -1,4 +1,4 @@
-function getRasterControls() {
+function getPRISMControls() {
 	var form = createForm(undefined, undefined, undefined);
     var fieldset = createFieldset("filterset", "Dataset Selection");
     fieldset.appendChild(getRasterAccordionMenu('bc_prism_demo'));
@@ -6,7 +6,7 @@ function getRasterControls() {
     return form;
 }
 
-function getRasterDownloadOptions() {
+function getPRISMDownloadOptions() {
     var frag = document.createDocumentFragment();
     var downloadForm = frag.appendChild(createForm("download-form", "download-form", "get"));
     var downloadFieldset = downloadForm.appendChild(createFieldset("downloadset", "Download Data"));
