@@ -8,7 +8,7 @@ function getNCWMSLayerCapabilities(capabilities, ncwms_url, layer) {
                 VERSION: "1.1.1",
                 DATASET: layer
             },
-            callback: function(capabilities, response) {
+            callback: function(response, capabilities) {
                 var xmldoc = $.parseXML(response.responseText);
                 capabilities = $(xmldoc); // must be a global var
                 setTimeAvailable(capabilities, layer);

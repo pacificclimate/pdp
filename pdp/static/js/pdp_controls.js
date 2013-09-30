@@ -60,9 +60,9 @@ function createAJAXAccordionMenu(divId, request_location) {
                 $('<a/>').text(stuff).click(function() {
                     ncwms.params.LAYERS = newlayer;
                     ncwms.redraw();
-                dst_selection = newlayer;
-                getNCWMSLayerCapabilities(ncwmsCapabilities, ncwms_url, subtree[stuff]);
-                $('#map-title').text(newlayer);
+                    $('#map-title').text(newlayer);
+                    current_dataset = newlayer;
+                    getNCWMSLayerCapabilities(ncwmsCapabilities, ncwms_url, subtree[stuff]);
                 }).appendTo(li);
             }
             li.appendTo(ul);
@@ -72,7 +72,6 @@ function createAJAXAccordionMenu(divId, request_location) {
         var menu_tree = get_menu_tree(data).attr('id', 'ds-menu');
         
         $("#" + divId).append(menu_tree);
-        amenu.init();
         }});
 
     return div;

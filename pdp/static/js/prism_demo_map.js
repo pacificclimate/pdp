@@ -3,10 +3,9 @@
 
 var selectionLayer;
 var current_dataset;
+var ncwmsCapabilities;
 
 function init_prism_map() {
-    var ncwmsCapabilities;
-
     // Map Config
     options = BC3005_map_options();
 
