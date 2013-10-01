@@ -160,19 +160,14 @@ class PathDispatcher(object):
             start_response('404 Not Found', [])
             return [path, " not found"]
 
+servers = {}
+for ensemble_name in ['canada_map', 'bc_prism_demo']:
+    conf = db_raster_configurator("Download Data", 0.1, 0, ensemble_name, 
+        root_url=global_config['app_root'].rstrip('/') +'/data/'
+    )
+    servers[ensemble_name] = RasterServer(conf)
 
-conf = db_raster_configurator("Canada downscaled data", 0.1, 0, 
-    'canada_map', root_url=global_config['app_root'].rstrip('/') +'/data/')
-raster_server = RasterServer(conf)
-
-conf = db_raster_configurator("PRISM Demo Data", 0.1, 0, 
-    'bc_prism_demo', root_url=global_config['app_root'].rstrip('/') +'/data/')
-bc_prism_server = RasterServer(conf)
-
-data = PathDispatcher('/data', [
-    ('^/canada_map/.*$', raster_server),
-    ('^/bc_prism_demo/.*$', bc_prism_server)
-    ])
+data = PathDispatcher('/data', [('^/' + k + '/.*$', v) for k, v in servers.iteritems()])
 
 lister = EnsembleMemberLister(dsn)
 
