@@ -62,7 +62,7 @@ function createAJAXAccordionMenu(divId, request_location) {
                     ncwms.redraw();
                     $('#map-title').text(newlayer);
                     current_dataset = newlayer;
-                    getNCWMSLayerCapabilities(ncwmsCapabilities, ncwms_url, subtree[stuff]);
+                    getNCWMSLayerCapabilities(ncwms_url, subtree[stuff]);
                 }).appendTo(li);
             }
             li.appendTo(ul);

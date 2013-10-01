@@ -1,4 +1,4 @@
-function getNCWMSLayerCapabilities(capabilities, ncwms_url, layer) {
+function getNCWMSLayerCapabilities(ncwms_url, layer) {
     OpenLayers.Request.GET(
         {
             url: ncwms_url,
@@ -8,10 +8,10 @@ function getNCWMSLayerCapabilities(capabilities, ncwms_url, layer) {
                 VERSION: "1.1.1",
                 DATASET: layer
             },
-            callback: function(response, capabilities) {
+            callback: function(response) {
                 var xmldoc = $.parseXML(response.responseText);
-                capabilities = $(xmldoc); // must be a global var
-                setTimeAvailable(capabilities, layer);
+                ncwmsCapabilities = $(xmldoc); // must be a global var
+                setTimeAvailable(ncwmsCapabilities, layer);
             }
         }
     );

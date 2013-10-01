@@ -46,7 +46,7 @@ function init_prism_map() {
     );
 
     $('#map-title').text(params.layers);
-    getNCWMSLayerCapabilities(ncwmsCapabilities, ncwms_url, defaults.dataset); // async save into global var ncwmsCapabilities
+    getNCWMSLayerCapabilities(ncwms_url, defaults.dataset); // async save into global var ncwmsCapabilities
     current_dataset = params.layers;
 
     map.addLayers(
