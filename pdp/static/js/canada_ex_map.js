@@ -29,7 +29,8 @@ function init_raster_map() {
         "http://medusa.pcic.uvic.ca/tilecache/tilecache.py/1.0.0/na/${z}/${x}/${y}.png",
         {
             projection: mapControls.projection,
-            zoomOffset: 4
+            zoomOffset: 4,
+            attribution: '© OpenStreetMap contributors'
         }
     );
 

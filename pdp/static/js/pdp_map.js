@@ -72,7 +72,8 @@ function getGSBaseLayer(gs_url, displayname, layername) {
             isBaseLayer:true,
             restrictedExtent: new OpenLayers.Bounds(-236114,41654.75,2204236,1947346.25),
             maxExtent: new OpenLayers.Bounds(-236114,41654.75,2204236,1947346.25),
-            resolutions: [2218.5, 1109.25, 554.625, 277.3125, 138.6562, 69.32812, 34.66406]
+            resolutions: [2218.5, 1109.25, 554.625, 277.3125, 138.6562, 69.32812, 34.66406],
+            attribution: '© OpenStreetMap contributors'
         }
     );
 }
@@ -84,7 +85,8 @@ function getTileBaseLayer(tilesurl, displayname, layername, proj) {
         tilesurl + "/" + layername + "/${z}/${x}/${y}.png",
         {
             projection: proj,
-            zoomOffset:4
+            zoomOffset:4,
+            attribution: '© OpenStreetMap contributors'
         }
     );
 }
@@ -100,7 +102,8 @@ function getBC3005OsmBaseLayer(wmsurl, displayname, layername) {
             maxExtent: new OpenLayers.Bounds(-1000000,-1000000,3000000,3000000),
             restrictedExtent: new OpenLayers.Bounds(-236114,41654.75,2204236,1947346.25),
             maxResolution: 7812.5,
-            numZoomLevels: 12
+            numZoomLevels: 12,
+            attribution: '© OpenStreetMap contributors'
         })
 }
 
@@ -110,7 +113,8 @@ function getBasicControls() {
         new OpenLayers.Control.ScaleLine({geodesic: true}),
         new OpenLayers.Control.KeyboardDefaults(),
         new OpenLayers.Control.MousePosition({div: $('#location')[0]}),
-        new OpenLayers.Control.PanZoomBar({panIcons:true})
+        new OpenLayers.Control.PanZoomBar({panIcons:true}),
+        new OpenLayers.Control.Attribution()
     ]
 }
 

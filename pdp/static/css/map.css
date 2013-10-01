@@ -95,6 +95,13 @@ div.olPopupContent {
     padding-bottom:0px;
 }
 
+div.olControlAttribution {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size:0.6em;
+}
+
 .olControlOpacitySliderContainer {
     position: absolute;
     bottom: 50px;
