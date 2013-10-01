@@ -3,6 +3,7 @@ import re
 
 from pkg_resources import resource_filename, get_distribution
 from tempfile import mkdtemp
+from wsgiref.util import shift_path_info
 
 from genshi.core import Markup
 import static
@@ -146,16 +147,11 @@ class PathDispatcher(object):
         self.default = default
 
     def __call__(self, environ, start_response):
-        path = environ['PATH_INFO'] + environ['SCRIPT_NAME']
-        if not path.startswith(self.path_to):
-            # 404
-            start_response('404')
-            return [path, " not found"]
-        path = path.replace(self.path_to, '', 1)
+        path = environ['PATH_INFO']
         for pattern, app in self.urls:
             m = re.match(pattern, path)
             if m:
-                environ['PATH_INFO'] = path
+                shift_path_info(environ)
                 return app(environ, start_response)
 
         if self.default:
@@ -164,19 +160,26 @@ class PathDispatcher(object):
             start_response('404 Not Found', [])
             return [path, " not found"]
 
-conf = db_raster_configurator("Canada downscaled data", 0.1, 0, 'canada_map', root_url=global_config['app_root'].rstrip('/') +'/data/')
+
+conf = db_raster_configurator("Canada downscaled data", 0.1, 0, 
+    'canada_map', root_url=global_config['app_root'].rstrip('/') +'/data/')
 raster_server = RasterServer(conf)
+
+conf = db_raster_configurator("PRISM Demo Data", 0.1, 0, 
+    'bc_prism_demo', root_url=global_config['app_root'].rstrip('/') +'/data/')
+bc_prism_server = RasterServer(conf)
+
+data = PathDispatcher('/data', [
+    ('^/canada_map/.*$', raster_server),
+    ('^/bc_prism_demo/.*$', bc_prism_server)
+    ])
 
 lister = EnsembleMemberLister(dsn)
 
 auth = PathDispatcher('/auth', [
     ('^/pcds/.*$', dispatch_app),
-    #        ('^/pydap/.*$', pydap_app),
+    # ('^/pydap/.*$', pydap_app),
     ('^/agg/?$', zip_app),
-    ])
-
-data = PathDispatcher('/data', [
-    ('^/.*$', raster_server)
     ])
 
 apps = PathDispatcher('/apps', [
@@ -193,11 +196,8 @@ main = PathDispatcher('', [
     ('^/bc_prism/.*$', bc_prism_map),
     ('^/auth.*$', auth),
     ('^/apps/.*$', apps),
-    ('^/ensemble_datasets.json.*$', lister),
-    #('^/data/.*$', raster_server),
-    ('^/(css|js|images)/.*$', static_app),
-    ('^/$', pcds_map)
+    ('^/ensemble_datasets.json.*$', lister)
     ],
-#    default=pcds_map
+    default=static_app
 )
 # main
