@@ -49,7 +49,7 @@ function intersection(b1, b2) {
 
 function getRasterBbox(capabilities, layer_name) { 
     // The WMS layer doesn't seem to have the bbox of the _data_ available, which I would like to have
-    var layer_name = ncwms.params.LAYERS;
+    // var layer_name = ncwms.params.LAYERS;
     // Pull the geographic bounding box out of the appropriate element
     var bbox = capabilities.find('Layer > Name:contains("' + layer_name + '")').parent().find('LatLonBoundingBox')[0];
     var real_bounds = new OpenLayers.Bounds();

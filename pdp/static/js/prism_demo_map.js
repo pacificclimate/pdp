@@ -4,6 +4,7 @@
 var selectionLayer;
 var current_dataset;
 var ncwmsCapabilities;
+var selectionBbox;
 
 function init_prism_map() {
     // Map Config
@@ -62,29 +63,5 @@ function init_prism_map() {
     addLoadingIcon(ncwms);
     map.zoomToExtent(new OpenLayers.Bounds(-236114,41654.75,2204236,1947346.25), true);
 
-
-    function download(extension) {
-            // Check input
-        if (selectionBbox == undefined) {
-            alert("You need to first select a rectangle of data to download (use the polygon tool in the top, right corner of the map.");
-            return;
-        };
-        if (ncwmsCapabilities == undefined) {
-            alert("I'm still trying to determine the geographic bounds of the selected layer.  Try again in a few seconds.");
-            return;
-        };
-        rasterBbox = getRasterBbox();
-        if (selectionBbox.toGeometry().getArea == 0) {
-            alert("Selection area must be of non-zero area (i.e. have extent)");
-            return;
-        };
-        if (! rasterBbox.intersectsBounds(selectionBbox)) {
-            alert('Selection area must intersect the raster area');
-            return;
-        };
-        rasterBBoxToIndicies(raster_map, current_dataset, intersection(rasterBbox, selectionBbox), extension);
-    };
-
-    $("#download-timeseries").click(function(){download($('select[name="data-format"]')[0].value);});
     return map
 };
