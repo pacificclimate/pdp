@@ -12,8 +12,7 @@ $(document).ready(function() {
     var downloader = document.getElementById("pdp-controls").appendChild(getPRISMDownloadOptions());
 
     $("#download-timeseries").click(function(){
-
     	type = $('select[name="data-format"]').val()
-   		download(type, map);
+   		download(type, map, selectionLayer);
     });
 });

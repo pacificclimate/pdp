@@ -15,24 +15,26 @@ function getPRISMDownloadOptions() {
     return frag;
 }
 
-function download(extension, map) {
+function download(extension, map, selection) {
     // Check input.  Relies upon global var selectionLayer, ncwmsCapabilities
-    if (selectionLayer == undefined) {
+    if (selection.features.length == 0) {
         alert("You need to first select a rectangle of data to download (use the polygon tool in the top, right corner of the map.");
             return;
         };
+        var selgeo = selection.features[0].geometry
         if (ncwmsCapabilities == undefined) {
             alert("I'm still trying to determine the geographic bounds of the selected layer.  Try again in a few seconds.");
             return;
         };
         rasterBbox = getRasterBbox(ncwmsCapabilities, current_dataset);
-        if (selectionBbox.getArea() == 0) {
+        if (selgeo.getArea() == 0) {
             alert("Selection area must be of non-zero area (i.e. have extent)");
             return;
         };
-        if (! rasterBbox.intersectsBounds(selectionBbox)) {
+        if (! rasterBbox.intersectsBounds(selgeo.bounds.transform(selection.projection, getProjection(4326)))) {
             alert('Selection area must intersect the raster area');
             return;
         };
+        alert('progressing to download')
         rasterBBoxToIndicies(map, current_dataset, intersection(rasterBbox, selectionBbox), extension);
     };
