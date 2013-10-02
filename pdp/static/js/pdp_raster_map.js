@@ -47,9 +47,15 @@ function intersection(b1, b2) {
     );
 };
 
+function getRasterNativeProj(capabilities, layer_name) { 
+    // Return the dataset native projection as an OL.Projection object
+    var bbox = capabilities.find('Layer > Name:contains("' + layer_name + '")').parent().find('BoundingBox')[0];
+    var srs = new OpenLayers.Projection(bbox.attributes.SRS.value);
+    return srs;
+};
+
 function getRasterBbox(capabilities, layer_name) { 
     // The WMS layer doesn't seem to have the bbox of the _data_ available, which I would like to have
-    // var layer_name = ncwms.params.LAYERS;
     // Pull the geographic bounding box out of the appropriate element
     var bbox = capabilities.find('Layer > Name:contains("' + layer_name + '")').parent().find('LatLonBoundingBox')[0];
     var real_bounds = new OpenLayers.Bounds();
@@ -67,7 +73,7 @@ function timeIndicies() {
     return [t0i, tni];
 };
 
-function rasterBBoxToIndicies(themap, layer, bnds, extension) {
+function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension) {
     var indexBounds = new OpenLayers.Bounds();
 
     function responder(response) {
@@ -90,17 +96,16 @@ function rasterBBoxToIndicies(themap, layer, bnds, extension) {
     function requestIndex(x, y) {
         var params = {
             REQUEST: "GetFeatureInfo",
-            BBOX: themap.getExtent().toBBOX(),
+            BBOX: map.getExtent().toBBOX(),
             SERVICE: "WMS",
             VERSION: "1.1.1",
             X: x,
             Y: y,
             QUERY_LAYERS: layer.params.LAYERS,
             LAYERS: layer.params.LAYERS,
-            WIDTH: themap.size.w,
-            HEIGHT: themap.size.h,
-            srs: layer.params.SRS,
-            CRS: "EPSG:4326",
+            WIDTH: map.size.w,
+            HEIGHT: map.size.h,
+            SRS: map.getProjectionObject(),
             INFO_FORMAT: 'text/xml'
         };
         // FIXME: URL below assumes that geoserver is running on the same machine as the webapp (or a proxy is in place)
@@ -111,8 +116,10 @@ function rasterBBoxToIndicies(themap, layer, bnds, extension) {
         });
     };
 
-    var ul = themap.getPixelFromLonLat(new OpenLayers.LonLat(bnds.left, bnds.top));
-    var lr = themap.getPixelFromLonLat(new OpenLayers.LonLat(bnds.right, bnds.bottom));
-    requestIndex(ul.x, ul.y);
-    requestIndex(lr.x, lr.y);
+    var ul = new OpenLayers.LonLat(bnds.left, bnds.top).transform(extent_proj, map.getProjectionObject());
+    var lr = new OpenLayers.LonLat(bnds.right, bnds.bottom).transform(extent_proj, map.getProjectionObject());
+    var ul_px = map.getPixelFromLonLat(ul);
+    var lr_px = map.getPixelFromLonLat(lr);
+    requestIndex(ul_px.x, ul_px.y);
+    requestIndex(lr_px.x, lr_px.y);
 };
