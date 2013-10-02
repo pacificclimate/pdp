@@ -16,26 +16,27 @@ function getPRISMDownloadOptions() {
 }
 
 function download(extension, map, selection_layer, ncwms_layer) {
-    // Check input.  Relies upon global var selectionLayer, ncwmsCapabilities
+    // Check input.  Relies upon global var ncwmsCapabilities
     if (selection_layer.features.length == 0) {
         alert("You need to first select a rectangle of data to download (use the polygon tool in the top, right corner of the map.");
-            return;
-        };
-        var selection_geo = selection_layer.features[0].geometry
-        if (ncwmsCapabilities == undefined) {
-            alert("I'm still trying to determine the geographic bounds of the selected layer.  Try again in a few seconds.");
-            return;
-        };
-        if (selection_geo.getArea() == 0) {
-            alert("Selection area must be of non-zero area (i.e. have extent)");
-            return;
-        };
-        var raster_proj = getRasterNativeProj(ncwmsCapabilities, current_dataset);
-        var raster_bnds = getRasterBbox(ncwmsCapabilities, current_dataset);
-        var selection_bnds = selection_geo.bounds.transform(selection_layer.projection, raster_proj);
-        if (! raster_bnds.intersectsBounds(selection_bnds)) {
-            alert('Selection area must intersect the raster area');
-            return;
-        };
-        rasterBBoxToIndicies(map, ncwms_layer, intersection(raster_bnds, selection_bnds), raster_proj, extension);
+        return;
     };
+    var selection_geo = selection_layer.features[0].geometry
+    if (ncwmsCapabilities == undefined) {
+        alert("I'm still trying to determine the geographic bounds of the selected layer.  Try again in a few seconds.");
+        return;
+    };
+    if (selection_geo.getArea() == 0) {
+        alert("Selection area must be of non-zero area (i.e. have extent)");
+        return;
+    };
+    var raster_proj = getRasterNativeProj(ncwmsCapabilities, current_dataset);
+    var raster_bnds = getRasterBbox(ncwmsCapabilities, current_dataset);
+    var selection_bnds = selection_geo.bounds.transform(selection_layer.projection, raster_proj);
+    if (! raster_bnds.intersectsBounds(selection_bnds)) {
+        alert('Selection area must intersect the raster area');
+        return;
+    }
+    console.log('progressing to download');
+    rasterBBoxToIndicies(map, ncwms_layer, intersection(raster_bnds, selection_bnds), raster_proj, extension);
+}

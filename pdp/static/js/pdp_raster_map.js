@@ -122,4 +122,4 @@ function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension) {
     var lr_px = map.getPixelFromLonLat(lr);
     requestIndex(ul_px.x, ul_px.y);
     requestIndex(lr_px.x, lr_px.y);
-};
+}
