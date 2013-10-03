@@ -73,7 +73,7 @@ function timeIndicies() {
     return [t0i, tni];
 };
 
-function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension) {
+function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension, callback) {
     var indexBounds = new OpenLayers.Bounds();
 
     function responder(response) {
@@ -82,12 +82,7 @@ function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension) {
         var jIndex = parseInt($(xmldoc).find('jIndex').text());
         if (!isNaN(indexBounds.toGeometry().getVertices()[0].x)) {
             indexBounds.extend(new OpenLayers.LonLat(iIndex, jIndex)); // not _really_ at lonlat... actually raster space
-            var ti = timeIndicies();
-            var id = current_dataset.split('/')[0]; // strip the variable to get the id
-            var variable = current_dataset.split('/')[1];
-            var url = catalog[id] + '.' + extension + '?' + variable +
-                '[' + ti[0] + ':' + ti[1] + '][' + indexBounds.bottom + ':' + indexBounds.top + '][' + indexBounds.left + ':' + indexBounds.right + ']&';
-            window.open(url, 'foo');
+            callback(indexBounds)
         } else { // first response... wait for the second
             indexBounds.extend(new OpenLayers.LonLat(iIndex, jIndex)); // not _really_ at lonlat... actually raster space
         }

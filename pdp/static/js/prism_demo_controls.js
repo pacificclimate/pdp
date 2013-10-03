@@ -16,6 +16,17 @@ function getPRISMDownloadOptions() {
 }
 
 function download(extension, map, selection_layer, ncwms_layer) {
+    
+    var callPydapDownloadUrl = function (raster_index_bounds) {
+        var id = ncwms_layer.params.LAYERS.split('/')[0]; // strip the variable to get the id
+        var variable = ncwms_layer.params.LAYERS.split('/')[1];
+        var url = catalog[id] + '.' + extension + '?' + variable + '[' + 
+            raster_index_bounds.bottom + ':' + 
+            raster_index_bounds.top + '][' + 
+            raster_index_bounds.left + ':' + 
+            raster_index_bounds.right + ']&';
+        window.open(url, 'foo');
+    }
     // Check input.  Relies upon global var ncwmsCapabilities
     if (selection_layer.features.length == 0) {
         alert("You need to first select a rectangle of data to download (use the polygon tool in the top, right corner of the map.");
@@ -38,5 +49,5 @@ function download(extension, map, selection_layer, ncwms_layer) {
         return;
     }
     console.log('progressing to download');
-    rasterBBoxToIndicies(map, ncwms_layer, intersection(raster_bnds, selection_bnds), raster_proj, extension);
+    rasterBBoxToIndicies(map, ncwms_layer, intersection(raster_bnds, selection_bnds), raster_proj, extension, callPydapDownloadUrl);
 }
