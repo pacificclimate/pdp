@@ -104,6 +104,7 @@ select {
 }
 
 #header {
+    margin-right: 24%;
     margin-top: 15px;
     height: 80px;
     top:0px;
