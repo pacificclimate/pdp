@@ -12,7 +12,7 @@ function createRasterFormatOptions() {
 		      csv: mkOpt('CSV', 'CSV stands for Comma Separated Values. This format is a human readable list of data typically with a time stamp, observational value, and flags with one line per observation time. Each observation is separated by commas.'),
 		      ascii: mkOpt('ASCII', 'ASCII data are also in a text format with a identical data organization as the CSV data.') };
 
-    return getSelectorWithHelp('Output Format', 'data-format', 'data-format', 'data-format-selector', 'csv', formatData,'View output format descriptions', 450, 450);
+    return getSelectorWithHelp('Output Format', 'data-format', 'data-format', 'data-format-selector', 'nc', formatData,'View output format descriptions', 450, 450);
 }
 
 function createMetadataFormatOptions() {
