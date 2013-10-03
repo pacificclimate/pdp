@@ -1,7 +1,7 @@
-function getPRISMControls() {
+function getPRISMControls(ensemble_name) {
 	var form = createForm(undefined, undefined, undefined);
     var fieldset = createFieldset("filterset", "Dataset Selection");
-    fieldset.appendChild(getRasterAccordionMenu('bc_prism_demo'));
+    fieldset.appendChild(getRasterAccordionMenu(ensemble_name));
     form.appendChild(fieldset);
     return form;
 }

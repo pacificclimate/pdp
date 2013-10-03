@@ -163,7 +163,8 @@ class PathDispatcher(object):
 servers = {}
 for ensemble_name in ['canada_map', 'bc_prism_demo']:
     conf = db_raster_configurator("Download Data", 0.1, 0, ensemble_name, 
-        root_url=global_config['app_root'].rstrip('/') +'/data/'
+        root_url=global_config['app_root'].rstrip('/') +
+            '/data/' + ensemble_name + '/'
     )
     servers[ensemble_name] = RasterServer(conf)
 
