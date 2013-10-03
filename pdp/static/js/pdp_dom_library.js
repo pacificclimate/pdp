@@ -163,10 +163,12 @@ function createHelp(helpDivId, helpData, title, width, height, helpElementType, 
 
     $(div).dialog({
 	appendTo: $(frag),
+        appendTo: '#main',
     	autoOpen: false,
     	title: title,
     	width: width,
     	height: height,
+        modal: true,
     	buttons: {
     	    "Close": function() {
     		$(this).dialog("close");
