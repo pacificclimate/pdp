@@ -27,23 +27,24 @@ function download(extension, map, selection_layer, ncwms_layer) {
             raster_index_bounds.right + ']&';
         window.open(url, 'foo');
     }
+
     // Check input.  Relies upon global var ncwmsCapabilities
     if (selection_layer.features.length == 0) {
         alert("You need to first select a rectangle of data to download (use the polygon tool in the top, right corner of the map.");
         return;
     };
-    var selection_geo = selection_layer.features[0].geometry
     if (ncwmsCapabilities == undefined) {
         alert("I'm still trying to determine the geographic bounds of the selected layer.  Try again in a few seconds.");
         return;
     };
-    if (selection_geo.getArea() == 0) {
+    if (selection_layer.features[0].geometry.getArea() == 0) {
         alert("Selection area must be of non-zero area (i.e. have extent)");
         return;
     };
     var raster_proj = getRasterNativeProj(ncwmsCapabilities, current_dataset);
     var raster_bnds = getRasterBbox(ncwmsCapabilities, current_dataset);
-    var selection_bnds = selection_geo.bounds.transform(selection_layer.projection, raster_proj);
+    var selection_bnds = selection_layer.features[0].geometry.bounds.clone().
+        transform(selection_layer.projection, raster_proj);
     if (! raster_bnds.intersectsBounds(selection_bnds)) {
         alert('Selection area must intersect the raster area');
         return;
