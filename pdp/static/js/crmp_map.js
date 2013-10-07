@@ -2,7 +2,6 @@
 // NOTE: variables 'gs_url' is expected to be set before this is call
 // Do this in the sourcing html
 
-var gs_url='http://medusa.pcic.uvic.ca/geoserver/'
 var map;
 var selectionLayer;
 

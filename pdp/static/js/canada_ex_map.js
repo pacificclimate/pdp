@@ -2,8 +2,6 @@
 // NOTE: variables 'gs_url' is expected to be set before this is call
 // Do this in the sourcing html
 
-var gs_url='http://medusa.pcic.uvic.ca/geoserver/'
-var ncwms_url='http://medusa.pcic.uvic.ca/ncWMS/wms'
 var map;
 var selectionLayer;
 var current_dataset;
