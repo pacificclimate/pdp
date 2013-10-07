@@ -18,7 +18,7 @@ function createInputElement(type, cssClass, id, name, value) {
 
 function createTextarea(id, value, readonly) {
     var ta = document.createElement('textarea');
-    ta.id = id;
+    if(typeof id != 'undefined') ta.id = id;
     if(typeof value != 'undefined') ta.value = value;
     if(typeof readonly != 'undefined') ta.readonly = 'readonly';
     return ta;
@@ -26,13 +26,13 @@ function createTextarea(id, value, readonly) {
 
 function createDiv(id) {
     var div = document.createElement("div");
-    div.id = id;
+    if(typeof id != 'undefined') div.id = id;
     return div;
 }
 
 function createLabel(id, text, forId) {
     var label = document.createElement("label");
-    label.id = id;
+    if(typeof id != 'undefined') label.id = id;
     label.appendChild(document.createTextNode(text));
     label.htmlFor = forId;
     return label;
@@ -40,7 +40,7 @@ function createLabel(id, text, forId) {
 
 function createLegend(id, text) {
     var legend = document.createElement("legend");
-    legend.id = id;
+    if(typeof id != 'undefined') legend.id = id;
     legend.appendChild(document.createTextNode(text));
     return legend;
 }
@@ -56,7 +56,7 @@ function createForm(id, name, method, action) {
 
 function createFieldset(id, label) {
     var fieldset = document.createElement("fieldset");
-    fieldset.id = id;
+    if(typeof id != 'undefined') fieldset.id = id;
     if (typeof label != 'undefined')
 	fieldset.appendChild(createLegend(id + "-legend", label));
     return fieldset;
@@ -162,7 +162,6 @@ function createHelp(helpDivId, helpData, title, width, height, helpElementType, 
     parent_elem.appendChild(helpCallback(helpData, 2));
 
     $(div).dialog({
-	appendTo: $(frag),
         appendTo: '#main',
     	autoOpen: false,
     	title: title,
