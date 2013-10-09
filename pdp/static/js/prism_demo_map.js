@@ -27,9 +27,8 @@ function init_prism_map() {
     params = {
         layers: defaults.dataset + "/" + defaults.variable,
         transparent: 'true',
-        styles: "boxfill/rainbow",
+        styles: '',
         numcolorbands: 254,
-        logscale: false,
         version: '1.1.1',
         srs: 'EPSG:3005'
     };
