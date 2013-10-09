@@ -36,7 +36,7 @@ dsn = 'postgresql://pcic_meta@monsoon.pcic/pcic_meta'
 pcds_dsn = 'postgresql://httpd@monsoon.pcic/crmp'
 
 global_config = {
-    'app_root': 'http://basalt.pcic.uvic.ca',
+    'app_root': 'http://medusa.pcic.uvic.ca/basil_crmp',
     'title': "CRMP Network Data",
     'css_files': [
         'css/jquery-ui-1.10.2.custom.css',
@@ -84,6 +84,7 @@ pcds_config = {
 canada_ex_config = {
     'title': 'Raster Data',
     'js_files' : [
+        'js/pdp_auth.js',
         'js/pdp_raster_map.js',
         'js/canada_ex_map.js',
         'js/canada_ex_controls.js',
@@ -94,6 +95,7 @@ canada_ex_config = {
 bc_prism_config = {
     'title': 'BC PRISM Raster Portal (DEVELOPMENT)',
     'js_files' : [
+        'js/pdp_auth.js',
         'js/pdp_raster_map.js',
         'js/prism_demo_map.js',
         'js/prism_demo_controls.js',
@@ -166,7 +168,7 @@ for ensemble_name in ['canada_map', 'bc_prism_demo']:
         root_url=global_config['app_root'].rstrip('/') +
             '/data/' + ensemble_name + '/'
     )
-    servers[ensemble_name] = RasterServer(conf)
+    servers[ensemble_name] = wrap_auth(RasterServer(conf))
 
 data = PathDispatcher('/data', [('^/' + k + '/.*$', v) for k, v in servers.iteritems()])
 
@@ -189,7 +191,7 @@ main = PathDispatcher('', [
     ('^/check_auth_app/?$', check_auth),
     ('^/pcds_map/.*$', pcds_map),
     ('^/canada_map/.*$', canada_ex_map),
-    ('^/bc_prism/.*$', bc_prism_map),
+    ('^/bc_prism_demo/.*$', bc_prism_map),
     ('^/auth.*$', auth),
     ('^/apps/.*$', apps),
     ('^/ensemble_datasets.json.*$', lister)

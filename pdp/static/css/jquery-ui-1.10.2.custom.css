@@ -785,7 +785,7 @@ body .ui-tooltip {
 ----------------------------------*/
 .ui-widget {
 	font-family: Lucida Grande, Lucida Sans, Arial, sans-serif;
-	font-size: 1.1em;
+	font-size: 0.875em;
 }
 .ui-widget .ui-widget {
 	font-size: 1em;
@@ -1172,4 +1172,9 @@ body .ui-tooltip {
 	opacity: .3;
 	filter: Alpha(Opacity=30);
 	border-radius: 8px;
+}
+
+/*BV: PCIC CHANGE*/
+.no-title .ui-dialog-titlebar {
+	display: none;
 }

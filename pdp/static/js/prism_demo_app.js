@@ -2,7 +2,7 @@
 
 $(document).ready(function() {
     map = init_prism_map();
-    amenu.init();
+    init_login('login-div');
 
     ensemble_name = 'bc_prism_demo';
     $.ajax({'url': app_root + '/data/' + ensemble_name + '/catalog.json',
@@ -26,4 +26,11 @@ $(document).ready(function() {
     	type = $('select[name="data-format"]').val()
    		download(type, map, selectionLayer, ncwms_layer);
     });
+
+    // For testing purposes:
+    var test_poly = new OpenLayers.Feature.Vector(
+    	// new OpenLayers.Geometry.fromWKT("POLYGON((-123.99271714942358 57.89648225746951,-121.76959864936369 57.89648225746951,-121.76959864936369 58.96152484973735,-123.99271714942358 58.96152484973735,-123.99271714942358 57.89648225746951))"
+    	// 	).transform(getProjection(4326), getProjection(3005)))
+    	new OpenLayers.Geometry.fromWKT("POLYGON((1000000 1000000,1050000 1000000,1050000 1050000,1000000 1050000,1000000 1000000))"))
+    selectionLayer.addFeatures([test_poly]);
 });

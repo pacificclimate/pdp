@@ -6,7 +6,7 @@
     color: #000;
 }
 
-#login-form {
+/*#login-form {
     z-index: 100;
     position: fixed;
     width: 30%;
@@ -14,9 +14,8 @@
     left: 30%;
     background-color: white;
     padding: 0px;
-    visibility: hidden;
     border: 1px solid #69a1ba;
-}
+}*/
 
 #login-form fieldset {
     margin-left: 12px;
