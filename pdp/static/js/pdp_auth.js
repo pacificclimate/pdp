@@ -18,14 +18,6 @@ function init_login(loginDivId) {
         "Yahoo": "https://edit.yahoo.com/registration?.src=fpctx&.intl=ca&.done=http%3A%2F%2Fca.yahoo.com%2F"
     };
 
-    // var signupUrls = [
-    //     "https://login.launchpad.net/pBkz56vSM5432lMr/+new_account", 
-    //     "https://www.myopenid.com/signup", 
-    //     "https://pip.verisignlabs.com/register.do", 
-    //     "https://accounts.google.com/NewAccount", 
-    //     "https://edit.yahoo.com/registration?.src=fpctx&.intl=ca&.done=http%3A%2F%2Fca.yahoo.com%2F"
-    // ];
-
 	var button = document.getElementById(loginDivId).appendChild(
 		createLink("login-button", undefined, undefined, "LOGIN")
 	);
@@ -47,8 +39,6 @@ function init_login(loginDivId) {
 
     var button = $('#login-button');
     button.prop('loggedIn', false);
-
-
 
     function startLogin(evt, onSuccess, onFailure) {
 		// spawn new window, hook the onClose with checkLogin()
