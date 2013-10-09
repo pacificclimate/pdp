@@ -2,13 +2,12 @@
 // NOTE: variables 'gs_url' is expected to be set before this is call
 // Do this in the sourcing html
 
-var map;
 var selectionLayer;
 var current_dataset;
-var catalog;
+var ncwmsCapabilities;
+var selectionBbox;
 
 function init_raster_map() {
-    var ncwmsCapabilities;
 
     // Map Config
     options = na4326_map_options();
@@ -23,7 +22,7 @@ function init_raster_map() {
     map = new OpenLayers.Map('pdp-map', options);
 
     var tiles4 = new OpenLayers.Layer.XYZ(
-        "TileCache mod_python DiscCache",
+        "N.A. OpenStreetMap",
         "http://medusa.pcic.uvic.ca/tilecache/tilecache.py/1.0.0/na/${z}/${x}/${y}.png",
         {
             projection: mapControls.projection,
@@ -32,24 +31,17 @@ function init_raster_map() {
         }
     );
 
-    var basemap = getGSBaseLayer(
-        gs_url,
-        "Canada Basemap",
-        "canada_map_wms_proxy",
-        mapControls.projection
-    );
-    
+   
     defaults = {
-        dataset: "pr-tasmax-tasmin_day_BCSD-ANUSPLIN300-CSIRO-Mk3-6-0_historical-rcp26_r1i1p1_19500101-21001231",
-        variable: "pr"
+        dataset: "pr-tasmax-tasmin_day_BCCA-ANUSPLIN300-CCSM4_historical-rcp45_r2i1p1_19500101-21001231",
+        variable: "tasmin"
     }
     
     params = {
         layers: defaults.dataset + "/" + defaults.variable,
         transparent: 'true',
-        styles: "boxfill/rainbow",
+        styles: '',
         numcolorbands: 254,
-        logscale: false,
         version: '1.1.1',
         srs: 'EPSG:4326'
     };
@@ -71,15 +63,14 @@ function init_raster_map() {
 	);
 
     $('#map-title').text(params.layers);
-    getNCWMSLayerCapabilities(ncwmsCapabilities, ncwms_url, defaults.dataset); // async save into global var ncwmsCapabilities
+    getNCWMSLayerCapabilities(ncwms_url, defaults.dataset); // async save into global var ncwmsCapabilities
     current_dataset = params.layers;
 
     map.addLayers(
         [
             ncwms,
             selectionLayer,
-            tiles4,
-            basemap
+            tiles4
         ]
     );
 
@@ -87,33 +78,6 @@ function init_raster_map() {
     map.addControl(slider);
     addLoadingIcon(ncwms);
     map.zoomToMaxExtent();
-
-    function download(extension) {
-            // Check input
-        if (selectionBbox == undefined) {
-            alert("You need to first select a rectangle of data to download (use the polygon tool in the top, right corner of the map.");
-            return;
-        };
-        if (ncwmsCapabilities == undefined) {
-            alert("I'm still trying to determine the geographic bounds of the selected layer.  Try again in a few seconds.");
-            return;
-        };
-        rasterBbox = getRasterBbox();
-        if (selectionBbox.toGeometry().getArea == 0) {
-            alert("Selection area must be of non-zero area (i.e. have extent)");
-            return;
-        };
-        if (! rasterBbox.intersectsBounds(selectionBbox)) {
-            alert('Selection area must intersect the raster area');
-            return;
-        };
-        rasterBBoxToIndicies(raster_map, current_dataset, intersection(rasterBbox, selectionBbox), extension);
-    };
-
-
-    
-    
-    $("#timeseries").click(function(){download($('select[name="data-format"]')[0].value);});
 
     return map
 };

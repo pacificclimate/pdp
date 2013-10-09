@@ -82,7 +82,7 @@ pcds_config = {
     }
 
 canada_ex_config = {
-    'title': 'Raster Data',
+    'title': 'Canadian Climate Raster Portal (DEVELOPMENT)',
     'js_files' : [
         'js/pdp_auth.js',
         'js/pdp_raster_map.js',
