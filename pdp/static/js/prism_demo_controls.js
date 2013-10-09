@@ -16,6 +16,14 @@ function getPRISMDownloadOptions() {
 }
 
 function download(extension, map, selection_layer, ncwms_layer) {
+
+    $.ajax({'url': app_root + '/data/' + ensemble_name + '/catalog.json',
+        'type': 'GET',
+        'dataType': 'json',
+        'success': function(data, textStatus, jqXHR) {
+            catalog = data;
+        }}
+    );
     
     var callPydapDownloadUrl = function (raster_index_bounds) {
         var id = ncwms_layer.params.LAYERS.split('/')[0]; // strip the variable to get the id

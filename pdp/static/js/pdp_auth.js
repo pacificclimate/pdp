@@ -48,27 +48,7 @@ function init_login(loginDivId) {
     var button = $('#login-button');
     button.prop('loggedIn', false);
 
-    function checkLogin(onSuccess, onFailure) {
-	$.ajax({'url': app_root + '/check_auth_app/',
-		'type': 'GET',
-		'dataType': 'json',
-		// show logged-in status
-		'success': function(data, textStatus, jqXHR) {
-		    button.prop('loggedIn', true);
-		    button.html("Logout as: " + data.email);
-		    if (onSuccess) {
-		    	onSuccess();
-		    };
-		},
-		// show link to login
-		'error': function(jqXHR, textStatus, errorThrown) {
-		    button.prop('loggedIn', false);
-		    button.html("Login with OpenID");
-		    if (onFailure) {
-		    	onFailure();
-		    };
-		}});
-    };
+
 
     function startLogin(evt, onSuccess, onFailure) {
 		// spawn new window, hook the onClose with checkLogin()
@@ -81,12 +61,12 @@ function init_login(loginDivId) {
 				if (loginWindow.closed) {
 					clearInterval(id);
 					form.dialog("close");
-					checkLogin(onSuccess, onFailure);
+					checkLogin(button, onSuccess, onFailure);
 				} else if (pattern.test(loginWindow.location.href)) { // FIXME: check whether it's XSS first
 					clearInterval(id);
 					loginWindow.close();
 					form.dialog("close");
-					checkLogin(onSuccess, onFailure);
+					checkLogin(button, onSuccess, onFailure);
 				};
 			} catch(e) {
 				// Permission denied on loginWindow.location.* ... ignore
@@ -140,11 +120,35 @@ function init_login(loginDivId) {
     	};
     };
 
-    checkLogin();
+    checkLogin(button);
     button.click(toggleLogin);
     $('#do-login').click(startLogin);
     $('#do-signup').click(startSignup);
+
+    return button;
 }
+
+function checkLogin(button, onSuccess, onFailure) {
+$.ajax({'url': app_root + '/check_auth_app/',
+	'type': 'GET',
+	'dataType': 'json',
+	// show logged-in status
+	'success': function(data, textStatus, jqXHR) {
+	    button.prop('loggedIn', true);
+	    button.html("Logout as: " + data.email);
+	    if (onSuccess) {
+	    	onSuccess();
+	    };
+	},
+	// show link to login
+	'error': function(jqXHR, textStatus, errorThrown) {
+	    button.prop('loggedIn', false);
+	    button.html("Login with OpenID");
+	    if (onFailure) {
+	    	onFailure();
+	    };
+	}});
+};
 
 function createCookie(name,value,days) {
     if (days) {

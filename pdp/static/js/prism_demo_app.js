@@ -1,18 +1,11 @@
 // Globals current_dataset, selectionLayer, ncwmsCapabilities
 
 $(document).ready(function() {
-    map = init_prism_map();
-    init_login('login-div');
-
     ensemble_name = 'bc_prism_demo';
-    $.ajax({'url': app_root + '/data/' + ensemble_name + '/catalog.json',
-        'type': 'GET',
-        'dataType': 'json',
-        'success': function(data, textStatus, jqXHR) {
-            catalog = data;
-        }}
-    );
-    
+
+    map = init_prism_map();
+    loginButton = init_login('login-div');
+
     // TODO: This can cause some incorrect formatting in the menu...
     // current_layer = map.getLayersByName('Climate raster')[0];
     // amenu.open(current_layer.params.LAYERS, true);
@@ -23,8 +16,9 @@ $(document).ready(function() {
     ncwms_layer = map.getLayersByName('Climate raster')[0];
 
     $("#download-timeseries").click(function(){
-    	type = $('select[name="data-format"]').val()
-   		download(type, map, selectionLayer, ncwms_layer);
+        type = $('select[name="data-format"]').val()
+        checkLogin(loginButton, download(type, map, selectionLayer, ncwms_layer), function() {alert('Please log in before downloading data');})
+   		// download(type, map, selectionLayer, ncwms_layer);
     });
 
     // For testing purposes:
