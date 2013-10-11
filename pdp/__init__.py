@@ -11,7 +11,7 @@ from beaker.middleware import SessionMiddleware
 
 from pdp_util.auth import PcicOidMiddleware, check_authorized_return_email
 from pdp_util.map import MapApp
-from pdp_util.raster import RasterServer, db_raster_configurator
+from pdp_util.raster import RasterServer, EnsembleCatalog, db_raster_configurator
 from pdp_util.filter_options import FilterOptions
 from pdp_util.ensemble_members import EnsembleMemberLister
 from pdp_util.counts import CountStationsApp, CountRecordLengthApp
@@ -82,7 +82,7 @@ pcds_config = {
     }
 
 canada_ex_config = {
-    'title': 'Canadian Climate Raster Portal (DEVELOPMENT)',
+    'title': 'Canadian Climate Coverage (DEV)',
     'js_files' : [
         'js/pdp_auth.js',
         'js/pdp_raster_map.js',
@@ -163,14 +163,17 @@ class PathDispatcher(object):
             return [path, " not found"]
 
 servers = {}
+catalogs = {}
 for ensemble_name in ['canada_map', 'bc_prism_demo']:
     conf = db_raster_configurator("Download Data", 0.1, 0, ensemble_name, 
         root_url=global_config['app_root'].rstrip('/') +
             '/data/' + ensemble_name + '/'
     )
     servers[ensemble_name] = wrap_auth(RasterServer(conf))
+    catalogs[ensemble_name] = EnsembleCatalog(conf) #No Auth
 
 data = PathDispatcher('/data', [('^/' + k + '/.*$', v) for k, v in servers.iteritems()])
+catalog = PathDispatcher('/catalog', [('^/' + k + '/.*$', v) for k, v in catalogs.iteritems()])
 
 lister = EnsembleMemberLister(dsn)
 
@@ -187,6 +190,7 @@ apps = PathDispatcher('/apps', [
     
 main = PathDispatcher('', [
     ('^/data/.*$', data),
+    ('^/catalog/.*$', catalog),
     ('^/images/legend/.*\.png$', legend_app),
     ('^/check_auth_app/?$', check_auth),
     ('^/pcds_map/.*$', pcds_map),
