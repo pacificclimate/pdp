@@ -149,8 +149,9 @@ function getPolygonLayer() {
     );
 } 
 
-function getBoxLayer() {
-    var boxLayer = new OpenLayers.Layer.Vector("Box selection");
+function getBoxLayer(name) {
+    name = typeof name !== 'undefined' ? name : "Box selection";
+    var boxLayer = new OpenLayers.Layer.Vector(name);
     // Allow only one rectangle at a time
     boxLayer.events.register(
         'beforefeatureadded',

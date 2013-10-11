@@ -12,7 +12,8 @@ function init_prism_map() {
 
     // Map Controls
     mapControls = getBasicControls();
-    selectionLayer = getBoxLayer();
+    selLayerName = "Box Selection";
+    selectionLayer = getBoxLayer(selLayerName);
     panelControls = getEditingToolbar([getHandNav(), getBoxEditor(selectionLayer)]);
     mapControls.push(panelControls);
 
@@ -33,8 +34,10 @@ function init_prism_map() {
         srs: 'EPSG:3005'
     };
 
+
+    datalayerName = "Climate raster"
     ncwms =  new OpenLayers.Layer.WMS(
-        "Climate raster",
+        datalayerName,
         ncwms_url,
         params,
         {
@@ -61,6 +64,13 @@ function init_prism_map() {
     map.addControl(slider);
     addLoadingIcon(ncwms);
     map.zoomToExtent(new OpenLayers.Bounds(-236114,41654.75,2204236,1947346.25), true);
+
+    map.getClimateLayer = function() {
+        return map.getLayersByName(datalayerName)[0];
+    }
+    map.getSelectionLayer = function() {
+        return map.getLayersByName(selLayerName)[0];
+    }
 
     return map
 };

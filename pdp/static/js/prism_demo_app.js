@@ -1,4 +1,4 @@
-// Globals current_dataset, selectionLayer, ncwmsCapabilities
+// Globals current_dataset, ncwmsCapabilities
 
 $(document).ready(function() {
     ensemble_name = 'bc_prism_demo';
@@ -9,7 +9,8 @@ $(document).ready(function() {
     var selector = document.getElementById("pdp-controls").appendChild(getPRISMControls(ensemble_name));
     var downloader = document.getElementById("pdp-controls").appendChild(getPRISMDownloadOptions());
 
-    ncwms_layer = map.getLayersByName('Climate raster')[0];
+    ncwmsLayer = map.getClimateLayer();
+    selectionLayer = map.getSelectionLayer();
 
     $("#download-timeseries").click(function(){
         type = $('select[name="data-format"]').val()

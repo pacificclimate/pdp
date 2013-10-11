@@ -2,10 +2,8 @@
 // NOTE: variables 'gs_url' is expected to be set before this is call
 // Do this in the sourcing html
 
-var selectionLayer;
 var current_dataset;
 var ncwmsCapabilities;
-var selectionBbox;
 
 function init_raster_map() {
 
@@ -14,7 +12,8 @@ function init_raster_map() {
 
     // Map Controls
     mapControls = getBasicControls();
-    selectionLayer = getBoxLayer();
+    selLayerName = "Box Selection";
+    selectionLayer = getBoxLayer(selLayerName);
     panelControls = getEditingToolbar([getHandNav(), getBoxEditor(selectionLayer)]);
     mapControls.push(panelControls);
 
@@ -46,8 +45,9 @@ function init_raster_map() {
         srs: 'EPSG:4326'
     };
 
+    datalayerName = "Climate raster"
     ncwms =  new OpenLayers.Layer.WMS(
-        "Climate raster",
+        datalayerName,
 		ncwms_url,
 		params,
 		{
@@ -78,6 +78,13 @@ function init_raster_map() {
     map.addControl(slider);
     addLoadingIcon(ncwms);
     map.zoomToMaxExtent();
+
+    map.getClimateLayer = function() {
+        return map.getLayersByName(datalayerName)[0];
+    }
+    map.getSelectionLayer = function() {
+        return map.getLayersByName(selLayerName)[0];
+    }
 
     return map
 };
