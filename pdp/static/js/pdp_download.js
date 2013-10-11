@@ -32,3 +32,13 @@ function createDownloadButtons(id, divClass, buttons) {
     });
     return downloadDiv;
 }
+
+function getCatalog(callback) {
+    $.ajax({'url': app_root + '/data/' + ensemble_name + '/catalog.json',
+        'type': 'GET',
+        'dataType': 'json',
+        'success': function(data, textStatus, jqXHR) {
+            callback(data);
+        }
+    });
+}

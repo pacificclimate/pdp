@@ -10,25 +10,18 @@ function getRasterDownloadOptions() {
     var frag = document.createDocumentFragment();
     var downloadForm = frag.appendChild(createForm("download-form", "download-form", "get"));
     var downloadFieldset = downloadForm.appendChild(createFieldset("downloadset", "Download Data"));
+    downloadFieldset.appendChild(getDateRange());
     downloadFieldset.appendChild(createRasterFormatOptions());
     downloadFieldset.appendChild(createDownloadButtons('download-buttons', 'download-buttons', {'download-timeseries': 'Timeseries' }));
     return frag;
 }
 
 function download(extension, map, selection_layer, ncwms_layer) {
-
-    $.ajax({'url': app_root + '/data/' + ensemble_name + '/catalog.json',
-        'type': 'GET',
-        'dataType': 'json',
-        'success': function(data, textStatus, jqXHR) {
-            catalog = data;
-        }}
-    );
     
     var callPydapDownloadUrl = function (raster_index_bounds) {
         var id = ncwms_layer.params.LAYERS.split('/')[0]; // strip the variable to get the id
         var variable = ncwms_layer.params.LAYERS.split('/')[1];
-        var url = catalog[id] + '.' + extension + '?' + variable + '[0][' + 
+        var url = catalog[id] + '.' + extension + '?' + variable + '[0:100][' + 
             raster_index_bounds.bottom + ':' + 
             raster_index_bounds.top + '][' + 
             raster_index_bounds.left + ':' + 
@@ -45,6 +38,10 @@ function download(extension, map, selection_layer, ncwms_layer) {
         alert("I'm still trying to determine the geographic bounds of the selected layer.  Try again in a few seconds.");
         return;
     };
+    if (catalog == undefined) {
+        alert("I'm still trying determine what information is available for this layer.  Try again in a few seconds");
+        return;
+    };
     if (selection_layer.features[0].geometry.getArea() == 0) {
         alert("Selection area must be of non-zero area (i.e. have extent)");
         return;
@@ -57,6 +54,7 @@ function download(extension, map, selection_layer, ncwms_layer) {
         alert('Selection area must intersect the raster area');
         return;
     }
-    console.log('progressing to download');
-    rasterBBoxToIndicies(map, ncwms_layer, intersection(raster_bnds, selection_bnds), raster_proj, extension, callPydapDownloadUrl);
+    rasterBBoxToIndicies(map, ncwms_layer, 
+        intersection(raster_bnds, selection_bnds), 
+        raster_proj, extension, callPydapDownloadUrl);
 }
