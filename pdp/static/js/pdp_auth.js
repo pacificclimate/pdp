@@ -207,7 +207,12 @@ function getLoginForm(providers) {
 			"Once signed in, you will be returned to the data portal. " + 
 			"PCIC uses OpenID to allow us to communicate with users via e-mail. " + 
 			"If you don't have an OpenID account, click \"Sign up\"." + 
-			"For information about OpenID click <a href=\"http://openid.net/get-an-openid/what-is-openid/\">here</a>"));
+			"For information about OpenID click "));
+		var a = document.createElement("a");
+		linkText = document.createTextNode("here");
+		a.appendChild(linkText);
+		a.href = "http://openid.net/get-an-openid/what-is-openid/";
+		p.appendChild(a);
 		return fieldset;
 	}
 
