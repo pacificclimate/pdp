@@ -40,6 +40,7 @@ function init_raster_map() {
         layers: defaults.dataset + "/" + defaults.variable,
         transparent: 'true',
         styles: '',
+        // colorscalerange: 'auto', //FIXME: after layer update, set colorscalerange based on map extent
         numcolorbands: 254,
         version: '1.1.1',
         srs: 'EPSG:4326'
