@@ -34,7 +34,7 @@ function createDownloadButtons(id, divClass, buttons) {
 }
 
 function getCatalog(callback) {
-    $.ajax({'url': app_root + '/data/' + ensemble_name + '/catalog.json',
+    $.ajax({'url': app_root + '/' + ensemble_name + '/catalog/' + 'catalog.json',
         'type': 'GET',
         'dataType': 'json',
         'success': function(data, textStatus, jqXHR) {
