@@ -1,8 +1,6 @@
-// Globals current_dataset, ncwmsCapabilities
+// Globals ensemble_name, current_dataset, ncwmsCapabilities
 
 $(document).ready(function() {
-    ensemble_name = 'bc_prism_demo';
-
     map = init_prism_map();
     loginButton = init_login('login-div');
     checkLogin(loginButton);

@@ -28,7 +28,7 @@ def updateConfig(d1, d2):
             res[k] = d1[k] + d2[k]
         else: # overwrite or add anything else
             res[k] = v
-            return res
+    return res
 
 here = os.getcwd()
 
@@ -64,6 +64,7 @@ global_config = {
     'geoserver_url': 'http://medusa.pcic.uvic.ca/geoserver/',
     'ncwms_url': 'http://medusa.pcic.uvic.ca/ncWMS/wms',
     'tilecache_url': 'http://medusa.pcic.uvic.ca/tilecache/tilecache.py',
+    'ensemble_name': '',
     'templates': os.path.join(here, 'pdp', 'templates'),
     'session_dir': mkdtemp(),
     'version': get_distribution('pdp').version
@@ -83,6 +84,7 @@ pcds_config = {
 
 canada_ex_config = {
     'title': 'Canadian Climate Coverage (DEV)',
+    'ensemble_name': 'bcsd_downscale_canada',
     'js_files' : [
         'js/pdp_auth.js',
         'js/pdp_raster_map.js',
@@ -94,6 +96,7 @@ canada_ex_config = {
 
 bc_prism_config = {
     'title': 'BC PRISM Raster Portal (DEVELOPMENT)',
+    'ensemble_name': 'bc_prism_demo',
     'js_files' : [
         'js/pdp_auth.js',
         'js/pdp_raster_map.js',
@@ -164,7 +167,7 @@ class PathDispatcher(object):
 
 servers = {}
 catalogs = {}
-for ensemble_name in ['canada_map', 'bc_prism_demo']:
+for ensemble_name in ['bcsd_downscale_canada', 'bc_prism_demo']:
     conf = db_raster_configurator("Download Data", 0.1, 0, ensemble_name, 
         root_url=global_config['app_root'].rstrip('/') +
             '/data/' + ensemble_name + '/'
