@@ -15,7 +15,7 @@ from webob.request import Request
 @pytest.fixture(scope="function")
 def raster_pydap():
     from pdp import servers
-    return servers['canada_map']
+    return servers['bcsd_downscale_canada']
 
 @pytest.fixture(scope="module")
 def pcic_data_portal():
