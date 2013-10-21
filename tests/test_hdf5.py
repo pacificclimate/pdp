@@ -45,28 +45,28 @@ def test_dds_response(pcic_data_portal, authorized_session_id):
     Float64 lon[lon = 1068];
     Grid {
         Array:
-            Int16 pr[time = 55115][lat = 510][lon = 1068];
+            Int16 pr[time = 55152][lat = 510][lon = 1068];
         Maps:
-            Float64 time[time = 55115];
+            Float64 time[time = 55152];
             Float64 lat[lat = 510];
             Float64 lon[lon = 1068];
     } pr;
     Grid {
         Array:
-            Int16 tasmax[time = 55115][lat = 510][lon = 1068];
+            Int16 tasmax[time = 55152][lat = 510][lon = 1068];
         Maps:
-            Float64 time[time = 55115];
+            Float64 time[time = 55152];
             Float64 lat[lat = 510];
             Float64 lon[lon = 1068];
     } tasmax;
     Grid {
         Array:
-            Int16 tasmin[time = 55115][lat = 510][lon = 1068];
+            Int16 tasmin[time = 55152][lat = 510][lon = 1068];
         Maps:
-            Float64 time[time = 55115];
+            Float64 time[time = 55152];
             Float64 lat[lat = 510];
             Float64 lon[lon = 1068];
     } tasmin;
-    Float64 time[time = 55115];
-} pr%2Btasmax%2Btasmin_day_CI%2BANUSPLIN300%2BCanESM2_historical%2Brcp45_r1i1p1_19500101-21001231%2Eh5;
+    Float64 time[time = 55152];
+} pr%2Btasmax%2Btasmin_day_BCSD%2BANUSPLIN300%2BCCSM4_historical%2Brcp26_r2i1p1_19500101-21001231%2Eh5;
 '''
