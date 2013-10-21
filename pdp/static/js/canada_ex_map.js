@@ -30,10 +30,9 @@ function init_raster_map() {
         }
     );
 
-   
     defaults = {
-        dataset: "pr-tasmax-tasmin_day_BCCA-ANUSPLIN300-CCSM4_historical-rcp45_r2i1p1_19500101-21001231",
-        variable: "tasmin"
+        dataset: "pr-tasmax-tasmin_day_ANUSPLIN300_observation_v20130130_19500101-20101231",
+        variable: "tasmax"
     }
     
     params = {
