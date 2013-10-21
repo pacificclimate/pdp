@@ -17,6 +17,49 @@ function getNCWMSLayerCapabilities(ncwms_layer) {
     );
 };
 
+function autoScale(map, newVariable) {
+    var dataBounds;
+
+    if (newVariable) {
+        // We use the bounding box of the whole layer
+        dataBounds = bbox[0] + ',' + bbox[1] + ',' + bbox[2] + ',' + bbox[3];
+    } else {
+        // Use the intersection of the viewport and the layer's bounding box
+        dataBounds = getIntersectionBBOX();
+    }
+    getMinMax(activeLayer.server, {
+        callback: gotMinMax,
+        layerName: activeLayer.id,
+        bbox: dataBounds,
+        crs: map.baseLayer.projection.toString() // (projection is a Projection object)
+        // time: isoTValue
+    });
+}
+
+function getMinMax(url, params) {
+    makeAjaxRequest(url, {
+        urlparams: {
+            item: 'minmax',
+            layers: params.layerName,
+            bbox: params.bbox,
+            elevation: params.elevation,
+            time: params.time,
+            srs: params.crs,
+            width: 50, // Request only a small box to save extracting lots of data
+            height: 50,
+            version: '1.1.1'
+        },
+        onSuccess: params.callback
+    });
+}
+
+function gotMinMax(minmax)
+{
+    $('scaleMin').value = minmax.min.toPrecision(4);
+    $('scaleMax').value = minmax.max.toPrecision(4);
+    validateScale(); // This calls updateMap()
+}
+
 function setTimeAvailable(capabilities, layer) {
     //TODO: only present times available in ncwms capabilities for this layer
     
