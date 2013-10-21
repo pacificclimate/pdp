@@ -1,17 +1,17 @@
-function getNCWMSLayerCapabilities(ncwms_url, layer) {
+function getNCWMSLayerCapabilities(ncwms_layer) {
     OpenLayers.Request.GET(
         {
-            url: ncwms_url,
+            url: ncwms_layer.url,
             params: {
                 REQUEST: "GetCapabilities",
                 SERVICE: "WMS",
                 VERSION: "1.1.1",
-                DATASET: layer
+                DATASET: ncwms_layer.params.LAYERS.split('/')[0]
             },
             callback: function(response) {
                 var xmldoc = $.parseXML(response.responseText);
                 ncwmsCapabilities = $(xmldoc); // must be a global var
-                setTimeAvailable(ncwmsCapabilities, layer);
+                getTimeAvailable(ncwms_layer);
             }
         }
     );
@@ -36,6 +36,23 @@ function setTimeAvailable(capabilities, layer) {
     $(".datepickerstart").datepicker('setDate', begin);
     $(".datepickerend").datepicker('setDate', end);
 };
+
+function getTimeAvailable(ncwms_layer, callback) {
+    maxTime = false;
+    var id = ncwms_layer.params.LAYERS.split('/')[0];
+    var url = (catalog[id] + '.dds?time').replace("/data/", "/catalog/");
+    console.log(url);
+    $.ajax({'url': url,
+        'type': 'GET',
+        'success': function(data, textStatus, jqXHR) {
+            var n = data.match(/\[time.*]/g)[0].match(/\d+/)[0];
+            maxTime = parseInt(n);
+            if (callback) {
+                callback(maxTime);
+            };
+        }
+    });
+}
 
 function intersection(b1, b2) {
     // take the intersection of two OpenLayers.Bounds
