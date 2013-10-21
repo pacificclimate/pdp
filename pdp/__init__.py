@@ -36,7 +36,7 @@ dsn = 'postgresql://pcic_meta@monsoon.pcic/pcic_meta'
 pcds_dsn = 'postgresql://httpd@monsoon.pcic/crmp'
 
 global_config = {
-    'app_root': 'http://medusa.pcic.uvic.ca/basil_crmp',
+    'app_root': 'http://medusa.pcic.uvic.ca/dataportal',
     'title': "CRMP Network Data",
     'css_files': [
         'css/jquery-ui-1.10.2.custom.css',
@@ -59,7 +59,8 @@ global_config = {
         'js/pdp_controls.js',
         'js/pdp_download.js',
         'js/pdp_filters.js',
-        'js/pdp_map.js'
+        'js/pdp_map.js',
+        'js/pdp_auth.js'
         ],
     'geoserver_url': 'http://medusa.pcic.uvic.ca/geoserver/',
     'ncwms_url': 'http://medusa.pcic.uvic.ca/ncWMS/wms',
@@ -83,10 +84,9 @@ pcds_config = {
     }
 
 canada_ex_config = {
-    'title': 'Canadian Climate Coverage (DEV)',
+    'title': 'Canadian Climate Coverage (BETA)',
     'ensemble_name': 'bcsd_downscale_canada',
     'js_files' : [
-        'js/pdp_auth.js',
         'js/pdp_raster_map.js',
         'js/canada_ex_map.js',
         'js/canada_ex_controls.js',
@@ -95,10 +95,9 @@ canada_ex_config = {
     }
 
 bc_prism_config = {
-    'title': 'BC PRISM Raster Portal (DEVELOPMENT)',
+    'title': 'BC PRISM Raster Portal (BETA)',
     'ensemble_name': 'bc_prism_demo',
     'js_files' : [
-        'js/pdp_auth.js',
         'js/pdp_raster_map.js',
         'js/prism_demo_map.js',
         'js/prism_demo_controls.js',
