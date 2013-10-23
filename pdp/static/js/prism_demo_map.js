@@ -21,13 +21,14 @@ function init_prism_map() {
     map = new OpenLayers.Map('pdp-map', options);
     
     defaults = {
-        dataset: "bcprism_tmin_review_01",
+        dataset: "bcprism_tmin_7100",
         variable: "tmin"
     }
     
     params = {
         layers: defaults.dataset + "/" + defaults.variable,
         transparent: 'true',
+        time: '1985-06-30',
         styles: '',
         numcolorbands: 254,
         version: '1.1.1',

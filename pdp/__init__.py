@@ -96,7 +96,7 @@ canada_ex_config = {
 
 bc_prism_config = {
     'title': 'BC PRISM Raster Portal (BETA)',
-    'ensemble_name': 'bc_prism_demo',
+    'ensemble_name': 'bc_prism',
     'js_files' : [
         'js/pdp_raster_map.js',
         'js/prism_demo_map.js',
@@ -166,7 +166,7 @@ class PathDispatcher(object):
 
 servers = {}
 catalogs = {}
-for ensemble_name in ['bcsd_downscale_canada', 'bc_prism_demo']:
+for ensemble_name in ['bcsd_downscale_canada', 'bc_prism']:
     conf = db_raster_configurator("Download Data", 0.1, 0, ensemble_name, 
         root_url=global_config['app_root'].rstrip('/') + '/' + 
             ensemble_name + '/data/'
@@ -176,10 +176,10 @@ for ensemble_name in ['bcsd_downscale_canada', 'bc_prism_demo']:
 
 lister = EnsembleMemberLister(dsn)
 
-bc_prism = PathDispatcher('/bc_prism_demo', [
+bc_prism = PathDispatcher('/bc_prism', [
     ('^/map/.*$', bc_prism_map),
-    ('^/catalog/.*$', catalogs['bc_prism_demo']),
-    ('^/data/.*$', servers['bc_prism_demo'])
+    ('^/catalog/.*$', catalogs['bc_prism']),
+    ('^/data/.*$', servers['bc_prism'])
     ])
 
 bcsd_canada = PathDispatcher('/bcsd_downscale_canada', [
@@ -203,7 +203,7 @@ main = PathDispatcher('', [
     ('^/images/legend/.*\.png$', legend_app),
     ('^/check_auth_app/?$', check_auth),
     ('^/pcds_map/.*$', pcds_map),
-    ('^/bc_prism_demo/.*$', bc_prism),
+    ('^/bc_prism/.*$', bc_prism),
     ('^/bcsd_downscale_canada/.*$', bcsd_canada),
     ('^/auth.*$', auth),
     ('^/apps/.*$', apps),
