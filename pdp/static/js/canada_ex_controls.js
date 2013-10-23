@@ -19,9 +19,14 @@ function getRasterDownloadOptions() {
 function download(extension, map, selection_layer, ncwms_layer) {
     
     var callPydapDownloadUrl = function (raster_index_bounds) {
+        if (raster_index_bounds.toGeometry().getArea() == 0) {
+            alert("Cannot resolve selection to data grid. Please zoom in select closer to the data region.");
+            return;
+        }
         var id = ncwms_layer.params.LAYERS.split('/')[0]; // strip the variable to get the id
         var variable = ncwms_layer.params.LAYERS.split('/')[1];
-        var url = catalog[id] + '.' + extension + '?' + variable + '[0:' + (maxTime - 1) + '][' + 
+        var url = catalog[id] + '.' + extension + '?' + variable + 
+            '[0:' + (maxTime - 1) + '][' + 
             raster_index_bounds.bottom + ':' + 
             raster_index_bounds.top + '][' + 
             raster_index_bounds.left + ':' + 
