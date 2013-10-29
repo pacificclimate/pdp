@@ -25,7 +25,7 @@ function download(extension, map, selection_layer, ncwms_layer) {
         var id = ncwms_layer.params.LAYERS.split('/')[0]; // strip the variable to get the id
         var variable = ncwms_layer.params.LAYERS.split('/')[1];
         var url = catalog[id] + '.' + extension + '?' + variable + 
-            '[0:' + (maxTime - 1) + '][' + 
+            '[0:12][' + 
             raster_index_bounds.bottom + ':' + 
             raster_index_bounds.top + '][' + 
             raster_index_bounds.left + ':' + 
@@ -42,7 +42,7 @@ function download(extension, map, selection_layer, ncwms_layer) {
         alert("I'm still trying to determine the geographic bounds of the selected layer.  Try again in a few seconds.");
         return;
     };
-    if (catalog == undefined || !maxTime) {
+    if (catalog == undefined) {
         alert("I'm still trying determine what information is available for this layer.  Try again in a few seconds");
         return;
     };
