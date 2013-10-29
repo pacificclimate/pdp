@@ -63,7 +63,6 @@ function init_raster_map() {
 	);
 
     $('#map-title').text(params.layers);
-    getNCWMSLayerCapabilities(ncwms); // async save into global var ncwmsCapabilities
     current_dataset = params.layers;
 
     map.addLayers(

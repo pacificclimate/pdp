@@ -1,3 +1,77 @@
+function cfTime(units, sDate) {
+    this.units = units;
+    this.sDate = sDate;
+}
+cfTime.prototype.setMaxTimeByIndex = function(index) {
+    this.maxIndex =  index;
+    this.eDate = this.toDate(index);
+    return this.eDate;
+}
+cfTime.prototype.toDate = function(index) {
+    if (typeof(index) == "undefined") {
+        return this.sDate;
+    }
+    if (this.units == "days") {
+        var d = new Date(this.sDate.getTime());
+        d.setDate(this.sDate.getDate() + index);
+        return d;
+    }
+}
+cfTime.prototype.toIndex = function(d) {
+    if (d < this.sDate || (this.eDate && this.eDate < d)) {
+        console.error("Invalid Date");
+        return;
+    }
+
+    if (this.units == "days") {
+        var msPerDay = 1000 * 60 * 60 * 24;
+        var msDiff = d.getTime() - this.sDate.getTime();
+        var days = msDiff / msPerDay;
+        return days;
+    }
+}
+
+function processNcwmsLayerMetadata(ncwms_layer) {
+    getNCWMSLayerCapabilities(ncwms_layer);
+
+    var layerUrl = catalog[getNcwmsLayerId(ncwms_layer)]
+    // Request time variables
+    maxTimeReq = $.ajax({
+        'url': (layerUrl + '.dds?time').replace("/data/", "/catalog/")
+    });
+
+    unitsSinceReq = $.ajax({
+        'url': (layerUrl + '.das').replace("/data/", "/catalog/")
+    });
+
+    // Process times when both returned
+    $.when(maxTimeReq, unitsSinceReq).done (function(maxTime, unitsSince) {
+        var maxTimeIndex = ddsToTimeIndex(maxTime[0]);
+        var unitsSince = dasToUnitsSince(unitsSince[0]);
+        var units = unitsSince[0];
+        var startDate = unitsSince[1];
+        var layerTime = new cfTime(units, startDate);
+        layerTime.setMaxTimeByIndex(maxTimeIndex);
+        ncwms_layer.times = layerTime; // Future access through ncwmslayer?
+        setTimeAvailable(layerTime.sDate, layerTime.eDate);
+    });
+}
+
+function getNcwmsLayerId(ncwms_layer) {
+    return ncwms_layer.params.LAYERS.split('/')[0];
+}
+
+function ddsToTimeIndex(data) {
+    return parseInt(data.match(/\[time.*]/g)[0].match(/\d+/)[0]);
+}
+
+function dasToUnitsSince(data) {
+    var s = data.match(/time \{[\s\S]*?\}/gm)[0];
+    var reg = /\"(.*?) since (.*?)\"/g;
+    var m = reg.exec(s);
+    return [m[1], new Date(m[2])];
+}
+
 function getNCWMSLayerCapabilities(ncwms_layer) {
     OpenLayers.Request.GET(
         {
@@ -11,7 +85,6 @@ function getNCWMSLayerCapabilities(ncwms_layer) {
             callback: function(response) {
                 var xmldoc = $.parseXML(response.responseText);
                 ncwmsCapabilities = $(xmldoc); // must be a global var
-                getTimeAvailable(ncwms_layer);
             }
         }
     );
@@ -60,40 +133,45 @@ function gotMinMax(minmax)
     validateScale(); // This calls updateMap()
 }
 
-function setTimeAvailable(capabilities, layer) {
+function setTimeAvailable(begin, end) {
     //TODO: only present times available in ncwms capabilities for this layer
     
-    // var stuff = ncwmsCapabilities.find('Layer > Name:contains("' + layer + '")').parent();
-    // var date_range = $.trim(stuff.find('Extent[name="time"]').text()).split('/');
-    // var begin = date_range[0].split('T', 1)[0].replace(/-/g, '/');
-    // var end = date_range[1].split('T', 1)[0].replace(/-/g, '/');
-
-    var begin = '1950/01/01';
-    var end = '2050/12/31';
     $.each([".datepickerstart", ".datepickerend"], function(idx, val) {
         $(val).datepicker('option', 'minDate', begin);
         $(val).datepicker('option', 'maxDate', end);
-        $(val).datepicker('option', 'yearRange', begin.split('/')[0] + ":" + end.split('/')[0]);
+        $(val).datepicker('option', 'yearRange', begin.getFullYear() + ":" + end.getFullYear());
     });
     $(".datepicker").datepicker('setDate', begin);
     $(".datepickerstart").datepicker('setDate', begin);
     $(".datepickerend").datepicker('setDate', end);
 };
 
-function getTimeAvailable(ncwms_layer, callback) {
-    maxTime = false;
-    var id = ncwms_layer.params.LAYERS.split('/')[0];
-    var url = (catalog[id] + '.dds?time').replace("/data/", "/catalog/");
-    console.log(url);
-    $.ajax({'url': url,
-        'type': 'GET',
-        'success': function(data, textStatus, jqXHR) {
-            var n = data.match(/\[time.*]/g)[0].match(/\d+/)[0];
-            maxTime = parseInt(n);
-            if (callback) {
-                callback(maxTime);
-            };
-        }
+function getMaxTimeIndex(ncwms_layer, callback) {
+    var url = (catalog[getNcwmsLayerId(ncwms_layer)] + '.dds?time').replace("/data/", "/catalog/");
+    $.ajax({
+        'url': url
+    }).done(function(data) {
+        var n = data.match(/\[time.*]/g)[0].match(/\d+/)[0];
+        if (callback) {
+            callback(parseInt(n));
+        };
+    });
+}
+
+function getTimeUnits(ncwms_layer, callback) {
+    // Based on the DAS, executes a callback with the parsed time units.
+    // Relies upon time varialbe of dataset to be stored in variable 'time' and 
+    // using units "(timeinterval) since (date)"
+    var url = (catalog[catalog[getNcwmsLayerId(ncwms_layer)]] + '.das').replace("/data/", "/catalog/");
+    $.ajax({
+        'url': url
+    }).done(function(data) {
+        var s = data.match(/time \{[\s\S]*?\}/gm)[0];
+        var reg = /\"(.*?) since (.*?)\"/g;
+        var match = reg.exec(s);
+        if (callback) {
+            callback([match[1]], Date(match[2]));
+        };
     });
 }
 
@@ -124,13 +202,13 @@ function getRasterBbox(capabilities, layer_name) {
     return real_bounds;
 };
 
-function timeIndicies() {
+function getTimeSelected() {
     var base = new Date($(".datepickerstart").datepicker('option', 'minDate'));
     var t0 = $(".datepickerstart").datepicker('getDate');
     var tn = $(".datepickerend").datepicker('getDate');
     var t0i = (t0 - base) / 1000 / 3600 / 24; // Date values are in milliseconds since the epoch
     var tni = (tn - base) / 1000 / 3600 / 24; // Date values are in milliseconds since the epoch
-    return [t0i, tni];
+    return [t0i, Math.ceil(tni)]; //Ceiling to work around DST
 };
 
 function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension, callback) {

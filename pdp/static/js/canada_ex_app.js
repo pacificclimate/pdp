@@ -5,13 +5,18 @@ $(document).ready(function() {
     loginButton = init_login('login-div');
     checkLogin(loginButton);
 
-    getCatalog(function (data) { catalog = data});
+    var ncwmsLayer = map.getClimateLayer();
+    var selectionLayer = map.getSelectionLayer();
+
+    var catalogUrl = app_root + '/' + ensemble_name + '/catalog/catalog.json';
+    var request = $.ajax(catalogUrl, { dataType: 'json'} );
+    var chained = request.then(function(data) {
+        catalog = data;
+        processNcwmsLayerMetadata(ncwmsLayer);
+    });
 
     var selector = document.getElementById("pdp-controls").appendChild(getRasterControls(ensemble_name));
     var downloader = document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions());
-
-    ncwmsLayer = map.getClimateLayer();
-    selectionLayer = map.getSelectionLayer();
 
     function callDownload() {
         download(type, map, selectionLayer, ncwmsLayer);
