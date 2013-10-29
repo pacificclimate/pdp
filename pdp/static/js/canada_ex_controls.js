@@ -17,15 +17,16 @@ function getRasterDownloadOptions() {
 }
 
 function download(extension, map, selection_layer, ncwms_layer) {
-    
+
+    var times = getTimeSelected();
+    start = times[0];
+    end = times[1];
+
     var callPydapDownloadUrl = function (raster_index_bounds) {
         if (raster_index_bounds.toGeometry().getArea() == 0) {
             alert("Cannot resolve selection to data grid. Please zoom in select closer to the data region.");
             return;
         }
-        var times = getTimeSelected();
-        start = times[0];
-        end = times[1];
         var id = ncwms_layer.params.LAYERS.split('/')[0]; // strip the variable to get the id
         var variable = ncwms_layer.params.LAYERS.split('/')[1];
         var url = catalog[id] + '.' + extension + 
@@ -55,6 +56,10 @@ function download(extension, map, selection_layer, ncwms_layer) {
         alert("Selection area must be of non-zero area (i.e. have extent)");
         return;
     };
+    if (start > end) {
+        alert("End date is more recent than start date, please select an appropriate minimum and maximum date");
+        return;
+    }
     var raster_proj = getRasterNativeProj(ncwmsCapabilities, current_dataset);
     var raster_bnds = getRasterBbox(ncwmsCapabilities, current_dataset);
     var selection_bnds = selection_layer.features[0].geometry.bounds.clone().
