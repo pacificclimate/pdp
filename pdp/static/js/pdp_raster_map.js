@@ -69,7 +69,14 @@ function dasToUnitsSince(data) {
     var s = data.match(/time \{[\s\S]*?\}/gm)[0];
     var reg = /\"(.*?) since (.*?)\"/g;
     var m = reg.exec(s);
-    return [m[1], new Date(m[2])];
+    var units = m[1];
+    var dateString = m[2];
+    
+    var reg = /(\d{4})-(\d{2}|\d)-(\d{2}|\d)( |T)(\d{2}|\d):(\d{2}|\d):(\d{2}|\d)/g;
+    var m = reg.exec(dateString);
+    for (var i in units) { m[i] = +m[i] }
+    var sDate = new Date(m[1], m[2], m[3], m[5], m[6], m[7], 0)
+    return [units, sDate];
 }
 
 function getNCWMSLayerCapabilities(ncwms_layer) {
