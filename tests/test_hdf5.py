@@ -27,7 +27,7 @@ def test_hdf5_to_netcdf(raster_pydap, authorized_session_id):
     os.remove(f.name)
 
 def test_prism_response(pcic_data_portal, authorized_session_id):
-    req = Request.blank('/bc_prism_demo/data/bc_tmax_review_07.nc.html')
+    req = Request.blank('/bc_prism/data/bc_tmax_7100.nc.html')
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'

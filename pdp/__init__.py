@@ -9,6 +9,7 @@ from genshi.core import Markup
 import static
 from beaker.middleware import SessionMiddleware
 
+from pdp_util import session_scope
 from pdp_util.auth import PcicOidMiddleware, check_authorized_return_email
 from pdp_util.map import MapApp
 from pdp_util.raster import RasterServer, RasterCatalog, db_raster_configurator
@@ -166,13 +167,14 @@ class PathDispatcher(object):
 
 servers = {}
 catalogs = {}
-for ensemble_name in ['bcsd_downscale_canada', 'bc_prism']:
-    conf = db_raster_configurator("Download Data", 0.1, 0, ensemble_name, 
-        root_url=global_config['app_root'].rstrip('/') + '/' + 
-            ensemble_name + '/data/'
-    )
-    servers[ensemble_name] = wrap_auth(RasterServer(conf))
-    catalogs[ensemble_name] = RasterCatalog(conf) #No Auth
+with session_scope(dsn) as sesh:
+    for ensemble_name in ['bcsd_downscale_canada', 'bc_prism']:
+        conf = db_raster_configurator(sesh, "Download Data", 0.1, 0, ensemble_name, 
+            root_url=global_config['app_root'].rstrip('/') + '/' + 
+                ensemble_name + '/data/'
+        )
+        servers[ensemble_name] = wrap_auth(RasterServer(dsn, conf))
+        catalogs[ensemble_name] = RasterCatalog(dsn, conf) #No Auth
 
 lister = EnsembleMemberLister(dsn)
 
