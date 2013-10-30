@@ -1,5 +1,6 @@
 import sys
 from logging import basicConfig, DEBUG
+from argparse import ArgumentParser
 
 from flask import Flask
 
@@ -7,10 +8,15 @@ from pdp import main
 
 if __name__ == '__main__':
 
+    parser = ArgumentParser(description='Start a development pdp:main Flask instance')
+    parser.add_argument('-p', '--port', type=int, required=True,
+                        help='Indicate the port on which to bind the application')
+    args = parser.parse_args()
+    
     basicConfig(format='%(levelname)s:%(asctime)s %(message)s', stream=sys.stdout, level=DEBUG)
 
     host = ''
-    port = 8004
+    port = args.port
 
     app = Flask(__name__)
     app.wsgi_app = main
