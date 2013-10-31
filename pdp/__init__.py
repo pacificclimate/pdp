@@ -13,7 +13,6 @@ from pdp_util import session_scope
 from pdp_util.auth import PcicOidMiddleware, check_authorized_return_email
 from pdp_util.map import MapApp
 from pdp_util.raster import RasterServer, RasterCatalog, db_raster_configurator
-from pdp_util.filter_options import FilterOptions
 from pdp_util.ensemble_members import EnsembleMemberLister
 from pdp_util.counts import CountStationsApp, CountRecordLengthApp
 from pdp_util.legend import LegendApp
