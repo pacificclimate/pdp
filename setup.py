@@ -27,7 +27,7 @@ setup(
     url="http://www.pacificclimate.org/",
     author="James Hiebert",
     author_email="hiebert@uvic.ca",
-    dependency_links = ['{0}/pdp_util@8c419d4e63d0#egg=pdp_util-0.1.4'.format(sw_path),
+    dependency_links = ['{0}/pdp_util@a3992f603fa8#egg=pdp_util-0.1.4'.format(sw_path),
                         '{0}/pydap.handlers.hdf5@113655f4a287#egg=pydap.handlers.hdf5-0.3'.format(sw_path),
                         '{0}/pydap.responses.netcdf@bca24acfb8a0#egg=pydap.responses.netcdf-0.2'.format(sw_path),
                         '{0}/pydap.responses.xls#egg=pydap.responses.xls'.format(sw_path)
