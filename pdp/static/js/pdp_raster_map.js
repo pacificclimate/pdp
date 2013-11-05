@@ -75,7 +75,7 @@ function dasToUnitsSince(data) {
     var reg = /(\d{4})-(\d{2}|\d)-(\d{2}|\d)( |T)(\d{2}|\d):(\d{2}|\d):(\d{2}|\d)/g;
     var m = reg.exec(dateString);
     for (var i in units) { m[i] = +m[i] }
-    var sDate = new Date(m[1], m[2], m[3], m[5], m[6], m[7], 0)
+    var sDate = new Date(m[1], --m[2], m[3], m[5], m[6], m[7], 0) // Account for 0 based month index in js
     return [units, sDate];
 }
 
