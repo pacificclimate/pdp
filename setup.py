@@ -49,7 +49,7 @@ setup(
                      'numpy'
                      ],
     scripts = ['scripts/rast_serve.py'],
-    package_data = {'pdp': ['static', 'templates']},
+    package_data = {'pdp': ['pdp/static', 'pdp/templates']},
     cmdclass = {'test': PyTest},
     zip_safe=True,
         classifiers='''Development Status :: 2 - Pre-Alpha
