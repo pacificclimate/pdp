@@ -132,7 +132,7 @@ legend_app = LegendApp(pcds_dsn)
 
 static_app = static.Cling(resource_filename('pdp', 'static'))
 
-dispatch_app = wrap_auth(PcdsDispatcher(templates=resource_filename('pdp', 'static'),
+dispatch_app = wrap_auth(PcdsDispatcher(templates=resource_filename('pdp_util', 'templates'),
                                         ol_path=None, #global_config['ol_path'],
                                         app_root=global_config['app_root'],
                                         conn_params=pcds_dsn
