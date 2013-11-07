@@ -18,6 +18,7 @@ from pdp_util.counts import CountStationsApp, CountRecordLengthApp
 from pdp_util.legend import LegendApp
 from pdp_util.agg import PcdsZipApp
 from pdp_util.pcds_dispatch import PcdsDispatcher
+from analytics import AnalyticsMiddleware
 
 def updateConfig(d1, d2):
     # standard dict update with the exception of joining lists
@@ -111,7 +112,7 @@ def wrap_auth(app, required=True):
                             templates=resource_filename('pdp_util', 'templates'),
                             root=global_config['app_root'],
                             auth_required=required)
-    return SessionMiddleware(app, auto=1, data_dir=global_config['session_dir'])
+    return app
 
 check_auth = wrap_auth(check_authorized_return_email, required=False)
 
@@ -212,4 +213,8 @@ main = PathDispatcher('', [
     ],
     default=static_app
 )
+
+main = AnalyticsMiddleware(main, 'UA-20166041-3')
+main = SessionMiddleware(main, auto=1, data_dir=global_config['session_dir'])
+
 # main

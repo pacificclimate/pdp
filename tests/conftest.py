@@ -33,9 +33,9 @@ def check_auth_app():
     return check_auth
 
 @pytest.fixture(scope="module")
-def authorized_session_id(check_auth_app):
+def authorized_session_id(check_auth_app, pcic_data_portal):
     # FIXME: I shouldn't have to do this, but the store doesn't get initialized until the first request
-    oid_app = check_auth_app.wrap_app
+    oid_app = check_auth_app
     try:
         oid_app({}, None)
     except:
@@ -51,10 +51,11 @@ def authorized_session_id(check_auth_app):
     oid_app.store.start_login(session, cPickle.dumps((claimed_id, assoc_handle)))
 
     # Simulate the return from the openid provider
-    req = Request.blank('/?openid_return='+session+'&openid.signed=yes')
-    resp = req.get_response(check_auth_app)
+    req = Request.blank('/check_auth_app?openid_return='+session+'&openid.signed=yes')
+    resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
-
+    assert 'Set-cookie' in resp.headers
+    
     m = re.search(r'beaker.session.id=([a-f0-9]+);', resp.headers['Set-cookie'])
     return m.group(1)
 
