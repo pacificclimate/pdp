@@ -19,6 +19,7 @@ from pdp_util.legend import LegendApp
 from pdp_util.agg import PcdsZipApp
 from pdp_util.pcds_dispatch import PcdsDispatcher
 from analytics import AnalyticsMiddleware
+from pdp.error import ErrorMiddleware
 
 def updateConfig(d1, d2):
     # standard dict update with the exception of joining lists
@@ -216,5 +217,6 @@ main = PathDispatcher('', [
 
 main = AnalyticsMiddleware(main, 'UA-20166041-3')
 main = SessionMiddleware(main, auto=1, data_dir=global_config['session_dir'])
+main = ErrorMiddleware(main)
 
 # main
