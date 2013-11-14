@@ -27,7 +27,7 @@ function createDownloadButtons(id, divClass, buttons) {
     var downloadDiv = createDiv(id);
     downloadDiv.className = divClass;
     $.each(buttons, function(idx, val) {
-	   downloadDiv.appendChild(createInputElement("button", undefined, idx, idx, val))
+	   downloadDiv.appendChild(createInputElement("button", undefined, idx, idx, val));
 	   downloadDiv.appendChild(document.createTextNode(" "));
     });
     return downloadDiv;

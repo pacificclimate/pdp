@@ -1,24 +1,25 @@
 //var pcds_map; // global so that it's accessible across documents
 // NOTE: variables 'gs_url' is expected to be set before this is call
 // Do this in the sourcing html
+"use strict";
 
+var ncwms;
 var current_dataset;
-var ncwmsCapabilities;
 
-function init_raster_map() {
+var init_raster_map = function() {
 
     // Map Config
-    options = na4326_map_options();
+    var options = na4326_map_options();
 
     // Map Controls
-    mapControls = getBasicControls();
-    selLayerName = "Box Selection";
-    selectionLayer = getBoxLayer(selLayerName);
-    panelControls = getEditingToolbar([getHandNav(), getBoxEditor(selectionLayer)]);
+    var mapControls = getBasicControls();
+    var selLayerName = "Box Selection";
+    var selectionLayer = getBoxLayer(selLayerName);
+    var panelControls = getEditingToolbar([getHandNav(), getBoxEditor(selectionLayer)]);
     mapControls.push(panelControls);
 
-    options.controls = mapControls
-    map = new OpenLayers.Map('pdp-map', options);
+    options.controls = mapControls;
+    var map = new OpenLayers.Map("pdp-map", options);
 
     var tiles4 = new OpenLayers.Layer.XYZ(
         "N.A. OpenStreetMap",
@@ -26,43 +27,39 @@ function init_raster_map() {
         {
             projection: mapControls.projection,
             zoomOffset: 4,
-            attribution: '© OpenStreetMap contributors'
+            attribution: "© OpenStreetMap contributors"
         }
     );
 
-    defaults = {
+    var defaults = {
         dataset: "pr-tasmax-tasmin_day_ANUSPLIN300_observation_v20130130_19500101-20101231",
         variable: "tasmax"
-    }
+    };
     
-    params = {
+    var params = {
         layers: defaults.dataset + "/" + defaults.variable,
-        transparent: 'true',
-        styles: '',
+        transparent: "true",
+        styles: "",
         // colorscalerange: 'auto', //FIXME: after layer update, set colorscalerange based on map extent
         numcolorbands: 254,
-        version: '1.1.1',
-        srs: 'EPSG:4326'
+        version: "1.1.1",
+        srs: "EPSG:4326"
     };
 
-    datalayerName = "Climate raster"
-    ncwms =  new OpenLayers.Layer.WMS(
+    var datalayerName = "Climate raster";
+    var ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
 		ncwms_url,
 		params,
 		{
             buffer: 1,
             ratio: 1.5,
-            wrapDateLine: true, 
+            wrapDateLine: true,
             opacity: 0.7,
-		    model: 'BCCA+ANUSPLIN300+MPI-ESM-LR',
-		    variable: 'pr',
-		    scenario: 'historical+rcp85',
-		    run:'r3i1p1'
         }
 	);
 
-    $('#map-title').text(params.layers);
+    $("#map-title").text(params.layers);
     current_dataset = params.layers;
 
     map.addLayers(
@@ -73,17 +70,18 @@ function init_raster_map() {
         ]
     );
 
-    slider = getSlider(ncwms);
+    var slider = getSlider(ncwms);
     map.addControl(slider);
     addLoadingIcon(ncwms);
     map.zoomToMaxExtent();
 
     map.getClimateLayer = function() {
         return map.getLayersByName(datalayerName)[0];
-    }
+    };
+
     map.getSelectionLayer = function() {
         return map.getLayersByName(selLayerName)[0];
-    }
+    };
 
-    return map
+    return map;
 };
