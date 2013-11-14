@@ -14,7 +14,7 @@ import xlrd
 import netCDF4
 import numpy as np
 from numpy.testing import assert_almost_equal
-
+from bs4 import BeautifulSoup
 
 @pytest.mark.parametrize('url', ['/', '/pcds_map/', '/js/crmp_map.js', '/css/ie7.css', '/images/banner.png', '/apps/count_stations/'])
 def test_no_404s(pcic_data_portal, url):
@@ -28,6 +28,25 @@ def test_am_authorized(pcic_data_portal, authorized_session_id):
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
 
+@pytest.mark.parametrize(('url', 'title', 'body_strings'), [
+                         ('/auth/pcds/', 'PCDS Data', ["Climatological calculations", "raw/"]),
+                         ('/auth/pcds/raw/', "Participating CRMP Networks", ["FLNRO-WMB/", "Environment Canada (Canadian Daily Climate Data 2007)"]),
+                         ('/auth/pcds/raw/AGRI/', "Stations for network AGRI", ["de107/", "Deep Creek"]),
+                         ]
+)
+def test_climo_index(pcic_data_portal, authorized_session_id, url, title, body_strings):
+    req = Request.blank(url)
+    req.cookies['beaker.session.id'] = authorized_session_id
+    resp = req.get_response(pcic_data_portal)
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'text/html'
+    assert resp.content_length < 0
+
+    soup = BeautifulSoup(resp.body)
+
+    assert title in soup.title.string
+    for string in body_strings:
+        assert string in resp.body
     
 def test_unsupported_extension(pcic_data_portal, authorized_session_id):
     req = Request.blank('/auth/agg/?data-format=foo')
