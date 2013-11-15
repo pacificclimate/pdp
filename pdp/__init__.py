@@ -12,7 +12,6 @@ from beaker.middleware import SessionMiddleware
 from pdp_util import session_scope
 from pdp_util.auth import PcicOidMiddleware, check_authorized_return_email
 from pdp_util.map import MapApp
-from pdp_util.raster import RasterServer, RasterCatalog, db_raster_configurator
 from pdp_util.ensemble_members import EnsembleMemberLister
 from pdp_util.counts import CountStationsApp, CountRecordLengthApp
 from pdp_util.legend import LegendApp
@@ -20,6 +19,7 @@ from pdp_util.agg import PcdsZipApp
 from pdp_util.pcds_dispatch import PcdsDispatcher
 from analytics import AnalyticsMiddleware
 from pdp.error import ErrorMiddleware
+from pdp.dispatch import PathDispatcher
 
 def updateConfig(d1, d2):
     # standard dict update with the exception of joining lists
@@ -73,39 +73,6 @@ global_config = {
     'version': get_distribution('pdp').version
     }
 
-pcds_config = {
-    'title': 'CRMP Network Data',
-    'js_files' : [
-        'js/pdp_vector_map.js',
-        'js/crmp_map.js',
-        'js/crmp_controls.js',
-        'js/crmp_download.js',
-        'js/crmp_filters.js',
-        'js/crmp_app.js'
-        ]
-    }
-
-canada_ex_config = {
-    'title': 'Canadian Climate Coverage (BETA)',
-    'ensemble_name': 'bcsd_downscale_canada',
-    'js_files' : [
-        'js/pdp_raster_map.js',
-        'js/canada_ex_map.js',
-        'js/canada_ex_controls.js',
-        'js/canada_ex_app.js'
-        ]
-    }
-
-bc_prism_config = {
-    'title': 'BC PRISM Raster Portal (BETA)',
-    'ensemble_name': 'bc_prism',
-    'js_files' : [
-        'js/pdp_raster_map.js',
-        'js/prism_demo_map.js',
-        'js/prism_demo_controls.js',
-        'js/prism_demo_app.js'
-        ]
-    }
 
 # auth wrappers
 def wrap_auth(app, required=True):
@@ -117,14 +84,7 @@ def wrap_auth(app, required=True):
 
 check_auth = wrap_auth(check_authorized_return_email, required=False)
 
-pcds_map_config = updateConfig(global_config, pcds_config)
-pcds_map = wrap_auth(MapApp(**pcds_map_config), required=False)
-
-canada_ex_map_config = updateConfig(global_config, canada_ex_config)
-canada_ex_map = wrap_auth(MapApp(**canada_ex_map_config), required=False)
-
-bc_prism_map_config = updateConfig(global_config, bc_prism_config)
-bc_prism_map = wrap_auth(MapApp(**bc_prism_map_config), required=False)
+from portals import pcds_map
 
 zip_app = wrap_auth(PcdsZipApp(pcds_dsn), required=True)
 
@@ -141,55 +101,11 @@ dispatch_app = wrap_auth(PcdsDispatcher(templates=resource_filename('pdp_util', 
                                         ),
                         required=True)
 
-
-class PathDispatcher(object):
-    '''
-    Simple wsgi app to route URL based on regex patterns at the beginning of the path.
-    Consume "path_to" from the PATH_INFO environment variable
-    '''
-    def __init__(self, path_to, urls, default=None):
-        self.path_to = path_to
-        self.urls = urls
-        self.default = default
-
-    def __call__(self, environ, start_response):
-        path = environ['PATH_INFO']
-        for pattern, app in self.urls:
-            m = re.match(pattern, path)
-            if m:
-                shift_path_info(environ)
-                return app(environ, start_response)
-
-        if self.default:
-            return self.default(environ, start_response)
-        else:
-            start_response('404 Not Found', [])
-            return [path, " not found"]
-
-servers = {}
-catalogs = {}
-with session_scope(dsn) as sesh:
-    for ensemble_name in ['bcsd_downscale_canada', 'bc_prism']:
-        conf = db_raster_configurator(sesh, "Download Data", 0.1, 0, ensemble_name, 
-            root_url=global_config['app_root'].rstrip('/') + '/' + 
-                ensemble_name + '/data/'
-        )
-        servers[ensemble_name] = wrap_auth(RasterServer(dsn, conf))
-        catalogs[ensemble_name] = RasterCatalog(dsn, conf) #No Auth
-
 lister = EnsembleMemberLister(dsn)
 
-bc_prism = PathDispatcher('/bc_prism', [
-    ('^/map/.*$', bc_prism_map),
-    ('^/catalog/.*$', catalogs['bc_prism']),
-    ('^/data/.*$', servers['bc_prism'])
-    ])
+from portals import bc_prism
 
-bcsd_canada = PathDispatcher('/bcsd_downscale_canada', [
-    ('^/map/.*$', canada_ex_map),
-    ('^/catalog/.*$', catalogs['bcsd_downscale_canada']),
-    ('^/data/.*$', servers['bcsd_downscale_canada'])
-    ])
+from portals import bcsd_canada
 
 auth = PathDispatcher('/auth', [
     ('^/pcds/.*$', dispatch_app),
