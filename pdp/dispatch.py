@@ -4,10 +4,16 @@ from wsgiref.util import shift_path_info
 class PathDispatcher(object):
     '''
     Simple wsgi app to route URL based on regex patterns at the beginning of the path.
-    Consume "path_to" from the PATH_INFO environment variable
+
+    urls: a dict or list of (path_regex, app) pairs
     '''
-    def __init__(self, path_to, urls, default=None):
-        self.path_to = path_to
+    def __init__(self, urls, default=None):
+        # Allow declaration by dictionary
+        try:
+            urls = list(urls.items())
+        except AttributeError:
+            pass
+
         self.urls = urls
         self.default = default
 
@@ -22,5 +28,5 @@ class PathDispatcher(object):
         if self.default:
             return self.default(environ, start_response)
         else:
-            start_response('404 Not Found', [])
+            start_response('404 Not Found', [('Content-Type', 'text/plain')])
             return [path, " not found"]

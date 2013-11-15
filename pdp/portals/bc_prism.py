@@ -30,8 +30,8 @@ with session_scope(dsn) as sesh:
     data_server = wrap_auth(RasterServer(dsn, conf))
     catalog_server = RasterCatalog(dsn, conf) #No Auth
 
-portal = PathDispatcher('/' + ensemble_name, [
-    ('^/map/.*$', map_app),
+portal = PathDispatcher([
+    ('^/map/?.*$', map_app),
     ('^/catalog/.*$', catalog_server),
     ('^/data/.*$', data_server)
     ])

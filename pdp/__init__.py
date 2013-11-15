@@ -105,18 +105,18 @@ from portals.bc_prism import portal as bc_prism
 
 from portals.bcsd_downscale_canada import portal as bcsd_canada
 
-auth = PathDispatcher('/auth', [
+auth = PathDispatcher([
     ('^/pcds/.*$', dispatch_app),
     # ('^/pydap/.*$', pydap_app),
     ('^/agg/?$', zip_app),
     ])
 
-apps = PathDispatcher('/apps', [
+apps = PathDispatcher([
     ('^/record_length/?$', record_length_app),
     ('^/count_stations/?$', count_stations_app),
     ])    
     
-main = PathDispatcher('', [
+main = PathDispatcher([
     ('^/images/legend/.*\.png$', legend_app),
     ('^/check_auth_app/?$', check_auth),
     ('^/pcds_map/.*$', pcds_map),
