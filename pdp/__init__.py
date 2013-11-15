@@ -99,8 +99,6 @@ dispatch_app = wrap_auth(PcdsDispatcher(templates=resource_filename('pdp_util', 
                                         ),
                         required=True)
 
-lister = EnsembleMemberLister(dsn)
-
 from portals.bc_prism import portal as bc_prism
 
 from portals.bcsd_downscale_canada import portal as bcsd_canada
@@ -123,8 +121,7 @@ main = PathDispatcher([
     ('^/bc_prism/.*$', bc_prism),
     ('^/bcsd_downscale_canada/.*$', bcsd_canada),
     ('^/auth.*$', auth),
-    ('^/apps/.*$', apps),
-    ('^/ensemble_datasets.json.*$', lister)
+    ('^/apps/.*$', apps)
     ],
     default=static_app
 )

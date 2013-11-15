@@ -3,6 +3,7 @@ from pdp.dispatch import PathDispatcher
 from pdp_util import session_scope
 from pdp_util.map import MapApp
 from pdp_util.raster import RasterServer, RasterCatalog, db_raster_configurator
+from pdp_util.ensemble_members import PrismEnsembleLister
 
 from pdp import dsn, global_config, updateConfig
 
@@ -30,8 +31,11 @@ with session_scope(dsn) as sesh:
     data_server = wrap_auth(RasterServer(dsn, conf))
     catalog_server = RasterCatalog(dsn, conf) #No Auth
 
+menu = PrismEnsembleLister(dsn)
+
 portal = PathDispatcher([
     ('^/map/?.*$', map_app),
     ('^/catalog/.*$', catalog_server),
-    ('^/data/.*$', data_server)
+    ('^/data/.*$', data_server),
+    ('^/menu.json.*$', menu)
     ])

@@ -75,7 +75,7 @@ function getRasterAccordionMenu(ensembleName) {
     var divId = "acdnmenu";
     var div = createDiv(divId);
 
-    var url = app_root + '/ensemble_datasets.json?ensemble_name=' + ensembleName
+    var url = app_root + '/' + ensembleName + '/menu.json?ensemble_name=' + ensembleName
     $.ajax(url, {dataType: 'json'}).done(function(data) {
         var menu_tree = generateMenuTree(data);
         menu_tree.attr('id', 'ds-menu');
