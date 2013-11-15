@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 from multiprocessing import Process, current_process, cpu_count
+from logging import basicConfig, DEBUG
 
 from gevent import server
 from gevent.baseserver import _tcp_listener
@@ -142,6 +143,8 @@ if __name__ == '__main__':
                         help='Number of listener processes to spawn.  Use 0 for (cpu_count()*2)+1')
     args = parser.parse_args()
 
+    basicConfig(format='%(levelname)s:%(name)s:%(asctime)s %(message)s', stream=sys.stdout, level=DEBUG)
+
     listener = _tcp_listener(('0.0.0.0', args.port))
     
     def serve_forever(listener):
@@ -154,5 +157,6 @@ if __name__ == '__main__':
 
     for i in range(num_proc):
         Process(target=serve_forever, args=(listener, )).start()
-        
+
+    print 'Starting server on port {}'.format(args.port)
     serve_forever(listener)

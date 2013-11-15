@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+from logging import basicConfig, DEBUG
 
 from gevent import pywsgi
 from gevent.monkey import patch_all; patch_all()
@@ -12,6 +13,8 @@ if __name__ == '__main__':
                         help='Indicate the port on which to bind the application')
     args = parser.parse_args()
 
+    basicConfig(format='%(levelname)s:%(name)s:%(asctime)s %(message)s', stream=sys.stdout, level=DEBUG)
+    
     print 'Starting server on port {}'.format(args.port)
     server = pywsgi.WSGIServer(('0.0.0.0', args.port), main)
     server.serve_forever()

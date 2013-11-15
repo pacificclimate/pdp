@@ -13,7 +13,7 @@ if __name__ == '__main__':
                         help='Indicate the port on which to bind the application')
     args = parser.parse_args()
     
-    basicConfig(format='%(levelname)s:%(asctime)s %(message)s', stream=sys.stdout, level=DEBUG)
+    basicConfig(format='%(levelname)s:%(name)s:%(asctime)s %(message)s', stream=sys.stdout, level=DEBUG)
 
     host = ''
     port = args.port
