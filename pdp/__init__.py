@@ -1,9 +1,7 @@
 import os
-import re
 
 from pkg_resources import resource_filename, get_distribution
 from tempfile import mkdtemp
-from wsgiref.util import shift_path_info
 
 from genshi.core import Markup
 import static
@@ -84,7 +82,7 @@ def wrap_auth(app, required=True):
 
 check_auth = wrap_auth(check_authorized_return_email, required=False)
 
-from portals import pcds_map
+from portals.pcds import map_app as pcds_map
 
 zip_app = wrap_auth(PcdsZipApp(pcds_dsn), required=True)
 
@@ -103,9 +101,9 @@ dispatch_app = wrap_auth(PcdsDispatcher(templates=resource_filename('pdp_util', 
 
 lister = EnsembleMemberLister(dsn)
 
-from portals import bc_prism
+from portals.bc_prism import portal as bc_prism
 
-from portals import bcsd_canada
+from portals.bcsd_downscale_canada import portal as bcsd_canada
 
 auth = PathDispatcher('/auth', [
     ('^/pcds/.*$', dispatch_app),

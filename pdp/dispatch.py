@@ -1,3 +1,6 @@
+import re
+from wsgiref.util import shift_path_info
+
 class PathDispatcher(object):
     '''
     Simple wsgi app to route URL based on regex patterns at the beginning of the path.
