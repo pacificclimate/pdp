@@ -6,14 +6,41 @@ The main goal of the PCIC Data Portal boils down to one simple idea: *give users
 Provincial Climate Data Set Portal
 ----------------------------------
 
+Searching for stations
+^^^^^^^^^^^^^^^^^^^^^^
 
+The primary supported method by which users can search for meteorological stations is by way of the map which takes up most of the screen real estate. The map shows all of the stations which meet the selection criteria in the "Filter Options" fieldset on the right-hand side of the window.
+
+To navigate the map, one can either use the zoom/pan controls in the upper left hand corner of the map, or simply use left-click, drag to pan and the mouse scroll wheel to zoom.
+
+.. figure:: images/nav.png
+
+Note that zooming in to a particular area does not exclude stations which are out of your field of view. To select a spatial subset of stations, one can draw one or more polygons on the map. To do so you must first switch to the polygon selection tool in the upper right hand corner.
+
+.. figure:: images/draw_polygon_on.png
+
+Once in polygon selection mode you can start drawing a polygon by left-clicking on the map. This will add the first vertex and subsequent verticies can be added with further left clicks. To finish the polygon, double-left-click to add your final vertex. After you close your polygon, both the map and the "Selection Information" text box will automatically update.
+
+.. figure:: images/polygon_selection.png
+
+There are several other controls available for further refining the selected stations. A user can select by date range, meteorologic variable, network name, frequency of observations and whether or not the stations have available a 1971-2000 normal period climatology. Selected stations are those which meet *all* of the constraints.
+
+The "Date Range" option will select an stations for which their date range overlaps with the user supplied date range. Note that many PCDS stations *do* have gaps in the data, so this simple range check does not necessarily guarantee that select stations have data within the range.
+
+TO BE CONTINUED
+
+
+
+Getting station info
+^^^^^^^^^^^^^^^^^^^^
+
+Retrieving station data
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Climate Coverage Portals
 ------------------------
 
-The Climate Coverage Portals make available spatiotemporal climate data for a number of PCIC's products such as downscaled climate model output, high resolution climatologies, and hydrologic model output. This bulk data is necessarily very large which presents both opportunities and challenges. A single scenario of BCSD downscaling output (of which there are dozens) requires about 15GB of binary storage (more for ASCII). Subsets can be much smaller, however if you as a user are not prepared for handling many large files such as these, you should consider leveraging PCIC's interpreted products and services or other web tools such as the `Regional Analysis Tool <http://www.pacificclimate.org/tools-and-data/regional-analysis-tool>`_ or `Plan2Adapt <http://www.pacificclimate.org/tools-and-data/plan2adapt>`_.
-
-FIXME: transition here?
+The Climate Coverage Portals make available spatiotemporal climate data for a number of PCIC's products such as downscaled climate model output, high resolution climatologies, and hydrologic model output. This bulk data is necessarily very large which presents both opportunities and challenges. A single scenario of BCSD downscaling output (of which there are dozens) requires about 15GB of binary storage (more for ASCII). Subsets can be much smaller, however if you as a user are not prepared for handling many large files such as these, you should consider leveraging PCIC's interpreted products and services or other web tools such as the `Regional Analysis Tool <http://www.pacificclimate.org/tools-and-data/regional-analysis-tool>`_ or `Plan2Adapt <http://www.pacificclimate.org/tools-and-data/plan2adapt>`_. If you *are* prepared to download, store, and process bulk data, then please read on.
 
 Each page which constitutes a "Climate Coverage Portal" exposes an *ensemble* of data. This ensemble should not be confused with the concept of a climate model ensemble which is used for model intercomparison. In this context an ensemble is simply a set of related files that are published together in the same place. Typically ensemble members have the same spatial domain and a similar purpose and are the result of a single project. For example, all of the Canada-wide BCSD downscaled data is in the same ensemble.
 
@@ -38,7 +65,7 @@ To navigate the map, one can either use the zoom/pan controls in the upper left 
 
 To select a spatial subset for data download, one must first switch to the polygon selection tool in the upper right hand corner.
 
-.. figure:: images/pan_on.png
+.. figure:: images/draw_polygon_on.png
 
 When in spatial subset selection mode, you can select a rectangular area by doing a left-click and drag. When selecting an area on high resolution datasets (e.g. BC PRISM), there is the possibility that the user interface will not resolve from screen resolution to dataset resolution. If this is the case, you will be prompted. The can usually be alleviated by zooming the map to a higher zoom level when performing your selection. To adjust the opacity of the climate overlay, there is an opacity slider in the lower left hand corner.
 
@@ -48,7 +75,7 @@ The map is a standard `OpenLayers <http://openlayers.org/>`_ map, so for more de
 
 To switch back to navigating mode after selecting, you must reselect the hand icon
 
-.. figure:: images/draw_polygon_on.png
+.. figure:: images/pan_on.png
 
 Dataset selection
 ^^^^^^^^^^^^^^^^^
@@ -252,9 +279,6 @@ Note that for this example the temperature values are all packed integer values 
 Frequently Asked Questions
 --------------------------
 
-CF Metadata and what does it mean???
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 Why do I have to login and what is OpenID?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -262,6 +286,18 @@ A user login is required to download data so that we can track usage and gauge t
 
 `OpenID <http://openid.net/get-an-openid/what-is-openid/>`_ allows you to use an existing account to sign in to multiple websites, without needing to create new passwords. For the user, OpenID provides the advantage that you can use a single account to log in to multiple websites.  For PCIC, OpenID provides the advantage that we do not have to maintain identity information and can minimize the personal information that we collect and store.
 
+What is a NetCDF file and how do I use it?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+NetCDF is a format for storing and tranfering multidimensional data and all of its associated metadata. It's designed specifically for handing structured earth science data and climate model output. While PCIC's users occasionally balk at it for not being "user friendly", it's a roughly equivalent time investment for learning how to use it versus figuring out how to parse CSV output and reinstate all of the data structures that get lost in translation.
+
+There is a fairly complete list of `NetCDF software <http://www.unidata.ucar.edu/software/netcdf/software.html>`_ available on Unidata's website. We often use the program `ncview <http://www.unidata.ucar.edu/software/netcdf/software.html#ncview>`_ to examine data. It's old, simple and crashes a bit, but it usually does a fine job of simple visualization on the desktop. There's also the `netcdf_tools <http://www.unidata.ucar.edu/software/netcdf/software.html#netcdf_tools>`_ which are basic command line tools to dump data, look at attributes, etc. For more sophisticated use, we frequently use `GDAL <http://www.unidata.ucar.edu/software/netcdf/software.html#GDAL>`_, and the `Python <http://www.unidata.ucar.edu/software/netcdf/software.html#Python>`_ and `R <http://www.unidata.ucar.edu/software/netcdf/software.html#R>`_ interfaces.
+
+How do I interpret this climate data? (a.k.a, What is CF Metadata?)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you download our data in NetCDF format, you will also receive all of the accompanying metadata. The metadata should comply with international conventions regarding how to describe and interpret climate and forecast data. These conventions are known as the *CF Metadata Conventions*. A full description of the conventions is beyond the scope of this FAQ, but all the details that you could as for can be found `here <http://cf-pcmdi.llnl.gov/>`_.
+ 
 Why can't I download climate model output in Excel?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -271,13 +307,24 @@ Additionally, the size of data which the Excel format can handle is limited comp
 
 To summarize, Excel is not designed for multi-dimensional data making it incovenient and technically impossible.
 
-What is a NetCDF file and how do I use it?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Can I download climate model output in a "GIS-friendly" format?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-NetCDF is a format for storing and tranfering multidimensional data and all of its associated metadata. It's designed specifically for handing structured earth science data and climate model output. While PCIC's users occasionally balk at it for not being "user friendly", it's a roughly equivalent time investment for learning how to use it versus figuring out how to parse CSV output and reinstate all of the data structures that get lost in translation.
+This question is related to the above question about Excel. Like spreadsheets, most (all?) GIS software packages are designed to display data in only two coordinate dimensions (i.e. a map). Suppose that you download daily data for a ten year period, how would your GIS software visualize the resulting 3600 layers? GIS software packages are not designed for this purpose. In general, you're going to need to do additional, needs-specific processing before you can create climate maps with your GIS software.
 
-There is a fairly complete list of `NetCDF software <http://www.unidata.ucar.edu/software/netcdf/software.html>`_ available on Unidata's website. We often use the program `ncview <http://www.unidata.ucar.edu/software/netcdf/software.html#ncview>`_ to examine data. It's old, simple and crashes a bit, but it usually does a fine job of simple visualization on the desktop. There's also the `netcdf_tools <http://www.unidata.ucar.edu/software/netcdf/software.html#netcdf_tools>`_ which are basic command line tools to dump data, look at attributes, etc. For more sophisticated use, we frequently use `GDAL <http://www.unidata.ucar.edu/software/netcdf/software.html#GDAL>`_, and the `Python <http://www.unidata.ucar.edu/software/netcdf/software.html#Python>`_ and `R <http://www.unidata.ucar.edu/software/netcdf/software.html#R>`_ interfaces.
- 
+All that said, if your GIS software can speak WMS and you want to map individual time steps, please review our Power user HOWTO.
+
+When I try to download PRISM data, I'm told that the map "Cannot resolve selection to data grid". Why?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You see something like this?
+
+.. figure:: images/prism_res_too_high.png
+
+This is an interesting problem and it turns out that it's because our PRISM data is actually *too* fine of a resolution. When you're zoomed out on the map, multiple pixels/grid cells of the PRISM raster are actually represented by a single screen pixel. For the web application to request the data subset from the data server, it has to be able to map a screen pixel (i.e. where you click when you select your rectangle) to a data pixel. If there are multiple data pixels per screen pixel (i.e. when you're zoomed out), then it's ambiguous and not determinable. For you to solve this, it *should* be sufficient to just zoom one or two steps. This issue only arises when your selection extends beyond the data area (and only beyond the southern and eastern extent). That's because to do the geographic clipping, the application has to reference yet another coordinate system (geographic). So in that case, the application has to reconcile three different coordinate systems (geographic, screen pixels, and PRISM grid cells) and there's not always enough information to resolve them.
 
 
+Where can I report a bug or request a feature?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Good question. In the future, we will accept bug reports through our `Redmine <http://www.redmine.org/>`_ project management software, but it's not yet ready. For now just `send us an email <mailto:climate@pacificclimate.org>`_, and please try to follow guidelines for `writing *effective* bug reports <http://www.chiark.greenend.org.uk/~sgtatham/bugs.html>`_.

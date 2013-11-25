@@ -3,10 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Developer Documentation for the PCIC Data Portal
+Documentation for the PCIC Data Portal
 ==========================================
 
-Contents:
+User Documentation:
+
+.. toctree::
+   :maxdepth: 2
+
+   user
+
+Developer Documentation
 
 .. toctree::
    :maxdepth: 2
