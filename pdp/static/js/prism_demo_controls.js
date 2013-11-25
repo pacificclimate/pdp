@@ -24,7 +24,7 @@ function download(extension, map, selection_layer, ncwms_layer) {
         }
         var id = ncwms_layer.params.LAYERS.split('/')[0]; // strip the variable to get the id
         var variable = ncwms_layer.params.LAYERS.split('/')[1];
-        var url = catalog[id] + '.' + extension + '?' + variable + 
+        var url = catalog[id] + '.' + extension + '?climatology_bounds,' + variable +
             '[0:12][' + 
             raster_index_bounds.bottom + ':' + 
             raster_index_bounds.top + '][' + 

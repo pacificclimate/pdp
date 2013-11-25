@@ -249,3 +249,42 @@ def test_legend_caching(pcic_data_portal):
     req.if_modified_since = pre_load_time
     resp = req.get_response(pcic_data_portal)
     assert resp.status.startswith('200')
+
+def test_climatology_bounds(prism_portal, authorized_session_id):
+    url = '/data/bc_tmin_7100.nc.nc?climatology_bounds,tmin[0:12][826:1095][1462:1888]&'
+    req = Request.blank(url)
+    req.cookies['beaker.session.id'] = authorized_session_id
+    resp = req.get_response(prism_portal)
+
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'application/x-netcdf'
+
+    f = NamedTemporaryFile(suffix='.nc', delete=False)
+    for block in resp.app_iter:
+        f.write(block)
+    f.close()
+
+    nc = netCDF4.Dataset(f.name)
+
+    assert 'climatology_bounds' in nc.variables
+    
+    assert_almost_equal(nc.variables['climatology_bounds'][:],
+                        np.array([[     0.,  10988.],
+                                  [    31.,  11017.],
+                                  [    59.,  11048.],
+                                  [    90.,  11078.],
+                                  [   120.,  11109.],
+                                  [   151.,  11139.],
+                                  [   181.,  11170.],
+                                  [   212.,  11201.],
+                                  [   243.,  11231.],
+                                  [   273.,  11262.],
+                                  [   304.,  11292.],
+                                  [   334.,  11323.],
+                                  [     0.,  11323.]], dtype=np.float32))
+
+    assert 'tmin' in nc.variables
+    assert nc.variables['tmin'].shape == (13, 270, 427)
+
+    nc.close()
+    os.remove(f.name)
