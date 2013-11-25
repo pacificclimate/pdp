@@ -36,14 +36,14 @@ Modules for dispatching to Pydap
 ================================
 
 pdp_util.pcds_dispatch
-------------------
+----------------------
 
 .. automodule:: pdp_util.pcds_dispatch
    :members:
    :special-members:
 
 pdp_util.pcds_index
----------------
+-------------------
 
 .. automodule:: pdp_util.pcds_index
    :members:
@@ -52,7 +52,7 @@ pdp_util.pcds_index
 OpenID Authentication
 =====================
 pdp_util.auth
----------
+-------------
 
 .. automodule:: pdp_util.auth
    :members:
@@ -64,7 +64,7 @@ pdp_util.auth
 Data Delivery
 =============
 pdp_util.agg
---------
+------------
 
 .. automodule:: pdp_util.agg
    :members:
