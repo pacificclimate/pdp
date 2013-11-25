@@ -46,7 +46,7 @@ function init_login() {
 	// spawn new window, hook the onClose with checkLogin()
 	var return_to = app_root + '/check_auth_app/';
 	var oid = $('select[name="openid-provider"]')[0].value;
-	var loginWindow = window.open(app_root + '/auth?openid_identifier=' + oid + '&return_to=' + return_to);
+	var loginWindow = window.open(app_root + '/auth?openid_identifier=' + oid + '&return_to=' + return_to, 'openid_login');
 	var pattern = new RegExp('^' + return_to)
 	var id = setInterval(function () {
 	    try {
