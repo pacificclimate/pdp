@@ -1,24 +1,9 @@
 "use strict";
 
-var getCanadaExAccordionMenu = function (ensembleName) {
-    var divId = "acdnmenu";
-    var div = createDiv(divId);
-    var amenu = getAccordionMenu(divId);
-
-    var url = app_root + '/' + ensembleName + '/menu.json?ensemble_name=' + ensembleName
-    $.ajax(url, {dataType: "json"}).done(function(data) {
-        var menu_tree = generateMenuTree(data);
-        menu_tree.attr("id", "ds-menu");
-        $("#" + divId).html(menu_tree);
-        amenu.init();
-    });
-    return div;
-};
-
 var getRasterControls = function(ensemble_name) {
 	var form = createForm(undefined, undefined, undefined);
     var fieldset = createFieldset("filterset", "Dataset Selection");
-    fieldset.appendChild(getCanadaExAccordionMenu(ensemble_name));
+    fieldset.appendChild(getRasterAccordionMenu(ensemble_name));
     form.appendChild(fieldset);
     return form;
 };

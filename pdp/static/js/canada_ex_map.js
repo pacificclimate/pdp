@@ -3,7 +3,6 @@
 // Do this in the sourcing html
 "use strict";
 
-var ncwms;
 var current_dataset;
 
 var init_raster_map = function() {
@@ -61,6 +60,10 @@ var init_raster_map = function() {
 
     $("#map-title").text(params.layers);
     current_dataset = params.layers;
+    (function(globals){
+        "use strict"
+        globals.ncwms = ncwms;
+    }(window));
 
     map.addLayers(
         [

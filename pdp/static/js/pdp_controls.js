@@ -26,17 +26,6 @@ function getDateRange() {
     return rangeDiv;
 }
 
-function getAccordionMenu(menuId) {
-    var amenuOptions = {
-    menuId: menuId, 
-    linkIdToMenuHtml: null,
-    expand: "single",
-    license: "mylicense"
-    };
-    
-    return new McAcdnMenu(amenuOptions);
-}
-
 function generateMenuTree(subtree) {
     var ul = $("<ul/>")
     $.each(Object.keys(subtree), function(index, stuff) {
@@ -59,28 +48,20 @@ function generateMenuTree(subtree) {
     return ul;
 }
 
-function createAJAXAccordionMenu(divId, request_location, callback) {
-    // Retrieve a tree of available datasets and fill out the selection menu
-    $.ajax({'url': request_location,
-        'type': 'GET',
-        'dataType': 'json',
-        'success': function(data, textStatus, jqXHR) {
-            var menu_tree = generateMenuTree(data).attr('id', 'ds-menu');
-            callback(menu_tree);
-        }
-    });
-}
-
 function getRasterAccordionMenu(ensembleName) {
-    var divId = "acdnmenu";
+    var divId = "dataset-menu";
     var div = createDiv(divId);
-
     var url = app_root + '/' + ensembleName + '/menu.json?ensemble_name=' + ensembleName
-    $.ajax(url, {dataType: 'json'}).done(function(data) {
+    $.ajax(url, {dataType: "json"}).done(function(data) {
         var menu_tree = generateMenuTree(data);
-        menu_tree.attr('id', 'ds-menu');
+        menu_tree.addClass("dataset-menu");
         $("#" + divId).html(menu_tree);
-        amenu = getAccordionMenu(divId);
+        $(".dataset-menu").accordion({
+            accordion: true,
+            speed: 200,
+            closedSign: '[+]',
+            openedSign: '[-]'
+        });
     });
     return div;
 }

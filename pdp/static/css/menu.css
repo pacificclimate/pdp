@@ -1,0 +1,70 @@
+.dataset-menu {
+    max-height: 450px;
+    overflow-y: auto;
+    padding: 40px 28px 25px 0;
+    /*font-family: "CenturyGothicRegular", "Century Gothic", Arial, Helvetica, sans-serif;*/
+}
+
+ul.dataset-menu {
+    padding: 0;
+    margin: 0;
+    font-size: 1em;
+    line-height: 0.5em;
+    list-style: none;
+}
+
+ul.dataset-menu li {
+    padding-right: 0.5em;
+}
+
+ul.dataset-menu li a {
+    line-height: 10px;
+    font-size: 0.875em;;
+    padding: 10px 5px;
+    color: #000;
+    display: block;
+    text-decoration: none;
+    font-weight: bolder;
+}
+
+ul.dataset-menu li a:hover {
+    background-color:#675C7C;
+    color:white;
+}
+
+ul.dataset-menu ul {
+    margin: 0;
+    padding: 0;
+    display: none;
+}
+
+ul.dataset-menu ul li {
+    margin: 0;
+    padding: 0;
+    clear: both;
+}
+
+ul.dataset-menu ul li a {
+    padding-left: 20px;
+    font-size: 0.725em;
+    font-weight: normal;
+}
+
+ul.dataset-menu ul li a:hover {
+    background-color:#D3C99C;
+    color:#675C7C;
+}
+
+ul.dataset-menu ul ul li a {
+    color:silver;
+    padding-left: 40px;
+}
+
+ul.dataset-menu ul ul li a:hover {
+    background-color:#D3CEB8;
+    color:#675C7C;
+}
+
+ul.dataset-menu span{
+    float:right;
+}

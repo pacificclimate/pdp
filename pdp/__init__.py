@@ -44,7 +44,7 @@ global_config = {
         'css/footer.css',
         'css/login.css',
         'css/controls.css',
-        'css/accordionmenu.css'],
+        'css/menu.css'],
     'js_files': [
         'js/jquery-1.9.1.js',
         'js/jquery-ui-1.10.2.custom.js',
@@ -52,7 +52,7 @@ global_config = {
         'js/OL/OpenLayers.js',
         'js/proj4js-compressed.js',
         'js/OpacitySlider.js',
-        'js/accordionmenu.js',
+        'js/multiaccordion.js',
         'js/pdp_dom_library.js',
         'js/pdp_controls.js',
         'js/pdp_download.js',
