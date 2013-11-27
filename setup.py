@@ -30,7 +30,7 @@ setup(
     name="pdp",
     description="PCIC's Data Portal (pdp): the server software to run the entire web application",
     keywords="opendap dods dap open data science climate meteorology downscaling modelling",
-    packages=['pdp'],
+    packages=['pdp', 'pdp.portals'],
     version='.'.join(str(d) for d in __version__),
     url="http://www.pacificclimate.org/",
     author="James Hiebert",
