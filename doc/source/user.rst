@@ -6,6 +6,8 @@ The main goal of the PCIC Data Portal boils down to one simple idea: *give users
 Provincial Climate Data Set Portal
 ----------------------------------
 
+The Provincial Climate Data Set (PCDS) Portal contains observations of weather and climate variables (such as temperature and rainfall amounts) for British Columbia. Locations of observation stations are shown on an interactive map of the province which enables a user to zoom and pan to a region of interest, learn about the stations that are there, filter the displayed stations based on observation date, weather element, observing agency, region and more.
+
 Searching for stations
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -19,7 +21,7 @@ Note that zooming in to a particular area does not exclude stations which are ou
 
 .. figure:: images/draw_polygon_on.png
 
-Once in polygon selection mode you can start drawing a polygon by left-clicking on the map. This will add the first vertex and subsequent verticies can be added with further left clicks. To finish the polygon, double-left-click to add your final vertex. After you close your polygon, both the map and the "Selection Information" text box will automatically update.
+Once in polygon selection mode you can start drawing a polygon by left-clicking on the map. This will add the first vertex and subsequent vertices can be added with further left clicks. To finish the polygon, double-left-click to add your final vertex. After you close your polygon, both the map and the "Selection Information" text box will automatically update.
 
 .. figure:: images/polygon_selection.png
 
@@ -27,15 +29,37 @@ There are several other controls available for further refining the selected sta
 
 The "Date Range" option will select an stations for which their date range overlaps with the user supplied date range. Note that many PCDS stations *do* have gaps in the data, so this simple range check does not necessarily guarantee that select stations have data within the range.
 
-TO BE CONTINUED
+The "Climate Variable" option allows a user to select only stations which record a given climate variable. Notice that there are many subtle difference in how various meteorological measurements are made. For example temperature can be recorded as a daily maximum ("Temperature (Max.)") or as an instantaneous measurement at regular intervals ("Temperature (point)"). Each of these differences in types of measure will show up as a different variable. Please note that while this select is used to filter stations, if you eventually download the data, you will receive *all* of the variables that are available for your selected stations.
 
+The "Network Name" option allows a user to select only the stations which belong to a particular network/partner of the Climate Related Monitoring Program. The drop down menu shows the network abbreviations, but you may click on the question mark to the right or the "View Legend" button on the map to list out the full network names.
 
+.. figure:: images/network_legend.png
+
+Finally, the "Observation Frequency" option allows a user to select stations having a particular time interval between measurements. For example, you can select hourly data, daily data, or several others. Note that the indicated frequency of data is true for the majority of the observations, however it is only a guideline. The true time interval between measurements can and most likely will vary.
 
 Getting station info
 ^^^^^^^^^^^^^^^^^^^^
 
+Searching for stations using the map is a much easier way to find station than is wading through a long spreadsheet of station attributes. That said, there can be substantial value and many use cases for obtaining the list of station attributes. Through the PCDS Portal, you can download the station attributes in a way that is dynamic and responsive to the user input of filters.
+
+To obtain station attributes, there are a couple ways to view them. For single stations, the easiest way is to left-click directly on the station symbols on the map. This action will pop up a window showing many of the attributes, for example; network name, station name, and location (latitude, longitude, elevation). If you're interested in *all* of the selected stations, you can left-click the "View Metadata" button at the top of the map. This action opens a window which provides the same attributes, but for all stations. Finally, if you want to download the station metadata, you can click the "Download" button and select one of the supported output formats.
+
+.. figure:: images/view_metadata.png
+
+One should note that the Download button produces a `Web Feature Service (WFS) <http://www.opengeospatial.org/standards/wfs>`_ or `Web Map Service (WMS) <http://www.opengeospatial.org/standards/wms>`_ request and are grouped accordingly in the selection box. WFS requests are useful for downloading the actual station attributes. For example, a WFS request for the CSV format will return a CSV table containing attributes for all of the stations. A WFS request for the Shapefile format will return an ESRI Shapefile containing point geometries for all of the selected stations and the attributes table. WMS requests are typically "just" images of the selected stations. Whether or not the images contain any geospatial information is format dependent. For example, GoogleEarth (KML) and GeoTiff files will be spatially referenced while JPEG and PNG files will *not* be spatially referenced.
+
+Finally, the selection information box on the right-hand side of the screen provides a coarse level of information estimating the amount of data that you would download with your present selection. It is updated automatically anytime you change your filter options or polygon selection.
+
+.. figure:: images/selection_info.png
+
 Retrieving station data
 ^^^^^^^^^^^^^^^^^^^^^^^
+
+The final step in using the data portal, downloading station data, is typically the easiest. To download, just go to the "Download Data" fieldset, select your desired output format, and then click either the "Climatology" button (if you want climatologies) or the "Timeseries" button, if you want the raw observations. The only additional option is a checkbox to optionally "Clip time series to filter date range". If this is checked, your download will only include observations between the start date and end date that you have indicated above in the filter options. If unchecked, you will simply get the full time range for all selected stations.
+
+.. figure:: images/download_fieldset.png
+
+The data response will be returned as a ZIP archive containing one folder per network. Each network folder contains one data file for each station, and a CSV file describing the variables collected by this network.
 
 Climate Coverage Portals
 ------------------------
@@ -55,7 +79,7 @@ The user interface only provides the means to download a single dataset. However
 Map
 ^^^
 
-The map shows a single time step of the selected dataset. The datasets's unique id is shown in the lower right hand corner of the map.
+The map shows a single time step of the selected dataset. The dataset's unique id is shown in the lower right hand corner of the map.
 
 .. figure:: images/dataset_id.png
 
@@ -73,7 +97,7 @@ When in spatial subset selection mode, you can select a rectangular area by doin
 
 The map is a standard `OpenLayers <http://openlayers.org/>`_ map, so for more details on usage, please refer to the `OpenLayers documentation <http://trac.osgeo.org/openlayers/wiki/Documentation>`_.
 
-To switch back to navigating mode after selecting, you must reselect the hand icon
+To switch back to navigating mode after selecting, you must re-select the hand icon
 
 .. figure:: images/pan_on.png
 
@@ -94,7 +118,7 @@ The download data fieldset allows a user to select the time range for which data
 Power user HOWTO
 ----------------
 
-A user with experience in programming or scripting should be able to reasonably recreate functionality of the Climate Coverage Portal in a programattic manner. This section describes some of the deployment details that one would require to do so.
+A user with experience in programming or scripting should be able to reasonably recreate functionality of the Climate Coverage Portal in a programmatic manner. This section describes some of the deployment details that one would require to do so.
 
 Map
 ^^^
@@ -105,7 +129,7 @@ Climate raster overlays are served via the `OSGeo's Open Geospatial Consortium's
 
 Dataset listings
 ^^^^^^^^^^^^^^^^
-The climate coverage data portal serves listings of the available datasets via a JSON-encoded response. This is how the web user interface retreives the data lists, however power users have access to it as well from this URL http://tools.pacificclimate.org/dataportal/[ensemble]/catalog/catalog.json. For example, if one wanted to retreive a list of the datasets available for the BC PRISM ensemble, one could do the following: ::
+The climate coverage data portal serves listings of the available datasets via a JSON-encoded response. This is how the web user interface retrieves the data lists, however power users have access to it as well from this URL http://tools.pacificclimate.org/dataportal/[ensemble]/catalog/catalog.json. For example, if one wanted to retrieve a list of the datasets available for the BC PRISM ensemble, one could do the following: ::
 
   james@basalt ~ $ wget --output-document=- http://tools.pcic.uvic.ca/dataportal/bc_prism/catalog/catalog.json 2> /dev/null
   {
@@ -121,7 +145,7 @@ Metadata and Data
 ^^^^^^^^^^^^^^^^^
 All of our multidimensional raster data is made available via `Open-source Project for a Network Data Access Protocol (OPeNDAP) <http://opendap.org/>`_, the specification of which can be found `here <http://www.opendap.org/pdf/ESE-RFC-004v1.2.pdf>`_. Requests are serviced by our deployment of the `Pydap server <http://www.pydap.org/>`_ which PCIC has heavily modified and rewritten to be able to stream large data requests.
 
-The *structure* and *attributes* of a dataset can be retreived using OPeNDAP by making a `DDS or DAS <http://www.opendap.org/api/pguide-html/pguide_6.html>`_ request respectively. For example, to determine how my timesteps are available from one of the BCSD datasets, one can make a DDS request against that dataset as such: ::
+The *structure* and *attributes* of a dataset can be retrieved using OPeNDAP by making a `DDS or DAS <http://www.opendap.org/api/pguide-html/pguide_6.html>`_ request respectively. For example, to determine how my timesteps are available from one of the BCSD datasets, one can make a DDS request against that dataset as such: ::
 
   james@basalt ~ $  wget --output-document=- http://tools.pcic.uvic.ca/dataportal/bcsd_downscale_canada/catalog/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.h5.dds 2> /dev/null
   Dataset {
@@ -258,7 +282,7 @@ You can see the the response clearly describes all variable which are available 
       }
   }
 
-Such a request would useful for retreiving data units in advance of downloading the data or for filtering according to driving model or institute.
+Such a request would useful for retrieving data units in advance of downloading the data or for filtering according to driving model or institute.
 
 Downloading the actual data values themselves is also done with a DAP request. There are a couple differences, however. First, to download data, the client must be logged in via OpenID. Secondly, the URL template for the request is http://tools.pacificclimate.org/dataportal/[ensemble]/data/[dataset_id].[format_extension]?[dap_selection]
 
@@ -289,7 +313,7 @@ A user login is required to download data so that we can track usage and gauge t
 What is a NetCDF file and how do I use it?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-NetCDF is a format for storing and tranfering multidimensional data and all of its associated metadata. It's designed specifically for handing structured earth science data and climate model output. While PCIC's users occasionally balk at it for not being "user friendly", it's a roughly equivalent time investment for learning how to use it versus figuring out how to parse CSV output and reinstate all of the data structures that get lost in translation.
+NetCDF is a format for storing and transferring multidimensional data and all of its associated metadata. It's designed specifically for handing structured earth science data and climate model output. While PCIC's users occasionally balk at it for not being "user friendly", it's a roughly equivalent time investment for learning how to use it versus figuring out how to parse CSV output and reinstate all of the data structures that get lost in translation.
 
 There is a fairly complete list of `NetCDF software <http://www.unidata.ucar.edu/software/netcdf/software.html>`_ available on Unidata's website. We often use the program `ncview <http://www.unidata.ucar.edu/software/netcdf/software.html#ncview>`_ to examine data. It's old, simple and crashes a bit, but it usually does a fine job of simple visualization on the desktop. There's also the `netcdf_tools <http://www.unidata.ucar.edu/software/netcdf/software.html#netcdf_tools>`_ which are basic command line tools to dump data, look at attributes, etc. For more sophisticated use, we frequently use `GDAL <http://www.unidata.ucar.edu/software/netcdf/software.html#GDAL>`_, and the `Python <http://www.unidata.ucar.edu/software/netcdf/software.html#Python>`_ and `R <http://www.unidata.ucar.edu/software/netcdf/software.html#R>`_ interfaces.
 
@@ -303,9 +327,9 @@ Why can't I download climate model output in Excel?
 
 Excel and spreadsheets in general are simply not designed to handle the large amounts of bulk data that come from climate models. Climate model output is multidimensional (lat x lon x time and sometimes x level) and Excel has no real concept of dimensionality. Excel *does* have rows and columns and as such it is common to represent two dimensional data with Excel, however, it is not designed for handling data that has three or four dimensions. Excel simply has a different data model than does climate model output.
 
-Additionally, the size of data which the Excel format can handle is limited compared to what is required by climate model output. An Excel 2010 Worksheet is `limited to 1,048,576 rows by 16,384 columns <http://office.microsoft.com/en-ca/excel-help/excel-specifications-and-limits-HP010342495.aspx?CTT=5&origin=HP005199291>`_. Compare this to the data requirements of our Canada-wide downscaled climate coverage which has a spatial extent of 510x1068 cells (i.e. 544,680 cells) and a temporal extent of 55,152 timesteps. Niether the temporal extent, nor the spatial extent will fit within Excel's column limits. Even if we utilized each of the 17,179,869,184 availble cells (ignoring and throwing away all of the data's structure), we would not have enough cells to store the dataset's 30,040,191,360 points. Excel *can* support multiple worksheets in a workbook, but the number of worksheets is limited by the memory of the system on which it is running. For the majority of standard desktops, this would be well short of the memory required to store climate model output.
+Additionally, the size of data which the Excel format can handle is limited compared to what is required by climate model output. An Excel 2010 Worksheet is `limited to 1,048,576 rows by 16,384 columns <http://office.microsoft.com/en-ca/excel-help/excel-specifications-and-limits-HP010342495.aspx?CTT=5&origin=HP005199291>`_. Compare this to the data requirements of our Canada-wide downscaled climate coverage which has a spatial extent of 510x1068 cells (i.e. 544,680 cells) and a temporal extent of 55,152 timesteps. Neither the temporal extent, nor the spatial extent will fit within Excel's column limits. Even if we utilized each of the 17,179,869,184 available cells (ignoring and throwing away all of the data's structure), we would not have enough cells to store the dataset's 30,040,191,360 points. Excel *can* support multiple worksheets in a workbook, but the number of worksheets is limited by the memory of the system on which it is running. For the majority of standard desktops, this would be well short of the memory required to store climate model output.
 
-To summarize, Excel is not designed for multi-dimensional data making it incovenient and technically impossible.
+To summarize, Excel is not designed for multi-dimensional data making it inconvenient and technically impossible.
 
 Can I download climate model output in a "GIS-friendly" format?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -313,6 +337,13 @@ Can I download climate model output in a "GIS-friendly" format?
 This question is related to the above question about Excel. Like spreadsheets, most (all?) GIS software packages are designed to display data in only two coordinate dimensions (i.e. a map). Suppose that you download daily data for a ten year period, how would your GIS software visualize the resulting 3600 layers? GIS software packages are not designed for this purpose. In general, you're going to need to do additional, needs-specific processing before you can create climate maps with your GIS software.
 
 All that said, if your GIS software can speak WMS and you want to map individual time steps, please review our Power user HOWTO.
+
+How do I interpret the date fields in the data responses
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Unfortunately the `Open-source Project for a Network Data Access Protocol (OPeNDAP) <http://opendap.org/>`_ protocol does not support a native date type. Therefore, all of our data responses which include dates (i.e. nearly all of them) have to encode the dates using a floating point number. Typically, these dates are encoded as "days since 1970/01/01", however you should always check the units of the data response to be sure.
+
+If you're loading data files from the PCDS Portal into a spreadsheet program, typically you can see the human-readable dates by simply configuring the cell type for the time column to be of type "date".
 
 When I try to download PRISM data, I'm told that the map "Cannot resolve selection to data grid". Why?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
