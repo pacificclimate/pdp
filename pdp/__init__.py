@@ -1,4 +1,5 @@
 import os
+from os.path import dirname
 
 from pkg_resources import resource_filename, get_distribution
 from tempfile import mkdtemp
@@ -88,6 +89,7 @@ record_length_app = CountRecordLengthApp(pcds_dsn, max_stns=100)
 legend_app = LegendApp(pcds_dsn)
 
 static_app = static.Cling(resource_filename('pdp', 'static'))
+docs_app = static.Cling(dirname(__file__) + '/../doc')
 
 dispatch_app = wrap_auth(PcdsDispatcher(templates=resource_filename('pdp_util', 'templates'),
                                         ol_path=None, #global_config['ol_path'],
@@ -118,7 +120,8 @@ main = PathDispatcher([
     ('^/bc_prism/.*$', bc_prism),
     ('^/bcsd_downscale_canada/.*$', bcsd_canada),
     ('^/auth.*$', auth),
-    ('^/apps/.*$', apps)
+    ('^/apps/.*$', apps),
+    ('^/docs/.*$', docs_app),
     ],
     default=static_app
 )

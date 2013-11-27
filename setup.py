@@ -1,4 +1,4 @@
-import sys
+import os, sys
 import string
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
@@ -12,8 +12,16 @@ class PyTest(TestCommand):
         #import here, cause outside the eggs aren't loaded
         import pytest
         errno = pytest.main(self.test_args)
-        sys.exit(errno)                                                                        
+        sys.exit(errno)
 
+
+def build_doc_list(basedir, prefix):
+    def find():
+        for dirname, dirnames, filenames in os.walk(basedir):
+            newdir = dirname.replace(basedir, prefix)
+            yield ( newdir, [ os.path.join(dirname, filename) for filename in filenames ] )
+    return [ x for x in find() ]
+        
 __version__ = (2, '0-rc1')
 
 sw_path = 'hg+ssh://medusa.pcic.uvic.ca//home/data/projects/comp_support/software'
@@ -52,8 +60,9 @@ setup(
                      ],
     scripts = ['scripts/rast_serve.py'],
     package_data = {'pdp': ['pdp/static', 'pdp/templates']},
+    data_files = build_doc_list('build/sphinx/html', 'doc'),
     cmdclass = {'test': PyTest},
-    zip_safe=True,
+    zip_safe=False,
         classifiers='''Development Status :: 2 - Pre-Alpha
 Environment :: Console
 nvironment :: Web Environment
