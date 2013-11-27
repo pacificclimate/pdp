@@ -21,8 +21,8 @@ function init_prism_map() {
     map = new OpenLayers.Map('pdp-map', options);
     
     defaults = {
-        dataset: "bcprism_tmin_7100",
-        variable: "tmin"
+        dataset: "bcprism_ppt_7100",
+        variable: "pr"
     }
     
     params = {
