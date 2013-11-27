@@ -2,8 +2,6 @@
 "use strict";
 
 var catalog;
-var app_root;
-var ensemble_name;
 var ncwmsCapabilities;
 
 $(document).ready(function() {
@@ -14,14 +12,14 @@ $(document).ready(function() {
     var ncwmsLayer = map.getClimateLayer();
     var selectionLayer = map.getSelectionLayer();
 
-    var catalogUrl = app_root + "/" + ensemble_name + "/catalog/catalog.json";
+    var catalogUrl = pdp.app_root + "/" + pdp.ensemble_name + "/catalog/catalog.json";
     var request = $.ajax(catalogUrl, { dataType: "json"} );
     request.then(function(data) {
         catalog = data;
         processNcwmsLayerMetadata(ncwmsLayer);
     });
 
-    document.getElementById("pdp-controls").appendChild(getRasterControls(ensemble_name));
+    document.getElementById("pdp-controls").appendChild(getRasterControls(pdp.ensemble_name));
     document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions());
 
     function callDownload() {

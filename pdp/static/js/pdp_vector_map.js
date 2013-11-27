@@ -32,7 +32,7 @@ function getLoadingPopup(name, loc) {
 	    name,
 	    loc,
 	    new OpenLayers.Size(100, 60),
-	    'Loading... <center><img style="padding-top:4px" width=30 height=30 src="' + app_root + '/images/anim_loading.gif"></center>',
+	    'Loading... <center><img style="padding-top:4px" width=30 height=30 src="' + pdp.app_root + '/images/anim_loading.gif"></center>',
 	    null, 
 	    true, // Means "add a close box"
 	    null  // Callback on close

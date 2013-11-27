@@ -1,4 +1,4 @@
-// Requires globals app_root, ensemble_name (really just need for url space)
+// Requires globals app_root
 function init_login(loginDivId) {
 
     // Will we ever want to have different providers by application?
@@ -42,9 +42,9 @@ function init_login(loginDivId) {
 
     function startLogin(evt, onSuccess, onFailure) {
 		// spawn new window, hook the onClose with checkLogin()
-		var return_to = app_root + '/check_auth_app/';
+		var return_to = pdp.app_root + '/check_auth_app/';
 		var oid = $('select[name="openid-provider"]')[0].value;
-		var loginWindow = window.open(app_root + '/check_auth_app/?openid_identifier=' + oid + '&return_to=' + return_to);
+		var loginWindow = window.open(pdp.app_root + '/check_auth_app/?openid_identifier=' + oid + '&return_to=' + return_to);
 		var pattern = new RegExp('^' + return_to)
 		var id = setInterval(function () {
 			try {
@@ -119,7 +119,7 @@ function init_login(loginDivId) {
 }
 
 function checkLogin(button, onSuccess, onFailure) {
-$.ajax({'url': app_root + '/check_auth_app/',
+$.ajax({'url': pdp.app_root + '/check_auth_app/',
 	'type': 'GET',
 	'dataType': 'json',
 	// show logged-in status

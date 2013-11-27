@@ -39,7 +39,7 @@ function init_prism_map() {
     datalayerName = "Climate raster"
     ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
-        ncwms_url,
+        pdp.ncwms_url,
         params,
         {
             maxExtent: getBC3005Bounds(),
@@ -57,7 +57,7 @@ function init_prism_map() {
         [
             ncwms,
             selectionLayer,
-            getBC3005OsmBaseLayer(tilecache_url, 'BC OpenStreeMap', 'bc_osm')
+            getBC3005OsmBaseLayer(pdp.tilecache_url, 'BC OpenStreeMap', 'bc_osm')
         ]
     );
 

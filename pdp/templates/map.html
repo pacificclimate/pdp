@@ -11,11 +11,19 @@
     </py:for>
       
     <script type="text/javascript">
-      var app_root = '${app_root}';
-      var gs_url = '${geoserver_url}';
-      var ncwms_url = '${ncwms_url}';
-      var tilecache_url = '${tilecache_url}';
-      var ensemble_name = '${ensemble_name}';
+    (function( global, undefined) {
+      "use strict"
+      var pdp = {
+        VERSION: '0.1',
+      };
+      global.pdp = pdp
+    }(typeof window === 'undefined' ? this : window));
+    
+    pdp.app_root = '${app_root}';
+    pdp.gs_url = '${geoserver_url}';
+    pdp.ncwms_url = '${ncwms_url}';
+    pdp.tilecache_url = '${tilecache_url}';
+    pdp.ensemble_name = '${ensemble_name}';
     </script>
 
     <py:for each="entry in js_files">

@@ -202,7 +202,7 @@ function getSlider(layer) {
 
 function addLoadingIcon(layer) {
     $("#map-wrapper").append('<div id="loading" class="invisible"><center>\
-<img src="' + app_root + '/images/loading.gif" alt="Layer loading animation" /><p>Loading...</p>\
+<img src="' + pdp.app_root + '/images/loading.gif" alt="Layer loading animation" /><p>Loading...</p>\
 </center></div>');
     layer.events.register('loadstart',
                           $("#loading"),

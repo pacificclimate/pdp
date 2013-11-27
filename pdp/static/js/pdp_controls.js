@@ -51,7 +51,7 @@ function generateMenuTree(subtree) {
 function getRasterAccordionMenu(ensembleName) {
     var divId = "dataset-menu";
     var div = pdp.createDiv(divId);
-    var url = app_root + '/' + ensembleName + '/menu.json?ensemble_name=' + ensembleName
+    var url = pdp.app_root + '/' + ensembleName + '/menu.json?ensemble_name=' + ensembleName
     $.ajax(url, {dataType: "json"}).done(function(data) {
         var menu_tree = generateMenuTree(data);
         menu_tree.addClass("dataset-menu");

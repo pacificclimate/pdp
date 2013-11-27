@@ -71,7 +71,7 @@ function polygon_filter(map) {
 function update_station_count(box) {
     box.value = box.value.replace(/[0-9]+[GMk]? stations/g, '??? stations');
     var req_time = last_station_count_req_time = Date();
-    $.ajax({'url': app_root + '/apps/count_stations',
+    $.ajax({'url': pdp.app_root + '/apps/count_stations',
 	    'data': $('form').serialize(),
 	    'type': 'GET',
 	    'dataType': 'json',
@@ -88,7 +88,7 @@ function update_record_length(box) {
 	box.value = box.value.replace(/[0-9]+[GMk]? climatologies/g, '??? climatologies');
 	var req_time = last_record_length_req_time = Date();
 
-	$.ajax({'url': app_root + '/apps/record_length',
+	$.ajax({'url': pdp.app_root + '/apps/record_length',
 		    'data': $('form').serialize(),
 		    'type': 'GET',
 		    'dataType': 'json',

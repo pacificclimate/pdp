@@ -53,7 +53,6 @@ global_config = {
         'js/proj4js-compressed.js',
         'js/OpacitySlider.js',
         'js/multiaccordion.js',
-        'js/pdp_core.js',
         'js/pdp_dom_library.js',
         'js/pdp_controls.js',
         'js/pdp_download.js',

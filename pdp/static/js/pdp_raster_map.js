@@ -1,4 +1,3 @@
-"use strict";
 var cfTime = function(units, sDate) {
     this.units = units;
     this.sDate = sDate;
@@ -74,9 +73,15 @@ var dasToUnitsSince = function(data) {
     
     reg = /(\d{4})-(\d{2}|\d)-(\d{2}|\d)( |T)(\d{2}|\d):(\d{2}|\d):(\d{2}|\d)/g;
     m = reg.exec(dateString);
-    for (var i in units) { m[i] = +m[i]; }
-    var sDate = new Date(m[1], --m[2], m[3], m[5], m[6], m[7], 0); // Account for 0 based month index in js
-    return [units, sDate];
+    if(!m) { // Not ISO Format, hope it's just YYYY-MM-DD
+        reg = /(\d{4})-(\d{2}|\d)-(\d{2}|\d)/g;
+         m = reg.exec(dateString);
+         if(m) { return [units, new Date(m[0])]; }
+    } else {
+        for (var i = 0; i < m.length; i++) { m[i] = +m[i]; }
+        var sDate = new Date(m[1], --m[2], m[3], m[5], m[6], m[7], 0); // Account for 0 based month index in js
+        return [units, sDate];
+    }
 };
 
 var getNCWMSLayerCapabilities = function(ncwms_layer) {
@@ -178,7 +183,7 @@ var rasterBBoxToIndicies = function (map, layer, bnds, extent_proj, extension, c
         };
         // FIXME: URL below assumes that geoserver is running on the same machine as the webapp (or a proxy is in place)
         OpenLayers.Request.GET({
-            url: ncwms_url,
+            url: pdp.ncwms_url,
             params: params,
             callback: responder
         });

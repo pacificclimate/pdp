@@ -48,7 +48,7 @@ var init_raster_map = function() {
     var datalayerName = "Climate raster";
     var ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
-		ncwms_url,
+		pdp.ncwms_url,
 		params,
 		{
             buffer: 1,

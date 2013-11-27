@@ -20,7 +20,7 @@ function init_crmp_map() {
     map = new OpenLayers.Map('pdp-map', options);
     
     var crmp = new OpenLayers.Layer.WMS(
-        "PCDS stations", gs_url + "CRMP/wms",
+        "PCDS stations", pdp.gs_url + "CRMP/wms",
         {
             layers: 'CRMP:crmp_network_geoserver',
             transparent: 'true'
@@ -33,9 +33,9 @@ function init_crmp_map() {
     map.addLayers(
         [crmp,
          selectionLayer,
-         getGSBaseLayer(gs_url, "OpenStreetMap brown green", "osm_pnwa_green_brown_gwc"),
-         getGSBaseLayer(gs_url, "OpenStreetMap greens", "osm_pnwa_mapquest_gwc"),
-         getGSBaseLayer(gs_url, "OpenStreetMap whites", "osm_pnwa_whites_gwc")
+         getGSBaseLayer(pdp.gs_url, "OpenStreetMap brown green", "osm_pnwa_green_brown_gwc"),
+         getGSBaseLayer(pdp.gs_url, "OpenStreetMap greens", "osm_pnwa_mapquest_gwc"),
+         getGSBaseLayer(pdp.gs_url, "OpenStreetMap whites", "osm_pnwa_whites_gwc")
         ]
     );
     addLoadingIcon(crmp);
@@ -44,7 +44,7 @@ function init_crmp_map() {
     // Additional Functionality
     var popup;    
     var crmpgetfeatureinfo = function(e, fCount, buff, funcToCall) {
-	    var wmsurl = gs_url + "CRMP/wms?";
+	    var wmsurl = pdp.gs_url + "CRMP/wms?";
 	    var stns_lyr = map.getLayersByName('PCDS stations')[0];
 	    var lonLat = map.getLonLatFromPixel(e.xy);
 	    myX = e.xy.x.toFixed(0);
@@ -90,7 +90,7 @@ function init_crmp_map() {
     };
     var callMetadata = function(e){
 	    if (popup) map.removePopup(popup);	    
-	    $('#stationList').html('Loading... <br/><img style="padding-top:4px" width=30 height=30 src="' + app_root + '/images/anim_loading.gif">');
+	    $('#stationList').html('Loading... <br/><img style="padding-top:4px" width=30 height=30 src="' + pdp.app_root + '/images/anim_loading.gif">');
 	    //var output = crmpgetfeatureinfo(e, 7000, 6, fillMetadata);
 	    fillMetadata();
     };
