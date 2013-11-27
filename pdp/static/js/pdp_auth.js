@@ -19,7 +19,7 @@ function init_login(loginDivId) {
     };
 
 	var button = document.getElementById(loginDivId).appendChild(
-		createLink("login-button", undefined, undefined, "LOGIN")
+		pdp.createLink("login-button", undefined, undefined, "LOGIN")
 	);
 	var form = document.getElementById(loginDivId).appendChild(getLoginForm(providers));
 	var form = $("#login-form").dialog({
@@ -171,36 +171,36 @@ function getLoginForm(providers) {
 		if(typeof id != 'undefined') select.id = id;
     	if(typeof name != 'undefined') select.name = name;
     	$.each(providers, function(idx, val) {
-    		select.appendChild(createOption(val, idx));
+    		select.appendChild(pdp.createOption(val, idx));
     	});
     	return select;
 	}
 
 	function createLoginFieldset(providers) {
 
-		var fieldset = createFieldset(undefined, "Login");
-		var div = fieldset.appendChild(createDiv("login-or-signup"));
-		div.appendChild(createLabel(undefined, "OpenID Provider"));
+		var fieldset = pdp.createFieldset(undefined, "Login");
+		var div = fieldset.appendChild(pdp.createDiv("login-or-signup"));
+		div.appendChild(pdp.createLabel(undefined, "OpenID Provider"));
 		
-		var providersDiv = div.appendChild(createDiv());
+		var providersDiv = div.appendChild(pdp.createDiv());
 		var select = createProviderSelect(undefined, "openid-provider", providers);
 		providersDiv.appendChild(select);
 		
-		loginDiv = div.appendChild(createDiv());
-		loginButton = createInputElement("button", undefined, "do-login", undefined, "Open login window");
+		loginDiv = div.appendChild(pdp.createDiv());
+		loginButton = pdp.createInputElement("button", undefined, "do-login", undefined, "Open login window");
 		loginDiv.appendChild(loginButton);
 
-		seperatorDiv = div.appendChild(createDiv());
+		seperatorDiv = div.appendChild(pdp.createDiv());
 		seperatorDiv.appendChild(document.createTextNode("--- or ---"));
 		
-		signupDiv = div.appendChild(createDiv());
-		signupButton = createInputElement("button", undefined, "do-signup", undefined, "Open sign up window");
+		signupDiv = div.appendChild(pdp.createDiv());
+		signupButton = pdp.createInputElement("button", undefined, "do-signup", undefined, "Open sign up window");
 		signupDiv.appendChild(signupButton);
 		return fieldset
 	}
 
 	function createWorksFieldset() {
-		var fieldset = createFieldset(undefined, "How it works");
+		var fieldset = pdp.createFieldset(undefined, "How it works");
 		p = fieldset.appendChild(document.createElement("p"));
 		p.appendChild(document.createTextNode("Click \"Login\" to use an existing OpenID account. " + 
 			"A new window will open asking you to sign in with the account provider. " + 
@@ -217,14 +217,14 @@ function getLoginForm(providers) {
 	}
 
 	function createWhyFieldset() {
-		var fieldset = createFieldset(undefined, "Why do you want my e-mail address?");
+		var fieldset = pdp.createFieldset(undefined, "Why do you want my e-mail address?");
 		p = fieldset.appendChild(document.createElement("p"));
 		p.appendChild(document.createTextNode("PCIC will use your address only to contact you in the event major errors  are found in the data or when major changes to the data in the portal are made. " + 
 			"Your e-mail address is the only personal information that PCIC will gather and will be kept secure."));
 		return fieldset;
 	}
 	
-	var loginForm = createForm("login-form", "login-form", "get");
+	var loginForm = pdp.createForm("login-form", "login-form", "get");
 	// var closeDiv = loginForm.appendChild(createDiv("close-login"));
 	// var closeButton = closeDiv.appendChild(document.createElement("button"));
 	loginForm.appendChild(createLoginFieldset(providers));

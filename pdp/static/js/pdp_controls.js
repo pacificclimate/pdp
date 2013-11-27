@@ -1,10 +1,10 @@
 function getDateRange() {
-    var rangeDiv = createDiv("date-range");
-    rangeDiv.appendChild(createLabel("date-range-label", "Date Range", "date-range"));
-    rangeDiv.appendChild(createInputElement("text", "datepickerstart", "from-date", "from-date", "YYYY/MM/DD"));
+    var rangeDiv = pdp.createDiv("date-range");
+    rangeDiv.appendChild(pdp.createLabel("date-range-label", "Date Range", "date-range"));
+    rangeDiv.appendChild(pdp.createInputElement("text", "datepickerstart", "from-date", "from-date", "YYYY/MM/DD"));
     rangeDiv.appendChild(document.createTextNode(" to "));
-    rangeDiv.appendChild(createInputElement("text", "datepickerend", "to-date", "to-date", "YYYY/MM/DD"));
-    rangeDiv.appendChild(createInputElement("hidden", "", "input-polygon", "input-polygon", ""));
+    rangeDiv.appendChild(pdp.createInputElement("text", "datepickerend", "to-date", "to-date", "YYYY/MM/DD"));
+    rangeDiv.appendChild(pdp.createInputElement("hidden", "", "input-polygon", "input-polygon", ""));
 
     $('.datepickerstart', rangeDiv).datepicker({
         inline: true,
@@ -50,7 +50,7 @@ function generateMenuTree(subtree) {
 
 function getRasterAccordionMenu(ensembleName) {
     var divId = "dataset-menu";
-    var div = createDiv(divId);
+    var div = pdp.createDiv(divId);
     var url = app_root + '/' + ensembleName + '/menu.json?ensemble_name=' + ensembleName
     $.ajax(url, {dataType: "json"}).done(function(data) {
         var menu_tree = generateMenuTree(data);
