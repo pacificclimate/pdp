@@ -8,7 +8,6 @@ import static
 from beaker.middleware import SessionMiddleware
 
 from pdp_util.auth import PcicOidMiddleware, check_authorized_return_email
-from pdp_util.ensemble_members import EnsembleMemberLister
 from pdp_util.counts import CountStationsApp, CountRecordLengthApp
 from pdp_util.legend import LegendApp
 from pdp_util.agg import PcdsZipApp

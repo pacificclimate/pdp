@@ -3,9 +3,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://genshi.edgewall.org/" xml:lang="en" lang="en">
   <head>
     <title>${title}</title>
-
-    <link type="text/css" href="${app_root}/css/main.css" rel="stylesheet" />
-    <link type="text/css" href="${app_root}/css/accordionmenu.css" rel="stylesheet" />
     <py:for each="entry in css_files">
       <link type="text/css" href="${app_root}/${entry}" rel="stylesheet" />
     </py:for>
