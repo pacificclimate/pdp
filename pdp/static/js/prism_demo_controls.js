@@ -1,6 +1,6 @@
 function getPRISMControls(ensemble_name) {
-	var form = createForm(undefined, undefined, undefined);
-    var fieldset = createFieldset("filterset", "Dataset Selection");
+	var form = pdp.createForm(undefined, undefined, undefined);
+    var fieldset = pdp.createFieldset("filterset", "Dataset Selection");
     fieldset.appendChild(getRasterAccordionMenu(ensemble_name));
     form.appendChild(fieldset);
     return form;
@@ -8,8 +8,8 @@ function getPRISMControls(ensemble_name) {
 
 function getPRISMDownloadOptions() {
     var frag = document.createDocumentFragment();
-    var downloadForm = frag.appendChild(createForm("download-form", "download-form", "get"));
-    var downloadFieldset = downloadForm.appendChild(createFieldset("downloadset", "Download Data"));
+    var downloadForm = frag.appendChild(pdp.createForm("download-form", "download-form", "get"));
+    var downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
     downloadFieldset.appendChild(createRasterFormatOptions());
     downloadFieldset.appendChild(createDownloadButtons('download-buttons', 'download-buttons', {'download-timeseries': 'Timeseries' }));
     return frag;

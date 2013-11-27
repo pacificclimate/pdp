@@ -4,7 +4,7 @@ function createFormatOptions() {
 		      ascii: pdp.mkOpt('ASCII', 'ASCII data are also in a text format with a identical data organization as the CSV data.'),
 		      xls: pdp.mkOpt('MS Excel', 'This data format is compatible with many popular spreadsheet programs such as Open Office, Libre Office and Microsoft Excel. Data organization is similar to CSV, but the format is more directly readable with spreadsheet software.') };
 
-    return getSelectorWithHelp('Output Format', 'data-format', 'data-format', 'data-format-selector', 'csv', formatData,'View output format descriptions', 450, 450);
+    return pdp.getSelectorWithHelp('Output Format', 'data-format', 'data-format', 'data-format-selector', 'csv', formatData,'View output format descriptions', 450, 450);
 }
 
 function createRasterFormatOptions() {
