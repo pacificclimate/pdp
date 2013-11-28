@@ -2,8 +2,8 @@
 
 $(document).ready(function() {
     map = init_prism_map();
-    loginButton = init_login('login-div');
-    checkLogin(loginButton);
+    loginButton = pdp.init_login('login-div');
+    pdp.checkLogin(loginButton);
 
     getCatalog(function (data) { catalog = data});
 
@@ -19,7 +19,7 @@ $(document).ready(function() {
 
     $("#download-timeseries").click(function(){
         type = $('select[name="data-format"]').val()
-        checkLogin(loginButton, callDownload, function() {alert('Please log in before downloading data');});
+        pdp.checkLogin(loginButton, callDownload, function() {alert('Please log in before downloading data');});
     });
 
 });

@@ -6,8 +6,8 @@ var ncwmsCapabilities;
 
 $(document).ready(function() {
     var map = init_raster_map();
-    var loginButton = init_login("login-div");
-    checkLogin(loginButton);
+    var loginButton = pdp.init_login("login-div");
+    pdp.checkLogin(loginButton);
 
     var ncwmsLayer = map.getClimateLayer();
     var selectionLayer = map.getSelectionLayer();
@@ -28,7 +28,7 @@ $(document).ready(function() {
     var type;
     $("#download-timeseries").click(function(){
         type = $('select[name="data-format"]').val();
-        checkLogin(loginButton, callDownload, function() {alert("Please log in before downloading data");});
+        pdp.checkLogin(loginButton, callDownload, function() {alert("Please log in before downloading data");});
     });
 
 });
