@@ -155,7 +155,13 @@ var rasterBBoxToIndicies = function (map, layer, bnds, extent_proj, extension, c
     var indexBounds = new OpenLayers.Bounds();
 
     var responder = function(response) {
-        var xmldoc = response.responseXML;
+        var xmldoc;
+        if (response.responseXML) {
+            xmldoc = response.responseXML;
+        } else {
+            var parser = new DOMParser();
+            xmldoc = parser.parseFromString(response.responseText, 'text/xml');
+        }
         var iIndex = parseInt($(xmldoc).find("iIndex").text());
         var jIndex = parseInt($(xmldoc).find("jIndex").text());
         if (!isNaN(indexBounds.toGeometry().getVertices()[0].x)) {
@@ -185,7 +191,8 @@ var rasterBBoxToIndicies = function (map, layer, bnds, extent_proj, extension, c
         OpenLayers.Request.GET({
             url: pdp.ncwms_url,
             params: params,
-            callback: responder
+            success: responder,
+            failure: function(){alert("Something has gone wrong with the download");}
         });
     };
 
