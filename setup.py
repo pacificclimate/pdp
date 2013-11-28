@@ -21,7 +21,15 @@ def build_doc_list(basedir, prefix):
             newdir = dirname.replace(basedir, prefix)
             yield ( newdir, [ os.path.join(dirname, filename) for filename in filenames ] )
     return [ x for x in find() ]
-        
+
+def recursive_list(pkg_dir, basedir):
+    def find():
+        for dirname, dirnames, filenames in os.walk(basedir):
+            for filename in filenames:
+                yield os.path.join(dirname, filename).lstrip(pkg_dir)
+    return [ x for x in find() ]
+
+
 __version__ = (2, '0-rc1')
 
 sw_path = 'hg+ssh://medusa.pcic.uvic.ca//home/data/projects/comp_support/software'
@@ -59,7 +67,8 @@ setup(
                      'numpy'
                      ],
     scripts = ['scripts/rast_serve.py'],
-    package_data = {'pdp': ['pdp/static', 'pdp/templates']},
+    package_dir = {'pdp': 'pdp'},
+    package_data = {'pdp': ['templates/*.html'] + recursive_list('pdp/', 'pdp/static')},
     data_files = build_doc_list('build/sphinx/html', 'doc'),
     cmdclass = {'test': PyTest},
     zip_safe=False,
