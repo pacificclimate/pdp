@@ -7,6 +7,7 @@
 
 ul.dataset-menu {
     padding: 0;
+    padding-right: 0.5em;
     margin: 0;
     font-size: 1em;
     line-height: 0.5em;
@@ -14,11 +15,11 @@ ul.dataset-menu {
 }
 
 ul.dataset-menu li {
-    padding-right: 0.5em;
+    position: relative;
 }
 
 ul.dataset-menu li a {
-    line-height: 10px;
+    line-height: 12px;
     font-size: 0.875em;;
     padding: 10px 5px;
     color: #000;
@@ -41,6 +42,7 @@ ul.dataset-menu ul {
 ul.dataset-menu ul li {
     margin: 0;
     padding: 0;
+    padding-right: 20px;
     clear: both;
 }
 
@@ -55,6 +57,10 @@ ul.dataset-menu ul li a:hover {
     color:#675C7C;
 }
 
+ul.dataset-menu ul ul li {
+    padding-right: 0;
+}
+
 ul.dataset-menu ul ul li a {
     color:silver;
     padding-left: 40px;
@@ -66,5 +72,8 @@ ul.dataset-menu ul ul li a:hover {
 }
 
 ul.dataset-menu span{
-    float:right;
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    margin: auto;
 }
