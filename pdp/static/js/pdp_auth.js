@@ -66,7 +66,7 @@ my.init_login = function (loginDivId) {
     }
 
     function doLogout(evt) {
-        eraseCookie("beaker.session.id");
+        pdp.eraseCookie("beaker.session.id");
         $.ajax({
             url: "./?openid_logout",
 

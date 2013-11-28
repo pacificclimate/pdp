@@ -108,7 +108,6 @@ var setTimeAvailable = function(begin, end) {
     $.each([".datepickerstart", ".datepickerend"], function(idx, val) {
         $(val).datepicker("option", "minDate", begin);
         $(val).datepicker("option", "maxDate", end);
-        $(val).datepicker("option", "yearRange", begin.getFullYear() + ":" + end.getFullYear());
     });
     $(".datepicker").datepicker("setDate", begin);
     $(".datepickerstart").datepicker("setDate", begin);
