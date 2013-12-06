@@ -19,7 +19,7 @@ $(document).ready(function() {
 
     $("#download-timeseries").click(function(){
         type = $('select[name="data-format"]').val()
-        pdp.checkLogin(loginButton, callDownload, function() {alert('Please log in before downloading data');});
+        callDownload();
     });
 
 });

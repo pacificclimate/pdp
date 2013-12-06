@@ -39,7 +39,7 @@ var download = function(extension, map, selection_layer, ncwms_layer) {
             raster_index_bounds.top + "][" +
             raster_index_bounds.left + ":" +
             raster_index_bounds.right + "]&";
-        window.open(url, "foo");
+        window.open(url,"","width=600,height=600");
     };
 
     // Check input.  Relies upon global var ncwmsCapabilities

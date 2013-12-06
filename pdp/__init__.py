@@ -74,7 +74,7 @@ global_config = {
 # auth wrappers
 def wrap_auth(app, required=True):
     app = PcicOidMiddleware(app,
-                            templates=resource_filename('pdp_util', 'templates'),
+                            templates=resource_filename('pdp', 'templates'),
                             root=global_config['app_root'],
                             auth_required=required)
     return app

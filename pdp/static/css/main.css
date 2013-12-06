@@ -21,7 +21,8 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 p {
-    padding: 0.5em 0;
+    margin-bottom: 1.5em;
+    color: #424242;
 }
 
 img {
@@ -38,6 +39,7 @@ a:link, a:visited {
 
 a:hover, a:active {
     text-decoration: none;
+    cursor: pointer;
     color: #000;
 }
 
@@ -87,6 +89,7 @@ dd {
     bottom: 2em;
     right: 0;
     left: 0;
+    padding: 1em;
 }
 
 #map-wrapper {

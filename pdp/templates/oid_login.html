@@ -1,0 +1,51 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/">
+  <head>
+    <title>OpenID Login</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${root}/css/reset.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${root}/css/main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${root}/css/mini.css" />
+    <script type="text/javascript" src="${root}/js/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="${root}/js/jquery-ui-1.10.2.custom.js"></script>
+  </head>
+
+  <body class="ui-helper-reset ui-widget">
+    <div id="wrapper">
+      <div id="header">
+        <a href="http://pacificclimate.org" style="background-image:url(${root}/images/banner_sm.png);" class="logo_sm">PCIC Home Page</a>
+        <h1>OpenID Login</h1>
+
+      </div>
+      <div id="main">
+	${notice}
+	<p>PCIC asks for a valid e-mail address (supplied through your <a href="http://openid.net/get-an-openid/">OpenID provider</a>) for the purposes of notifying users in the event of changes or errors to the data located herin.  Your e-mail address is the only personal information that PCIC will gather and will be kept secure.</p>
+  <p style="text-align:center;"><a href="http://openid.net/" target="blank" class="button">What is OpenID?</a></p>
+
+	<table class="providers">
+	  <thead>
+    <tr>
+	    <th>Provider</th>
+	    <th>Identifier</th>
+	  </tr>
+  </thead>
+  <tbody>
+    <!-- <tr py:for="p in providers" href="?openid_identifier=${p.url}&amp;return_to=${return_to}" class="clickableRow"> -->
+    <tr py:for="p in providers" href="?openid_identifier=${p.url}&amp;return_to=${return_to}" class="clickableRow">
+	    <td><a><img src="${p.icon}" alt="${p.name}" class="oid-logo" />${p.name}</a></td>
+	    <td>${p.url}</td>
+	  </tr>
+  </tbody>
+	</table>
+      </div>
+    </div>
+     <script>
+    $(document).ready(function($) {
+      $(".clickableRow").click(function() {
+            window.document.location = $(this).attr("href");
+      }).css("cursor", "pointer");
+});
+     </script>
+  </body>
+</html>
