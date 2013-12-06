@@ -1,12 +1,53 @@
+div.control {
+    padding: 1em 1.5em 1em 1em;
+    font-size: 1.0833em;
+}
+
 fieldset {
     border: 1px solid #69a1ba;
-    padding: 0 10px 10px 10px;
-    margin-bottom: 15px;	
+    padding: 0.8333em 0.8333em 0.8333em 0.8333em;
 }
 
 legend {
-    font-size: 1.0em;
+    font-size: 1.5em;
     color: #69a1ba;
+}
+
+label {
+    display: block;
+    margin: 0.375em;
+    color: #000;
+}
+
+select, input[type=text] {
+    border: 1px solid #c8c8c8;
+    background-color: #fff;
+    color: #004360;
+}
+
+input[type="checkbox"] {
+    border: none;
+}
+
+input[type=button], input[type=reset] {
+    border: 1px solid #69a1ba;
+    color: #fff;
+    background-color: #69a1ba;
+    padding: 1px;
+    font-size: 12px;
+    text-align: center;
+    margin: 5px auto;
+    width: 100px;
+}
+
+input[type=button]:hover, input[type=reset]:hover {
+    border: 1px solid #69a1ba;
+    color: #004360;
+    background-color: #fff;
+}
+
+select {
+    width: 80%;
 }
 
 #date-range input {
@@ -87,9 +128,8 @@ legend {
 
 span.helplink {
 	float: right;
-	font-size: 1.2em;
+	font-size: 1.23em;
 }
-
-form div {
-    margin-top: 20px;
+span.helplink a {
+    text-decoration: none;
 }

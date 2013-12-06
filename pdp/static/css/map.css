@@ -4,7 +4,6 @@
     position: absolute;
     bottom: -1.6em;
     right: 0;
-    font-size: 0.8em;
     margin-left: 10px;
 }
 
@@ -17,17 +16,12 @@
 
 #map-title {
     position: absolute;
-    bottom: 1em;
+    bottom: 1.5em;
     right: 0;
-    margin-left: 5em;
-    padding-right: 16px;
-    font-size: 0.8em;
-    line-height: 1em;
 
-/* Options for readable text on map are background, outlined letters, or dropshadow... */
 
 /* background */
-    padding: 5px 5px 5px 5px;
+    padding: 5px 10px;
     background-color: white;
     -webkit-border-top-left-radius: 10px;
     -khtml-border-radius-topleft: 10px;
@@ -37,15 +31,6 @@
     -khtml-border-radius-bottomleft: 10px;
     -moz-border-radius-bottomleft: 10px;
     border-bottom-left-radius: 10px;
-
-/* shadow */
-/*    text-shadow: white 0.1em 0.1em 0.2em;
-*/
-
-/* outlined */
-/*    color: white;
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-*/
 }
 
 div.olPopup {
@@ -65,20 +50,19 @@ div.olPopup {
 }
 
 #map-wrapper #loading {
-    width: 100px;
-    height: 100px;
+    width: 6em;
+    height: 9em;
     position: absolute;
-    left: 50%;
-    top: 50%;
-    margin: -50px 0 0 -50px;
+    left: 6em;
+    top: 2em;
     padding-top: 1em;
     background: white;
     opacity:0.4;
     filter:alpha(opacity=40);
-    -webkit-border-radius: 10px;
-    -khtml-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
+    -webkit-border-radius: 0.8333em;
+    -khtml-border-radius: 0.8333em;
+    -moz-border-radius: 0.8333em;
+    border-radius: 0.8333em;
 }
 
 #map-wrapper #loading p {
@@ -90,23 +74,26 @@ div.olMapViewport {
 }
 
 div.olPopupContent {
-    padding:5px;
+    padding:0.4167em;
     overflow: auto;
-    padding-bottom:0px;
+    padding-bottom:0;
 }
 
 div.olControlAttribution {
     position: absolute;
     bottom: 0;
-    right: 0;
-    font-size:0.6em;
+    right: 0.25em;
+}
+
+div.olMapViewport {
+    line-height: 1em;
 }
 
 .olControlOpacitySliderContainer {
     position: absolute;
     bottom: 50px;
     left: 0;
-    font-size:0.8em;
+    /*font-size:0.8em;*/
 }
 
 .olControlOpacitySliderElement {
@@ -145,7 +132,7 @@ table.featureInfo, table.featureInfo td, table.featureInfo th {
     border-collapse:collapse;
     margin:0;
     padding:0;
-    font-size: 90%;
+    /*font-size: 90%;*/
     padding:0.2em 0.2em;
 }
 table.featureInfo td.attribute{
@@ -170,7 +157,7 @@ table.featureInfo th{
 table.featureInfo caption{
     text-align:left;
     border-collapse:collapse;
-    font-size:100%;
+    /*font-size:100%;*/
     font-weight:bold;
     text-transform:uppercase;
     padding:0.2em 0.2em;
@@ -185,7 +172,7 @@ table.metafeatureInfo, table.metafeatureInfo td, table.metafeatureInfo th {
     margin:0;
     margin-top:5px;
     padding:0;
-    font-size: 95%;
+    /*font-size: 95%;*/
     padding:0.4em 0.4em;
 }
 table.metafeatureInfo td.attribute{
@@ -206,7 +193,7 @@ table.metafeatureInfo th{
 table.metafeatureInfo caption{
     text-align:left;
     border-collapse:collapse;
-    font-size:100%;
+    /*font-size:100%;*/
     padding:0.2em 0.2em;
 }
 

@@ -14,7 +14,8 @@ function createDownloadButtons(id, divClass, buttons) {
 
 function getCRMPDownloadOptions() {
     var frag = document.createDocumentFragment();
-    var downloadForm = frag.appendChild(pdp.createForm("download-form", "download-form", "get"));
+    var div = frag.appendChild(pdp.createDiv('', 'control'));
+    var downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get"));
     var downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
     downloadFieldset.appendChild(createFormatOptions());
     downloadFieldset.appendChild(getClipCheckbox());

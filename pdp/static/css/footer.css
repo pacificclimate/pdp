@@ -1,28 +1,12 @@
-#footer ul{
-    /* padding: 8px 8px 8px 0px; */
-    background-color: white;
-    -webkit-border-top-right-radius: 10px;
-    -khtml-border-radius-topright: 10px;
-    -moz-border-radius-topright: 10px;
-    border-top-right-radius: 10px;
-    -webkit-border-bottom-right-radius: 10px;
-    -khtml-border-radius-bottomright: 10px;
-    -moz-border-radius-bottomright: 10px;
-    border-bottom-right-radius: 10px;
-}
-
-#footer .menu, #topnav .menu {
+#footer .menu {
     display: block;
-    font-size: 0.8em;
+    margin-top: -0.5em;
+    font-size: 1.0833em;
     float: left;
     list-style: none;
 }
 
-#topnav .menu {
-    margin-top: 10px;
-}
-
-#footer .menu li, #topnav .menu li{
+#footer .menu li {
     float: left;
-    margin-right: 10px;
+    margin-right: 0.8333em;
 }

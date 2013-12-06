@@ -29,10 +29,11 @@
   </head>
 
   <body>
+    <div id="wrapper">
     <div id="header">
       <a href="http://pacificclimate.org"><img src="${app_root}/images/banner.png" alt="PCIC Logo" /></a>
       <h1>${title}</h1>
-
+      <div style="clear"></div>
       <div id="topnav">
       <!-- TODO: populate from js -->        
         <ul class="menu">
@@ -43,12 +44,13 @@
 	    <div id="login-div"></div>
       </div><!-- /topnav -->
     </div><!-- /header -->
-
     <div id="main">
       <div id="map-wrapper">
+        <div class="relative">
         <div id="pdp-map"></div>
         <div id="map-title"></div>
         <div id="location"></div>
+      </div>
       </div>
       <div id="pdp-controls"></div>
     </div><!-- /main -->
@@ -61,6 +63,6 @@
           <li><a href="http://www.pacificclimate.org/terms-of-use/">Terms of Use</a></li>
         </ul>
     </div><!-- /footer -->
-    
+    </div><!-- /wrapper -->
   </body>
 </html>

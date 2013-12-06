@@ -3,13 +3,22 @@
 }
 
 #header h1 {
-    float: right;
-    font-size: 2em;
-    color: #69a1ba;
-    font-weight: normal;
-    margin-top: 8px;
+    text-align: right;
+    font-size: 2.5em;
+    line-height: 1.2em;
 }
 
 #header #topnav {
-    clear: left;
+    font-size: 1.0833em;
+    clear: both;
+    margin-top: 1em;
+}
+
+#login-div {
+    float: right;
+}
+
+#topnav li{
+    float: left;
+    margin-right: 1em;
 }

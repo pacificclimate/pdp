@@ -1,17 +1,5 @@
-.dataset-menu {
-    max-height: 450px;
-    overflow-y: auto;
-    padding: 40px 28px 25px 0;
-    /*font-family: "CenturyGothicRegular", "Century Gothic", Arial, Helvetica, sans-serif;*/
-}
-
 ul.dataset-menu {
-    padding: 0;
     padding-right: 0.5em;
-    margin: 0;
-    font-size: 1em;
-    line-height: 0.5em;
-    list-style: none;
 }
 
 ul.dataset-menu li {
@@ -19,17 +7,14 @@ ul.dataset-menu li {
 }
 
 ul.dataset-menu li a {
-    line-height: 12px;
-    font-size: 0.875em;;
-    padding: 10px 5px;
-    color: #000;
+    padding: 0.5em;
+    color: #004361;
     display: block;
-    text-decoration: none;
-    font-weight: bolder;
+    font-weight: bold;
 }
 
 ul.dataset-menu li a:hover {
-    background-color:#675C7C;
+    background-color:#004361;
     color:white;
 }
 
@@ -42,19 +27,18 @@ ul.dataset-menu ul {
 ul.dataset-menu ul li {
     margin: 0;
     padding: 0;
-    padding-right: 20px;
     clear: both;
 }
 
 ul.dataset-menu ul li a {
     padding-left: 20px;
-    font-size: 0.725em;
+    font-size: 0.923em;
     font-weight: normal;
 }
 
 ul.dataset-menu ul li a:hover {
-    background-color:#D3C99C;
-    color:#675C7C;
+    background-color:#6AA2BB;
+    color: white;
 }
 
 ul.dataset-menu ul ul li {
@@ -62,18 +46,15 @@ ul.dataset-menu ul ul li {
 }
 
 ul.dataset-menu ul ul li a {
-    color:silver;
+    color:#6AA2BB;
     padding-left: 40px;
 }
 
 ul.dataset-menu ul ul li a:hover {
-    background-color:#D3CEB8;
-    color:#675C7C;
+    background-color:#B0D79A;
+    color:white;
 }
 
 ul.dataset-menu span{
-    position: absolute;
-    top: 10px;
-    right: 5px;
-    margin: auto;
+    float: right;
 }

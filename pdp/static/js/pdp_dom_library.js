@@ -26,9 +26,10 @@ var pdp = (function (my, $) {
         return ta;
     };
 
-    my.createDiv = function (id) {
+    my.createDiv = function (id, className) {
         var div = document.createElement("div");
         if(typeof id != "undefined") div.id = id;
+        if(typeof className != "undefined") div.className = className;
         return div;
     };
 

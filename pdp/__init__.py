@@ -38,6 +38,7 @@ global_config = {
     'title': "CRMP Network Data",
     'css_files': [
         'css/jquery-ui-1.10.2.custom.css',
+        'css/reset.css',
         'css/main.css',
         'css/map.css',
         'css/header.css',
@@ -46,10 +47,10 @@ global_config = {
         'css/controls.css',
         'css/menu.css'],
     'js_files': [
-        'js/jquery-1.9.1.js',
+        'js/jquery-1.10.2.js',
         'js/jquery-ui-1.10.2.custom.js',
         'js/zebra.js',
-        'js/OL/OpenLayers.js',
+        'js/OL/OpenLayers-2.13.js',
         'js/proj4js-compressed.js',
         'js/OpacitySlider.js',
         'js/multiaccordion.js',

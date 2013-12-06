@@ -126,6 +126,7 @@ function getCRMPDateRange(map) {
 }
 
 function getCRMPControls(map) {
+    var div = pdp.createDiv('', 'control');
     var form = pdp.createForm("filter", "station_filters", "get");
     var fieldset = pdp.createFieldset("filterset", "Filter Options");
     fieldset.appendChild(getCRMPDateRange(map));
@@ -137,6 +138,6 @@ function getCRMPControls(map) {
     fieldset.appendChild(getResetButton());
     form.appendChild(fieldset);
     $(form).bind('reset', function() {filter_clear(map); CRMPFilterChange(map); });
-
-    return form;
+    div.appendChild(form);
+    return div;
 }
