@@ -1,6 +1,9 @@
 $(document).ready(function() {
     map = init_crmp_map();    
 
+    var loginButton = pdp.init_login("login-div");
+    pdp.checkLogin(loginButton);
+    
     var filtChange = pdp.curry(CRMPFilterChange, map);
     
     var filters = document.getElementById("pdp-controls").appendChild(getCRMPControls(map));
