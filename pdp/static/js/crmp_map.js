@@ -38,7 +38,6 @@ function init_crmp_map() {
          getGSBaseLayer(pdp.gs_url, "OpenStreetMap whites", "osm_pnwa_whites_gwc")
         ]
     );
-    addLoadingIcon(crmp);
     map.zoomToMaxExtent();
     
     // Additional Functionality

@@ -75,7 +75,6 @@ var init_raster_map = function() {
 
     var slider = getSlider(ncwms);
     map.addControl(slider);
-    addLoadingIcon(ncwms);
     map.zoomToMaxExtent();
 
     map.getClimateLayer = function() {
