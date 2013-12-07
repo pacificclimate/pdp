@@ -9,6 +9,7 @@ var init_raster_map = function() {
 
     // Map Config
     var options = na4326_map_options();
+    options.tileManager = null;
 
     // Map Controls
     var mapControls = getBasicControls();
@@ -55,6 +56,7 @@ var init_raster_map = function() {
             ratio: 1.5,
             wrapDateLine: true,
             opacity: 0.7,
+            transitionEffect: null
         }
 	);
 

@@ -9,6 +9,7 @@ var selectionBbox;
 function init_prism_map() {
     // Map Config
     options = BC3005_map_options();
+    options.tileManager = null;
 
     // Map Controls
     mapControls = getBasicControls();
@@ -45,7 +46,8 @@ function init_prism_map() {
             maxExtent: getBC3005Bounds(),
             buffer: 1,
             ratio: 1.5,
-            opacity: 0.7
+            opacity: 0.7,
+            transitionEffect: null
         }
     );
 
