@@ -30,7 +30,7 @@ def updateConfig(d1, d2):
 
 here = os.getcwd()
 
-dsn = 'postgresql://pcic_meta@monsoon.pcic/pcic_meta'
+dsn = 'postgresql://pcic_meta@monsoon.pcic/pcic_meta_v1'
 pcds_dsn = 'postgresql://httpd@monsoon.pcic/crmp'
 
 global_config = {
