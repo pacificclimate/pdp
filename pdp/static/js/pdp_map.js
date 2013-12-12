@@ -192,14 +192,6 @@ function getBoxEditor(box) {
     );
 }
 
-function getSlider(layer) {
-    return new OpenLayers.Control.OpacitySlider(
-        {
-            layerToOpacisize: layer
-        }
-    );
-}
-
 var getOpacitySlider = function(layer) {
 
     // Container

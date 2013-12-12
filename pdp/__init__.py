@@ -52,7 +52,6 @@ global_config = {
         'js/zebra.js',
         'js/OL/OpenLayers-2.13.1.js',
         'js/proj4js-compressed.js',
-        'js/OpacitySlider.js',
         'js/multiaccordion.js',
         'js/pdp_dom_library.js',
         'js/pdp_controls.js',
