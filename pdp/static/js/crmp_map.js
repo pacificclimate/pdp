@@ -26,7 +26,8 @@ function init_crmp_map() {
             transparent: 'true'
         },
         {
-            maxExtent: new OpenLayers.Bounds(-236114,41654.75,2204236,1947346.25)
+            maxExtent: new OpenLayers.Bounds(-236114,41654.75,2204236,1947346.25),
+            transitionEffect: null
         }
     );
 
