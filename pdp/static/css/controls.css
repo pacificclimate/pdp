@@ -13,7 +13,7 @@ legend {
     color: #69a1ba;
 }
 
-label {
+.control label {
     display: block;
     margin: 0.375em;
     color: #000;

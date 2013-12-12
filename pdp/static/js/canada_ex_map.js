@@ -75,8 +75,7 @@ var init_raster_map = function() {
         ]
     );
 
-    var slider = getSlider(ncwms);
-    map.addControl(slider);
+    document.getElementById("pdp-map").appendChild(getSlider(ncwms));
     map.zoomToMaxExtent();
 
     map.getClimateLayer = function() {

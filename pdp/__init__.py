@@ -50,7 +50,7 @@ global_config = {
         'js/jquery-1.10.2.js',
         'js/jquery-ui-1.10.2.custom.js',
         'js/zebra.js',
-        'js/OL/OpenLayers-2.13.js',
+        'js/OL/OpenLayers-2.13.1.js',
         'js/proj4js-compressed.js',
         'js/OpacitySlider.js',
         'js/multiaccordion.js',

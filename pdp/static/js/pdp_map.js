@@ -200,6 +200,47 @@ function getSlider(layer) {
     );
 }
 
+var getOpacitySlider = function(layer) {
+
+    // Container
+    var sliderContainer = document.createElement('div');
+    sliderContainer.className = "opacitySliderContainer";
+    sliderContainer.style.padding = "0.5em";
+    
+    // Title
+    var sliderTitle = document.createElement('div');
+    sliderTitle.className = "opacitySliderTitle";
+    sliderTitle.innerHTML = 'Climate Layer Opacity';
+    sliderTitle.setAttribute("unselectable", "on");
+    sliderTitle.className += " unselectable";
+    sliderTitle.style.display = "block";
+    sliderTitle.style.marginBottom = "0.5em";
+    sliderTitle.style.padding = "0 2em"
+    sliderTitle.style.fontWeight = "bold"
+
+    sliderContainer.appendChild(sliderTitle);
+
+    // Slider Element
+    var sliderElement = document.createElement('div');
+    sliderElement.style.position = "relative";
+    sliderElement.style.marginBottom = "0.5em"
+    sliderElement.className = "opacitySliderElement";
+    sliderContainer.appendChild(sliderElement);
+
+    // init Slider
+    $(sliderElement).slider({
+        animate: "fast",
+        range: "min",
+        min: 0,
+        value: 70,
+        slide: function(e, ui) {
+            layer.setOpacity(ui.value / 100);
+        }
+    });
+
+    return sliderContainer;
+};
+
 function addLoadingIcon(layer) {
     $("#map-wrapper").append('<div id="loading" class="invisible"><center>\
 <img src="' + pdp.app_root + '/images/loading.gif" alt="Layer loading animation" /><p>Loading...</p>\

@@ -63,8 +63,7 @@ function init_prism_map() {
         ]
     );
 
-    slider = getSlider(ncwms);
-    map.addControl(slider);
+    document.getElementById("pdp-map").appendChild(getSlider(ncwms));
     map.zoomToExtent(new OpenLayers.Bounds(-236114,41654.75,2204236,1947346.25), true);
 
     map.getClimateLayer = function() {

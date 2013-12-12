@@ -89,17 +89,13 @@ div.olMapViewport {
     line-height: 1em;
 }
 
-.olControlOpacitySliderContainer {
+div.opacitySliderContainer {
     position: absolute;
-    bottom: 50px;
-    left: 0;
-    /*font-size:0.8em;*/
-}
-
-.olControlOpacitySliderElement {
-    padding: 10px 10px 10px 18px;
-    background-color: #000080;
+    bottom: 4em;
     opacity:0.75;
+    background-color: #000080;
+    color: white;
+    z-index: 1010;
     -webkit-border-top-right-radius: 10px;
     -khtml-border-radius-topright: 10px;
     -moz-border-radius-topright: 10px;
@@ -110,22 +106,8 @@ div.olMapViewport {
     border-bottom-right-radius: 10px;
 }
 
-.olControlOpacitySliderMinimizeButton {
-    left: 0;
-    bottom: 30px;
-    cursor: pointer;
-}
-
-.olControlOpacitySliderMaximizeButton {
-    left: 0;
-    bottom: 30px;
-    cursor: pointer;
-}
-
-.opacitySliderText {
-    padding-bottom:8px;
-    padding-left:4px;
-    color:white;
+div.ui-slider-range-min {
+    background: #BFF08E;
 }
 
 table.featureInfo, table.featureInfo td, table.featureInfo th {
