@@ -5,7 +5,11 @@ div.control {
 
 fieldset {
     border: 1px solid #69a1ba;
-    padding: 0.8333em 0.8333em 0.8333em 0.8333em;
+    padding: 0.8333em;
+}
+
+.control fieldset div {
+    margin: 0.5em 0;
 }
 
 legend {
@@ -15,8 +19,7 @@ legend {
 
 .control label {
     display: block;
-    margin: 0.375em;
-    color: #000;
+    margin-bottom: 0.375em;
 }
 
 select, input[type=text] {
@@ -51,7 +54,7 @@ select {
 }
 
 #date-range input {
-    width: 80px;
+    width: 8em;
 }
 
 
@@ -96,13 +99,6 @@ select {
 #with-climatology input,
 #cliptodate input {
 	float: left;
-	width: 10%;
-}
-
-#with-climatology label,
-#cliptodate label {
-    float: right;
-    width: 90%;
 }
 
 #infobox {
