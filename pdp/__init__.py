@@ -30,8 +30,8 @@ def updateConfig(d1, d2):
 
 here = os.getcwd()
 
-dsn = 'postgresql://pcic_meta@monsoon.pcic/pcic_meta_v1'
-pcds_dsn = 'postgresql://httpd@monsoon.pcic/crmp'
+dsn = 'postgresql://httpd_meta@atlas.pcic/pcic_meta'
+pcds_dsn = 'postgresql://httpd@atlas.pcic/crmp'
 
 global_config = {
     'app_root': 'http://medusa.pcic.uvic.ca/dataportal',
@@ -60,8 +60,8 @@ global_config = {
         'js/pdp_map.js',
         'js/pdp_auth.js'
         ],
-    'geoserver_url': 'http://medusa.pcic.uvic.ca/geoserver/',
-    'ncwms_url': 'http://medusa.pcic.uvic.ca/ncWMS/wms',
+    'geoserver_url': 'http://atlas.pcic.uvic.ca/geoserver/',
+    'ncwms_url': 'http://atlas.pcic.uvic.ca/ncWMS/wms',
     'tilecache_url': 'http://medusa.pcic.uvic.ca/tilecache/tilecache.py',
     'ensemble_name': '',
     'templates': os.path.join(here, 'pdp', 'templates'),
