@@ -32,7 +32,7 @@ var init_raster_map = function() {
     );
 
     var defaults = {
-        dataset: "pr-tasmax-tasmin_day_ANUSPLIN300_observation_v20130130_19500101-20101231",
+        dataset: "pr-tasmax-tasmin_day_BCSD-ANUSPLIN300-CanESM2_historical-rcp26_r1i1p1_19500101-21001231",
         variable: "tasmax"
     };
     
