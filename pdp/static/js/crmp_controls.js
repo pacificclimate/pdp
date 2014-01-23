@@ -137,7 +137,7 @@ function getCRMPControls(map) {
     fieldset.appendChild(pdp.getTextareaLabeled('infobox', 'Selection Information', "0 stations\n0 observations\n0 climatologies", 'readonly'));
     fieldset.appendChild(getResetButton());
     form.appendChild(fieldset);
-    $(form).bind('reset', function() {filter_clear(map); CRMPFilterChange(map); });
+    $('#filter-reset', form).bind('click', function() { $("#filter")[0].reset(); filter_clear(map); CRMPFilterChange(map); return false; });
     div.appendChild(form);
     return div;
 }

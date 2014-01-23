@@ -14,14 +14,19 @@ var pdp = (function (my, $) {
         if(typeof cssClass != "undefined") ie.className = cssClass;
         if(typeof id != "undefined") ie.id = id;
         ie.name = name;
-        if(typeof value != "undefined") ie.value = value;
+        if(typeof value != "undefined") { 
+            ie.value = value;
+            ie.defaultValue = value;
+        }
         return ie;
     };
 
     my.createTextarea = function (id, value, readonly) {
         var ta = document.createElement("textarea");
         if(typeof id != "undefined") ta.id = id;
-        if(typeof value != "undefined") ta.value = value;
+        if(typeof value != "undefined") {
+            ta.value = ta.defaultValue = value;
+        }
         if(typeof readonly != "undefined") ta.readonly = "readonly";
         return ta;
     };
