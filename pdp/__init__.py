@@ -16,6 +16,7 @@ from pdp_util.pcds_dispatch import PcdsDispatcher
 from analytics import AnalyticsMiddleware
 from pdp.error import ErrorMiddleware
 from pdp.dispatch import PathDispatcher
+from pdp.minify import wrap_mini
 
 def updateConfig(d1, d2):
     # standard dict update with the exception of joining lists
@@ -52,14 +53,16 @@ global_config = {
         'js/zebra.js',
         'js/OL/OpenLayers-2.13.1.js',
         'js/proj4js-compressed.js',
-        'js/multiaccordion.js',
-        'js/pdp_dom_library.js',
+        'js/multiaccordion.js'] +
+        wrap_mini(['js/pdp_dom_library.js',
         'js/pdp_controls.js',
         'js/pdp_download.js',
         'js/pdp_filters.js',
         'js/pdp_map.js',
-        'js/pdp_auth.js'
-        ],
+        'js/pdp_auth.js',
+        'js/pdp_raster_map.js',
+        'js/pdp_vector_map.js'
+        ]),
     'geoserver_url': 'http://atlas.pcic.uvic.ca/geoserver/',
     'ncwms_url': 'http://atlas.pcic.uvic.ca/ncWMS/wms',
     'tilecache_url': 'http://medusa.pcic.uvic.ca/tilecache/tilecache.py',

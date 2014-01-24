@@ -57,7 +57,8 @@ setup(
                         'pydap.handlers.hdf5 >=0.3',
                         'pydap.responses.netcdf >=0.2',
                         'pydap.responses.xls',
-                        'analytics'
+                        'analytics',
+                        'slimit'
                         ],
     tests_require = ['webob',
                      'pytest',

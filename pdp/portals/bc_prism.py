@@ -13,7 +13,6 @@ portal_config = {
     'title': 'BC PRISM Raster Portal (BETA)',
     'ensemble_name': ensemble_name,
     'js_files' : [
-        'js/pdp_raster_map.js',
         'js/prism_demo_map.js',
         'js/prism_demo_controls.js',
         'js/prism_demo_app.js'

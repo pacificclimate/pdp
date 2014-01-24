@@ -9,7 +9,6 @@ from pdp import global_config, updateConfig
 pcds_config = {
     'title': 'CRMP Network Data',
     'js_files' : [
-        'js/pdp_vector_map.js',
         'js/crmp_map.js',
         'js/crmp_controls.js',
         'js/crmp_download.js',

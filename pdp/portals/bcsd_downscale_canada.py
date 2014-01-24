@@ -13,7 +13,6 @@ portal_config = {
     'title': 'Canadian Climate Coverage (BETA)',
     'ensemble_name': ensemble_name,
     'js_files' : [
-        'js/pdp_raster_map.js',
         'js/canada_ex_map.js',
         'js/canada_ex_controls.js',
         'js/canada_ex_app.js'
