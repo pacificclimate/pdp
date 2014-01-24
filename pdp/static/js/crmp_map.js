@@ -8,6 +8,7 @@ var selectionLayer;
 function init_crmp_map() {
     // Map Config
     options = BC3005_map_options();
+    options.tileManager = null;
 
     // Map Controls
     mapControls = getBasicControls();
@@ -53,40 +54,46 @@ function init_crmp_map() {
 	    myWidth = map.size.w;
 	    myHeight = map.size.h;
 	    
-        params = generateGetFeatureInfoParams(map, myX, myY, stns_lyr, fCount, buff);
+        var fillPopup = function(response){
+            if (popup) map.removePopup(popup);
+            tempPopup = getLoadingPopup("temp", lonLat);
+            map.addPopup(tempPopup, true);
+            if ($('<div/>').append(response.responseText).find('table').length > 0){
+                popup = new OpenLayers.Popup.Anchored(
+                    "chicken",
+                    lonLat,
+                    new OpenLayers.Size(200, 200),
+                    response.responseText,
+                    null,
+                    true,
+                    null);
+                popup.autoSize = true;
+                popup.keepInMap = true;
+                popup.panMapIfOutOfView = (map.getZoom() != 0);
+                map.removePopup(tempPopup);
+                map.addPopup(popup, true);
+            }
+            else
+            {
+                map.removePopup(tempPopup);
+            };
+        };
 	    // FIXME: URL below assumes that geoserver is running on the same machine as the webapp (or a proxy is in place)
-	    OpenLayers.loadURL(wmsurl, params, this, function(response){
-	        funcToCall(response, lonLat);
-	    });
+	    
+        OpenLayers.Request.GET({
+            url: wmsurl,
+            params: generateGetFeatureInfoParams(map, myX, myY, stns_lyr, fCount, buff),
+            success: fillPopup
+            });
+        // OpenLayers.loadURL(wmsurl, params, this, function(response){
+	        // funcToCall(response, lonLat);
+	    // });
     };
 
-    var fillPopup = function(response, lonLat){
-	    if (popup) map.removePopup(popup);
-        tempPopup = getLoadingPopup("temp", lonLat);
-        map.addPopup(tempPopup, true);
-	    if ($('<div/>').append(response.responseText).find('table').length > 0){
-	        popup = new OpenLayers.Popup.Anchored(
-		        "chicken",
-		        lonLat,
-		        new OpenLayers.Size(200, 200),
-		        response.responseText,
-		        null,
-		        true,
-		        null);
-	        popup.autoSize = true;
-	        popup.keepInMap = true;
-            popup.panMapIfOutOfView = (map.getZoom() != 0);
-            map.removePopup(tempPopup);
-	        map.addPopup(popup, true);
-	    }
-	    else
-	    {
-	        map.removePopup(tempPopup);
-	    };
-    };
+
     
     var callPopup = function(e){
-	    var output = crmpgetfeatureinfo(e, 5, 10, fillPopup);
+	    var output = crmpgetfeatureinfo(e, 5, 10);
     };
     var callMetadata = function(e){
 	    if (popup) map.removePopup(popup);	    
