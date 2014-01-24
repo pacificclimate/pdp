@@ -62,7 +62,7 @@ global_config = {
         'js/pdp_auth.js',
         'js/pdp_raster_map.js',
         'js/pdp_vector_map.js'
-        ]),
+        ], debug=True),
     'geoserver_url': 'http://atlas.pcic.uvic.ca/geoserver/',
     'ncwms_url': 'http://atlas.pcic.uvic.ca/ncWMS/wms',
     'tilecache_url': 'http://medusa.pcic.uvic.ca/tilecache/tilecache.py',

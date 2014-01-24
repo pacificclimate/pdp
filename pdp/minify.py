@@ -1,3 +1,7 @@
+import os
+
+from pkg_resources import resource_filename, get_distribution
+
 from slimit import minify
 
 def wrap_mini(paths, debug=True):
@@ -5,9 +9,9 @@ def wrap_mini(paths, debug=True):
         return paths
     else:
         d = resource_filename('pdp', 'static')
+        version = get_distribution('pdp').version
         s = ''
         for path in paths:
-            print path, os.path.dirname(path)
             with open(os.path.join(d, path), 'r') as f:
                 s += f.read()
         smin = minify(s, mangle=True, mangle_toplevel=False)
