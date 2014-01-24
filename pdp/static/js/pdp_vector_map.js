@@ -18,7 +18,7 @@ function generateGetFeatureInfoParams(map, x, y, query_layer, count, buffer) {
         WIDTH: map.size.w,
         HEIGHT: map.size.h,
         SRS: query_layer.params.SRS,
-        FILTER: query_layer.params.FILTER,
+        FILTER: query_layer.params.filter,
         BUFFER: buffer
     };
     for (var attrname in custom_params) {
