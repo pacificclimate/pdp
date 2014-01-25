@@ -6,7 +6,7 @@ function createDownloadButtons(id, divClass, buttons) {
     var downloadDiv = pdp.createDiv(id);
     downloadDiv.className = divClass;
     $.each(buttons, function(idx, val) {
-	downloadDiv.appendChild(pdp.createInputElement("button", undefined, idx, idx, val))
+	downloadDiv.appendChild(pdp.createInputElement("submit", undefined, idx, idx, val))
 	downloadDiv.appendChild(document.createTextNode(" "));
     });
     return downloadDiv;
@@ -15,7 +15,7 @@ function createDownloadButtons(id, divClass, buttons) {
 function getCRMPDownloadOptions() {
     var frag = document.createDocumentFragment();
     var div = frag.appendChild(pdp.createDiv('', 'control'));
-    var downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get"));
+    var downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get", pdp.app_root + "/auth/agg/"));
     var downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
     downloadFieldset.appendChild(createFormatOptions());
     downloadFieldset.appendChild(getClipCheckbox());
