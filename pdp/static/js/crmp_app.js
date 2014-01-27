@@ -5,9 +5,12 @@ $(document).ready(function() {
     pdp.checkLogin(loginButton);
     
     var filtChange = pdp.curry(CRMPFilterChange, map);
+
+    var downloadForm = pdp.createForm("download-form", "download-form", "get", pdp.app_root + "/auth/agg/")
+    document.getElementById("pdp-controls").appendChild(downloadForm);
     
-    var filters = document.getElementById("pdp-controls").appendChild(getCRMPControls(map));
-    var download = document.getElementById("pdp-controls").appendChild(getCRMPDownloadOptions());
+    var filters = downloadForm.appendChild(getCRMPControls(map));
+    var download = downloadForm.appendChild(getCRMPDownloadOptions());
     
     map.filters = {};
     map.filters.values = getActiveFilters;

@@ -15,8 +15,7 @@ function createDownloadButtons(id, divClass, buttons) {
 function getCRMPDownloadOptions() {
     var frag = document.createDocumentFragment();
     var div = frag.appendChild(pdp.createDiv('', 'control'));
-    var downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get", pdp.app_root + "/auth/agg/"));
-    var downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
+    var downloadFieldset = div.appendChild(pdp.createFieldset("downloadset", "Download Data"));
     downloadFieldset.appendChild(createFormatOptions());
     downloadFieldset.appendChild(getClipCheckbox());
     downloadFieldset.appendChild(createDownloadButtons('download-buttons', 'download-buttons', {'download-climatology': 'Climatology', 'download-timeseries': 'Timeseries' }));

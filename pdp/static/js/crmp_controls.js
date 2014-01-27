@@ -115,8 +115,10 @@ function getClimatologyCheckbox(map) {
     return climaSel;
 }
 
-function getResetButton() {
-    return pdp.createInputElement("reset", "", "filter-reset", "filter-reset", "Reset Filters");
+function getResetButton(map) {
+    var reset_button = pdp.createInputElement("reset", "", "filter-reset", "filter-reset", "Reset Filters");
+    $(reset_button).bind('click', function() { this.form.reset(); filter_clear(map); dateChange(map); CRMPFilterChange(map); return false; });
+    return reset_button;
 }
 
 function getCRMPDateRange(map) {
@@ -127,7 +129,6 @@ function getCRMPDateRange(map) {
 
 function getCRMPControls(map) {
     var div = pdp.createDiv('', 'control');
-    var form = pdp.createForm("filter", "station_filters", "get");
     var fieldset = pdp.createFieldset("filterset", "Filter Options");
     fieldset.appendChild(getCRMPDateRange(map));
     fieldset.appendChild(createVariableOptions(map));
@@ -135,9 +136,7 @@ function getCRMPControls(map) {
     fieldset.appendChild(createFrequencyOptions(map));
     fieldset.appendChild(getClimatologyCheckbox(map));
     fieldset.appendChild(pdp.getTextareaLabeled('infobox', 'Selection Information', "0 stations\n0 observations\n0 climatologies", 'readonly'));
-    fieldset.appendChild(getResetButton());
-    form.appendChild(fieldset);
-    $('#filter-reset', form).bind('click', function() { $("#filter")[0].reset(); filter_clear(map); CRMPFilterChange(map); return false; });
-    div.appendChild(form);
+    fieldset.appendChild(getResetButton(map));
+    div.appendChild(fieldset);
     return div;
 }
