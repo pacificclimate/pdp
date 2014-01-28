@@ -88,7 +88,8 @@ function getNaBaseLayer(wmsurl, displayname, layername, proj) {
             numZoomLevels: 10,
             attribution: '© OpenStreetMap contributors'
         }
-    );}
+    );
+}
 
 function getTileBaseLayer(tilesurl, displayname, layername, proj) {
     /* tilesurl something like "http://medusa.pcic.uvic.ca/tilecache/tilecache.py/1.0.0" */
@@ -111,8 +112,9 @@ function getBC3005OsmBaseLayer(wmsurl, displayname, layername) {
             layers: layername
         },
         {
+            projection: getProjection(3005),
+            units: 'Meter',
             maxExtent: new OpenLayers.Bounds(-1000000,-1000000,3000000,3000000),
-            restrictedExtent: new OpenLayers.Bounds(-236114,41654.75,2204236,1947346.25),
             maxResolution: 7812.5,
             numZoomLevels: 12,
             attribution: '© OpenStreetMap contributors'
