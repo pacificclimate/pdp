@@ -21,7 +21,7 @@ var init_raster_map = function() {
     options.controls = mapControls;
     var map = new OpenLayers.Map("pdp-map", options);
 
-    var tiles4 = getTileBaseLayer(pdp.tilecache_url, 'North America OpenStreetMap', 'na4326_osm', mapControls.projection)
+    var na_osm = getNaBaseLayer(pdp.tilecache_url, 'North America OpenStreetMap', 'world_4326_osm', mapControls.projection)
 
     var defaults = {
         dataset: "pr-tasmax-tasmin_day_BCSD-ANUSPLIN300-CanESM2_historical-rcp26_r1i1p1_19500101-21001231",
@@ -63,7 +63,7 @@ var init_raster_map = function() {
         [
             ncwms,
             selectionLayer,
-            tiles4
+            na_osm
         ]
     );
 
