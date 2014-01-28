@@ -1,3 +1,6 @@
+function filter_undefined(filter) {
+    return filter == '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><ogc:And/></ogc:Filter>';
+}
 
 function generateGetFeatureInfoParams(map, x, y, query_layer, count, buffer) {
     var params = {
@@ -18,9 +21,11 @@ function generateGetFeatureInfoParams(map, x, y, query_layer, count, buffer) {
         WIDTH: map.size.w,
         HEIGHT: map.size.h,
         SRS: query_layer.params.SRS,
-        FILTER: query_layer.params.filter,
         BUFFER: buffer
     };
+    if(!filter_undefined(query_layer.params.filter))
+	params["FILTER"] = query_layer.params.filter;
+
     for (var attrname in custom_params) {
         params[attrname] = custom_params[attrname]; 
     }
