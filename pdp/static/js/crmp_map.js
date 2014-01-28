@@ -32,53 +32,68 @@ function init_crmp_map() {
         }
     );
 
-    function getMdDownloadFormatSelector() {
-	var fmtOptionData = {
-	    '': pdp.mkOpt('Select one'),
-	    'WFS': pdp.mkOptGroup({ 'csv': pdp.mkOpt('CSV'), 
-				    'GML2': pdp.mkOpt('GML2'),
-				    'GML2-GZIP': pdp.mkOpt('GML2-GZIP'),
-				    'text/xml; subtype=gml/3.1.1': pdp.mkOpt('GML3.1'),
-				    'text/xml; subtype=gml/3.2': pdp.mkOpt('GML3.2'),
-				    'json': pdp.mkOpt('GeoJSON'),
-				    'SHAPE-ZIP': pdp.mkOpt('Shapefile')
-				  }),
-	    'WMS': pdp.mkOptGroup({ 'application/atom+xml': pdp.mkOpt(''),
-				    'image/gif': pdp.mkOpt(''),
-				    'application/rss+xml': pdp.mkOpt(''),
-				    'image/geotiff': pdp.mkOpt(''),
-				    'image/geotiff8': pdp.mkOpt(''),
-				    'image/jpeg': pdp.mkOpt(''),
-				    'application/vnd.google-earth.kmz+xml': pdp.mkOpt(''),
-				    'application/vnd.google-earth.kml+xml': pdp.mkOpt(''),
-				    'application/openlayers': pdp.mkOpt(''),
-				    'image/png8': pdp.mkOpt(''),
-				    'image/svg+xml': pdp.mkOpt(''),
-				    'image/svg+xml': pdp.mkOpt(''),
-				    'image/tiff8': pdp.mkOpt('')
-
-	    })
-	}
-    }
+    var getMdDownloadFormatSelector = function() {
+        var fmtOptionData = {
+            '': pdp.mkOpt('Select one'),
+            'WFS': pdp.mkOptGroup({
+                'csv': pdp.mkOpt('CSV'), 
+                'GML2': pdp.mkOpt('GML2'),
+                'GML2-GZIP': pdp.mkOpt('GML2-GZIP'),
+                'text/xml; subtype=gml/3.1.1': pdp.mkOpt('GML3.1'),
+                'text/xml; subtype=gml/3.2': pdp.mkOpt('GML3.2'),
+                'json': pdp.mkOpt('GeoJSON'),
+                'SHAPE-ZIP': pdp.mkOpt('Shapefile')
+            }),
+            'WMS': pdp.mkOptGroup({
+                'application/atom+xml': pdp.mkOpt('AtomPub'),
+                'image/gif': pdp.mkOpt('GIF'),
+                'application/rss+xml': pdp.mkOpt('GeoRSS'),
+                'image/geotiff': pdp.mkOpt('GeoTiff'),
+                'image/geotiff8': pdp.mkOpt('GeoTiff 8-bits'),
+                'image/jpeg': pdp.mkOpt('JPEG'),
+                'application/vnd.google-earth.kmz+xml': pdp.mkOpt('KML (compressed)'),
+                'application/vnd.google-earth.kml+xml': pdp.mkOpt('KML (plain)'),
+                'application/openlayers': pdp.mkOpt('OpenLayers'),
+                'application/pdf': pdp.mkOpt('PDF'),
+                'image/png': pdp.mkOpt('PNG'),
+                'image/png8': pdp.mkOpt('PNG 8bit'),
+                'image/svg+xml': pdp.mkOpt('SVG'),
+                'image/tiff': pdp.mkOpt('Tiff'),
+                'image/tiff8': pdp.mkOpt('Tiff 8-bits')
+            })
+        };
+        div = pdp.getSelector('Output Format:', 'metadata-format', 'metadata-format', 'metadata-format', '', fmtOptionData);
+        div.style.width = '200px';
+        return div;
+    };
 
     function getMdDownloadFieldset() {
-	var fs = pdp.createFieldset("md-fieldset", "Metadata Download");
-	fs.appendChild(
-	
+       var fs = pdp.createFieldset("md-fieldset", "Metadata Download");
+       var formatDiv = pdp.createDiv("md-format");
+       formatDiv.appendChild(getMdDownloadFormatSelector());
+       var downloadDiv = pdp.createDiv("download-buttons");
+       downloadDiv.appendChild(pdp.createInputElement('button', '', '', '', "Download"))
+
+       fs.appendChild(formatDiv);
+       fs.appendChild(downloadDiv);
+       return fs;
+	   
     }
 
     var mapButtonsDiv = pdp.createDiv("map-buttons");
     mapButtonsDiv.appendChild(pdp.createInputElement("button", undefined, "legend-button", "legend-button", "View Legend"));
     mapButtonsDiv.appendChild(pdp.createInputElement("button", undefined, "metadata-button", "metadata-button", "View Metadata"));
     map.div.appendChild(mapButtonsDiv);
+    
     var mdDialogDiv = pdp.createDiv("metadata-dialog");
     var mdDownloadDiv = pdp.createDiv("md-download");
+    mdFieldset = getMdDownloadFieldset();
     mdDownloadDiv.appendChild(mdFieldset);
     var stnListDiv = pdp.createDiv("station-list");
     mdDialogDiv.appendChild(mdDownloadDiv);
     mdDialogDiv.appendChild(stnListDiv);
     map.div.appendChild(mdDialogDiv);
-    pdp.createDialog(mdDialogDiv, "Station Metadata", 800, 600);
+    pdp.createDialog(mdDialogDiv, "Station Metadata", 1000, 600);
 
     map.addLayers(
         [crmp,
@@ -143,13 +158,14 @@ function init_crmp_map() {
     var callPopup = function(e){
 	    var output = crmpgetfeatureinfo(e, 5, 10);
     };
-    var callMetadata = function(e){
-	$('#station-list').dialog("open");
-	$('#station-list').html('<p>Loading... <br/><img style="padding-top: 4px; width: 30px; height: 30px;" src="' + pdp.app_root + '/images/anim_loading.gif"/></p>');
-	fillMetadata();
-    };
+    
     map.events.register('click', map, callPopup);
-    $('#metadata-button').click(callMetadata);
+    
+    $('#metadata-button').click(function(e){
+       $('#metadata-dialog').dialog("open");
+       $('#station-list').html('<p>Loading... <br/><img style="padding-top: 4px; width: 30px; height: 30px;" src="' + pdp.app_root + '/images/anim_loading.gif"/></p>');
+       fillMetadata();
+    });
 
     function fixAttrDataFields(colName, value){
 	    if (value == null) {
@@ -175,17 +191,18 @@ function init_crmp_map() {
 			};
     
     function fillMetadata(){
-	var filters = map.getLayersByName('PCDS stations')[0].params.filter;
-	var formatter = new OpenLayers.Format.Filter.v1_1_0({defaultVersion: "1.1.0", outputFormat: "GML3", xy: 'WFS' == 'WMS'});
+        var filters = map.getLayersByName('PCDS stations')[0].params.filter;
+        var formatter = new OpenLayers.Format.Filter.v1_1_0({defaultVersion: "1.1.0", outputFormat: "GML3", xy: 'WFS' == 'WMS'});
         var xml = new OpenLayers.Format.XML();
 
-	url = '/geoserver/CRMP/ows?service=WFS';
-        params = {'version': '1.1.0',
-                  'request': 'GetFeature',
-                  'typeName': 'CRMP:crmp_network_geoserver',
-                  'outputFormat': 'json',
-                  'srsname': 'epsg:4326'
-                 };
+        url = '/geoserver/CRMP/ows?service=WFS';
+        params = {
+            'version': '1.1.0',
+            'request': 'GetFeature',
+            'typeName': 'CRMP:crmp_network_geoserver',
+            'outputFormat': 'json',
+            'srsname': 'epsg:4326'
+        };
 
 	if(!filter_undefined(filters))
 	    params["FILTER"] = filters;
