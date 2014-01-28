@@ -8,7 +8,7 @@ function getBC3005Bounds() {
 }
 
 function getNA4326Bounds() {
-    return new OpenLayers.Bounds(-150,30,-50,90);
+    return new OpenLayers.Bounds(-150,40,-50,90);
 }
 
 function getWorld4326Bounds() {
@@ -32,16 +32,14 @@ function BC3005_map_options() {
 }
 
 function na4326_map_options() {
-    bounds = getNA4326Bounds()
-    projection = getProjection(4326)
+    bounds = getNA4326Bounds();
+    projection = getProjection(4326);
 
     var options = {
         restrictedExtent: bounds,
+        units: 'degrees',
         displayProjection: projection,
-        maxResolution: 0.087890625,
-        numZoomLevels: 9,
         projection: projection,
-        units: 'degrees'
     };
     return options
 }
@@ -78,6 +76,21 @@ function getGSBaseLayer(gs_url, displayname, layername) {
     );
 }
 
+function getNaBaseLayer(wmsurl, displayname, layername, proj) {
+    return new OpenLayers.Layer.WMS(
+        displayname,
+        wmsurl,
+        {
+            layers: layername,
+        },{
+            projection: proj,
+            maxResolution: 1.40625,
+            numZoomLevels: 10,
+            attribution: '© OpenStreetMap contributors'
+        }
+    );
+}
+
 function getTileBaseLayer(tilesurl, displayname, layername, proj) {
     /* tilesurl something like "http://medusa.pcic.uvic.ca/tilecache/tilecache.py/1.0.0" */
     return new OpenLayers.Layer.XYZ(
@@ -99,8 +112,9 @@ function getBC3005OsmBaseLayer(wmsurl, displayname, layername) {
             layers: layername
         },
         {
+            projection: getProjection(3005),
+            units: 'Meter',
             maxExtent: new OpenLayers.Bounds(-1000000,-1000000,3000000,3000000),
-            restrictedExtent: new OpenLayers.Bounds(-236114,41654.75,2204236,1947346.25),
             maxResolution: 7812.5,
             numZoomLevels: 12,
             attribution: '© OpenStreetMap contributors'
