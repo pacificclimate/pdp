@@ -5,6 +5,7 @@ from pdp_util.map import MapApp
 from pdp_util.raster import RasterServer, RasterCatalog, db_raster_configurator
 from pdp_util.ensemble_members import PrismEnsembleLister
 
+from pdp.minify import wrap_mini
 from pdp import dsn, global_config, updateConfig
 
 ensemble_name = 'bc_prism'
@@ -13,9 +14,11 @@ portal_config = {
     'title': 'BC PRISM Raster Portal (BETA)',
     'ensemble_name': ensemble_name,
     'js_files' : [
-        'js/prism_demo_map.js',
-        'js/prism_demo_controls.js',
-        'js/prism_demo_app.js'
+        wrap_mini([
+            'js/prism_demo_map.js',
+            'js/prism_demo_controls.js',
+            'js/prism_demo_app.js'],
+            basename='bc_prism', debug=False)
         ]
     }
 
