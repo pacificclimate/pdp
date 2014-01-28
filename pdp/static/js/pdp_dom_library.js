@@ -13,7 +13,7 @@ var pdp = (function (my, $) {
         ie.type = type;
         if(typeof cssClass != "undefined") ie.className = cssClass;
         if(typeof id != "undefined") ie.id = id;
-        ie.name = name;
+        if(typeof name != "undefined") ie.name = name;
         if(typeof value != "undefined") { 
             ie.value = value;
             ie.defaultValue = value;

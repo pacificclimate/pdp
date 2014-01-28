@@ -21,6 +21,9 @@ $(document).ready(function() {
     // Wire up legend button to pop up network-name-help.
     $("#legend-button").on('click', function() { $('#network-name-help').dialog("open"); return false; });
 
+
+    $('#md-download-button').click( function(e) { downloadMetadata(e, map); });
+
     // No map titles for CRMP...
     $("#map-title").remove();
 

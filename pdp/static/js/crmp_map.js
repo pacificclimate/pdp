@@ -68,29 +68,30 @@ function init_crmp_map() {
     };
 
     function getMdDownloadFieldset() {
-       var fs = pdp.createFieldset("md-fieldset", "Metadata Download");
-       var formatDiv = pdp.createDiv("md-format");
-       formatDiv.appendChild(getMdDownloadFormatSelector());
-       var downloadDiv = pdp.createDiv("download-buttons");
-       downloadDiv.appendChild(pdp.createInputElement('button', '', '', '', "Download"))
+        var form = pdp.createForm(undefined, undefined, 'post', undefined);
 
-       fs.appendChild(formatDiv);
-       fs.appendChild(downloadDiv);
-       return fs;
-	   
+        var fs = pdp.createFieldset("md-fieldset", "Metadata Download");
+        var downloadDiv = pdp.createDiv("md-download-button");
+        downloadDiv.appendChild(pdp.createInputElement('button', undefined, undefined, undefined, "Download"))
+
+        fs.appendChild(getMdDownloadFormatSelector());
+        fs.appendChild(downloadDiv);
+
+        form.appendChild(fs);
+        return form;
     }
 
     var mapButtonsDiv = pdp.createDiv("map-buttons");
     mapButtonsDiv.appendChild(pdp.createInputElement("button", undefined, "legend-button", "legend-button", "View Legend"));
     mapButtonsDiv.appendChild(pdp.createInputElement("button", undefined, "metadata-button", "metadata-button", "View Metadata"));
     map.div.appendChild(mapButtonsDiv);
-    
+
     var mdDialogDiv = pdp.createDiv("metadata-dialog");
-    var mdDownloadDiv = pdp.createDiv("md-download");
+    // var mdDownloadDiv = pdp.createDiv("md-download");
     mdFieldset = getMdDownloadFieldset();
-    mdDownloadDiv.appendChild(mdFieldset);
+    // mdDownloadDiv.appendChild(mdFieldset);
     var stnListDiv = pdp.createDiv("station-list");
-    mdDialogDiv.appendChild(mdDownloadDiv);
+    mdDialogDiv.appendChild(mdFieldset);
     mdDialogDiv.appendChild(stnListDiv);
     map.div.appendChild(mdDialogDiv);
     pdp.createDialog(mdDialogDiv, "Station Metadata", 1000, 600);
@@ -204,31 +205,31 @@ function init_crmp_map() {
             'srsname': 'epsg:4326'
         };
 
-	if(!filter_undefined(filters))
-	    params["FILTER"] = filters;
-
+        if(!filter_undefined(filters)) {
+            params["FILTER"] = filters;            
+        }
         url = url + '&' + $.param(params);
-	    $.getJSON(url, function(data){
-	        var stationCount = (data.features.length)+" stations selected.\n";
-	        var tbl_body = '<table class="metafeatureInfo" border="0"><thead><tr>';
+        $.getJSON(url, function(data){
+           var stationCount = (data.features.length)+" stations selected.\n";
+           var tbl_body = '<table class="metafeatureInfo" border="0"><thead><tr>';
 
             // add the header row first
-	        if (data.features.length != 0){
-		        $.each(crmpHashNames, function(k,v){
-		            tbl_body += '<th align="left" class="attribute">'+v+'</th>';
-		        });
-		        tbl_body += '</tr></thead><tbody>';
+            if (data.features.length != 0){
+              $.each(crmpHashNames, function(k,v){
+                  tbl_body += '<th align="left" class="attribute">'+v+'</th>';
+              });
+              tbl_body += '</tr></thead><tbody>';
 
                 // then loop through the data & add the data rows
-		        $.each(data.features, function(i,feat) {
-		            var tbl_row = '';
-		            $.each(crmpHashNames, function(k,v){
-			            tbl_row += "<td>"+fixAttrDataFields(k, feat.properties[k])+"</td>";
-		            });
-		            tbl_body += "<tr>"+tbl_row+"</tr>";                 
-		        });
-		        $("#station-list").html(stationCount+tbl_body+"</tbody></table>");
-	        } else {
+                $.each(data.features, function(i,feat) {
+                  var tbl_row = '';
+                  $.each(crmpHashNames, function(k,v){
+                     tbl_row += "<td>"+fixAttrDataFields(k, feat.properties[k])+"</td>";
+                 });
+                  tbl_body += "<tr>"+tbl_row+"</tr>";                 
+              });
+                $("#station-list").html(stationCount+tbl_body+"</tbody></table>");
+            } else {
 		        $("#station-list").html("No data selected.");
 	        };
 	    });
