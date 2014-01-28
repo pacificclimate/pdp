@@ -161,14 +161,7 @@ var pdp = (function (my, $) {
         return frag;
     };
 
-    my.createHelp = function (helpDivId, helpData, title, width, height, helpElementType, helpCallback) {
-        if(typeof helpElementType == "undefined") helpElementType = "dl";
-        if(typeof helpCallback == "undefined") helpCallback = my.getHelpRecursive;
-        var div = my.createDiv(helpDivId);
-        var frag = document.createDocumentFragment();
-        var parent_elem = div.appendChild(document.createElement(helpElementType));
-        parent_elem.appendChild(helpCallback(helpData, 2));
-
+    my.createDialog = function(div, title, width, height) {
         $(div).dialog({
             appendTo: "#main",
             autoOpen: false,
@@ -178,11 +171,21 @@ var pdp = (function (my, $) {
             modal: true,
             buttons: {
                 "Close": function() {
-                $(this).dialog("close");
+                    $(this).dialog("close");
                 }
             }
         });
-        
+    }
+
+    my.createHelp = function (helpDivId, helpData, title, width, height, helpElementType, helpCallback) {
+        if(typeof helpElementType == "undefined") helpElementType = "dl";
+        if(typeof helpCallback == "undefined") helpCallback = my.getHelpRecursive;
+        var div = my.createDiv(helpDivId);
+        var frag = document.createDocumentFragment();
+        var parent_elem = div.appendChild(document.createElement(helpElementType));
+        parent_elem.appendChild(helpCallback(helpData, 2));
+	my.createDialog(div, title, width, height);
+
         return frag;
     };
 

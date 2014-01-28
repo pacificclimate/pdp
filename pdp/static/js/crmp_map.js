@@ -32,6 +32,54 @@ function init_crmp_map() {
         }
     );
 
+    function getMdDownloadFormatSelector() {
+	var fmtOptionData = {
+	    '': pdp.mkOpt('Select one'),
+	    'WFS': pdp.mkOptGroup({ 'csv': pdp.mkOpt('CSV'), 
+				    'GML2': pdp.mkOpt('GML2'),
+				    'GML2-GZIP': pdp.mkOpt('GML2-GZIP'),
+				    'text/xml; subtype=gml/3.1.1': pdp.mkOpt('GML3.1'),
+				    'text/xml; subtype=gml/3.2': pdp.mkOpt('GML3.2'),
+				    'json': pdp.mkOpt('GeoJSON'),
+				    'SHAPE-ZIP': pdp.mkOpt('Shapefile')
+				  }),
+	    'WMS': pdp.mkOptGroup({ 'application/atom+xml': pdp.mkOpt(''),
+				    'image/gif': pdp.mkOpt(''),
+				    'application/rss+xml': pdp.mkOpt(''),
+				    'image/geotiff': pdp.mkOpt(''),
+				    'image/geotiff8': pdp.mkOpt(''),
+				    'image/jpeg': pdp.mkOpt(''),
+				    'application/vnd.google-earth.kmz+xml': pdp.mkOpt(''),
+				    'application/vnd.google-earth.kml+xml': pdp.mkOpt(''),
+				    'application/openlayers': pdp.mkOpt(''),
+				    'image/png8': pdp.mkOpt(''),
+				    'image/svg+xml': pdp.mkOpt(''),
+				    'image/svg+xml': pdp.mkOpt(''),
+				    'image/tiff8': pdp.mkOpt('')
+
+	    })
+	}
+    }
+
+    function getMdDownloadFieldset() {
+	var fs = pdp.createFieldset("md-fieldset", "Metadata Download");
+	fs.appendChild(
+	
+    }
+
+    var mapButtonsDiv = pdp.createDiv("map-buttons");
+    mapButtonsDiv.appendChild(pdp.createInputElement("button", undefined, "legend-button", "legend-button", "View Legend"));
+    mapButtonsDiv.appendChild(pdp.createInputElement("button", undefined, "metadata-button", "metadata-button", "View Metadata"));
+    map.div.appendChild(mapButtonsDiv);
+    var mdDialogDiv = pdp.createDiv("metadata-dialog");
+    var mdDownloadDiv = pdp.createDiv("md-download");
+    mdDownloadDiv.appendChild(mdFieldset);
+    var stnListDiv = pdp.createDiv("station-list");
+    mdDialogDiv.appendChild(mdDownloadDiv);
+    mdDialogDiv.appendChild(stnListDiv);
+    map.div.appendChild(mdDialogDiv);
+    pdp.createDialog(mdDialogDiv, "Station Metadata", 800, 600);
+
     map.addLayers(
         [crmp,
          selectionLayer,
@@ -96,13 +144,12 @@ function init_crmp_map() {
 	    var output = crmpgetfeatureinfo(e, 5, 10);
     };
     var callMetadata = function(e){
-	    if (popup) map.removePopup(popup);	    
-	    $('#stationList').html('Loading... <br/><img style="padding-top:4px" width=30 height=30 src="' + pdp.app_root + '/images/anim_loading.gif">');
-	    //var output = crmpgetfeatureinfo(e, 7000, 6, fillMetadata);
-	    fillMetadata();
+	$('#station-list').dialog("open");
+	$('#station-list').html('<p>Loading... <br/><img style="padding-top: 4px; width: 30px; height: 30px;" src="' + pdp.app_root + '/images/anim_loading.gif"/></p>');
+	fillMetadata();
     };
     map.events.register('click', map, callPopup);
-    $('#metadata').click(callMetadata);
+    $('#metadata-button').click(callMetadata);
 
     function fixAttrDataFields(colName, value){
 	    if (value == null) {
@@ -117,22 +164,22 @@ function init_crmp_map() {
 	    };
     };
     var crmpHashNames = {'network_name' : 'Network Name',
-			             'native_id'    : 'Native ID',
-			             'station_name' : 'Station Name',
-			             'lon'          : 'Longitude',
-			             'lat'          : 'Latitidue',
-			             'elev'         : 'Elev (m)',
-			             'min_obs_time' : 'Record Start',
-			             'max_obs_time' : 'Record End',
-			             'freq'         : 'Frequency'
-			            };
+			 'native_id'    : 'Native ID',
+			 'station_name' : 'Station Name',
+			 'lon'          : 'Longitude',
+			 'lat'          : 'Latitidue',
+			 'elev'         : 'Elev (m)',
+			 'min_obs_time' : 'Record Start',
+			 'max_obs_time' : 'Record End',
+			 'freq'         : 'Frequency'
+			};
     
     function fillMetadata(){
-	    var filters = map.composite_filter;
-	    var formatter = new OpenLayers.Format.Filter.v1_1_0({defaultVersion: "1.1.0", outputFormat: "GML3", xy: 'WFS' == 'WMS'});
+	var filters = map.getLayersByName('PCDS stations')[0].params.filter;
+	var formatter = new OpenLayers.Format.Filter.v1_1_0({defaultVersion: "1.1.0", outputFormat: "GML3", xy: 'WFS' == 'WMS'});
         var xml = new OpenLayers.Format.XML();
-	    // FIXME: URL below assumes that geoserver is running on the same machine as the webapp (or a proxy is in place)
-	    url = '/geoserver/CRMP/ows?service=WFS';
+
+	url = '/geoserver/CRMP/ows?service=WFS';
         params = {'version': '1.1.0',
                   'request': 'GetFeature',
                   'typeName': 'CRMP:crmp_network_geoserver',
@@ -140,21 +187,20 @@ function init_crmp_map() {
                   'srsname': 'epsg:4326'
                  };
 
-	    if (filters) {
-	        params['filter'] = xml.write(formatter.write(filters));
-        }
+	if(!filter_undefined(filters))
+	    params["FILTER"] = filters;
 
         url = url + '&' + $.param(params);
 	    $.getJSON(url, function(data){
 	        var stationCount = (data.features.length)+" stations selected.\n";
-	        var tbl_body = '<table class="metafeatureInfo" border="0"><tbody><tr>';
+	        var tbl_body = '<table class="metafeatureInfo" border="0"><thead><tr>';
 
             // add the header row first
 	        if (data.features.length != 0){
 		        $.each(crmpHashNames, function(k,v){
 		            tbl_body += '<th align="left" class="attribute">'+v+'</th>';
 		        });
-		        tbl_body += '</tr>';
+		        tbl_body += '</tr></thead><tbody>';
 
                 // then loop through the data & add the data rows
 		        $.each(data.features, function(i,feat) {
@@ -164,9 +210,9 @@ function init_crmp_map() {
 		            });
 		            tbl_body += "<tr>"+tbl_row+"</tr>";                 
 		        });
-		        $("#stationList").html(stationCount+tbl_body+"</tbody></table>");
+		        $("#station-list").html(stationCount+tbl_body+"</tbody></table>");
 	        } else {
-		        $("#stationList").html("No data selected.");
+		        $("#station-list").html("No data selected.");
 	        };
 	    });
     };

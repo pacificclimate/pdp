@@ -1,3 +1,4 @@
+
 $(document).ready(function() {
     map = init_crmp_map();    
 
@@ -17,6 +18,13 @@ $(document).ready(function() {
     map.composite_filter = '';
     map.getControlsByClass('OpenLayers.Control.DrawFeature')[0].events.register('featureadded', '', pdp.curry(polyChange, map));
 
+    // Wire up legend button to pop up network-name-help.
+    $("#legend-button").on('click', function() { $('#network-name-help').dialog("open"); return false; });
+
+    // No map titles for CRMP...
+    $("#map-title").remove();
+
     // Populate selection information textbox initially.
     filtChange();
 });
+
