@@ -9,16 +9,14 @@ from pdp import global_config, updateConfig
 
 pcds_config = {
     'title': 'CRMP Network Data',
-    'js_files' : [
-        wrap_mini([
-            'js/crmp_map.js',
-            'js/crmp_controls.js',
-            'js/crmp_download.js',
-            'js/crmp_filters.js',
-            'js/crmp_app.js'],
-            basename='pcds', debug=False
-            )
-        ]
+    'js_files' : wrap_mini([
+        'js/crmp_map.js',
+        'js/crmp_controls.js',
+        'js/crmp_download.js',
+        'js/crmp_filters.js',
+        'js/crmp_app.js'], 
+        basename='pcds', debug=True
+        )
     }
 
 pcds_map_config = updateConfig(global_config, pcds_config)
