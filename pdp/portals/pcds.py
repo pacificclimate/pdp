@@ -4,16 +4,20 @@ from pdp_util import session_scope
 from pdp_util.map import MapApp
 from pdp_util.raster import RasterServer, RasterCatalog, db_raster_configurator
 
+from pdp.minify import wrap_mini
 from pdp import global_config, updateConfig
 
 pcds_config = {
     'title': 'CRMP Network Data',
     'js_files' : [
-        'js/crmp_map.js',
-        'js/crmp_controls.js',
-        'js/crmp_download.js',
-        'js/crmp_filters.js',
-        'js/crmp_app.js'
+        wrap_mini([
+            'js/crmp_map.js',
+            'js/crmp_controls.js',
+            'js/crmp_download.js',
+            'js/crmp_filters.js',
+            'js/crmp_app.js'],
+            basename='pcds', debug=False
+            )
         ]
     }
 

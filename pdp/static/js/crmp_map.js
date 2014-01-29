@@ -192,7 +192,7 @@ function init_crmp_map() {
 			};
     
     function fillMetadata(){
-        var filters = map.getLayersByName('PCDS stations')[0].params.filter;
+        var filters = map.composite_filter;
         var formatter = new OpenLayers.Format.Filter.v1_1_0({defaultVersion: "1.1.0", outputFormat: "GML3", xy: 'WFS' == 'WMS'});
         var xml = new OpenLayers.Format.XML();
 
@@ -206,7 +206,7 @@ function init_crmp_map() {
         };
 
         if(!filter_undefined(filters)) {
-            params["FILTER"] = filters;            
+            params["filter"] = xml.write(formatter.write(filters));            
         }
         url = url + '&' + $.param(params);
         $.getJSON(url, function(data){

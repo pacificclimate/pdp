@@ -4,7 +4,7 @@ from pkg_resources import resource_filename, get_distribution
 
 from slimit import minify
 
-def wrap_mini(paths, debug=True):
+def wrap_mini(paths, basename='pdp', debug=True):
     if debug:
         return paths
     else:
@@ -15,8 +15,9 @@ def wrap_mini(paths, debug=True):
             with open(os.path.join(d, path), 'r') as f:
                 s += f.read()
         smin = minify(s, mangle=True, mangle_toplevel=False)
-        outpath = os.path.join(d, 'pdp-min-' + version + '.js')
+        outname = '{basename}-min-{version}.js'.format(**locals())
+        outpath = os.path.join(d, outname)
         with open(outpath, 'w') as f:
             f.write(smin)
-        return ['pdp-min-' + version + '.js']
+        return [outname]
     
