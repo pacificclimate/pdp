@@ -62,7 +62,7 @@ global_config = {
         'js/pdp_auth.js',
         'js/pdp_raster_map.js',
         'js/pdp_vector_map.js'
-        ], debug=False),
+        ], debug=True),
     'geoserver_url': 'http://atlas.pcic.uvic.ca/geoserver/',
     'ncwms_url': 'http://atlas.pcic.uvic.ca/ncWMS/wms',
     'tilecache_url': 'http://medusa.pcic.uvic.ca/tilecache/tilecache.py',
@@ -105,6 +105,8 @@ from portals.bc_prism import portal as bc_prism
 
 from portals.bcsd_downscale_canada import portal as bcsd_canada
 
+from portals.vic_gen1 import portal as vic_gen1
+
 auth = PathDispatcher([
     ('^/pcds/.*$', dispatch_app),
     # ('^/pydap/.*$', pydap_app),
@@ -121,6 +123,7 @@ main = PathDispatcher([
     ('^/check_auth_app/?$', check_auth),
     ('^/pcds_map/.*$', pcds_map),
     ('^/bc_prism/.*$', bc_prism),
+    ('^/vic_gen1/.*$', vic_gen1),
     ('^/bcsd_downscale_canada/.*$', bcsd_canada),
     ('^/auth.*$', auth),
     ('^/apps/.*$', apps),
