@@ -7,6 +7,10 @@ function getBC3005Bounds() {
     return new OpenLayers.Bounds(-236114,41654.75,2204236,1947346.25);
 }
 
+function getBC3005Bounds_vic() { 
+    return new OpenLayers.Bounds(611014.125,251336.4375,2070975.0625,1737664.5625);
+}
+
 function getNA4326Bounds() {
     return new OpenLayers.Bounds(-150,40,-50,90);
 }
@@ -21,6 +25,18 @@ function getBC3005Resolutions() {
 
 function BC3005_map_options() {
     bounds = getBC3005Bounds()
+
+    var options = {
+        restrictedExtent: bounds,
+        displayProjection: getProjection(4326),
+        projection: getProjection(3005),
+        units: 'Meter'
+    };
+    return options
+}
+
+function BC3005_map_options_vic() {
+    bounds = getBC3005Bounds_vic()
 
     var options = {
         restrictedExtent: bounds,
