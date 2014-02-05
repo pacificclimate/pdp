@@ -15,7 +15,7 @@ var getRasterDownloadOptions = function () {
     var downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
     downloadFieldset.appendChild(getDateRange());
     downloadFieldset.appendChild(createRasterFormatOptions());
-    downloadFieldset.appendChild(createDownloadButtons("download-buttons", "download-buttons", {"download-timeseries": "Timeseries"}));
+    downloadFieldset.appendChild(createDownloadButtons("download-buttons", "download-buttons", {"download-timeseries": "Download"}));
     return frag;
 };
 

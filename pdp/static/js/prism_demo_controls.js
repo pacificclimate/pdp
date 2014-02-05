@@ -14,7 +14,7 @@ function getPRISMDownloadOptions() {
     var downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get"));
     var downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
     downloadFieldset.appendChild(createRasterFormatOptions());
-    downloadFieldset.appendChild(createDownloadButtons('download-buttons', 'download-buttons', {'download-timeseries': 'Timeseries' }));
+    downloadFieldset.appendChild(createDownloadButtons('download-buttons', 'download-buttons', {'download-timeseries': 'Download' }));
     return frag;
 }
 
