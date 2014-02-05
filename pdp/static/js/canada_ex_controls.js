@@ -21,7 +21,7 @@ var getRasterDownloadOptions = function () {
 
 var download = function(extension, map, selection_layer, ncwms_layer) {
 
-    var times = getTimeSelected();
+    var times = getTimeSelected(ncwms_layer);
     var start = times[0];
     var end = times[1];
 
