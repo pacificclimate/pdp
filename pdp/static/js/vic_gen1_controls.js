@@ -1,4 +1,4 @@
-function getPRISMControls(ensemble_name) {
+function getVICControls(ensemble_name) {
     var div = pdp.createDiv('', 'control');
 	var form = pdp.createForm(undefined, undefined, undefined);
     var fieldset = pdp.createFieldset("filterset", "Dataset Selection");
@@ -8,17 +8,22 @@ function getPRISMControls(ensemble_name) {
     return div;
 }
 
-function getPRISMDownloadOptions() {
+function getVICDownloadOptions() {
     var frag = document.createDocumentFragment();
     var div = frag.appendChild(pdp.createDiv('', 'control'));
     var downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get"));
     var downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
+    downloadFieldset.appendChild(getDateRange());
     downloadFieldset.appendChild(createRasterFormatOptions());
-    downloadFieldset.appendChild(createDownloadButtons('download-buttons', 'download-buttons', {'download-timeseries': 'Timeseries' }));
+    downloadFieldset.appendChild(createDownloadButtons('download-buttons', 'download-buttons', {'download-timeseries': 'Download' }));
     return frag;
 }
 
 function download(extension, map, selection_layer, ncwms_layer) {
+
+    var times = getTimeSelected(ncwms_layer);
+    var start = times[0];
+    var end = times[1];
 
     var callPydapDownloadUrl = function (raster_index_bounds) {
         if (raster_index_bounds.toGeometry().getArea() == 0) {
@@ -27,8 +32,8 @@ function download(extension, map, selection_layer, ncwms_layer) {
         }
         var id = ncwms_layer.params.LAYERS.split('/')[0]; // strip the variable to get the id
         var variable = ncwms_layer.params.LAYERS.split('/')[1];
-        var url = catalog[id] + '.' + extension + '?climatology_bounds,' + variable +
-            '[0:12][' + 
+        var url = catalog[id] + '.' + extension + '?' + variable +
+            '[' + start + ":" + end + "][" +
             raster_index_bounds.bottom + ':' + 
             raster_index_bounds.top + '][' + 
             raster_index_bounds.left + ':' + 

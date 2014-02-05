@@ -5,13 +5,15 @@ $(document).ready(function() {
     loginButton = pdp.init_login('login-div');
     pdp.checkLogin(loginButton);
 
-    getCatalog(function (data) { catalog = data});
-
-    var selector = document.getElementById("pdp-controls").appendChild(getPRISMControls(pdp.ensemble_name));
-    var downloader = document.getElementById("pdp-controls").appendChild(getPRISMDownloadOptions());
-
     ncwmsLayer = map.getClimateLayer();
     selectionLayer = map.getSelectionLayer();
+
+    getCatalog(function (data) { catalog = data;
+				 processNcwmsLayerMetadata(ncwmsLayer);
+			       });
+
+    var selector = document.getElementById("pdp-controls").appendChild(getVICControls(pdp.ensemble_name));
+    var downloader = document.getElementById("pdp-controls").appendChild(getVICDownloadOptions());
 
     function callDownload() {
         download(type, map, selectionLayer, ncwmsLayer);
