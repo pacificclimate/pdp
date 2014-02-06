@@ -14,11 +14,11 @@ function getPRISMDownloadOptions() {
     var downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get"));
     var downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
     downloadFieldset.appendChild(createRasterFormatOptions());
-    downloadFieldset.appendChild(createDownloadButtons('download-buttons', 'download-buttons', {'download-timeseries': 'Download' }));
+    downloadFieldset.appendChild(createDownloadButtons('download-buttons', 'download-buttons', {'download-timeseries': 'Download', 'permalink': 'Permalink' }));
     return frag;
 }
 
-function download(extension, map, selection_layer, ncwms_layer) {
+function download(extension, map, selection_layer, ncwms_layer, link_only) {
 
     var callPydapDownloadUrl = function (raster_index_bounds) {
         if (raster_index_bounds.toGeometry().getArea() == 0) {
@@ -33,7 +33,11 @@ function download(extension, map, selection_layer, ncwms_layer) {
             raster_index_bounds.top + '][' + 
             raster_index_bounds.left + ':' + 
             raster_index_bounds.right + ']&';
-        window.open(url,"","width=600,height=600");
+	if (link_only) {
+	    alert(url);
+	} else {
+            window.open(url,"","width=600,height=600");
+	}
     }
 
     // Check input.  Relies upon global var ncwmsCapabilities

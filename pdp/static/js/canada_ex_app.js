@@ -25,10 +25,17 @@ $(document).ready(function() {
     function callDownload() {
         download(type, map, selectionLayer, ncwmsLayer);
     }
+    function showDownloadLink() {
+	download(type, map, selectionLayer, ncwmsLayer, true);
+    }
     var type;
     $("#download-timeseries").click(function(){
         type = $('select[name="data-format"]').val();
         callDownload();
+    });
+    $("#permalink").click(function(){
+	type = $('select[name="data-format"]').val();
+	showDownloadLink();
     });
 
 });

@@ -15,11 +15,11 @@ var getRasterDownloadOptions = function () {
     var downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
     downloadFieldset.appendChild(getDateRange());
     downloadFieldset.appendChild(createRasterFormatOptions());
-    downloadFieldset.appendChild(createDownloadButtons("download-buttons", "download-buttons", {"download-timeseries": "Download"}));
+    downloadFieldset.appendChild(createDownloadButtons("download-buttons", "download-buttons", {"download-timeseries": "Download", "permalink": "Permalink"}));
     return frag;
 };
 
-var download = function(extension, map, selection_layer, ncwms_layer) {
+var download = function(extension, map, selection_layer, ncwms_layer, link_only) {
 
     var times = getTimeSelected();
     var start = times[0];
@@ -39,7 +39,11 @@ var download = function(extension, map, selection_layer, ncwms_layer) {
             raster_index_bounds.top + "][" +
             raster_index_bounds.left + ":" +
             raster_index_bounds.right + "]&";
-        window.open(url,"","width=600,height=600");
+	if (link_only) {
+	    alert(url);
+	} else {
+            window.open(url,"","width=600,height=600");
+	}
     };
 
     // Check input.  Relies upon global var ncwmsCapabilities
