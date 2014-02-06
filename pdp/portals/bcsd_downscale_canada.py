@@ -13,14 +13,13 @@ ensemble_name = 'bcsd_downscale_canada'
 portal_config = {
     'title': 'Downscaled Climate Change Scenarios',
     'ensemble_name': ensemble_name,
-    'js_files' : [
+    'js_files' :
         wrap_mini([
             'js/canada_ex_map.js',
             'js/canada_ex_controls.js',
             'js/canada_ex_app.js'],
             basename='bcsd_downscale_canada', debug=False
             )
-        ]
     }
 
 portal_config = updateConfig(global_config, portal_config)
