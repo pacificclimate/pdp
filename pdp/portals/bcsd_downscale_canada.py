@@ -11,7 +11,7 @@ from pdp import dsn, global_config, updateConfig
 ensemble_name = 'bcsd_downscale_canada'
 
 portal_config = {
-    'title': 'Canadian Climate Coverage (BETA)',
+    'title': 'Downscaled Climate Change Scenarios',
     'ensemble_name': ensemble_name,
     'js_files' : [
         wrap_mini([
