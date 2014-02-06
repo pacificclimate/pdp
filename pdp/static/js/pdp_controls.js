@@ -37,6 +37,7 @@ function generateMenuTree(subtree) {
             li.attr('id', newlayer);
             $('<a/>').text(stuff).click(function() {
                 ncwms.params.LAYERS = newlayer;
+                ncwms.events.triggerEvent('change', newlayer);
                 ncwms.redraw();
                 $('#map-title').text(newlayer);
                 current_dataset = newlayer;
