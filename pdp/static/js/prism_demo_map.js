@@ -51,9 +51,21 @@ function init_prism_map() {
         }
     );
 
-    $('#map-title').text(params.layers);
+    $('#map-title').html(params.layers + '<br />' + ncwms.params.TIME);
     getNCWMSLayerCapabilities(ncwms); // async save into global var ncwmsCapabilities
     current_dataset = params.layers;
+
+    function customize_wms_params(layer_name) {
+	var varname = layer_name.split('/')[1];
+	if (varname == 'pr') {
+	    this.params.logscale = true;
+	    this.params.styles = 'occam_inv';
+	} else {
+	    this.params.logscale = false;
+	    this.params.styles = 'ferret';
+	}
+    };
+    ncwms.events.register('change', ncwms, customize_wms_params);
 
     map.addLayers(
         [

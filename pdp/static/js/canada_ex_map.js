@@ -33,6 +33,7 @@ var init_raster_map = function() {
         transparent: "true",
         styles: "",
         // colorscalerange: 'auto', //FIXME: after layer update, set colorscalerange based on map extent
+        time: "2000-01-01",
         numcolorbands: 254,
         version: "1.1.1",
         srs: "EPSG:4326"
@@ -52,7 +53,7 @@ var init_raster_map = function() {
         }
 	);
 
-    $("#map-title").text(params.layers);
+    $('#map-title').html(params.layers + '<br />' + ncwms.params.TIME);
     current_dataset = params.layers;
     (function(globals){
         "use strict"

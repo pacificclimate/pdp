@@ -11,15 +11,13 @@ from pdp import dsn, global_config, updateConfig
 ensemble_name = 'bc_prism'
 
 portal_config = {
-    'title': 'BC PRISM Raster Portal (BETA)',
+    'title': 'High-Resolution Climatology',
     'ensemble_name': ensemble_name,
-    'js_files' : [
-        wrap_mini([
-            'js/prism_demo_map.js',
-            'js/prism_demo_controls.js',
-            'js/prism_demo_app.js'],
-            basename='bc_prism', debug=False)
-        ]
+    'js_files' : wrap_mini([
+        'js/prism_demo_map.js',
+        'js/prism_demo_controls.js',
+        'js/prism_demo_app.js'],
+        basename='bc_prism', debug=True)
     }
 
 portal_config = updateConfig(global_config, portal_config)
