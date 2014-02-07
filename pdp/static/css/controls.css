@@ -36,11 +36,11 @@ input[type=button], input[type=reset] {
     border: 1px solid #69a1ba;
     color: #fff;
     background-color: #69a1ba;
-    padding: 1px;
+    padding: 1px 0;
     font-size: 12px;
     text-align: center;
-    margin: 5px auto;
-    width: 100px;
+    margin: 5px 0;
+    width: 32%;
 }
 
 input[type=button]:hover, input[type=reset]:hover {
