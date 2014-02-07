@@ -32,7 +32,7 @@ def updateConfig(d1, d2):
 here = os.getcwd()
 
 dsn = 'postgresql://httpd_meta@atlas.pcic/pcic_meta'
-pcds_dsn = 'postgresql://httpd@atlas.pcic/crmp'
+pcds_dsn = 'postgresql://httpd@atlas.pcic/crmp?application_name=pcds'
 
 global_config = {
     'app_root': 'http://medusa.pcic.uvic.ca/dataportal',

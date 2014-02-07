@@ -24,6 +24,7 @@ portal_config = {
 portal_config = updateConfig(global_config, portal_config)
 map_app = wrap_auth(MapApp(**portal_config), required=False)
 
+dsn = dsn + '?application_name=pdp_vicgen1'
 with session_scope(dsn) as sesh:
     conf = db_raster_configurator(sesh, "Download Data", 0.1, 0, ensemble_name, 
         root_url=global_config['app_root'].rstrip('/') + '/' + 
