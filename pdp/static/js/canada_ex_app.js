@@ -23,10 +23,13 @@ $(document).ready(function() {
     document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions());
 
     function callDownload() {
-        download(type, map, selectionLayer, ncwmsLayer);
+        download(type, map, selectionLayer, ncwmsLayer, 'data');
     }
     function showDownloadLink() {
-	download(type, map, selectionLayer, ncwmsLayer, true);
+	download(type, map, selectionLayer, ncwmsLayer, 'link');
+    }
+    function callDownloadMetadata() {
+	download('das', map, selectionLayer, ncwmsLayer, 'metadata');
     }
     var type;
     $("#download-timeseries").click(function(){
@@ -37,5 +40,6 @@ $(document).ready(function() {
 	type = $('select[name="data-format"]').val();
 	showDownloadLink();
     });
+    $("#metadata").click(callDownloadMetadata);
 
 });

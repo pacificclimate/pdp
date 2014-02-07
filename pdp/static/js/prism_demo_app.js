@@ -15,10 +15,13 @@ $(document).ready(function() {
 
     
     function callDownload() {
-        download(type, map, selectionLayer, ncwmsLayer);
+        download(type, map, selectionLayer, ncwmsLayer, 'data');
     }
     function showDownloadLink() {
-	download(type, map, selectionLayer, ncwmsLayer, true);
+	download(type, map, selectionLayer, ncwmsLayer, 'link');
+    }
+    function callDownloadMetadata() {
+	download('das', map, selectionLayer, ncwmsLayer, 'metadata');
     }
     $("#download-timeseries").click(function(){
         type = $('select[name="data-format"]').val()
@@ -27,6 +30,7 @@ $(document).ready(function() {
     $("#permalink").click(function(){
 	type = $('select[name="data-format"]').val();
 	showDownloadLink();
-    })
+    });
+    $("#metadata").click(callDownloadMetadata);
 
 });
