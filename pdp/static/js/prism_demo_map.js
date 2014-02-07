@@ -47,7 +47,8 @@ function init_prism_map() {
             buffer: 1,
             ratio: 1.5,
             opacity: 0.7,
-            transitionEffect: null
+            transitionEffect: null,
+            tileSize: new OpenLayers.Size(512, 512)
         }
     );
 
