@@ -30,7 +30,8 @@ function init_prism_map() {
         layers: defaults.dataset + "/" + defaults.variable,
         transparent: 'true',
         time: '1985-06-30',
-        styles: '',
+        styles: 'boxfill/occam_inv',
+        logscale: true,
         numcolorbands: 254,
         version: '1.1.1',
         srs: 'EPSG:3005'
@@ -58,11 +59,11 @@ function init_prism_map() {
     function customize_wms_params(layer_name) {
 	var varname = layer_name.split('/')[1];
 	if (varname == 'pr') {
-	    this.params.logscale = true;
-	    this.params.styles = 'occam_inv';
+	    this.params.LOGSCALE = true;
+	    this.params.STYLES = 'boxfill/occam_inv';
 	} else {
-	    this.params.logscale = false;
-	    this.params.styles = 'ferret';
+	    this.params.LOGSCALE = false;
+	    this.params.STYLES = 'boxfill/ferret';
 	}
     };
     ncwms.events.register('change', ncwms, customize_wms_params);
