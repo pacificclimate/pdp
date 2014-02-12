@@ -31,12 +31,14 @@ var init_raster_map = function() {
     var params = {
         layers: defaults.dataset + "/" + defaults.variable,
         transparent: "true",
-        styles: "",
+        styles: "boxfill/ferret",
         // colorscalerange: 'auto', //FIXME: after layer update, set colorscalerange based on map extent
         time: "2000-01-01",
         numcolorbands: 254,
         version: "1.1.1",
-        srs: "EPSG:4326"
+        srs: "EPSG:4326",
+        colorscalerange: "-50,11.0",
+        logscale: false
     };
 
     var datalayerName = "Climate raster";
@@ -56,6 +58,22 @@ var init_raster_map = function() {
 
     $('#map-title').html(params.layers + '<br />' + ncwms.params.TIME);
     current_dataset = params.layers;
+
+    function customize_wms_params(layer_name) {
+	var varname = layer_name.split('/')[1];
+	if (varname == 'pr') {
+	    this.params.LOGSCALE = false;
+	    this.params.STYLES = 'boxfill/occam_inv';
+	    this.params.BELOWMINCOLOR = 'transparent';
+	    this.params.COLORSCALERANGE = '0.0,30.0';
+	} else {
+	    this.params.LOGSCALE = false;
+	    this.params.STYLES = 'boxfill/ferret';
+	    this.params.COLORSCALERANGE = '-50,11';
+	}
+    };
+    ncwms.events.register('change', ncwms, customize_wms_params);
+
     (function(globals){
         "use strict"
         globals.ncwms = ncwms;

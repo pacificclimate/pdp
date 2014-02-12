@@ -15,11 +15,11 @@ var getRasterDownloadOptions = function () {
     var downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
     downloadFieldset.appendChild(getDateRange());
     downloadFieldset.appendChild(createRasterFormatOptions());
-    downloadFieldset.appendChild(createDownloadButtons("download-buttons", "download-buttons", {"download-timeseries": "Download", "permalink": "Permalink"}));
+    downloadFieldset.appendChild(createDownloadButtons("download-buttons", "download-buttons", {"download-timeseries": "Download", "metadata": "Metadata", "permalink": "Permalink"}));
     return frag;
 };
 
-var download = function(extension, map, selection_layer, ncwms_layer, link_only) {
+var download = function(extension, map, selection_layer, ncwms_layer, dl_type) {
 
     var times = getTimeSelected(ncwms_layer);
     var start = times[0];
@@ -39,9 +39,9 @@ var download = function(extension, map, selection_layer, ncwms_layer, link_only)
             raster_index_bounds.top + "][" +
             raster_index_bounds.left + ":" +
             raster_index_bounds.right + "]&";
-	if (link_only) {
+	if (dl_type == 'link') {
 	    alert(url);
-	} else {
+	} else if (dl_type == 'data' || dl_type == 'metadata') {
             window.open(url,"","width=600,height=600");
 	}
     };
