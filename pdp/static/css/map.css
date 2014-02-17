@@ -47,6 +47,7 @@ div.olPopup {
 #map-buttons input {
     margin-right: 3px;
     border-color: #fff;
+    width: 8em;
 }
 
 #map-wrapper #loading {

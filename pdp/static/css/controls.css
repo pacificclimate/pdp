@@ -40,6 +40,9 @@ input[type=button], input[type=reset] {
     font-size: 12px;
     text-align: center;
     margin: 5px 0;
+}
+
+.control input[type=button], input[type=reset] {
     width: 32%;
 }
 
