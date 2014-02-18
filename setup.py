@@ -3,6 +3,8 @@ import string
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
+from mercurial import ui, hg
+
 class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
@@ -30,7 +32,8 @@ def recursive_list(pkg_dir, basedir):
     return [ x for x in find() ]
 
 
-__version__ = (2, '0-rc4')
+__repo__ = hg.repository(ui.ui(), os.getcwd()).parents()[0].hex()[0:12]
+__version__ = '2.1-{}'.format(__repo__)
 
 sw_path = 'hg+ssh://medusa.pcic.uvic.ca//home/data/projects/comp_support/software'
 
@@ -39,7 +42,7 @@ setup(
     description="PCIC's Data Portal (pdp): the server software to run the entire web application",
     keywords="opendap dods dap open data science climate meteorology downscaling modelling",
     packages=['pdp', 'pdp.portals'],
-    version='.'.join(str(d) for d in __version__),
+    version=__version__,
     url="http://www.pacificclimate.org/",
     author="James Hiebert",
     author_email="hiebert@uvic.ca",
