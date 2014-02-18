@@ -250,11 +250,11 @@ def test_legend_caching(pcic_data_portal):
     resp = req.get_response(pcic_data_portal)
     assert resp.status.startswith('200')
 
-def test_climatology_bounds(prism_portal, authorized_session_id):
-    url = '/data/tmin_monClim_PRISM_historical_run1_197101-200012.nc.nc?climatology_bounds,tmin[0:12][826:1095][1462:1888]&'
+def test_climatology_bounds(pcic_data_portal, authorized_session_id):
+    url = '/bc_prism/data/tmin_monClim_PRISM_historical_run1_197101-200012.nc.nc?climatology_bounds,tmin[0:12][826:1095][1462:1888]&'
     req = Request.blank(url)
     req.cookies['beaker.session.id'] = authorized_session_id
-    resp = req.get_response(prism_portal)
+    resp = req.get_response(pcic_data_portal)
 
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/x-netcdf'
