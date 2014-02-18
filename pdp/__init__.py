@@ -64,8 +64,8 @@ global_config = {
         'js/pdp_vector_map.js'
         ], debug=False),
     'geoserver_url': 'http://atlas.pcic.uvic.ca/geoserver/',
-    'ncwms_url': 'http://atlas.pcic.uvic.ca/ncWMS/wms',
-    'tilecache_url': 'http://medusa.pcic.uvic.ca/tilecache/tilecache.py',
+    'ncwms_url': ['http://atlas.pcic.uvic.ca/ncWMS/wms'],
+    'tilecache_url': ['http://a.tiles.pacificclimate.org/tilecache/tilecache.py', 'http://b.tiles.pacificclimate.org/tilecache/tilecache.py', 'http://c.tiles.pacificclimate.org/tilecache/tilecache.py'],
     'ensemble_name': '',
     'templates': os.path.join(here, 'pdp', 'templates'),
     'session_dir': mkdtemp(),

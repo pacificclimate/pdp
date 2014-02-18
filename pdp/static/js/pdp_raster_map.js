@@ -188,7 +188,7 @@ var rasterBBoxToIndicies = function (map, layer, bnds, extent_proj, extension, c
         };
         // FIXME: URL below assumes that geoserver is running on the same machine as the webapp (or a proxy is in place)
         OpenLayers.Request.GET({
-            url: pdp.ncwms_url,
+            url: pdp.ncwms_url[0],
             params: params,
             success: responder,
             failure: function(){alert("Something has gone wrong with the download");}
