@@ -8,7 +8,7 @@ from pdp.minify import wrap_mini
 from pdp import global_config, updateConfig
 
 pcds_config = {
-    'title': 'CRMP Network Data',
+    'title': 'BC Station Data - PCDS',
     'js_files' : [
         wrap_mini([
             'js/crmp_map.js',
