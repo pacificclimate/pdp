@@ -27,8 +27,7 @@ map_app = wrap_auth(MapApp(**portal_config), required=False)
 
 with session_scope(dsn) as sesh:
     conf = db_raster_configurator(sesh, "Download Data", 0.1, 0, ensemble_name, 
-        root_url=global_config['app_root'].rstrip('/') + '/' + 
-        ensemble_name + '/data/'
+        root_url=global_config['app_root'].rstrip('/') + '/downscaled_gcms/data/'
     )
     data_server = wrap_auth(RasterServer(dsn, conf))
     catalog_server = RasterCatalog(dsn, conf) #No Auth
