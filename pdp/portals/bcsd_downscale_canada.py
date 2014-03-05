@@ -18,7 +18,7 @@ portal_config = {
             'js/canada_ex_map.js',
             'js/canada_ex_controls.js',
             'js/canada_ex_app.js'],
-            basename='bcsd_downscale_canada', debug=False
+            basename='downscaled_gcms', debug=False
             )
     }
 
