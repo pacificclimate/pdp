@@ -12,7 +12,7 @@ $(document).ready(function() {
     var ncwmsLayer = map.getClimateLayer();
     var selectionLayer = map.getSelectionLayer();
 
-    var catalogUrl = pdp.app_root + "/" + pdp.ensemble_name + "/catalog/catalog.json";
+    var catalogUrl = "../catalog/catalog.json";
     var request = $.ajax(catalogUrl, { dataType: "json"} );
     request.then(function(data) {
         catalog = data;

@@ -124,7 +124,7 @@ main = PathDispatcher([
     ('^/pcds_map/.*$', pcds_map),
     ('^/bc_prism/.*$', bc_prism),
     ('^/vic_gen1/.*$', vic_gen1),
-    ('^/bcsd_downscale_canada/.*$', bcsd_canada),
+    ('^/downscaled_gcms/.*$', bcsd_canada),
     ('^/auth.*$', auth),
     ('^/apps/.*$', apps),
     ('^/docs/.*$', docs_app),

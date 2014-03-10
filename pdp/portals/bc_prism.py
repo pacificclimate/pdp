@@ -11,7 +11,7 @@ from pdp import dsn, global_config, updateConfig
 ensemble_name = 'bc_prism'
 
 portal_config = {
-    'title': 'High-Resolution Climatology',
+    'title': 'High-Resolution PRISM Climatology',
     'ensemble_name': ensemble_name,
     'js_files' : wrap_mini([
         'js/prism_demo_map.js',
