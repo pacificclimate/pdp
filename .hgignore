@@ -3,8 +3,12 @@ syntax: glob
 
 *.pyc
 *.egg*
+*.orig
+*.bak
 build/*
+*~
 
 syntax: regexp
 ^.*\..*~
 ^.*?[\\]?\#.*\#$
+^.*-min-.*js$
