@@ -50,6 +50,7 @@ setup(
                         '{0}/pydap.handlers.hdf5@a94261f9ab7c#egg=pydap.handlers.hdf5-0.4'.format(sw_path),
                         '{0}/pydap.responses.netcdf@82cf794b9f1e#egg=pydap.responses.netcdf-0.4'.format(sw_path),
                         '{0}/pydap.responses.xls#egg=pydap.responses.xls'.format(sw_path),
+                        '{0}/pydap.responses.aaigrid#egg=pydap.responses.aaigrid'.format(sw_path),
                         '{0}/analytics@8a82a759ca02#egg=analytics'.format(sw_path),
                         ],
     install_requires = ['flask',
@@ -60,6 +61,7 @@ setup(
                         'pydap.handlers.hdf5 >=0.3',
                         'pydap.responses.netcdf >=0.2',
                         'pydap.responses.xls',
+                        'pydap.responses.aaigrid',
                         'analytics',
                         'slimit'
                         ],
