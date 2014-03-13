@@ -288,3 +288,16 @@ def test_climatology_bounds(pcic_data_portal, authorized_session_id):
 
     nc.close()
     os.remove(f.name)
+
+@pytest.mark.parametrize('url', [
+    '/downscaled_gcms/data/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.aig?tasmax[0:30][77:138][129:238]&', # has NODATA values
+    '/downscaled_gcms/data/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.aig?tasmax[0:30][144:236][307:348]&',
+])
+def test_aaigrid_response(pcic_data_portal, authorized_session_id, url):
+    req = Request.blank(url)
+    req.cookies['beaker.session.id'] = authorized_session_id
+    resp = req.get_response(pcic_data_portal)
+
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'application/zip'
+
