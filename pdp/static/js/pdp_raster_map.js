@@ -85,22 +85,19 @@ var dasToUnitsSince = function(data) {
 };
 
 var getNCWMSLayerCapabilities = function(ncwms_layer) {
-    OpenLayers.Request.GET(
-        {
-            url: ncwms_layer.url,
-            params: {
-                REQUEST: "GetCapabilities",
-                SERVICE: "WMS",
-                VERSION: "1.1.1",
-                DATASET: ncwms_layer.params.LAYERS.split("/")[0]
-            },
-            callback: function(response) {
-                var xmldoc = $.parseXML(response.responseText);
-                ncwmsCapabilities = $(xmldoc); // must be a global var
-            }
-        }
-    );
-};
+    var params = {
+        REQUEST: "GetCapabilities",
+        SERVICE: "WMS",
+        VERSION: "1.1.1",
+        DATASET: ncwms_layer.params.LAYERS.split("/")[0]
+    };
+    $.ajax({url: ncwms_layer.url,
+	    data: params}).done(
+	    function(response, status, jqXHR) {
+        window.ncwmsCapabilities = $(jqXHR.responseXML); // must be a global var
+    }).fail(function(response, status, jqXHR) {alert(status);})
+	.always(function() {alert(params);});
+}
 
 var setTimeAvailable = function(begin, end) {
     //TODO: only present times available in ncwms capabilities for this layer
@@ -153,7 +150,7 @@ var getTimeSelected = function() {
 var rasterBBoxToIndicies = function (map, layer, bnds, extent_proj, extension, callback) {
     var indexBounds = new OpenLayers.Bounds();
 
-    var responder = function(response) {
+    var responder = function(data, status, response) {
         var xmldoc;
         if (response.responseXML) {
             xmldoc = response.responseXML;
@@ -183,16 +180,14 @@ var rasterBBoxToIndicies = function (map, layer, bnds, extent_proj, extension, c
             LAYERS: layer.params.LAYERS,
             WIDTH: map.size.w,
             HEIGHT: map.size.h,
-            SRS: map.getProjectionObject(),
+            SRS: map.getProjectionObject().projCode,
             INFO_FORMAT: "text/xml"
         };
         // FIXME: URL below assumes that geoserver is running on the same machine as the webapp (or a proxy is in place)
-        OpenLayers.Request.GET({
-            url: pdp.ncwms_url[0],
-            params: params,
-            success: responder,
-            failure: function(){alert("Something has gone wrong with the download");}
-        });
+	$.ajax({url: pdp.ncwms_url[0],
+	        data: params})
+	    .done(responder)
+	    .fail(function(){alert("Something has gone wrong with the download");});
     };
 
     var ul = new OpenLayers.LonLat(bnds.left, bnds.top).transform(extent_proj, map.getProjectionObject());
