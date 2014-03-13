@@ -1,4 +1,4 @@
-var pdp = (function (my, $) {
+window.pdp = (function (my, $) {
     "use strict";
     my.curry = function ( fn /*, ... */) {
         var curryArgs = Array.prototype.slice.call( arguments, 1 );
@@ -235,4 +235,4 @@ var pdp = (function (my, $) {
 
     return my;
 
-}(pdp, jQuery));
+}(window.pdp || {}, jQuery));

@@ -1,4 +1,4 @@
-var pdp = (function (my, $) {
+window.pdp = (function (my, $) {
 "use strict";
 
 my.init_login = function (loginDivId) {
@@ -244,4 +244,4 @@ my.getLoginForm = function (providers) {
 };
 
 return my;
-}(pdp, jQuery));
+}(window.pdp, jQuery));
