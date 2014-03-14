@@ -34,3 +34,21 @@ if (!Array.prototype.indexOf)
     return -1;
   };
 }
+
+function handle_ie8_xml(response, status, jqXHR) {
+    if (status == 'parsererror') { // We must be in IE8 with broken XML parsing
+	var xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+	xmlDoc.loadXML(response.responseText);
+
+	if (xmlDoc.parseError.errorCode != 0) {
+	    var myErr = xmlDoc.parseError;
+	    console.log("You have error " + myErr.reason);
+	} else {
+	    console.log(xmlDoc.xml);
+	}
+
+	jqXHR.responseXML = xmlDoc;
+    } else {
+	alert("There was an unhandleable problem fetching some metadata for the current layer. Unfortunately this prevents some of the controls from functioning properly. Please try a page reload and if the problem persists, please file a bug report.");
+    }
+};
