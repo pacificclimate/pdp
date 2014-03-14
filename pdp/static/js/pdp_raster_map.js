@@ -89,6 +89,12 @@ var dasToUnitsSince = function(data) {
 };
 
 var getNCWMSLayerCapabilities = function(ncwms_layer) {
+
+    // FIXME: this .ajax logic doesn't really work in all cases
+    // What we really want is the fail() handler to _resolve_ the status,
+    // and then have another fail() fallthrough handler .That is impossible, however.
+    // see: http://domenic.me/2012/10/14/youre-missing-the-point-of-promises/
+
     var params = {
         REQUEST: "GetCapabilities",
         SERVICE: "WMS",
@@ -96,11 +102,12 @@ var getNCWMSLayerCapabilities = function(ncwms_layer) {
         DATASET: ncwms_layer.params.LAYERS.split("/")[0]
     };
     $.ajax({url: ncwms_layer.url,
-	    data: params}).done(
-	    function(response, status, jqXHR) {
-        window.ncwmsCapabilities = $(jqXHR.responseXML); // must be a global var
-    }).fail(function(response, status, jqXHR) {alert(status);})
-	.always(function() {alert(params);});
+	    data: params,
+	   })
+	.fail(handle_ie8_xml)
+	.always(function(response, status, jqXHR) {
+	    window.ncwmsCapabilities = $(jqXHR.responseXML);
+	});
 }
 
 var setTimeAvailable = function(begin, end) {
@@ -165,6 +172,7 @@ var rasterBBoxToIndicies = function (map, layer, bnds, extent_proj, extension, c
         }
         var iIndex = parseInt($(xmldoc).find("iIndex").text());
         var jIndex = parseInt($(xmldoc).find("jIndex").text());
+	// FIXME: This should be handled with a jquery $.when(req1, req2); this will simplify the code quite a bit
         if (!isNaN(indexBounds.toGeometry().getVertices()[0].x)) {
             indexBounds.extend(new OpenLayers.LonLat(iIndex, jIndex)); // not _really_ at lonlat... actually raster space
             callback(indexBounds);
@@ -191,8 +199,9 @@ var rasterBBoxToIndicies = function (map, layer, bnds, extent_proj, extension, c
         // FIXME: URL below assumes that geoserver is running on the same machine as the webapp (or a proxy is in place)
 	$.ajax({url: pdp.ncwms_url[0],
 	        data: params})
-	    .done(responder)
-	    .fail(function(){alert("Something has gone wrong with the download");});
+	    .fail(handle_ie8_xml)
+	    .always(responder);
+	    //.fail(function(){alert("Something has gone wrong with the download");});
     };
 
     var ul = new OpenLayers.LonLat(bnds.left, bnds.top).transform(extent_proj, map.getProjectionObject());

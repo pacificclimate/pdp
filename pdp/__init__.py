@@ -48,6 +48,7 @@ global_config = {
         'css/controls.css',
         'css/menu.css'],
     'js_files': [
+        'js/ie8.js', # must be included before OL
         'js/jquery-1.10.2.js',
         'js/jquery-ui-1.10.2.custom.js',
         'js/zebra.js',
