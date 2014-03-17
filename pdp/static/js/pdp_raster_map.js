@@ -131,8 +131,8 @@ var intersection = function(b1, b2) {
 var getRasterNativeProj = function(capabilities, layer_name) {
     // Return the dataset native projection as an OL.Projection object
     var bbox = capabilities.find('Layer > Name:contains("' + layer_name + '")').parent().find('BoundingBox')[0];
-    var srs = new OpenLayers.Projection(bbox.attributes.SRS.value);
-    return srs;
+    var srs = bbox.attributes.getNamedItem('SRS');
+    return new OpenLayers.Projection(srs.value);
 };
 
 var getRasterBbox = function(capabilities, layer_name) {
@@ -140,8 +140,8 @@ var getRasterBbox = function(capabilities, layer_name) {
     // Pull the geographic bounding box out of the appropriate element
     var bbox = capabilities.find('Layer > Name:contains("' + layer_name + '")').parent().find('LatLonBoundingBox')[0];
     var real_bounds = new OpenLayers.Bounds();
-    real_bounds.extend(new OpenLayers.LonLat(parseFloat(bbox.attributes.minx.value), parseFloat(bbox.attributes.miny.value)));
-    real_bounds.extend(new OpenLayers.LonLat(parseFloat(bbox.attributes.maxx.value), parseFloat(bbox.attributes.maxy.value)));
+    real_bounds.extend(new OpenLayers.LonLat(parseFloat(bbox.attributes.getNamedItem('minx').value), parseFloat(bbox.attributes.getNamedItem('miny').value)));
+    real_bounds.extend(new OpenLayers.LonLat(parseFloat(bbox.attributes.getNamedItem('maxx').value), parseFloat(bbox.attributes.getNamedItem('maxy').value)));
     return real_bounds;
 };
 
