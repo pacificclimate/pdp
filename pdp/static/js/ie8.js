@@ -1,3 +1,5 @@
+window.shittyIE = (!Object.keys && !Array.prototype.IndexOf);
+
 if (!Object.keys) {
   Object.keys = function(obj) {
     var keys = [];
@@ -38,13 +40,14 @@ if (!Array.prototype.indexOf)
 function handle_ie8_xml(response, status, jqXHR) {
     if (status == 'parsererror') { // We must be in IE8 with broken XML parsing
 	var xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+	xmlDoc.async = false;
+	xmlDoc.validateOnParse = false;
+	xmlDoc.resolveExternals = false;
 	xmlDoc.loadXML(response.responseText);
 
 	if (xmlDoc.parseError.errorCode != 0) {
 	    var myErr = xmlDoc.parseError;
 	    console.log("You have error " + myErr.reason);
-	} else {
-	    console.log(xmlDoc.xml);
 	}
 
 	jqXHR.responseXML = xmlDoc;

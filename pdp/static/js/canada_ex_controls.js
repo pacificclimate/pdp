@@ -42,7 +42,10 @@ var download = function(extension, map, selection_layer, ncwms_layer, dl_type) {
 	if (dl_type == 'link') {
 	    alert(url);
 	} else if (dl_type == 'data' || dl_type == 'metadata') {
-            window.open(url,"","width=600,height=600");
+	    if (window.shittyIE) {
+		alert("Downloads may not function completely correctly on IE <= 8. Cross your fingers and/or upgrade your browser.");
+	    }
+            window.open(url, "_blank", "width=600,height=600");
 	}
     };
 
