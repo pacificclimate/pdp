@@ -22,7 +22,7 @@ function polygon_as_text() {
 	var P3005 = new OpenLayers.Projection("EPSG:3005");
 	var fts = map.getLayersByName("Polygon selection")[0].features
 	if (fts.length == 0) return '';
-	var mp = new OpenLayers.Geometry.MultiPolygon(fts.map(function(f) {return f.geometry.clone();}));
+	var mp = new OpenLayers.Geometry.MultiPolygon($.map(fts, function(f) {return f.geometry.clone();}));
 	mp.transform(P3005, P4326); // This does a transform _in_place_ (always clone first)
 	return mp.toString();
 };
