@@ -8,10 +8,10 @@ cfTime.prototype.setMaxTimeByIndex = function(index) {
     return this.eDate;
 };
 cfTime.prototype.toDate = function(index) {
-    if (typeof(index) == "undefined") {
+    if (index === undefined) {
         return this.sDate;
     }
-    if (this.units == "days") {
+    if (this.units === "days") {
         var d = new Date(this.sDate.getTime());
         d.setDate(this.sDate.getDate() + index);
         return d;
@@ -22,7 +22,7 @@ cfTime.prototype.toIndex = function(d) {
         return;
     }
 
-    if (this.units == "days") {
+    if (this.units === "days") {
         var msPerDay = 1000 * 60 * 60 * 24;
         var msDiff = d.getTime() - this.sDate.getTime();
         var days = msDiff / msPerDay;

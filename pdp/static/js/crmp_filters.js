@@ -10,8 +10,8 @@ function net_filter(net_name) {
 
 function date_filter(sdate, edate) {
     var d = new Date();
-    if (edate == 'YYYY/MM/DD') edate = d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate(); //today
-	if (sdate == 'YYYY/MM/DD') sdate = '1870/01/01'; // ~beginning of our data (unless we find a magic data set)
+    if (edate === 'YYYY/MM/DD') edate = d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate(); //today
+	if (sdate === 'YYYY/MM/DD') sdate = '1870/01/01'; // ~beginning of our data (unless we find a magic data set)
 	// http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
 	return new OpenLayers.Filter.Logical({
     	type: OpenLayers.Filter.Logical.AND,

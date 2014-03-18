@@ -39,9 +39,9 @@ var download = function(extension, map, selection_layer, ncwms_layer, dl_type) {
             raster_index_bounds.top + "][" +
             raster_index_bounds.left + ":" +
             raster_index_bounds.right + "]&";
-	if (dl_type == 'link') {
+	if (dl_type === 'link') {
 	    alert(url);
-	} else if (dl_type == 'data' || dl_type == 'metadata') {
+	} else if (dl_type === 'data' || dl_type === 'metadata') {
 	    if (window.shittyIE) {
 		alert("Downloads may not function completely correctly on IE <= 8. Cross your fingers and/or upgrade your browser.");
 	    }

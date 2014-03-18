@@ -38,7 +38,7 @@ if (!Array.prototype.indexOf)
 }
 
 function handle_ie8_xml(response, status, jqXHR) {
-    if (status == 'parsererror') { // We must be in IE8 with broken XML parsing
+    if (status === 'parsererror') { // We must be in IE8 with broken XML parsing
 	var xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
 	xmlDoc.async = false;
 	xmlDoc.validateOnParse = false;

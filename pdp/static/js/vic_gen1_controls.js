@@ -26,7 +26,7 @@ function download(extension, map, selection_layer, ncwms_layer) {
     var end = times[1];
 
     var callPydapDownloadUrl = function (raster_index_bounds) {
-        if (raster_index_bounds.toGeometry().getArea() == 0) {
+        if (raster_index_bounds.toGeometry().getArea() === 0) {
             alert("Cannot resolve selection to data grid. Please zoom in and select only within the data region.");
             return;
         }
@@ -42,19 +42,19 @@ function download(extension, map, selection_layer, ncwms_layer) {
     }
 
     // Check input.  Relies upon global var ncwmsCapabilities
-    if (selection_layer.features.length == 0) {
+    if (selection_layer.features.length === 0) {
         alert("You need to first select a rectangle of data to download (use the polygon tool in the top, right corner of the map.");
         return;
     };
-    if (ncwmsCapabilities == undefined) {
+    if (ncwmsCapabilities === undefined) {
         alert("I'm still trying to determine the geographic bounds of the selected layer.  Try again in a few seconds.");
         return;
     };
-    if (catalog == undefined) {
+    if (catalog === undefined) {
         alert("I'm still trying determine what information is available for this layer.  Try again in a few seconds");
         return;
     };
-    if (selection_layer.features[0].geometry.getArea() == 0) {
+    if (selection_layer.features[0].geometry.getArea() === 0) {
         alert("Selection area must be of non-zero area (i.e. have extent)");
         return;
     };
