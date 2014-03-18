@@ -50,6 +50,7 @@ function has_climatology_filter() {
 	});
 };
 function polygon_filter(map) {
+    var filters;
 	var P4326 = new OpenLayers.Projection("EPSG:4326");
 	var P3005 = new OpenLayers.Projection("EPSG:3005");
 	function feat2filt(feat) {
@@ -61,7 +62,7 @@ function polygon_filter(map) {
 	    });
 	};
 	var lyr = map.getLayersByName("Polygon selection")[0];
-	var filters = lyr.features.map(feat2filt);
+        filters = $.map(lyr.features, feat2filt);
 	return new OpenLayers.Filter.Logical({
 	    type: OpenLayers.Filter.Logical.OR,
 	    filters: filters
