@@ -121,6 +121,7 @@ apps = PathDispatcher([
     
 main = PathDispatcher([
     ('^/images/legend/.*\.png$', legend_app),
+    ('^/css/(default|pcic).css$', static.Cling(resource_filename('pdp_util', 'data'))), # a bit of a hack for now
     ('^/check_auth_app/?$', check_auth),
     ('^/pcds_map/.*$', pcds_map),
     ('^/bc_prism/.*$', bc_prism),
