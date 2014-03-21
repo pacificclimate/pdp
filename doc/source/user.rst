@@ -61,6 +61,42 @@ The final step in using the data portal, downloading station data, is typically 
 
 The data response will be returned as a ZIP archive containing one folder per network. Each network folder contains one data file for each station, and a CSV file describing the variables collected by this network.
 
+Unexpected Behaviour
+^^^^^^^^^^^^^^^^^^^^
+
+There are a few nuances to the aggregated data download that work the way the user expectes *most* of the time, but may be unexpected in a variety of ways.
+
+1. Even if you zoom in the the map and limit your field of view, there may be selected stations that extend beyond the field of view. Stations are selected based on your entire set of filters, and are completely unaffected by your view on the map.
+2. When downloading data, all variables for a selected station are included in the download *regardless of whether you filter by variable*. This is slightly different behaviour than is exhibited by the time selection, so it's a point that warrants attention.
+
+Station Listings
+^^^^^^^^^^^^^^^^
+
+If one is interested in exploring the station offerings in a hiearchical listing format (as opposed to a map), we offer a station listings interface available at the URL http://tools.pacificclimate.org/dataportal/auth/pcds/
+
+These listing pages lay out the stations in a hierarchy splitting on raw data vs. climatology ("raw|climo"), CRMP network, and finally station. For example, to list all of the climatologies available for the BC Hydro network, one would navigate to http://tools.pacificclimate.org/dataportal/auth/pcds/climo/BCH/
+
+The page for a single station includes a simple HTML page that lists all global metadata, all variables for the station, and it provides some form controls to download individual variables. Please note that you must select the checkbox for *each and every* variable that you want to download. None are selected by default, so clicking "Download" without any prior action will result in a bad request.
+
+Advanced/Programmatic Usage
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In theory, the whole data portal is written using open protocols and an advanced user with some scripting abilities should be able to reasonably script up a bulk download (assuming that the filters on the user interface do not cover your use case).
+
+For your purposes of demonstration, let's assume that a user is interested in downloading data from a whole bunch of Wildfire Management Branch stations, network code "FLNRO-WMB". From our instance of Pydap, you can get a station listing from the `data listing pages <http://tools.pacificclimate.org/data_portal/auth/pydap/pcds/raw/FLNRO-WMB/>`_.
+
+If you have a list of network_name/station_ids (where station_id is the id by which it is called *by the network*, then you can patch together a URL for the full data download. For example, if you wanted to download FLNRO-WMB data for station "1002", the URL would be http://tools.pacificclimate.org/data_portal/auth/pydap/pcds/raw/FLNRO-WMB/1002.rsql.csv
+
+The file format extension on the end can be [csv|xls|ascii|nc].
+
+Further subselections are possible with URL query string parameters, but for that, one should refer to the `OPeNDAP documentation <http://www.opendap.org/pdf/ESE-RFC-004v1.2.pdf>`_.
+
+This is all relatively simple, however, if one is going to script it, you must also handle the OpenID login which can be a little tricky. We advise that you first login with your standard web browser and establish a session. Find the beaker.session.id cookie for the domain tools.pacificclimate.org and then look at the wget line in the user docs :ref:`metadata-and-data`.
+
+Essentially, you do something like: ::
+
+  wget --output-document=[your_data_file] --header "Cookie: beaker.session.id=[your_session_id]" [your_url] 2> /dev/null
+
 Climate Coverage Portals
 ------------------------
 
@@ -141,6 +177,7 @@ The climate coverage data portal serves listings of the available datasets via a
 The JSON output give you a mapping between the dataset's unique ID and the base URL for a DAP request (described below).
 
 
+.. _metadata-and-data:
 Metadata and Data
 ^^^^^^^^^^^^^^^^^
 All of our multidimensional raster data is made available via `Open-source Project for a Network Data Access Protocol (OPeNDAP) <http://opendap.org/>`_, the specification of which can be found `here <http://www.opendap.org/pdf/ESE-RFC-004v1.2.pdf>`_. Requests are serviced by our deployment of the `Pydap server <http://www.pydap.org/>`_ which PCIC has heavily modified and rewritten to be able to stream large data requests.
