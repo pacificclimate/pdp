@@ -1,5 +1,6 @@
 import sys
 import logging  
+import traceback
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.exc import OperationalError
@@ -50,6 +51,6 @@ class ErrorMiddleware(object):
                 status = "500 Internal Server Error"
                 response_headers = [("content-type", "text/plain")]
                 start_response(status, response_headers, sys.exc_info())
-                yield "There was a serious problem while generating the streamed response: '{}'".format(e.message)
+                yield "There was a serious problem while generating the streamed response: '{}'".format(e.message) + traceback.format_exc()
                 logger.error("Exception raised during streamed response: '{}'\n{}".format(e.message, sys.exc_info()))
 

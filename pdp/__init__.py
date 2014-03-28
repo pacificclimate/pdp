@@ -106,6 +106,8 @@ from portals.bc_prism import portal as bc_prism
 
 from portals.bcsd_downscale_canada import portal as bcsd_canada
 
+from portals.bccaq_extremes import portal as bccaq_extremes
+
 from portals.vic_gen1 import portal as vic_gen1
 
 auth = PathDispatcher([
@@ -127,6 +129,7 @@ main = PathDispatcher([
     ('^/bc_prism/.*$', bc_prism),
     ('^/vic_gen1/.*$', vic_gen1),
     ('^/downscaled_gcms/.*$', bcsd_canada),
+    ('^/bccaq_extremes/.*$', bccaq_extremes),
     ('^/auth.*$', auth),
     ('^/apps/.*$', apps),
     ('^/docs/.*$', docs_app),

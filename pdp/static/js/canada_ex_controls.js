@@ -70,8 +70,8 @@ var download = function(extension, map, selection_layer, ncwms_layer, dl_type) {
         alert("End date is more recent than start date, please select an appropriate minimum and maximum date");
         return;
     }
-    var raster_proj = getRasterNativeProj(ncwmsCapabilities, current_dataset);
-    var raster_bnds = getRasterBbox(ncwmsCapabilities, current_dataset);
+    var raster_proj = getRasterNativeProj(window.ncwmsCapabilities, current_dataset);
+    var raster_bnds = getRasterBbox(window.ncwmsCapabilities, current_dataset);
     var selection_bnds = selection_layer.features[0].geometry.bounds.clone().
         transform(selection_layer.projection, raster_proj);
     if (! raster_bnds.intersectsBounds(selection_bnds)) {
