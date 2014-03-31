@@ -165,7 +165,7 @@ Climate raster overlays are served via the `OSGeo's Open Geospatial Consortium's
 
 Dataset listings
 ^^^^^^^^^^^^^^^^
-The climate coverage data portal serves listings of the available datasets via a JSON-encoded response. This is how the web user interface retrieves the data lists, however power users have access to it as well from this URL http://tools.pacificclimate.org/dataportal/[ensemble]/catalog/catalog.json. For example, if one wanted to retrieve a list of the datasets available for the BC PRISM ensemble, one could do the following: ::
+The climate coverage data portal serves listings of the available datasets via a JSON-encoded response. This is how the web user interface retrieves the data lists, however power users have access to it as well from this URL: ``http://tools.pacificclimate.org/dataportal/[page_id]/catalog/catalog.json``. For example, if one wanted to retrieve a list of the datasets available for the BC PRISM page, one could do the following: ::
 
   james@basalt ~ $ wget --output-document=- http://tools.pcic.uvic.ca/dataportal/bc_prism/catalog/catalog.json 2> /dev/null
   {
@@ -174,8 +174,9 @@ The climate coverage data portal serves listings of the available datasets via a
       "bcprism_tmin_7100": "http://tools.pcic.uvic.ca/dataportal/bc_prism/data/bc_tmin_7100.nc"
   }
 
-The JSON output give you a mapping between the dataset's unique ID and the base URL for a DAP request (described below).
+The JSON output gives you a mapping between the dataset's unique ID and the base URL for a DAP request (described below).
 
+At present, there are four pages for which one can retrieve catalogs: ``bc_prism``, ``downscaled_gcms``, ``bccaq_extremes``, and ``vic_gen1``.
 
 .. _metadata-and-data:
 Metadata and Data
@@ -321,7 +322,7 @@ You can see the the response clearly describes all variable which are available 
 
 Such a request would useful for retrieving data units in advance of downloading the data or for filtering according to driving model or institute.
 
-Downloading the actual data values themselves is also done with a DAP request. There are a couple differences, however. First, to download data, the client must be logged in via OpenID. Secondly, the URL template for the request is http://tools.pacificclimate.org/dataportal/[ensemble]/data/[dataset_id].[format_extension]?[dap_selection]
+Downloading the actual data values themselves is also done with a DAP request. There are a couple differences, however. First, to download data, the client must be logged in via OpenID. Secondly, the URL template for the request is ``http://tools.pacificclimate.org/dataportal/[page_id]/data/[dataset_id].[format_extension]?[dap_selection]``
 
 *format_extension* can be one of: nc, csv, ascii. 
 
