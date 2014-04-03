@@ -24,6 +24,8 @@ Developer Documentation
 
    pydap.handlers.pcic
 
+   pydap.responses.aaigrid
+
    pycds
 
 Indices and tables
