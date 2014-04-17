@@ -16,7 +16,7 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 from bs4 import BeautifulSoup
 
-@pytest.mark.parametrize('url', ['/', '/pcds_map/', '/js/crmp_map.js', '/css/ie7.css', '/images/banner.png', '/apps/count_stations/'])
+@pytest.mark.parametrize('url', ['/', '/pcds_map/', '/js/crmp_map.js', '/css/main.css', '/images/banner.png', '/apps/count_stations/'])
 def test_no_404s(pcic_data_portal, url):
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
