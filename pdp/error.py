@@ -3,7 +3,6 @@ import logging
 import traceback
 
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.exc import OperationalError
 
 logger = logging.getLogger(__name__)
 

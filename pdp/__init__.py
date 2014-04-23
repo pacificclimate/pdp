@@ -4,7 +4,6 @@ from os.path import dirname
 from pkg_resources import resource_filename, get_distribution
 from tempfile import mkdtemp
 
-from genshi.core import Markup
 import static
 from beaker.middleware import SessionMiddleware
 
