@@ -12,7 +12,7 @@ from pdp_util.counts import CountStationsApp, CountRecordLengthApp
 from pdp_util.legend import LegendApp
 from pdp_util.agg import PcdsZipApp
 from pdp_util.pcds_dispatch import PcdsDispatcher
-from analytics import AnalyticsMiddleware
+from ga_wsgi_client import AnalyticsMiddleware
 from pdp.error import ErrorMiddleware
 from pdp.dispatch import PathDispatcher
 from pdp.minify import wrap_mini
