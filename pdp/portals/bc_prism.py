@@ -1,3 +1,6 @@
+'''The pdp.portals.bc_prism module configures a raster portal to serve the 1971-2000, 800 meter resolution PRISM dataset for BC.
+'''
+
 from pdp import wrap_auth
 from pdp.dispatch import PathDispatcher
 from pdp_util import session_scope

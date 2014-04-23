@@ -1,3 +1,8 @@
+'''The pdp package ties together all of the aspects of the PCIC Data Portal (pdp).
+   The base pdp module configures the application, sets up a URL hierarchy (a PathDispatcher instance),
+   instantiates all of the responder applications and binds them to various PathDispatchers.
+'''
+
 import os
 from os.path import dirname
 
@@ -18,7 +23,7 @@ from pdp.dispatch import PathDispatcher
 from pdp.minify import wrap_mini
 
 def updateConfig(d1, d2):
-    # standard dict update with the exception of joining lists
+    '''standard dict update with the exception of joining lists'''
     res = d1.copy()
     for k, v in d2.items():
         if k in d1 and type(v) == list:
@@ -75,6 +80,8 @@ global_config = {
 
 # auth wrappers
 def wrap_auth(app, required=True):
+    '''This function wraps a WSGI application with the PcicOidMiddleware for session management and optional authentication
+    '''
     app = PcicOidMiddleware(app,
                             templates=resource_filename('pdp', 'templates'),
                             root=global_config['app_root'],

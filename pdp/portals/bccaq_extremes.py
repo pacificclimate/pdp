@@ -1,3 +1,6 @@
+'''The pdp.portals.bccaq_extremes module configures a raster portal to serve ClimDEX data computed on the Canada-wide BCCAQ downscaled dataset.
+'''
+
 from pdp import wrap_auth
 from pdp.dispatch import PathDispatcher
 from pdp_util import session_scope

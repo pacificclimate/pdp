@@ -1,3 +1,6 @@
+'''The pdp.portals.bcsd_downscale_canada module configures a raster portal to serve BCSD and BCCAQ downscaled (10km) data over all of Canada.
+'''
+
 from pdp import wrap_auth
 from pdp.dispatch import PathDispatcher
 from pdp_util import session_scope

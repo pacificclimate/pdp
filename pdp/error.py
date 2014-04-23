@@ -7,6 +7,10 @@ from sqlalchemy.exc import SQLAlchemyError
 logger = logging.getLogger(__name__)
 
 class ErrorMiddleware(object):
+    '''This class is a WSGI Middleware that can be used as a top-level exception handler.
+       It catches `SQLAlchemyError`, `IOError` and general `Exception`s on application call
+       and it catches general `Exception`s during iteration over the response_iter.
+    '''
     def __init__(self, wrapped_app):
         self.wrapped_app = wrapped_app
     def __call__(self, environ, start_response):

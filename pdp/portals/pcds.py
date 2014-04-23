@@ -1,3 +1,6 @@
+'''The pdp.portals.pcds module configures the Provincial Climate Data Set portal.
+'''
+
 from pdp import wrap_auth
 from pdp_util.map import MapApp
 

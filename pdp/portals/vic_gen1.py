@@ -1,3 +1,6 @@
+'''The pdp.portals.vic_gen1 module configures a raster portal which serves the first generation of output from the VIC Hydrologic Model. The spatial domain is specific watersheds within BC and the model was run using CMIP3 forcings.
+'''
+
 from pdp import wrap_auth
 from pdp.dispatch import PathDispatcher
 from pdp_util import session_scope
