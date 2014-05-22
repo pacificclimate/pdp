@@ -47,7 +47,7 @@ setup(
                         '{0}/pydap.handlers.hdf5@93c34cbe414c#egg=pydap.handlers.hdf5-0.4'.format(sw_path),
                         '{0}/pydap.responses.netcdf@82cf794b9f1e#egg=pydap.responses.netcdf-0.4'.format(sw_path),
                         '{0}/pydap.responses.xls#egg=pydap.responses.xls'.format(sw_path),
-                        '{0}/ga_wsgi_client@8a82a759ca02#egg=ga_wsgi_client'.format(sw_path),
+                        '{0}/ga_wsgi_client@0cb3455dbdd5#egg=ga_wsgi_client'.format(sw_path),
                         ],
     install_requires = ['flask',
                         'beaker',
