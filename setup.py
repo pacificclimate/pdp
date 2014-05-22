@@ -30,7 +30,7 @@ def recursive_list(pkg_dir, basedir):
     return [ x for x in find() ]
 
 
-__version__ = (2, 0, 1)
+__version__ = (2, 0, 2)
 
 sw_path = 'hg+ssh://medusa.pcic.uvic.ca//home/data/projects/comp_support/software'
 
@@ -43,11 +43,11 @@ setup(
     url="http://www.pacificclimate.org/",
     author="James Hiebert",
     author_email="hiebert@uvic.ca",
-    dependency_links = ['{0}/pdp_util@0.1.5#egg=pdp-util-0.1.5'.format(sw_path),
-                        '{0}/pydap.handlers.hdf5@a94261f9ab7c#egg=pydap.handlers.hdf5-0.4'.format(sw_path),
+    dependency_links = ['{0}/pdp_util@0.1.7#egg=pdp-util-0.1.7'.format(sw_path),
+                        '{0}/pydap.handlers.hdf5@93c34cbe414c#egg=pydap.handlers.hdf5-0.4'.format(sw_path),
                         '{0}/pydap.responses.netcdf@82cf794b9f1e#egg=pydap.responses.netcdf-0.4'.format(sw_path),
                         '{0}/pydap.responses.xls#egg=pydap.responses.xls'.format(sw_path),
-                        '{0}/analytics@8a82a759ca02#egg=analytics'.format(sw_path),
+                        '{0}/ga_wsgi_client@8a82a759ca02#egg=ga_wsgi_client'.format(sw_path),
                         ],
     install_requires = ['flask',
                         'beaker',
@@ -57,7 +57,7 @@ setup(
                         'pydap.handlers.hdf5 >=0.3',
                         'pydap.responses.netcdf >=0.2',
                         'pydap.responses.xls',
-                        'analytics',
+                        'ga-wsgi-client',
                         'slimit'
                         ],
     tests_require = ['webob',
