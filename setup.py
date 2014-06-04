@@ -35,8 +35,6 @@ def recursive_list(pkg_dir, basedir):
 __repo__ = hg.repository(ui.ui(), os.getcwd()).parents()[0].hex()[0:12]
 __version__ = '2.1-{}'.format(__repo__)
 
-sw_path = 'hg+ssh://medusa.pcic.uvic.ca//home/data/projects/comp_support/software'
-
 setup(
     name="pdp",
     description="PCIC's Data Portal (pdp): the server software to run the entire web application",
@@ -46,13 +44,6 @@ setup(
     url="http://www.pacificclimate.org/",
     author="James Hiebert",
     author_email="hiebert@uvic.ca",
-    dependency_links = ['{0}/pdp_util@0.1.6#egg=pdp-util-0.1.6'.format(sw_path),
-                        '{0}/pydap.handlers.hdf5@93c190eb6ff6#egg=pydap.handlers.hdf5-0.5'.format(sw_path),
-                        '{0}/pydap.responses.netcdf@82cf794b9f1e#egg=pydap.responses.netcdf-0.4'.format(sw_path),
-                        '{0}/pydap.responses.xls#egg=pydap.responses.xls'.format(sw_path),
-                        '{0}/pydap.responses.aaigrid@8902670d4973#egg=pydap.responses.aaigrid-0.1'.format(sw_path),
-                        '{0}/ga_wsgi_client@8a82a759ca02#egg=ga_wsgi_client'.format(sw_path),
-                        ],
     install_requires = ['flask',
                         'beaker',
                         'genshi',

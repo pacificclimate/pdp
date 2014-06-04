@@ -1,0 +1,7 @@
+WebOb
+Pillow
+pytest
+xlrd
+numpy
+-e git://github.com/Unidata/netcdf4-python.git@a930505#egg=netCDF4-1.1.1-dev #New version allows numpy not to be installed for setup.py to load, use v1.1.1 as soon as it's released
+beautifulsoup4
