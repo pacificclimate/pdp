@@ -3,8 +3,6 @@ import string
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
-from mercurial import ui, hg
-
 class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
@@ -32,8 +30,7 @@ def recursive_list(pkg_dir, basedir):
     return [ x for x in find() ]
 
 
-__repo__ = hg.repository(ui.ui(), os.getcwd()).parents()[0].hex()[0:12]
-__version__ = '2.1-{}'.format(__repo__)
+__version__ = '2.1-dev'
 
 setup(
     name="pdp",
