@@ -1,0 +1,10 @@
+language: python
+python: 2.7_with_system_site_packages
+before_install:
+    - sudo apt-get update -qq
+    - sudo apt-get install -qq python-gdal python-numpy libhdf5-serial-dev
+install:
+    - pip install -i http://tools.pacificclimate.org/pypiserver/ -r requirements.txt -r test_requirements.txt -r data_format_requirements.txt
+    - pip install -i http://tools.pacificclimate.org/pypiserver/ .
+script:
+    - py.test -vv --tb=short tests
