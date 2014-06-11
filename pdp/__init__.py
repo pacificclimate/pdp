@@ -1,8 +1,11 @@
 import os
 from os.path import dirname
+import atexit
 
 from pkg_resources import resource_filename, get_distribution
 from tempfile import mkdtemp
+from shutil import rmtree
+
 
 from genshi.core import Markup
 import static
@@ -70,9 +73,16 @@ global_config = {
     'ensemble_name': '',
     'templates': os.path.join(here, 'pdp', 'templates'),
     'session_dir': mkdtemp(),
+    'clean_session_dir': True,
     'version': get_distribution('pdp').version
     }
 
+def clean_session_dir(session_dir, should_I):
+    if should_I:
+        print('Removing session directory {}'.format(session_dir))
+        rmtree(session_dir)
+
+atexit.register(clean_session_dir, global_config['session_dir'], global_config['clean_session_dir'])
 
 # auth wrappers
 def wrap_auth(app, required=True):
