@@ -1,3 +1,8 @@
+'''The pdp package ties together all of the aspects of the PCIC Data Portal (pdp).
+   The base pdp module configures the application, sets up a URL hierarchy (a PathDispatcher instance),
+   instantiates all of the responder applications and binds them to various PathDispatchers.
+'''
+
 import os
 from os.path import dirname
 import atexit
@@ -7,7 +12,6 @@ from tempfile import mkdtemp
 from shutil import rmtree
 
 
-from genshi.core import Markup
 import static
 from beaker.middleware import SessionMiddleware
 
@@ -22,7 +26,7 @@ from pdp.dispatch import PathDispatcher
 from pdp.minify import wrap_mini
 
 def updateConfig(d1, d2):
-    # standard dict update with the exception of joining lists
+    '''standard dict update with the exception of joining lists'''
     res = d1.copy()
     for k, v in d2.items():
         if k in d1 and type(v) == list:
@@ -35,7 +39,7 @@ def updateConfig(d1, d2):
 here = os.getcwd()
 
 dsn = 'postgresql://httpd_meta@atlas.pcic/pcic_meta'
-pcds_dsn = 'postgresql://httpd@atlas.pcic/crmp'
+pcds_dsn = 'postgresql://httpd@atlas.pcic/crmp?application_name=pcds'
 
 global_config = {
     'app_root': 'http://medusa.pcic.uvic.ca/dataportal',
@@ -66,7 +70,7 @@ global_config = {
         'js/pdp_auth.js',
         'js/pdp_raster_map.js',
         'js/pdp_vector_map.js'
-        ], debug=False),
+        ], debug=True),
     'geoserver_url': 'http://atlas.pcic.uvic.ca/geoserver/',
     'ncwms_url': ['http://atlas.pcic.uvic.ca/ncWMS/wms'],
     'tilecache_url': ['http://a.tiles.pacificclimate.org/tilecache/tilecache.py', 'http://b.tiles.pacificclimate.org/tilecache/tilecache.py', 'http://c.tiles.pacificclimate.org/tilecache/tilecache.py'],
@@ -86,6 +90,8 @@ atexit.register(clean_session_dir, global_config['session_dir'], global_config['
 
 # auth wrappers
 def wrap_auth(app, required=True):
+    '''This function wraps a WSGI application with the PcicOidMiddleware for session management and optional authentication
+    '''
     app = PcicOidMiddleware(app,
                             templates=resource_filename('pdp', 'templates'),
                             root=global_config['app_root'],
@@ -116,6 +122,10 @@ from portals.bc_prism import portal as bc_prism
 
 from portals.bcsd_downscale_canada import portal as bcsd_canada
 
+from portals.bccaq_extremes import portal as bccaq_extremes
+
+from portals.vic_gen1 import portal as vic_gen1
+
 auth = PathDispatcher([
     ('^/pcds/.*$', dispatch_app),
     # ('^/pydap/.*$', pydap_app),
@@ -133,7 +143,9 @@ main = PathDispatcher([
     ('^/check_auth_app/?$', check_auth),
     ('^/pcds_map/.*$', pcds_map),
     ('^/bc_prism/.*$', bc_prism),
+    ('^/vic_gen1/.*$', vic_gen1),
     ('^/downscaled_gcms/.*$', bcsd_canada),
+    ('^/bccaq_extremes/.*$', bccaq_extremes),
     ('^/auth.*$', auth),
     ('^/apps/.*$', apps),
     ('^/docs/.*$', docs_app),

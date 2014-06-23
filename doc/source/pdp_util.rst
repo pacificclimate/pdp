@@ -1,5 +1,3 @@
-Contents:
-
 .. contents::
    :depth: 3
 

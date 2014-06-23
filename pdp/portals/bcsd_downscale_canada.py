@@ -1,3 +1,6 @@
+'''The pdp.portals.bcsd_downscale_canada module configures a raster portal to serve BCSD and BCCAQ downscaled (10km) data over all of Canada.
+'''
+
 from pdp import wrap_auth
 from pdp.dispatch import PathDispatcher
 from pdp_util import session_scope
@@ -18,13 +21,14 @@ portal_config = {
             'js/canada_ex_map.js',
             'js/canada_ex_controls.js',
             'js/canada_ex_app.js'],
-            basename='downscaled_gcms', debug=False
+            basename='downscaled_gcms', debug=True
             )
     }
 
 portal_config = updateConfig(global_config, portal_config)
 map_app = wrap_auth(MapApp(**portal_config), required=False)
 
+dsn = dsn + '?application_name=pdp_bcsd'
 with session_scope(dsn) as sesh:
     conf = db_raster_configurator(sesh, "Download Data", 0.1, 0, ensemble_name, 
         root_url=global_config['app_root'].rstrip('/') + '/downscaled_gcms/data/'

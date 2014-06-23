@@ -8,10 +8,10 @@ cfTime.prototype.setMaxTimeByIndex = function(index) {
     return this.eDate;
 };
 cfTime.prototype.toDate = function(index) {
-    if (typeof(index) == "undefined") {
+    if (index === undefined) {
         return this.sDate;
     }
-    if (this.units == "days") {
+    if (this.units === "days") {
         var d = new Date(this.sDate.getTime());
         d.setDate(this.sDate.getDate() + index);
         return d;
@@ -22,11 +22,11 @@ cfTime.prototype.toIndex = function(d) {
         return;
     }
 
-    if (this.units == "days") {
+    if (this.units === "days") {
         var msPerDay = 1000 * 60 * 60 * 24;
         var msDiff = d.getTime() - this.sDate.getTime();
         var days = msDiff / msPerDay;
-        return days;
+        return Math.floor(days);
     }
 };
 
@@ -73,15 +73,19 @@ var dasToUnitsSince = function(data) {
     
     reg = /(\d{4})-(\d{2}|\d)-(\d{2}|\d)( |T)(\d{2}|\d):(\d{2}|\d):(\d{2}|\d)/g;
     m = reg.exec(dateString);
-    if(!m) { // Not ISO Format, hope it's just YYYY-MM-DD
-        reg = /(\d{4})-(\d{2}|\d)-(\d{2}|\d)/g;
-         m = reg.exec(dateString);
-         if(m) { return [units, new Date(m[0])]; }
-    } else {
+    if(m) {
         for (var i = 0; i < m.length; i++) { m[i] = +m[i]; }
         var sDate = new Date(m[1], --m[2], m[3], m[5], m[6], m[7], 0); // Account for 0 based month index in js
         return [units, sDate];
     }
+    // Not ISO Format, maybe YYYY-MM-DD?
+    reg = /(\d{4})-(\d{2}|\d)-(\d{2}|\d)/g;
+    m = reg.exec(dateString);
+    if(m) { 
+        return [units, new Date(m[1], --m[2], m[3])];
+    }
+    // Well, crap.
+    return undefined;
 };
 
 var getNCWMSLayerCapabilities = function(ncwms_layer) {
@@ -108,7 +112,7 @@ var getNCWMSLayerCapabilities = function(ncwms_layer) {
 
 var setTimeAvailable = function(begin, end) {
     //TODO: only present times available in ncwms capabilities for this layer
-    
+
     $.each([".datepickerstart", ".datepickerend"], function(idx, val) {
         $(val).datepicker("option", "minDate", begin);
         $(val).datepicker("option", "maxDate", end);
@@ -145,13 +149,14 @@ var getRasterBbox = function(capabilities, layer_name) {
     return real_bounds;
 };
 
-var getTimeSelected = function() {
+var getTimeSelected = function(ncwms_layer) {
     var base = new Date($(".datepickerstart").datepicker("option", "minDate"));
     var t0 = $(".datepickerstart").datepicker("getDate");
     var tn = $(".datepickerend").datepicker("getDate");
-    var t0i = (t0 - base) / 1000 / 3600 / 24; // Date values are in milliseconds since the epoch
-    var tni = (tn - base) / 1000 / 3600 / 24; // Date values are in milliseconds since the epoch
-    return [t0i, Math.ceil(tni)]; //Ceiling to work around DST
+    var units = ncwms_layer.times.units;
+    var t0i = ncwms_layer.times.toIndex(t0);
+    var tni = ncwms_layer.times.toIndex(tn);
+    return [t0i, tni];
 };
 
 var rasterBBoxToIndicies = function (map, layer, bnds, extent_proj, extension, callback) {

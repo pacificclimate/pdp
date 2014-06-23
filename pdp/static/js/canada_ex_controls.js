@@ -21,7 +21,7 @@ var getRasterDownloadOptions = function () {
 
 var download = function(extension, map, selection_layer, ncwms_layer, dl_type) {
 
-    var times = getTimeSelected();
+    var times = getTimeSelected(ncwms_layer);
     var start = times[0];
     var end = times[1];
 
@@ -39,9 +39,9 @@ var download = function(extension, map, selection_layer, ncwms_layer, dl_type) {
             raster_index_bounds.top + "][" +
             raster_index_bounds.left + ":" +
             raster_index_bounds.right + "]&";
-	if (dl_type == 'link') {
+	if (dl_type === 'link') {
 	    alert(url);
-	} else if (dl_type == 'data' || dl_type == 'metadata') {
+	} else if (dl_type === 'data' || dl_type === 'metadata') {
 	    if (window.shittyIE) {
 		alert("Downloads may not function completely correctly on IE <= 8. Cross your fingers and/or upgrade your browser.");
 	    }
@@ -70,8 +70,8 @@ var download = function(extension, map, selection_layer, ncwms_layer, dl_type) {
         alert("End date is more recent than start date, please select an appropriate minimum and maximum date");
         return;
     }
-    var raster_proj = getRasterNativeProj(ncwmsCapabilities, current_dataset);
-    var raster_bnds = getRasterBbox(ncwmsCapabilities, current_dataset);
+    var raster_proj = getRasterNativeProj(window.ncwmsCapabilities, current_dataset);
+    var raster_bnds = getRasterBbox(window.ncwmsCapabilities, current_dataset);
     var selection_bnds = selection_layer.features[0].geometry.bounds.clone().
         transform(selection_layer.projection, raster_proj);
     if (! raster_bnds.intersectsBounds(selection_bnds)) {

@@ -95,6 +95,11 @@ function init_crmp_map() {
     mdDialogDiv.appendChild(stnListDiv);
     map.div.appendChild(mdDialogDiv);
     pdp.createDialog(mdDialogDiv, "Station Metadata", 1000, 600);
+    $(mdDialogDiv).dialog({
+        beforeClose: function(event, ui) {
+            $('#station-list').html('');
+        }
+    });
 
     map.addLayers(
         [crmp,

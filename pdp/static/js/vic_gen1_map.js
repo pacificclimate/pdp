@@ -6,9 +6,9 @@ var current_dataset;
 var ncwmsCapabilities;
 var selectionBbox;
 
-function init_prism_map() {
+function init_vic_map() {
     // Map Config
-    options = BC3005_map_options();
+    options = BC3005_map_options_vic();
     options.tileManager = null;
 
     // Map Controls
@@ -22,16 +22,14 @@ function init_prism_map() {
     map = new OpenLayers.Map('pdp-map', options);
     
     defaults = {
-        dataset: "pr_monClim_PRISM_historical_run1_197101-200012",
-        variable: "pr"
+        dataset: "5var_day_CCSM3_A1B_run1_19500101-20991231",
+        variable: "sm"
     }
     
     params = {
         layers: defaults.dataset + "/" + defaults.variable,
         transparent: 'true',
-        time: '1985-06-30',
-        styles: 'boxfill/occam_inv',
-        logscale: true,
+        // styles: '',
         numcolorbands: 254,
         version: '1.1.1',
         srs: 'EPSG:3005'
@@ -44,7 +42,7 @@ function init_prism_map() {
         pdp.ncwms_url,
         params,
         {
-            maxExtent: getBC3005Bounds(),
+            maxExtent: getBC3005Bounds_vic(),
             buffer: 1,
             ratio: 1.5,
             opacity: 0.7,
@@ -53,21 +51,9 @@ function init_prism_map() {
         }
     );
 
-    $('#map-title').html(params.layers + '<br />' + ncwms.params.TIME);
+    $('#map-title').text(params.layers);
     getNCWMSLayerCapabilities(ncwms); // async save into global var ncwmsCapabilities
     current_dataset = params.layers;
-
-    function customize_wms_params(layer_name) {
-	var varname = layer_name.split('/')[1];
-	if (varname == 'pr') {
-	    this.params.LOGSCALE = true;
-	    this.params.STYLES = 'boxfill/occam_inv';
-	} else {
-	    this.params.LOGSCALE = false;
-	    this.params.STYLES = 'boxfill/ferret';
-	}
-    };
-    ncwms.events.register('change', ncwms, customize_wms_params);
 
     map.addLayers(
         [
@@ -78,7 +64,7 @@ function init_prism_map() {
     );
 
     document.getElementById("pdp-map").appendChild(getOpacitySlider(ncwms));
-    map.zoomToExtent(new OpenLayers.Bounds(-236114,41654.75,2204236,1947346.25), true);
+    map.zoomToExtent(new OpenLayers.Bounds(611014.125,251336.4375,2070975.0625,1737664.5625), true);
 
     map.getClimateLayer = function() {
         return map.getLayersByName(datalayerName)[0];

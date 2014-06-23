@@ -51,7 +51,8 @@ var init_raster_map = function() {
             ratio: 1.5,
             wrapDateLine: true,
             opacity: 0.7,
-            transitionEffect: null
+            transitionEffect: null,
+            tileSize: new OpenLayers.Size(512, 512)
         }
 	);
 

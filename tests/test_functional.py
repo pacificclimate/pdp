@@ -16,7 +16,7 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 from bs4 import BeautifulSoup
 
-@pytest.mark.parametrize('url', ['/', '/pcds_map/', '/js/crmp_map.js', '/css/ie7.css', '/images/banner.png', '/apps/count_stations/'])
+@pytest.mark.parametrize('url', ['/', '/pcds_map/', '/js/crmp_map.js', '/css/main.css', '/images/banner.png', '/apps/count_stations/'])
 def test_no_404s(pcic_data_portal, url):
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
@@ -250,11 +250,11 @@ def test_legend_caching(pcic_data_portal):
     resp = req.get_response(pcic_data_portal)
     assert resp.status.startswith('200')
 
-def test_climatology_bounds(prism_portal, authorized_session_id):
-    url = '/data/tmin_monClim_PRISM_historical_run1_197101-200012.nc.nc?climatology_bounds,tmin[0:12][826:1095][1462:1888]&'
+def test_climatology_bounds(pcic_data_portal, authorized_session_id):
+    url = '/bc_prism/data/tmin_monClim_PRISM_historical_run1_197101-200012.nc.nc?climatology_bounds,tmin[0:12][826:1095][1462:1888]&'
     req = Request.blank(url)
     req.cookies['beaker.session.id'] = authorized_session_id
-    resp = req.get_response(prism_portal)
+    resp = req.get_response(pcic_data_portal)
 
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/x-netcdf'
@@ -288,3 +288,16 @@ def test_climatology_bounds(prism_portal, authorized_session_id):
 
     nc.close()
     os.remove(f.name)
+
+@pytest.mark.parametrize('url', [
+    '/downscaled_gcms/data/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.aig?tasmax[0:30][77:138][129:238]&', # has NODATA values
+    '/downscaled_gcms/data/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.aig?tasmax[0:30][144:236][307:348]&',
+])
+def test_aaigrid_response(pcic_data_portal, authorized_session_id, url):
+    req = Request.blank(url)
+    req.cookies['beaker.session.id'] = authorized_session_id
+    resp = req.get_response(pcic_data_portal)
+
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'application/zip'
+

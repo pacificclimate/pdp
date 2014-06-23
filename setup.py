@@ -30,14 +30,14 @@ def recursive_list(pkg_dir, basedir):
     return [ x for x in find() ]
 
 
-__version__ = (2, 0, 2)
+__version__ = '2.1-dev'
 
 setup(
     name="pdp",
     description="PCIC's Data Portal (pdp): the server software to run the entire web application",
     keywords="opendap dods dap open data science climate meteorology downscaling modelling",
     packages=['pdp', 'pdp.portals'],
-    version='.'.join(str(d) for d in __version__),
+    version=__version__,
     url="http://www.pacificclimate.org/",
     author="James Hiebert",
     author_email="hiebert@uvic.ca",
@@ -46,9 +46,10 @@ setup(
                         'genshi',
                         'static',
                         'pdp-util >=0.1.5',
-                        'pydap.handlers.hdf5 >=0.3',
+                        'pydap.handlers.hdf5 >=0.5',
                         'pydap.responses.netcdf >=0.2',
                         'pydap.responses.xls',
+                        'pydap.responses.aaigrid >=0.5',
                         'ga-wsgi-client',
                         'slimit'
                         ],
