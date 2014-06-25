@@ -2,7 +2,8 @@ function getVICControls(ensemble_name) {
     var div = pdp.createDiv('', 'control');
 	var form = pdp.createForm(undefined, undefined, undefined);
     var fieldset = pdp.createFieldset("filterset", "Dataset Selection");
-    fieldset.appendChild(getRasterAccordionMenu(ensemble_name));
+    var varMapping = { 'bf': "Base Flow", 'R': "Runoff", 'swe': "Snow Water Equivalent", 'aet': "Actual Evapotranspiration", 'sm': "Column Total Soil Moisture" };
+    fieldset.appendChild(getRasterAccordionMenu(ensemble_name, varMapping));
     form.appendChild(fieldset);
     div.appendChild(form);
     return div;

@@ -26,16 +26,20 @@ function getDateRange() {
     return rangeDiv;
 }
 
-function generateMenuTree(subtree) {
+function generateMenuTree(subtree, leafNameMapping) {
     var ul = $("<ul/>")
     $.each(Object.keys(subtree), function(index, stuff) {
         var li = $('<li/>');
         if(subtree[stuff] instanceof Object) {
-            li.append($('<a/>').text(stuff)).append(generateMenuTree(subtree[stuff]));
+	    li.append($('<a/>').text(stuff)).append(generateMenuTree(subtree[stuff], leafNameMapping));
         } else {
             var newlayer = subtree[stuff] + "/" + stuff;
+	    var linkText = stuff;
+	    if(typeof leafNameMapping != 'undefined')
+		linkText = leafNameMapping[stuff];
+
             li.attr('id', newlayer);
-            $('<a/>').text(stuff).click(function() {
+            $('<a/>').text(linkText).click(function() {
                 ncwms.params.LAYERS = newlayer;
                 ncwms.events.triggerEvent('change', newlayer);
                 ncwms.redraw();
@@ -49,12 +53,12 @@ function generateMenuTree(subtree) {
     return ul;
 }
 
-function getRasterAccordionMenu(ensembleName) {
+function getRasterAccordionMenu(ensembleName, leafNameMapping) {
     var divId = "dataset-menu";
     var div = pdp.createDiv(divId);
     var url = '../menu.json?ensemble_name=' + ensembleName
     $.ajax(url, {dataType: "json"}).done(function(data) {
-        var menu_tree = generateMenuTree(data);
+        var menu_tree = generateMenuTree(data, leafNameMapping);
         menu_tree.addClass("dataset-menu");
         $("#" + divId).html(menu_tree);
         $(".dataset-menu").accordion({
