@@ -9,20 +9,21 @@ News / Release Notes
 * Addition of the VIC Hydrologic Model Output Portal
 * Addition of the BCCAQ Downscaling Extremes (ClimDEX) Portal
 
-  * timeseries on map click feature
+  * Timeseries on map click feature (available in ClimDEX portal)
 
 * New output formats available for some portals
 
-  * Arc GIS/ASCII Grid file
-  * Excel 2010 (XLSX)
+  * Arc GIS/ASCII Grid file (available in all coverage portals)
+  * Excel 2010 (XLSX) (available in PCDS portal)
 
 * Mods to the HDF5 handler to make it more robust
 
-  * added the ability to slice a sliced proxy object (for use in slicing multiple times and then iterating over the result)
-  * fixed errors on iteration and dimension retreival for variables of rank 1
-  * fixed bug for multiple iterators couldn't access the same HDF5Data object
-  * fixed bug in Pydap that caused redundant and incorrect last-modified timestamps on data from hdf5 files
+  * Added the ability to slice a sliced proxy object (for use in slicing multiple times and then iterating over the result)
+  * Fixed errors on iteration and dimension retreival for variables of rank 1
+  * Fixed bug for multiple iterators couldn't access the same HDF5Data object
+  * Fixed bug in Pydap that caused redundant and incorrect last-modified timestamps on data from hdf5 files
 
+* Bugfix in SQL handler (used by the PCDS portal) which caused the NetCDF response to fail for a subset of stations (stations where NULL is the first value in the timeseries for any variable)
 * Included more documentation describing the raster data formats
 
 2.0.2

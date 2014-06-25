@@ -30,7 +30,7 @@ def recursive_list(pkg_dir, basedir):
     return [ x for x in find() ]
 
 
-__version__ = '2.1-dev'
+__version__ = '2.1.0-rc0'
 
 setup(
     name="pdp",
@@ -50,6 +50,7 @@ setup(
                         'pydap.responses.netcdf >=0.2',
                         'pydap.responses.xls',
                         'pydap.responses.aaigrid >=0.5',
+                        'pydap.handlers.sql',
                         'ga-wsgi-client',
                         'slimit'
                         ],

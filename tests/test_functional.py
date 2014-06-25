@@ -117,6 +117,13 @@ def test_nc_response(pcic_data_portal, authorized_session_id):
     nc.close()
     os.remove(f.name)
 
+def test_nc_response_with_null_values(pcic_data_portal, authorized_session_id):
+    req = Request.blank('/auth/pcds/raw/BCH/AKI.rsql.nc')
+    req.cookies['beaker.session.id'] = authorized_session_id
+    resp = req.get_response(pcic_data_portal)
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'application/x-netcdf'
+
 def test_clip_to_date_one(pcic_data_portal, authorized_session_id):
     base_url = '/auth/agg/?'
     sdate, edate = datetime(2007, 01, 01), None
@@ -300,4 +307,3 @@ def test_aaigrid_response(pcic_data_portal, authorized_session_id, url):
 
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/zip'
-

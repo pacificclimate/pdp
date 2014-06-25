@@ -5,3 +5,4 @@ ga-wsgi-client==0.1
 pdp-util==0.1.5
 slimit==0.8.1
 static==1.0.2
+pydap.handlers.sql >=0.8
