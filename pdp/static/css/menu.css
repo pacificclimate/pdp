@@ -8,14 +8,6 @@ ul.dataset-menu li {
 
 ul.dataset-menu li a {
     padding: 0.5em;
-    color: #004361;
-    display: block;
-    font-weight: bold;
-}
-
-ul.dataset-menu li a:hover {
-    background-color:#004361;
-    color:white;
 }
 
 ul.dataset-menu ul {
@@ -27,12 +19,23 @@ ul.dataset-menu ul {
 ul.dataset-menu ul li {
     margin: 0;
     padding: 0;
+    padding-left:1em;
     clear: both;
 }
 
+ul.dataset-menu li a {
+    color: #004361;
+    display: block;
+    font-weight: bold;
+}
+
+ul.dataset-menu li a:hover {
+    background-color:#004361;
+    color:white;
+}
+
 ul.dataset-menu ul li a {
-    padding-left: 20px;
-    font-size: 0.923em;
+    font-size: 0.857em;
     font-weight: normal;
 }
 
@@ -47,10 +50,20 @@ ul.dataset-menu ul ul li {
 
 ul.dataset-menu ul ul li a {
     color:#6AA2BB;
-    padding-left: 40px;
+    font-weight: bold;
 }
 
 ul.dataset-menu ul ul li a:hover {
+    background-color:#8DC0D6;
+    color:white;
+}
+
+ul.dataset-menu a.menu-leaf {
+    color:#88BD6A;
+    font-weight: normal;
+}
+
+ul.dataset-menu a.menu-leaf:hover {
     background-color:#B0D79A;
     color:white;
 }

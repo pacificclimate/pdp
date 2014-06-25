@@ -46,7 +46,7 @@ function generateMenuTree(subtree, leafNameMapping) {
                 $('#map-title').html(newlayer + '<br />' + ncwms.params.TIME);
                 current_dataset = newlayer;
                 processNcwmsLayerMetadata(ncwms);
-            }).appendTo(li);
+            }).addClass('menu-leaf').appendTo(li);
         }
         li.appendTo(ul);
     });
