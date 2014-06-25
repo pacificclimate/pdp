@@ -71,3 +71,26 @@ function getRasterAccordionMenu(ensembleName, leafNameMapping) {
     return div;
 }
 
+var getRasterControls = function(ensemble_name) {
+    var div = pdp.createDiv('', 'control');
+    var form = pdp.createForm(undefined, undefined, undefined);
+    var fieldset = pdp.createFieldset("filterset", "Dataset Selection");
+    fieldset.appendChild(getRasterAccordionMenu(ensemble_name));
+    form.appendChild(fieldset);
+    div.appendChild(form);
+    return div;
+};
+
+var getRasterDownloadOptions = function (include_dates_selection) {
+    var frag = document.createDocumentFragment();
+    var div = frag.appendChild(pdp.createDiv('', 'control'));
+    var downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get"));
+    var downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
+    if (include_dates_selection) {
+        downloadFieldset.appendChild(getDateRange());
+    }
+    downloadFieldset.appendChild(createRasterFormatOptions());
+    downloadFieldset.appendChild(createDownloadButtons("download-buttons", "download-buttons", {"download-timeseries": "Download", "metadata": "Metadata", "permalink": "Permalink"}));
+    return frag;
+};
+

@@ -9,17 +9,6 @@ function getVICControls(ensemble_name) {
     return div;
 }
 
-function getVICDownloadOptions() {
-    var frag = document.createDocumentFragment();
-    var div = frag.appendChild(pdp.createDiv('', 'control'));
-    var downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get"));
-    var downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
-    downloadFieldset.appendChild(getDateRange());
-    downloadFieldset.appendChild(createRasterFormatOptions());
-    downloadFieldset.appendChild(createDownloadButtons('download-buttons', 'download-buttons', {'download-timeseries': 'Download' }));
-    return frag;
-}
-
 function download(extension, map, selection_layer, ncwms_layer) {
 
     var times = getTimeSelected(ncwms_layer);

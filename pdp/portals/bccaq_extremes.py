@@ -23,7 +23,6 @@ portal_config = {
             'js/d3.js',
             'js/bccaq_extremes_map.js',
             'js/bccaq_extremes_controls.js',
-            'js/canada_ex_controls.js',
             'js/bccaq_extremes_app.js'],
             basename='downscaled_gcms', debug=True
             )

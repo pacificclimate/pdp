@@ -1,24 +1,3 @@
-var getRasterControls = function(ensemble_name) {
-    var div = pdp.createDiv('', 'control');
-	var form = pdp.createForm(undefined, undefined, undefined);
-    var fieldset = pdp.createFieldset("filterset", "Dataset Selection");
-    fieldset.appendChild(getRasterAccordionMenu(ensemble_name));
-    form.appendChild(fieldset);
-    div.appendChild(form);
-    return div;
-};
-
-var getRasterDownloadOptions = function () {
-    var frag = document.createDocumentFragment();
-    var div = frag.appendChild(pdp.createDiv('', 'control'));
-    var downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get"));
-    var downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
-    downloadFieldset.appendChild(getDateRange());
-    downloadFieldset.appendChild(createRasterFormatOptions());
-    downloadFieldset.appendChild(createDownloadButtons("download-buttons", "download-buttons", {"download-timeseries": "Download", "metadata": "Metadata", "permalink": "Permalink"}));
-    return frag;
-};
-
 var download = function(extension, map, selection_layer, ncwms_layer, dl_type) {
 
     var times = getTimeSelected(ncwms_layer);

@@ -8,7 +8,7 @@ $(document).ready(function() {
     getCatalog(function (data) { catalog = data});
 
     var selector = document.getElementById("pdp-controls").appendChild(getPRISMControls(pdp.ensemble_name));
-    var downloader = document.getElementById("pdp-controls").appendChild(getPRISMDownloadOptions());
+    var downloader = document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(false));
 
     ncwmsLayer = map.getClimateLayer();
     selectionLayer = map.getSelectionLayer();

@@ -20,7 +20,7 @@ $(document).ready(function() {
     });
 
     document.getElementById("pdp-controls").appendChild(getRasterControls(pdp.ensemble_name));
-    document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions());
+    document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(true));
 
     function callDownload() {
         download(type, map, selectionLayer, ncwmsLayer, 'data');

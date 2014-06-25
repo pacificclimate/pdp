@@ -8,16 +8,6 @@ function getPRISMControls(ensemble_name) {
     return div;
 }
 
-function getPRISMDownloadOptions() {
-    var frag = document.createDocumentFragment();
-    var div = frag.appendChild(pdp.createDiv('', 'control'));
-    var downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get"));
-    var downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
-    downloadFieldset.appendChild(createRasterFormatOptions());
-    downloadFieldset.appendChild(createDownloadButtons('download-buttons', 'download-buttons', {'download-timeseries': 'Download', "metadata": "Metadata", 'permalink': 'Permalink' }));
-    return frag;
-}
-
 function download(extension, map, selection_layer, ncwms_layer, dl_type) {
 
     var callPydapDownloadUrl = function (raster_index_bounds) {
