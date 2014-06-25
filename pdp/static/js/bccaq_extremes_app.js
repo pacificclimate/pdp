@@ -44,7 +44,6 @@ $(document).ready(function() {
         $.when(maxTimeReq).done (function(maxTime, unitsSince) {
             var maxTimeIndex = ddsToTimeIndex(maxTime);
             ncwms.max_time_index = maxTimeIndex;
-            alert(maxTimeIndex);
         });
     };
 
