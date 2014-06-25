@@ -1,15 +1,14 @@
 function createFormatOptions() {
     var formatData = {nc: pdp.mkOpt('NetCDF', 'NetCDF is a self-describing file format widely used in the atmospheric sciences. Self describing means that the format information is contained within the file itself, so generic tools can be used to import these data. The format requires use of freely available applications to view, import, and export the data.'),
-		      csv: pdp.mkOpt('CSV', 'CSV stands for Comma Separated Values. This format is a human readable list of data typically with a time stamp, observational value, and flags with one line per observation time. Each observation is separated by commas.'),
-		      ascii: pdp.mkOpt('ASCII', 'ASCII data are also in a text format with a identical data organization as the CSV data.'),
-		      xls: pdp.mkOpt('MS Excel', 'This data format is compatible with many popular spreadsheet programs such as Open Office, Libre Office and Microsoft Excel. Data organization is similar to CSV, but the format is more directly readable with spreadsheet software.') };
+		      ascii: pdp.mkOpt('CSV/ASCII', 'CSV/ASCII response will return an OPeNDAP plain-text response which is a human readable array notation. For weather station data, the format normally consists of a sequence of fields separated by a comma and a space (e.g. " ,")'),
+		      xlsx: pdp.mkOpt('MS Excel 2010', 'This data format is compatible with many popular spreadsheet programs such as Open Office, Libre Office and Microsoft Excel 2010. Data organization is similar to CSV, but the format is more directly readable with spreadsheet software.') };
 
     return pdp.getSelectorWithHelp('Output Format', 'data-format', 'data-format', 'data-format-selector', 'csv', formatData,'View output format descriptions', 450, 450);
 }
 
 function createRasterFormatOptions() {
     var formatData = {nc: pdp.mkOpt('NetCDF', 'NetCDF is a self-describing file format widely used in the atmospheric sciences. Self describing means that the format information is contained within the file itself, so generic tools can be used to import these data. The format requires use of freely available applications to view, import, and export the data.'),
-		      csv: pdp.mkOpt('CSV', 'CSV stands for Comma Separated Values. This format is a human readable list of data typically with a time stamp, observational value, and flags with one line per observation time. Each observation is separated by commas.'),
+		      ascii: pdp.mkOpt('ASCII', 'ASCII response will return an OPeNDAP plain-text response which is a human readable array notation.'),
 		      aig: pdp.mkOpt('Arc/Info ASCII Grid', 'This format is the ASCII interchange format for Arc/Info Grid. It takes the form of one ASCII file per layer, plus sometimes an associated .prj file, all of which are wrapped up in zip archive.') };
 
     return pdp.getSelectorWithHelp('Output Format', 'data-format', 'data-format', 'data-format-selector', 'nc', formatData,'View output format descriptions', 450, 450);

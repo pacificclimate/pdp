@@ -2,7 +2,7 @@ Beaker==1.6.4
 Flask==0.10.1
 Genshi==0.7
 ga-wsgi-client==0.1
-pdp-util==0.1.5
+pdp-util==0.1.6
 slimit==0.8.1
 static==1.0.2
 pydap.handlers.sql >=0.8
