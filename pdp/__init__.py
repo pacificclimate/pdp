@@ -34,6 +34,12 @@ def updateConfig(d1, d2):
             res[k] = d1[k] + d2[k]
         else: # overwrite or add anything else
             res[k] = v
+
+        # Ensure that there are no lists within lists.
+        if type(res[k]) == list:
+            for elem in res[k]:
+                if type(elem) == list:
+                    raise NameError('List found where value expected within config for key ' + k)
     return res
 
 here = os.getcwd()
