@@ -9,7 +9,7 @@ function getVICControls(ensemble_name) {
     return div;
 }
 
-function download(extension, map, selection_layer, ncwms_layer) {
+function download(extension, map, selection_layer, ncwms_layer, dl_type) {
 
     var times = getTimeSelected(ncwms_layer);
     var start = times[0];
@@ -28,8 +28,16 @@ function download(extension, map, selection_layer, ncwms_layer) {
             raster_index_bounds.top + '][' + 
             raster_index_bounds.left + ':' + 
             raster_index_bounds.right + ']&';
-        window.open(url,"","width=600,height=600");
-    }
+	if (dl_type === 'link') {
+	    alert(url);
+	} else if (dl_type === 'data' || dl_type === 'metadata') {
+	    if (window.shittyIE) {
+		alert("Downloads may not function completely correctly on IE <= 8. Cross your fingers and/or upgrade your browser.");
+            }
+            window.open(url, "_blank", "width=600,height=600");
+        }
+    };
+
 
     // Check input.  Relies upon global var ncwmsCapabilities
     if (selection_layer.features.length === 0) {
