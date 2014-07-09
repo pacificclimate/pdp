@@ -15,7 +15,7 @@ pcds_config = {
         'js/crmp_download.js',
         'js/crmp_filters.js',
         'js/crmp_app.js'], 
-        basename='pcds', debug=True
+        basename='pcds', debug=False
         )
     }
 

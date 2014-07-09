@@ -19,12 +19,12 @@ portal_config = {
     'css_files' : [
         'css/plot.css' ],
     'js_files' :
+        ['js/d3.v3.min.js'] +
         wrap_mini([
-            'js/d3.js',
             'js/bccaq_extremes_map.js',
             'js/bccaq_extremes_controls.js',
             'js/bccaq_extremes_app.js'],
-            basename='bccaq_extremes', debug=True
+            basename='downscaled_gcm_extremes', debug=False
             )
     }
 
@@ -34,7 +34,7 @@ map_app = wrap_auth(MapApp(**portal_config), required=False)
 dsn = dsn + '?application_name=pdp_bccaq_extremes'
 with session_scope(dsn) as sesh:
     conf = db_raster_configurator(sesh, "Download Data", 0.1, 0, ensemble_name, 
-        root_url=global_config['app_root'].rstrip('/') + '/bccaq_extremes/data/'
+        root_url=global_config['app_root'].rstrip('/') + '/downscaled_gcm_extremes/data/'
     )
     data_server = wrap_auth(RasterServer(dsn, conf))
     catalog_server = RasterCatalog(dsn, conf) #No Auth

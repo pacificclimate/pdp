@@ -21,7 +21,7 @@ portal_config = {
             'js/vic_gen1_map.js',
             'js/vic_gen1_controls.js',
             'js/vic_gen1_app.js'],
-            basename='vic_gen1', debug=True)
+            basename='hydro_model_out', debug=False)
     }
 
 portal_config = updateConfig(global_config, portal_config)
@@ -30,8 +30,7 @@ map_app = wrap_auth(MapApp(**portal_config), required=False)
 dsn = dsn + '?application_name=pdp_vicgen1'
 with session_scope(dsn) as sesh:
     conf = db_raster_configurator(sesh, "Download Data", 0.1, 0, ensemble_name, 
-        root_url=global_config['app_root'].rstrip('/') + '/' + 
-        ensemble_name + '/data/'
+        root_url=global_config['app_root'].rstrip('/') + '/hydro_model_out/data/'
     )
     data_server = wrap_auth(RasterServer(dsn, conf))
     catalog_server = RasterCatalog(dsn, conf) #No Auth
