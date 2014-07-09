@@ -14,7 +14,7 @@ from pdp import dsn, global_config, updateConfig
 ensemble_name = 'bccaq_extremes'
 
 portal_config = {
-    'title': 'BCCAQ Extremes',
+    'title': 'Statistically Downscaled GCM Scenarios: Extremes',
     'ensemble_name': ensemble_name,
     'css_files' : [
         'css/plot.css' ],
@@ -24,7 +24,7 @@ portal_config = {
             'js/bccaq_extremes_map.js',
             'js/bccaq_extremes_controls.js',
             'js/bccaq_extremes_app.js'],
-            basename='downscaled_gcms', debug=True
+            basename='bccaq_extremes', debug=True
             )
     }
 

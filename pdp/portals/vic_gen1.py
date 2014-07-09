@@ -14,7 +14,7 @@ from pdp import dsn, global_config, updateConfig
 ensemble_name = 'vic_gen1'
 
 portal_config = {
-    'title': 'VIC Gen 1 Hydrologic Data',
+    'title': 'Gridded Hydrologic Model Output',
     'ensemble_name': ensemble_name,
     'js_files' : 
         wrap_mini([
