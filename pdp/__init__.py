@@ -25,17 +25,6 @@ from pdp.error import ErrorMiddleware
 from pdp.dispatch import PathDispatcher
 from pdp.minify import wrap_mini
 
-def updateConfig(d1, d2):
-    '''standard dict update with the exception of joining lists'''
-    res = d1.copy()
-    for k, v in d2.items():
-        if k in d1 and type(v) == list:
-            # join any config lists
-            res[k] = d1[k] + d2[k]
-        else: # overwrite or add anything else
-            res[k] = v
-    return res
-
 here = os.getcwd()
 
 dsn = 'postgresql://httpd_meta@atlas.pcic/pcic_meta'
@@ -100,7 +89,7 @@ def wrap_auth(app, required=True):
 
 check_auth = wrap_auth(check_authorized_return_email, required=False)
 
-from portals.pcds import map_app as pcds_map
+from portals.pcds import portal as pcds_map
 
 zip_app = wrap_auth(PcdsZipApp(pcds_dsn), required=True)
 
@@ -141,11 +130,11 @@ main = PathDispatcher([
     ('^/images/legend/.*\.png$', legend_app),
     ('^/css/(default|pcic).css$', static.Cling(resource_filename('pdp_util', 'data'))), # a bit of a hack for now
     ('^/check_auth_app/?$', check_auth),
-    ('^/pcds_map/.*$', pcds_map),
-    ('^/bc_prism/.*$', bc_prism),
-    ('^/hydro_model_out/.*$', vic_gen1),
-    ('^/downscaled_gcms/.*$', bcsd_canada),
-    ('^/downscaled_gcm_extremes/.*$', bccaq_extremes),
+    ('^/pcds_map/.*$', pcds_map(None, global_config)),
+    ('^/bc_prism/.*$', bc_prism(dsn, global_config)),
+    ('^/hydro_model_out/.*$', vic_gen1(dsn, global_config)),
+    ('^/downscaled_gcms/.*$', bcsd_canada(dsn, global_config)),
+    ('^/downscaled_gcm_extremes/.*$', bccaq_extremes(dsn, global_config)),
     ('^/auth.*$', auth),
     ('^/apps/.*$', apps),
     ('^/docs/.*$', docs_app),
