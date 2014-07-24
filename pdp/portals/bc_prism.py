@@ -9,7 +9,7 @@ from pdp_util.raster import RasterServer, RasterCatalog, db_raster_configurator
 from pdp_util.ensemble_members import PrismEnsembleLister
 
 from pdp.minify import wrap_mini
-from pdp.portal import updateConfig
+from pdp.portals import updateConfig
 
 def portal(dsn, global_config):
 
