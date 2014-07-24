@@ -23,7 +23,7 @@ $(document).ready(function() {
     });
 
     document.getElementById("pdp-controls").appendChild(getRasterControls(pdp.ensemble_name));
-    document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions());
+    document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(false));
     document.getElementById("pdp-controls").appendChild(getPlotWindow());
 
     function callDownload() {
@@ -34,8 +34,20 @@ $(document).ready(function() {
     }
     function callDownloadMetadata() {
 	download('das', map, selectionLayer, ncwmsLayer, 'metadata');
-    }
-    
+    };
+
+    function getTimeIndex(layer_name) {
+        var layerUrl = catalog[layer_name.split('/')[0]];
+        var maxTimeReq = $.ajax({
+            url: (layerUrl + ".dds?time").replace("/data/", "/catalog/")
+        });
+        $.when(maxTimeReq).done (function(maxTime, unitsSince) {
+            var maxTimeIndex = ddsToTimeIndex(maxTime);
+            ncwms.max_time_index = maxTimeIndex;
+        });
+    };
+
+    ncwms.events.register('change', ncwms, getTimeIndex);
 
     var type;
     $("#download-timeseries").click(function(){

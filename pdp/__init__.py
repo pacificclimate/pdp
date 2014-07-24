@@ -25,23 +25,6 @@ from pdp.error import ErrorMiddleware
 from pdp.dispatch import PathDispatcher
 from pdp.minify import wrap_mini
 
-def updateConfig(d1, d2):
-    '''standard dict update with the exception of joining lists'''
-    res = d1.copy()
-    for k, v in d2.items():
-        if k in d1 and type(v) == list:
-            # join any config lists
-            res[k] = d1[k] + d2[k]
-        else: # overwrite or add anything else
-            res[k] = v
-
-        # Ensure that there are no lists within lists.
-        if type(res[k]) == list:
-            for elem in res[k]:
-                if type(elem) == list:
-                    raise NameError('List found where value expected within config for key ' + k)
-    return res
-
 here = os.getcwd()
 
 dsn = 'postgresql://httpd_meta@atlas.pcic/pcic_meta'
@@ -106,7 +89,7 @@ def wrap_auth(app, required=True):
 
 check_auth = wrap_auth(check_authorized_return_email, required=False)
 
-from portals.pcds import map_app as pcds_map
+from portals.pcds import portal as pcds_map
 
 zip_app = wrap_auth(PcdsZipApp(pcds_dsn), required=True)
 
