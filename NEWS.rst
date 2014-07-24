@@ -4,7 +4,7 @@ News / Release Notes
 2.1.0
 -----
 
-*Release date: xx-Jun-2014*
+*Release date: 24-Jul-2014*
 
 * Addition of the VIC Hydrologic Model Output Portal
 * Addition of the BCCAQ Downscaling Extremes (ClimDEX) Portal
