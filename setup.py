@@ -30,7 +30,7 @@ def recursive_list(pkg_dir, basedir):
     return [ x for x in find() ]
 
 
-__version__ = '2.1.0'
+__version__ = '2.1.1'
 
 setup(
     name="pdp",
