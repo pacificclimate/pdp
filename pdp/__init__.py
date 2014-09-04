@@ -105,11 +105,11 @@ dispatch_app = wrap_auth(PcdsDispatcher(templates=resource_filename('pdp_util', 
                                         app_root=global_config['app_root'],
                                         conn_params=pcds_dsn
                                         ),
-                        required=True)
+                        required=False)
 
 from portals.bc_prism import portal as bc_prism
 
-from portals.hydro_stn import hydro_stn_app as hydro_stn_map
+from portals.hydro_stn import portal as hydro_stn_map
 from portals.bcsd_downscale_canada import portal as bcsd_canada
 
 from portals.bccaq_extremes import portal as bccaq_extremes
@@ -132,7 +132,7 @@ main = PathDispatcher([
     ('^/css/(default|pcic).css$', static.Cling(resource_filename('pdp_util', 'data'))), # a bit of a hack for now
     ('^/check_auth_app/?$', check_auth),
     ('^/pcds_map/.*$', pcds_map),
-    ('^/hydro_stn_map/.*$', hydro_stn_map),
+    ('^/hydro_stn_map/.*$', hydro_stn_map(global_config)),
     ('^/bc_prism/.*$', bc_prism),
     ('^/vic_gen1/.*$', vic_gen1),
     ('^/downscaled_gcms/.*$', bcsd_canada),
