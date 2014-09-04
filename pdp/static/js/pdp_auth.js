@@ -9,7 +9,7 @@ my.init_login = function (loginDivId) {
         "myOpenID": "https://www.myopenid.com/",
         "Verisign": "http://pip.verisignlabs.com",
         "Google": "https://www.google.com/accounts/o8/id",
-        "Yahoo": "http://yahoo.com/"
+        "Yahoo": "http://open.login.yahooapis.com/openid20/www.yahoo.com/xrds"
     };
 
     var signupUrls = {
