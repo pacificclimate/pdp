@@ -13,6 +13,7 @@ def portal(global_config):
         'title': 'PCIC Hydrology Gauge data',
         'js_files' :
         wrap_mini([
+                'js/jquery.csv-0.71.js',
                 'js/hydro_stn_map.js',
                 'js/hydro_stn_controls.js',
                 'js/hydro_stn_download.js',
@@ -21,6 +22,5 @@ def portal(global_config):
                   basename='hydro_stn', debug=True
                   )
         }
-
     config = updateConfig(global_config, hydro_stn_config)
     return wrap_auth(MapApp(**config), required=False)

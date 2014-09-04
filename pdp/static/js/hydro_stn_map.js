@@ -8,7 +8,7 @@ var selectionLayer;
 function init_hydro_stn_map() {
     // Map Config
     options = BC3005_map_options();
-    options.tileManager = null;
+    //options.tileManager = null;
 
     // Map Controls
     mapControls = getBasicControls();
@@ -16,7 +16,7 @@ function init_hydro_stn_map() {
     //panelControls = getEditingToolbar([getHandNav(), getPolyEditor(selectionLayer)]);
     //mapControls.push(panelControls);
 
-    options.controls = mapControls;
+    //options.controls = mapControls;
 
     map = new OpenLayers.Map('pdp-map', options);
     
@@ -96,13 +96,16 @@ function init_hydro_stn_map() {
     // map.div.appendChild(mdDialogDiv);
     // pdp.createDialog(mdDialogDiv, "Station Metadata", 1000, 600);
 
+    var markerLayer = new OpenLayers.Layer.Markers("Stations");
+
     map.addLayers(
         [
          getGSBaseLayer(pdp.gs_url, "OpenStreetMap brown green", "osm_pnwa_green_brown_gwc"),
          getGSBaseLayer(pdp.gs_url, "OpenStreetMap greens", "osm_pnwa_mapquest_gwc"),
-         getGSBaseLayer(pdp.gs_url, "OpenStreetMap whites", "osm_pnwa_whites_gwc")
+         getGSBaseLayer(pdp.gs_url, "OpenStreetMap whites", "osm_pnwa_whites_gwc"),
         ]
     );
+    map.addLayer(markerLayer);
     map.zoomToMaxExtent();
     
     // // Additional Functionality
