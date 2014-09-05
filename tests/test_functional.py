@@ -307,3 +307,47 @@ def test_aaigrid_response(pcic_data_portal, authorized_session_id, url):
 
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/zip'
+
+def test_hydro_stn_data_catalog(pcic_data_portal):
+    url = '/hydro_stn/data/catalog.json'
+    req = Request.blank(url)
+    resp = req.get_response(pcic_data_portal)
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'application/json'
+    assert '/hydro_stn/data//hydro_stn/data//fraser_SEYMO.csv' in resp.body
+    data = json.loads(resp.body)
+    assert len(data) == 114
+
+def test_hydro_stn_data_csv_csv(pcic_data_portal):
+    url = '/hydro_stn/data/campbell_BCSCA.csv.csv'
+    req = Request.blank(url)
+    resp = req.get_response(pcic_data_portal)
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'text/plain'
+    for line in resp.app_iter:
+        if line.strip() == '1950/1/1, 4.641066, 1.517283, 0.51405, 1.210924, 9.211309, 4.641478, 1.517639, 0.236416, 15.646284, 9.212482, 0.275539, 1.51632, 0.236427, 15.631995, 9.209709, 0.275423, 0.514521, 0.236471, 15.64847, 4.632195, 0.275424, 0.514519, 1.210046, 0.0':
+            assert True
+            return
+
+    assert False, "Data line for 1950/1/1 does not exist"
+
+def test_hydro_stn_data_csv_selection_projection(pcic_data_portal):
+    url = '/hydro_stn/data/campbell_BCSCA.csv.csv?sequence.ccsm3_A2run1&sequence.ccsm3_A2run1>100'
+    req = Request.blank(url)
+    resp = req.get_response(pcic_data_portal)
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'text/plain'
+    assert resp.body.startswith('''sequence
+ccsm3_A2run1
+233.348526
+232.394409
+154.738205
+101.900795
+105.346199
+147.165222
+110.808685
+204.573883
+235.45874
+132.928482
+194.308685
+882.569519''')

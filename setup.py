@@ -64,7 +64,7 @@ setup(
                      ],
     scripts = ['scripts/rast_serve.py'],
     package_dir = {'pdp': 'pdp'},
-    package_data = {'pdp': ['templates/*.html'] + recursive_list('pdp/', 'pdp/static')},
+    package_data = {'pdp': ['templates/*.html', 'portals/hydro_stn.yaml'] + recursive_list('pdp/', 'pdp/static')},
     data_files = build_doc_list('build/sphinx/html', 'doc'),
     cmdclass = {'test': PyTest},
     zip_safe=False,
