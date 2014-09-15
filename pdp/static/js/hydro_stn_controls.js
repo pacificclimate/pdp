@@ -1,12 +1,24 @@
 
-function getHydroStnControls(map) {
+function getHydroStnControls() {
+    var frag = document.createDocumentFragment();
+
     var div = pdp.createDiv('', 'control');
+    frag.appendChild(div);
+
+    var form = pdp.createForm("download-form", "download-form");
+    div.appendChild(form);
+
     var fieldset = pdp.createFieldset("filterset", "Selection");
+    form.appendChild(fieldset);
+
+    var sBox = createSearchBox("searchBox")
+    fieldset.appendChild(sBox);
+    frag.sBox = sBox;
+
     var selection = pdp.createDiv('selectedStations', '');
-    //fieldset.appendChild(getResetButton(map));
     fieldset.appendChild(selection);
-    div.appendChild(fieldset);
-    return div;
+
+    return frag;
 }
 
 // Add an item from the Selection sidebar
@@ -23,15 +35,8 @@ var removeFromSidebar = function(idx) {
 
 // Create a search box using jquery ui's autocomplete control.
 var createSearchBox = function(id, cssClass, data, select_callback) {
-    var frag = document.createDocumentFragment();
-    var elem = frag.appendChild(pdp.createInputElement("text", cssClass, id, id, ''));
-    $(elem).autocomplete({
-        source: data,
-        select: select_callback,
-        delay: 100,
-        minLength: 2
-    });
-    return frag;
+    var sbox = pdp.createInputElement("text", cssClass, id, id, '');
+    return sbox;
 };
 
 // Toggle whether an index into the data array is selected.

@@ -2,25 +2,23 @@
 $(document).ready(function() {
     map = init_hydro_stn_map();    
 
-    var downloadForm = pdp.createForm("download-form", "download-form", "get", pdp.app_root + "/auth/agg/")
-    document.getElementById("pdp-controls").appendChild(downloadForm);
+    var controls = getHydroStnControls();
+    document.getElementById("pdp-controls").appendChild(controls);
     
     // The selectionList isn't used at this time, but it seems useful.
     var selectionList = {};
     var dataArray;
 
-    var controls = downloadForm.appendChild(getHydroStnControls(map));
-
-    // Creates search box and adds it to DOM in the "Selection" fieldset.
-    var searchBox = createSearchBox(
-        'searchBox', '', [],
-        function(event, ui) {
-            toggleIdxSelection(ui.item.value, dataArray[ui.item.value].icon, selectionList, dataArray);
-            $('#searchBox').val('');
-            return false;
-        }
-    );
-    document.getElementById('selectedStations').appendChild(searchBox);
+    var selection_callback = function(event, ui) {
+        toggleIdxSelection(ui.item.value, dataArray[ui.item.value].icon, selectionList, dataArray);
+        $('#searchBox').val('');
+        return false;
+    };
+    $(controls.sBox).autocomplete({
+        select: selection_callback,
+        delay: 100,
+        minLength: 2
+    });
 
     $.ajax(pdp.app_root + "/csv/routed_flow_metadatav4.csv")
         .done(function(data) {
@@ -28,8 +26,19 @@ $(document).ready(function() {
             for(i = 0; i < dataArray.length; ++i) {
                 dataArray[i].idx = i;
             }
+
+            searchData = $.map(dataArray, function(x) {
+                return { label: x.StationName, value: x.idx };
+            }).concat($.map(dataArray, function(x) {
+                return { label: x.SiteID, value: x.idx };
+            }));
+
             // Adds data to the search box.
-            $('#searchBox').autocomplete("option", "source", $.map(dataArray, function(x) { return { label: x.StationName, value: x.idx }; }));
+            $('#searchBox').autocomplete(
+                "option",
+                "source",
+                searchData
+            );
 
             var stnLayer = map.getLayersByName("Stations")[0];
             var inProj = new OpenLayers.Projection("EPSG:4326");
