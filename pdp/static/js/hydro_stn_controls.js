@@ -54,19 +54,3 @@ var createSearchBox = function(id, cssClass, data, select_callback) {
     sbox.placeholder = "Station Name or ID"
     return sbox;
 };
-
-// Toggle whether an index into the data array is selected.
-var toggleIdxSelection = function(idx, icon, selectionList, dataArray) {
-    var stnLayer = map.getLayersByName("Stations")[0];
-
-    if(idx in selectionList) {
-        icon.setUrl(pdp.app_root + "/images/mini_triangle.png");
-        delete selectionList[idx];
-        removeFromSidebar(idx);
-    } else {
-        icon.setUrl(pdp.app_root + "/images/mini_triangle_selected.png");
-        selectionList[idx] = dataArray[idx];
-        addToSidebar(idx, dataArray);
-    }
-    stnLayer.redraw();
-};

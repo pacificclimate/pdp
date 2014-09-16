@@ -5,12 +5,11 @@ $(document).ready(function() {
     var controls = getHydroStnControls();
     document.getElementById("pdp-controls").appendChild(controls);
     
-    // The selectionList isn't used at this time, but it seems useful.
-    var selectionList = {};
     var dataArray;
 
     var selection_callback = function(event, ui) {
-        toggleIdxSelection(ui.item.value, dataArray[ui.item.value].icon, selectionList, dataArray);
+
+        map.selectFeatureByFid(ui.item.value);
         $('#searchBox').val('');
         return false;
     };
@@ -18,6 +17,16 @@ $(document).ready(function() {
         select: selection_callback,
         delay: 100,
         minLength: 2
+    });
+
+    var stnLayer = map.getStnLayer();
+    stnLayer.events.on({
+        'featureselected': function(feature) {
+            addToSidebar(feature.feature.fid, dataArray);
+        },
+        'featureunselected': function(feature) {
+            removeFromSidebar(feature.feature.fid);
+        }
     });
 
     $.ajax(pdp.app_root + "/csv/routed_flow_metadatav4.csv")
@@ -40,21 +49,17 @@ $(document).ready(function() {
                 searchData
             );
 
-            var stnLayer = map.getLayersByName("Stations")[0];
+
             var inProj = new OpenLayers.Projection("EPSG:4326");
             var outProj = map.getProjectionObject();
 
-            var icon = new OpenLayers.Icon(pdp.app_root + "/images/mini_triangle.png");
             $(dataArray).each(function(idx, row) {
-                // Create markers and wire up mousedown handler to toggle selection.
-                pt = new OpenLayers.LonLat(row.Longitude, row.Latitude).transform(inProj, outProj);
-                var marker = new OpenLayers.Marker(pt, icon.clone());
-                dataArray[idx].icon = marker.icon;
-                marker.events.register('mousedown', marker, function(evt) {
-                    toggleIdxSelection(idx, this.icon, selectionList, dataArray);
-                    OpenLayers.Event.stop(evt); 
-                });
-                stnLayer.addMarker(marker);
+                var pt = new OpenLayers.Geometry.Point(
+                    parseFloat(row.Longitude), 
+                    parseFloat(row.Latitude)).transform(inProj, outProj);
+                var feature = new OpenLayers.Feature.Vector(pt);
+                feature.fid = idx;
+                stnLayer.addFeatures(feature);
             });
         });
 });
