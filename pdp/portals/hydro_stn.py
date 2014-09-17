@@ -10,6 +10,18 @@ from pydap.wsgi.app import DapServer
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
 
+class HydroStationDataServer(DapServer):
+    '''WSGI app which is a subclass of PyDap's DapServer that directly configures the app's root_url'''
+    def __init__(self, filepath, root_url):
+        self.root_url = root_url
+        return super(HydroStationDataServer, self).__init__(filepath)
+
+    @property
+    def config(self):
+        cfg = super(HydroStationDataServer, self).config
+        self._config['root_url'] = self.root_url
+        return self._config
+
 def portal(global_config):
 
     hydro_stn_config = {
@@ -28,12 +40,11 @@ def portal(global_config):
 
     map_app = wrap_auth(MapApp(**config), required=False)
 
-    data_server = DapServer(resource_filename('pdp', 'portals/hydro_stn.yaml'))
+    data_server = HydroStationDataServer(resource_filename('pdp', 'portals/hydro_stn.yaml'), global_config['app_root'])
 
     return PathDispatcher([
         ('^/map/?.*$', map_app),
         # Catalog can be found at /data/catalog.json
-        # ('^/catalog/.*$', catalog_server),
         ('^/data/.*$', data_server),
     ])
 

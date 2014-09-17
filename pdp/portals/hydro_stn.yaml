@@ -2,5 +2,5 @@ name: hydro-station-data-server
 version: 0
 api_version: 0
 handlers:
-    - url: /hydro_stn/data/
+    - url: hydro_stn/data
       dir: /home/data/projects/hydrology/vic_gen2/output/vic_gen1_routed
