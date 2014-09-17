@@ -5,7 +5,7 @@ function getHydroStnControls() {
     var div = pdp.createDiv('', 'control');
     frag.appendChild(div);
 
-    var form = pdp.createForm("download-form", "download-form");
+    var form = pdp.createForm();
     $(form).submit(false);
     div.appendChild(form);
 
@@ -53,4 +53,23 @@ var createSearchBox = function(id, cssClass, data, select_callback) {
     var sbox = pdp.createInputElement("text", cssClass, id, id, '');
     sbox.placeholder = "Station Name or ID"
     return sbox;
+};
+
+var createFormatOptions = function() {
+    var formatData = {
+        xlsx: pdp.mkOpt('MS Excel 2010', 'This data format is compatible with many popular spreadsheet programs such as Open Office, Libre Office and Microsoft Excel 2010. Data organization is similar to CSV, but the format is more directly readable with spreadsheet software.'),
+        ascii: pdp.mkOpt('CSV/ASCII', 'CSV/ASCII response will return an OPeNDAP plain-text response which is a human readable array notation. For weather station data, the format normally consists of a sequence of fields separated by a comma and a space (e.g. " ,")'),
+    };
+
+    return pdp.getSelectorWithHelp('Output Format', 'data-format', 'data-format', 'data-format-selector', 'csv', formatData,'View output format descriptions', 450, 450);
+};
+
+var getDownloadOptions = function () {
+    var frag = document.createDocumentFragment();
+    var div = frag.appendChild(pdp.createDiv('', 'control'));
+    var downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get"));
+    var downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
+    downloadFieldset.appendChild(createFormatOptions());
+    downloadFieldset.appendChild(createDownloadButtons("download-buttons", "download-buttons", {"download": "Download", "permalink": "Permalink"}));
+    return frag;
 };

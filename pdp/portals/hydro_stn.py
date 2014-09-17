@@ -17,6 +17,7 @@ def portal(global_config):
         'js_files' :
         wrap_mini([
                 'js/jquery.csv-0.71.js',
+                'js/hydro_stn_download.js',
                 'js/hydro_stn_map.js',
                 'js/hydro_stn_controls.js',
                 'js/hydro_stn_app.js'],

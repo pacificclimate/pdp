@@ -1,32 +1,19 @@
-function getClipCheckbox() {
-    return pdp.getCheckbox('cliptodate', undefined, 'cliptodate', 'cliptodate', 'Clip time series to filter date range');
-}
+var download = function(fids, extension, dl_type) {
 
-function createDownloadButtons(id, divClass, buttons) {
-    var downloadDiv = pdp.createDiv(id);
-    downloadDiv.className = divClass;
-    $.each(buttons, function(idx, val) {
-	downloadDiv.appendChild(pdp.createInputElement("submit", undefined, idx, idx, val))
-	downloadDiv.appendChild(document.createTextNode(" "));
-    });
-    return downloadDiv;
-}
+    // Basic validity checks
+    if (fids.length === 0) {
+        alert("Please select stations to download data");
+        return;
+    }
 
-function getCRMPDownloadOptions() {
-    var frag = document.createDocumentFragment();
-    var div = frag.appendChild(pdp.createDiv('', 'control'));
-    var downloadFieldset = div.appendChild(pdp.createFieldset("downloadset", "Download Data"));
-    downloadFieldset.appendChild(createFormatOptions());
-    downloadFieldset.appendChild(getClipCheckbox());
-    downloadFieldset.appendChild(createDownloadButtons('download-buttons', 'download-buttons', {'download-climatology': 'Climatology', 'download-timeseries': 'Timeseries' }));
-
-    var nodelistDiv = frag.appendChild(pdp.createDiv("nodelist"));
-    var metadataForm = pdp.createForm('metadata-form', 'metadata-form', 'post');
-    var metadataFieldset = pdp.createFieldset("metadataset");
-    metadataFieldset.appendChild(createMetadataFormatOptions());
-    metadataFieldset.appendChild(createDownloadButtons('metadata-buttons', 'download-buttons', {'download-meta': 'Download'}));
-    metadataForm.appendChild(metadataFieldset);
-    nodelistDiv.appendChild(metadataForm);
-
-    return frag;
-}
+    if (dl_type === 'link') {
+        alert(url);
+    } else if (dl_type === 'data') {
+        if (window.shittyIE) {
+            alert("Downloads may not function completely correctly on IE <= 8. Cross your fingers and/or upgrade your browser.");
+        }
+        alert("OBJECTS BEYOND DOWNLOAD BUTTON MAY BE FURTHER THAN THEY APPEAR");
+        window.open("http://i3.kym-cdn.com/photos/images/facebook/000/075/870/Raisins.png", "_blank", "width=600,height=600");
+    }
+    
+};

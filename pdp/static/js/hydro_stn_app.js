@@ -4,6 +4,7 @@ $(document).ready(function() {
 
     var controls = getHydroStnControls();
     document.getElementById("pdp-controls").appendChild(controls);
+    document.getElementById("pdp-controls").appendChild(getDownloadOptions());
     
     var dataArray;
 
@@ -19,6 +20,7 @@ $(document).ready(function() {
         minLength: 2
     });
 
+    // Set up station layer events
     var stnLayer = map.getStnLayer();
     stnLayer.events.on({
         'featureselected': function(feature) {
@@ -49,7 +51,6 @@ $(document).ready(function() {
                 searchData
             );
 
-
             var inProj = new OpenLayers.Projection("EPSG:4326");
             var outProj = map.getProjectionObject();
 
@@ -62,4 +63,14 @@ $(document).ready(function() {
                 stnLayer.addFeatures(feature);
             });
         });
+
+    $("#download").click(function(){
+        extension = $('select[name="data-format"]').val();
+        fids = map.getSelectedFids()
+        download(fids, extension, 'data')
+    });
+    $("#permalink").click(function(){
+        extension = $('select[name="data-format"]').val();
+        download(fids, extension, 'link')
+    });
 });

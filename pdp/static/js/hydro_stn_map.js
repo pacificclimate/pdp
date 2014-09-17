@@ -18,7 +18,6 @@ function init_hydro_stn_map() {
             'geometryType': OpenLayers.Geometry.Polygon
         }
     );
-
     panelControls = getEditingToolbar([getHandNav(), getPolyEditor(selectionLayer)]);
     mapControls.push(panelControls);
 
@@ -26,6 +25,7 @@ function init_hydro_stn_map() {
 
     map = new OpenLayers.Map('pdp-map', options);
 
+    // Set up default, hover, and selected styles
     var defaultStyle = new OpenLayers.Style({
         externalGraphic: pdp.app_root + "/images/hydro_marker.svg",
         graphicWidth: 18,
@@ -53,6 +53,7 @@ function init_hydro_stn_map() {
         'temporary': hoverStyle
     });
 
+    // Set up station layer and apply styles/selection control
     var stationLayer = new OpenLayers.Layer.Vector(
         "Stations",
         {
@@ -103,10 +104,22 @@ function init_hydro_stn_map() {
     map.getStnLayer = function() {
         return map.getLayersByName("Stations")[0];
     };
+    map.getPolySelectLayer = function() {
+        return map.getLayersByName("Polygon selection")[0]
+    };
     map.selectFeatureByFid = function(fid) {
         var feature = stationLayer.getFeatureByFid(fid);
         selectCtrl.select(feature);
     };
+
+    map.getSelectedFids = function() {
+        var fids = [];
+        selected = stationLayer.selectedFeatures;
+        for (var i = selected.length - 1; i >= 0; i--) {
+            fids.push(selected[i].fid);
+        };
+        return fids;
+    }
 
     return map;
 };
