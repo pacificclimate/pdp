@@ -78,6 +78,19 @@ function init_hydro_stn_map() {
     map.addControl(selectCtrl);
     selectCtrl.activate();
 
+    selectionLayer.events.on({
+        beforefeatureadded: function(event) {
+            poly = event.feature.geometry;
+            console.log(poly)
+            for (var i = stationLayer.features.length - 1; i >= 0; i--) {
+                if (poly.intersects(stationLayer.features[i].geometry)) {
+                    console.log('intersection');
+                    selectCtrl.select(stationLayer.features[i]);
+                }
+            };
+        }
+    });
+
     map.addLayers(
         [
         stationLayer,
