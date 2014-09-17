@@ -31,38 +31,37 @@ $(document).ready(function() {
         }
     });
 
-    $.ajax(pdp.app_root + "/csv/routed_flow_metadatav4.csv")
-        .done(function(data) {
-            dataArray = $.csv.toObjects(data);
-            for(i = 0; i < dataArray.length; ++i) {
-                dataArray[i].idx = i;
-            }
+    $.ajax(pdp.app_root + "/csv/routed_flow_metadatav4.csv").done(function(data) {
+        dataArray = $.csv.toObjects(data);
+        for(i = 0; i < dataArray.length; ++i) {
+            dataArray[i].idx = i;
+        }
 
-            searchData = $.map(dataArray, function(x) {
-                return { label: x.StationName, value: x.idx };
-            }).concat($.map(dataArray, function(x) {
-                return { label: x.SiteID, value: x.idx };
-            }));
+        searchData = $.map(dataArray, function(x) {
+            return { label: x.StationName, value: x.idx };
+        }).concat($.map(dataArray, function(x) {
+            return { label: x.SiteID, value: x.idx };
+        }));
 
-            // Adds data to the search box.
-            $('#searchBox').autocomplete(
-                "option",
-                "source",
-                searchData
-            );
+        // Adds data to the search box.
+        $('#searchBox').autocomplete(
+            "option",
+            "source",
+            searchData
+        );
 
-            var inProj = new OpenLayers.Projection("EPSG:4326");
-            var outProj = map.getProjectionObject();
+        var inProj = new OpenLayers.Projection("EPSG:4326");
+        var outProj = map.getProjectionObject();
 
-            $(dataArray).each(function(idx, row) {
-                var pt = new OpenLayers.Geometry.Point(
-                    parseFloat(row.Longitude), 
-                    parseFloat(row.Latitude)).transform(inProj, outProj);
-                var feature = new OpenLayers.Feature.Vector(pt);
-                feature.fid = idx;
-                stnLayer.addFeatures(feature);
-            });
+        $(dataArray).each(function(idx, row) {
+            var pt = new OpenLayers.Geometry.Point(
+                parseFloat(row.Longitude),
+                parseFloat(row.Latitude)).transform(inProj, outProj);
+            var feature = new OpenLayers.Feature.Vector(pt);
+            feature.fid = idx;
+            stnLayer.addFeatures(feature);
         });
+    });
 
     $("#download").click(function(){
         extension = $('select[name="data-format"]').val();
