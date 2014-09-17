@@ -84,7 +84,6 @@ function init_hydro_stn_map() {
             console.log(poly)
             for (var i = stationLayer.features.length - 1; i >= 0; i--) {
                 if (poly.intersects(stationLayer.features[i].geometry)) {
-                    console.log('intersection');
                     selectCtrl.select(stationLayer.features[i]);
                 }
             };
