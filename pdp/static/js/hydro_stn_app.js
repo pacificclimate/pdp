@@ -10,7 +10,7 @@ $(document).ready(function() {
     var dataArray, catalog;
 
     var selection_callback = function(event, ui) {
-        map.selectFeatureByFid(ui.item.value);
+        map.toggleSelectFeatureByFid(ui.item.value);
         $('#searchBox').val('');
         return false;
     };

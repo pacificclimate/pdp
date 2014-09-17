@@ -81,7 +81,6 @@ function init_hydro_stn_map() {
     selectionLayer.events.on({
         beforefeatureadded: function(event) {
             poly = event.feature.geometry;
-            console.log(poly)
             for (var i = stationLayer.features.length - 1; i >= 0; i--) {
                 if (poly.intersects(stationLayer.features[i].geometry)) {
                     selectCtrl.select(stationLayer.features[i]);
@@ -103,11 +102,24 @@ function init_hydro_stn_map() {
         return map.getLayersByName("Stations")[0];
     };
     map.getPolySelectLayer = function() {
-        return map.getLayersByName("Polygon selection")[0]
+        return map.getLayersByName("Polygon selection")[0];
     };
+
     map.selectFeatureByFid = function(fid) {
         var feature = stationLayer.getFeatureByFid(fid);
         selectCtrl.select(feature);
+    };
+    map.unselectFeatureByFid = function(fid) {
+        var feature = stationLayer.getFeatureByFid(fid);
+        selectCtrl.unselect(feature);
+    };
+    map.toggleSelectFeatureByFid = function(fid) {
+        var feature = stationLayer.getFeatureByFid(fid);
+        if ($.inArray(feature, stationLayer.selectedFeatures) === -1) {
+            selectCtrl.select(feature);
+        } else {
+            selectCtrl.unselect(feature);
+        }
     };
 
     map.getSelectedFids = function() {
@@ -117,7 +129,7 @@ function init_hydro_stn_map() {
             fids.push(selected[i].fid);
         };
         return fids;
-    }
+    };
 
     return map;
-};
+}
