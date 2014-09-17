@@ -8,7 +8,6 @@ var selectionLayer;
 function init_hydro_stn_map() {
     // Map Config
     options = BC3005_map_options();
-    options.tileManager = null;
 
     // Map Controls
     mapControls = getBasicControls();
