@@ -84,7 +84,7 @@ function init_hydro_stn_map() {
             poly = event.feature.geometry;
             for (var i = stationLayer.features.length - 1; i >= 0; i--) {
                 if (poly.intersects(stationLayer.features[i].geometry)) {
-                    selectCtrl.select(stationLayer.features[i]);
+                    map.toggleSelectFeatureByFid(stationLayer.features[i].fid);
                 }
             };
         }
