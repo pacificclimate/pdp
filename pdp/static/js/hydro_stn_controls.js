@@ -39,7 +39,12 @@ function getHydroStnControls() {
 // Add an item from the Selection sidebar
 var addToSidebar = function(idx, dataArray) {
     var item = pdp.createDiv('stnNo' + idx, '');
-    item.textContent = dataArray[idx].StationName;
+    var close = item.appendChild(pdp.createDiv('', 'stn_remove'));
+    close.textContent = "[X]";
+    $(close).click(function() {
+        map.toggleSelectFeatureByFid(idx)
+    });
+    item.appendChild(document.createTextNode(dataArray[idx].StationName));
     $('#selectedStations').append(item);
 };
 
