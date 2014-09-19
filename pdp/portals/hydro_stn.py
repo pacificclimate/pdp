@@ -25,7 +25,7 @@ class HydroStationDataServer(DapServer):
 def portal(global_config):
 
     hydro_stn_config = {
-        'title': 'PCIC Hydrology Gauge data',
+        'title': 'Modelled Streamflow Data',
         'js_files' :
         wrap_mini([
                 'js/jquery.csv-0.71.js',
