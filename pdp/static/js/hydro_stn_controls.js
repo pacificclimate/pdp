@@ -33,7 +33,21 @@ function getHydroStnControls() {
     var selection = pdp.createDiv('selectedStations', '');
     fieldset.appendChild(selection);
 
+    var clear = createClearSelectionButton();
+    fieldset.appendChild(clear);
+
     return frag;
+}
+
+function createClearSelectionButton(buttons) {
+    var container = pdp.createDiv();
+    button = pdp.createInputElement("button", undefined, "reset", "reset", "Reset Selection");
+    button.appendChild(document.createTextNode(" "));
+    $(button).click(function() {
+        map.unselectAll();
+    });
+    container.appendChild(button);
+    return container;
 }
 
 // Add an item from the Selection sidebar

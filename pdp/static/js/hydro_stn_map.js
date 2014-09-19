@@ -74,6 +74,7 @@ function init_hydro_stn_map() {
         {
             multiple: true,
             toggle: true,
+            clickoutFeature: true,
         }
     );
     map.addControl(selectCtrl);
@@ -113,6 +114,9 @@ function init_hydro_stn_map() {
     map.unselectFeatureByFid = function(fid) {
         var feature = stationLayer.getFeatureByFid(fid);
         selectCtrl.unselect(feature);
+    };
+    map.unselectAll = function() {
+        selectCtrl.unselectAll();
     };
     map.toggleSelectFeatureByFid = function(fid) {
         var feature = stationLayer.getFeatureByFid(fid);
