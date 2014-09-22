@@ -1,6 +1,8 @@
 
 $(document).ready(function() {
-    map = init_hydro_stn_map();    
+    map = init_hydro_stn_map();
+    var loginButton = pdp.init_login("login-div");
+    pdp.checkLogin(loginButton);
     var mapProj = map.getProjectionObject();
 
     var controls = getHydroStnControls();
