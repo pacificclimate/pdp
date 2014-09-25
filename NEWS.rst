@@ -1,6 +1,26 @@
 News / Release Notes
 ====================
 
+2.1.3
+-----
+
+*Release Date: 25-Sept-2014*
+
+* Hotfix: Remove MyOpenID as an openid endpoint
+
+  * Remove from auth popup
+  * Bump pdp_util version to 2.1
+
+2.1.2
+-----
+
+* Hotfix: patch around broken inline authentication with pcds portal
+
+2.1.1
+-----
+
+* Hotfix: update yahoo openid endpoint url
+
 2.1.0
 -----
 
