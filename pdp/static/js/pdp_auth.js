@@ -6,7 +6,6 @@ my.init_login = function (loginDivId) {
     // Will we ever want to have different providers by application?
     var providers = {
         "Launchpad": "https://login.launchpad.net/",
-        "myOpenID": "https://www.myopenid.com/",
         "Verisign": "http://pip.verisignlabs.com",
         "Google": "https://www.google.com/accounts/o8/id",
         "Yahoo": "http://open.login.yahooapis.com/openid20/www.yahoo.com/xrds"
@@ -14,7 +13,6 @@ my.init_login = function (loginDivId) {
 
     var signupUrls = {
         "Launchpad": "https://login.launchpad.net/pBkz56vSM5432lMr/+new_account",
-        "myOpenID": "https://www.myopenid.com/signup",
         "Verisign": "https://pip.verisignlabs.com/register.do",
         "Google": "https://accounts.google.com/NewAccount",
         "Yahoo": "https://edit.yahoo.com/registration?.src=fpctx&.intl=ca&.done=http%3A%2F%2Fca.yahoo.com%2F"
