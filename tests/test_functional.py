@@ -314,7 +314,7 @@ def test_hydro_stn_data_catalog(pcic_data_portal):
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/json'
-    assert '/hydro_stn/data//hydro_stn/data//fraser_SEYMO.csv' in resp.body
+    assert 'hydro_stn/data/fraser_SEYMO.csv' in resp.body
     data = json.loads(resp.body)
     assert len(data) == 114
 
