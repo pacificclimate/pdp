@@ -94,3 +94,94 @@ var getRasterDownloadOptions = function (include_dates_selection) {
     return frag;
 };
 
+// Colorbar class
+//
+// Usage is something like this:
+//
+// var style = {position: "absolute",
+//              width: "100px",
+//              height: "500px",
+//              color: "white",
+//              "font-weight": "bold",
+//              opacity: ".75",
+//              border: "2px solid black",
+//              right: "0px",
+//              top: "100px",
+//             };
+
+// $("#map-wrapper").append('<div id="colorbar"/>');
+// $('#colorbar').css(style);
+
+// var cb = new Colorbar("colorbar", "http://localhost/ncwms/", "tmax_monClim_PRISM_historical_run1_197101-200012%2Ftmax", "ferret");
+// cb.refresh_values();
+
+function Colorbar(div_id, ncwms_url, layer_name, palette) {
+    this.div_id = div_id;
+    this.ncwms_url = ncwms_url;
+    this.layer_name = layer_name;
+    this.palette = palette;
+    this.minimum = 5.7324;
+    this.maximum = 15.2222222;
+
+    // create the elements
+    $("#" + div_id).html('<div id="minimum"></div><div id="midpoint"></div><div id="maximum"></div>');
+    $('#minimum').css({ position: "absolute", top: "0px", left: "50px"});
+    $('#midpoint').css({ position: "absolute", top: "250px", left: "50px"});
+    $('#maximum').css({ position: "absolute", bottom: "0px", left: "50px"});
+};
+
+
+Colorbar.prototype = {
+    constructor: Colorbar,
+
+    get midpoint() {return (this.minimum + this.maximum) / 2;},
+
+    graphic_url: function() {
+        return this.ncwms_url + "wms?REQUEST=GetLegendGraphic&COLORBARONLY=true&WIDTH=1" +
+            "&HEIGHT=500" + 
+            "&PALETTE=" + this.palette +
+            "&NUMCOLORBANDS=254";
+    },    
+
+    //$.ajax('http://medusa.pcic.uvic.ca:8080/ncWMS/wms?LAYERS=bcprism_tmax_7100%2Ftmax&ELEVATION=0&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMetadata&FORMAT=image%2Fpng&SRS=EPSG%3A4326&BBOX=-140,48,-113,61.991666666667&WIDTH=256&HEIGHT=256&item=minmax')
+    //$.ajax('http://medusa.pcic.uvic.ca:8080/ncWMS/wms?REQUEST=GetMetadata&LAYERS=bcprism_tmax_7100/tmax&item=minmax&SRS=EPSG:4326&bbox=-140.00000000000034,47.99999999999997,-112.99999999999966,61.99166666666663&width=100&height=100');
+    metadata_url: function() {
+	// FIXME: how do we set these programatically and what effect do they actually have?
+        var bbox = "-140.00000000000034,47.99999999999997,-112.99999999999966,61.99166666666663",
+        width = "100",
+        height = "100";
+        
+        return this.ncwms_url + "wms?REQUEST=GetMetadata" +
+            "&LAYERS=" + this.layer_name +
+            "&item=minmax" +
+            "&SRS=EPSG:4326" +
+            "&bbox=" + bbox +
+            "&width=" + width +
+            "&height=" + height;
+    },
+    refresh_values: function() {
+        var url = this.metadata_url(),
+        request = $.ajax({
+            url: url,
+            context: this
+        });
+	
+        request.done(function( data ) {
+            this.minimum = data.min;
+            this.maximum = data.max;
+            this.redraw();
+        });
+    },
+    redraw: function() {
+        var div = $("#" + this.div_id);
+        div.css('background-image', "url(" + this.graphic_url() + ")");
+        div.find("#minimum").html(round(this.minimum));
+        div.find("#maximum").html(round(this.maximum));
+        div.find("#midpoint").html(round(this.midpoint));
+    }
+};
+
+var round = function(number) {
+    return Math.round(number * 100) / 100;
+};
+
