@@ -2,13 +2,13 @@
 
 $(document).ready(function() {
     map = init_prism_map();
-    loginButton = pdp.init_login('login-div');
-    pdp.checkLogin(loginButton);
+    loginButton = pdp.auth.init_login('login-div');
+    pdp.auth.checkLogin(loginButton);
 
-    getCatalog(function (data) { catalog = data});
+    pdp.download.getCatalog(function (data) { catalog = data});
 
     var selector = document.getElementById("pdp-controls").appendChild(getPRISMControls(pdp.ensemble_name));
-    var downloader = document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(false));
+    var downloader = document.getElementById("pdp-controls").appendChild(pdp.controls.getRasterDownloadOptions(false));
 
     ncwmsLayer = map.getClimateLayer();
     selectionLayer = map.getSelectionLayer();

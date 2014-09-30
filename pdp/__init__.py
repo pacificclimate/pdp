@@ -50,16 +50,9 @@ global_config = {
         'js/zebra.js',
         'js/OL/OpenLayers-2.13.1.js',
         'js/proj4js-compressed.js',
-        'js/multiaccordion.js'] +
-        wrap_mini(['js/pdp_dom_library.js',
-        'js/pdp_controls.js',
-        'js/pdp_download.js',
-        'js/pdp_filters.js',
-        'js/pdp_map.js',
-        'js/pdp_auth.js',
-        'js/pdp_raster_map.js',
-        'js/pdp_vector_map.js'
-        ], debug=True),
+        'js/multiaccordion.js',
+        'js/nodejs/browser/dist/pdp.0.0.0.min.js'
+        ],
     'geoserver_url': 'http://atlas.pcic.uvic.ca/geoserver/',
     'ncwms_url': ['http://atlas.pcic.uvic.ca/ncWMS/wms'],
     'tilecache_url': ['http://a.tiles.pacificclimate.org/tilecache/tilecache.py', 'http://b.tiles.pacificclimate.org/tilecache/tilecache.py', 'http://c.tiles.pacificclimate.org/tilecache/tilecache.py'],

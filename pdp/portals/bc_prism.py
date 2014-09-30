@@ -27,7 +27,7 @@ def portal(dsn, global_config):
             'js/prism_demo_map.js',
             'js/prism_demo_controls.js',
             'js/prism_demo_app.js'],
-            basename='bc_prism', debug=False)
+            basename='bc_prism', debug=True)
     }
 
     portal_config = updateConfig(global_config, portal_config)
