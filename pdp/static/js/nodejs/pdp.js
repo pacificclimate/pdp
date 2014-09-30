@@ -7,5 +7,4 @@ module.exports = {
     raster: require('./lib/raster.js'),
     vector: require('./lib/vector.js'),
     cftime: require('./lib/cftime.js'),
-    id8: require('./lib/ie8.js'),
 };
