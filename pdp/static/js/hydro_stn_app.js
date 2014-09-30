@@ -9,7 +9,7 @@ $(document).ready(function() {
     document.getElementById("pdp-controls").appendChild(controls);
     document.getElementById("pdp-controls").appendChild(getDownloadOptions());
     
-    var dataArray, catalog;
+    var dataArray;
 
     var selection_callback = function(event, ui) {
         map.toggleSelectFeatureByFid(ui.item.value);
@@ -33,13 +33,6 @@ $(document).ready(function() {
         }
     });
 
-    var catalogReq = new $.Deferred();
-    $.ajax("../data/catalog.json").done(function(data){
-        catalog = data;
-        catalogReq.resolve();
-    });
-
-    var metadataReq = new $.Deferred();
     $.ajax(pdp.app_root + "/csv/routed_flow_metadatav4.csv").done(function(data) {
         var inProj = new OpenLayers.Projection("EPSG:4326");
 
@@ -47,6 +40,9 @@ $(document).ready(function() {
 
         $(dataArray).each(function(idx, row) {
             row.idx = idx;
+            var parser = document.createElement('a');
+            parser.href = "../data/" + row.FileName;
+            row.url = parser.href;
             var pt = new OpenLayers.Geometry.Point(
                 parseFloat(row.Longitude),
                 parseFloat(row.Latitude)).transform(inProj, mapProj);
@@ -54,8 +50,6 @@ $(document).ready(function() {
             feature.fid = idx;
             stnLayer.addFeatures(feature);
         });
-
-        metadataReq.resolve();
 
         searchData = $.map(dataArray, function(x) {
             return { label: x.StationName, value: x.idx };
@@ -69,19 +63,6 @@ $(document).ready(function() {
             "source",
             searchData
         );
-    });
-
-    // Match up metadata table to download location
-    // THIS IS TERRIBLE!! DEVELOP A BETTER WAY TO DO THIS
-    $.when(catalogReq, metadataReq).done(function () {
-        $(dataArray).each(function(didx, drow) {
-            for (var i = catalog.length - 1; i >= 0; i--) {
-                if (catalog[i].search(drow.VICID) > 0) {
-                    drow.url = catalog[i];
-                }
-            };
-        });
-
     });
 
     $("#download").click(function(){
