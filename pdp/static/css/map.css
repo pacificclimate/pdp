@@ -208,7 +208,6 @@ div#pdpColorbar {
     color: white;
     font-weight: bold;
     opacity: .75;
-    border: 2px solid black;
     right: 0px;
     top: 100px;
     -webkit-border-top-left-radius: 10px;
