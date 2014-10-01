@@ -98,22 +98,8 @@ var getRasterDownloadOptions = function (include_dates_selection) {
 //
 // Usage is something like this:
 //
-// var style = {position: "absolute",
-//              width: "100px",
-//              height: "500px",
-//              color: "white",
-//              "font-weight": "bold",
-//              opacity: ".75",
-//              border: "2px solid black",
-//              right: "0px",
-//              top: "100px",
-//             };
-
-// $("#map-wrapper").append('<div id="colorbar"/>');
-// $('#colorbar').css(style);
-
-// var cb = new Colorbar("colorbar", "http://localhost/ncwms/", "tmax_monClim_PRISM_historical_run1_197101-200012%2Ftmax", "ferret");
-// cb.refresh_values();
+//  var cb = new Colorbar("pdpColorbar", my_ncwms_layer);
+//  cb.refresh_values();
 
 function Colorbar(div_id, layer) {
     this.div_id = div_id;
