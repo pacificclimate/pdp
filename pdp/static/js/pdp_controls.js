@@ -115,19 +115,19 @@ var getRasterDownloadOptions = function (include_dates_selection) {
 // var cb = new Colorbar("colorbar", "http://localhost/ncwms/", "tmax_monClim_PRISM_historical_run1_197101-200012%2Ftmax", "ferret");
 // cb.refresh_values();
 
-function Colorbar(div_id, ncwms_url, layer_name, palette) {
+function Colorbar(div_id, layer) {
     this.div_id = div_id;
-    this.ncwms_url = ncwms_url;
-    this.layer_name = layer_name;
-    this.palette = palette;
-    this.minimum = 5.7324;
-    this.maximum = 15.2222222;
-
-    // create the elements
+    this.layer = layer;
+    this.minimum = 0.0;
+    this.maximum = 0.0;
+ 
+    // create and style the children elements
     $("#" + div_id).html('<div id="minimum"></div><div id="midpoint"></div><div id="maximum"></div>');
-    $('#minimum').css({ position: "absolute", top: "0px", left: "50px"});
-    $('#midpoint').css({ position: "absolute", top: "250px", left: "50px"});
-    $('#maximum').css({ position: "absolute", bottom: "0px", left: "50px"});
+    $('#maximum').css({ position: "absolute", top: "0px", right: "0px"});
+    $('#midpoint').css({ position: "absolute", top: "50%", right: "0px"});
+    $('#minimum').css({ position: "absolute", bottom: "0px", right: "0px"});
+
+    this.layer.events.register('change', this, this.refresh_values);
 };
 
 
@@ -137,35 +137,32 @@ Colorbar.prototype = {
     get midpoint() {return (this.minimum + this.maximum) / 2;},
 
     graphic_url: function() {
-        return this.ncwms_url + "wms?REQUEST=GetLegendGraphic&COLORBARONLY=true&WIDTH=1" +
+	var palette = this.layer.params.STYLES.split('/')[1];
+        return pdp.ncwms_url + "?REQUEST=GetLegendGraphic&COLORBARONLY=true&WIDTH=1" +
             "&HEIGHT=500" + 
-            "&PALETTE=" + this.palette +
+            "&PALETTE=" + palette +
             "&NUMCOLORBANDS=254";
     },    
 
-    //$.ajax('http://medusa.pcic.uvic.ca:8080/ncWMS/wms?LAYERS=bcprism_tmax_7100%2Ftmax&ELEVATION=0&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMetadata&FORMAT=image%2Fpng&SRS=EPSG%3A4326&BBOX=-140,48,-113,61.991666666667&WIDTH=256&HEIGHT=256&item=minmax')
-    //$.ajax('http://medusa.pcic.uvic.ca:8080/ncWMS/wms?REQUEST=GetMetadata&LAYERS=bcprism_tmax_7100/tmax&item=minmax&SRS=EPSG:4326&bbox=-140.00000000000034,47.99999999999997,-112.99999999999966,61.99166666666663&width=100&height=100');
-    metadata_url: function() {
-	// FIXME: how do we set these programatically and what effect do they actually have?
-        var bbox = "-140.00000000000034,47.99999999999997,-112.99999999999966,61.99166666666663",
-        width = "100",
-        height = "100";
-        
-        return this.ncwms_url + "wms?REQUEST=GetMetadata" +
-            "&LAYERS=" + this.layer_name +
-            "&item=minmax" +
-            "&SRS=EPSG:4326" +
-            "&bbox=" + bbox +
-            "&width=" + width +
-            "&height=" + height;
+    metadata_url: function(lyr_id) {
+	//"http://localhost/bc_prism/metadata.json?request=GetMinMax&var=tmax&id=tmax_monClim_PRISM_historical_run1_197101-200012"
+
+	if (lyr_id === undefined) {
+	    lyr_id = this.layer.params.LAYERS;
+	}
+
+	return pdp.app_root + "/bc_prism/metadata.json?request=GetMinMax" +
+            "&id=" + lyr_id.split('/')[0] +
+            "&var=" + lyr_id.split('/')[1];
+
     },
-    refresh_values: function() {
-        var url = this.metadata_url(),
-        request = $.ajax({
-            url: url,
-            context: this
-        });
-	
+    refresh_values: function(lyr_id) {
+        var url = this.metadata_url(lyr_id),
+            request = $.ajax({
+                url: url,
+                context: this
+            });
+
         request.done(function( data ) {
             this.minimum = data.min;
             this.maximum = data.max;
