@@ -146,13 +146,11 @@ Colorbar.prototype = {
     },    
 
     metadata_url: function(lyr_id) {
-	//"http://localhost/bc_prism/metadata.json?request=GetMinMax&var=tmax&id=tmax_monClim_PRISM_historical_run1_197101-200012"
-
 	if (lyr_id === undefined) {
 	    lyr_id = this.layer.params.LAYERS;
 	}
 
-	return pdp.app_root + "/bc_prism/metadata.json?request=GetMinMax" +
+	return "../metadata.json?request=GetMinMax" +
             "&id=" + lyr_id.split('/')[0] +
             "&var=" + lyr_id.split('/')[1];
 
