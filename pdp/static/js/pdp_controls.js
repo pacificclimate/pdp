@@ -135,7 +135,13 @@ function Colorbar(div_id, layer) {
 Colorbar.prototype = {
     constructor: Colorbar,
 
-    get midpoint() {return (this.minimum + this.maximum) / 2;},
+    get midpoint() {
+        if (this.layer.params.LOGSCALE) {
+            return Math.sqrt(this.maximum - this.minimum);
+        } else {
+            return (this.minimum + this.maximum) / 2;
+        }
+    },
 
     graphic_url: function() {
 	var palette = this.layer.params.STYLES.split('/')[1];
