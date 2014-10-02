@@ -5,7 +5,7 @@ from pdp import wrap_auth
 from pdp.dispatch import PathDispatcher
 from pdp_util import session_scope
 from pdp_util.map import MapApp
-from pdp_util.raster import RasterServer, RasterCatalog, db_raster_configurator
+from pdp_util.raster import RasterServer, RasterCatalog, RasterMetadata, db_raster_configurator
 from pdp_util.ensemble_members import ClimdexEnsembleLister
 
 from pdp.minify import wrap_mini
@@ -43,9 +43,12 @@ def portal(dsn, global_config):
 
     menu = ClimdexEnsembleLister(dsn)
 
+    metadata = RasterMetadata(dsn)
+
     return PathDispatcher([
         ('^/map/?.*$', map_app),
         ('^/catalog/.*$', catalog_server),
         ('^/data/.*$', data_server),
-        ('^/menu.json.*$', menu)
+        ('^/menu.json.*$', menu),
+        ('^/metadata.json.*$', metadata),
     ])

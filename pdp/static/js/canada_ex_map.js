@@ -98,5 +98,8 @@ var init_raster_map = function() {
         return map.getLayersByName(selLayerName)[0];
     };
 
+    var cb = new Colorbar("pdpColorbar", ncwms);
+    cb.refresh_values();
+
     return map;
 };
