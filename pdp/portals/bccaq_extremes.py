@@ -6,10 +6,16 @@ from pdp.dispatch import PathDispatcher
 from pdp_util import session_scope
 from pdp_util.map import MapApp
 from pdp_util.raster import RasterServer, RasterCatalog, RasterMetadata, db_raster_configurator
-from pdp_util.ensemble_members import ClimdexEnsembleLister
+from pdp_util.ensemble_members import EnsembleMemberLister
 
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
+
+class ClimdexEnsembleLister(EnsembleMemberLister):
+    def list_stuff(self, ensemble):
+        for dfv in ensemble.data_file_variables:
+            ## FIXME
+            yield dfv.file.run.emission.short_name, dfv.file.run.model.short_name, "annual" if "_yr_" in dfv.file.unique_id else "monthly", dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
 def portal(dsn, global_config):
 

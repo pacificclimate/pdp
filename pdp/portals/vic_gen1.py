@@ -6,10 +6,15 @@ from pdp.dispatch import PathDispatcher
 from pdp_util import session_scope
 from pdp_util.map import MapApp
 from pdp_util.raster import RasterServer, RasterCatalog, RasterMetadata, db_raster_configurator
-from pdp_util.ensemble_members import VicGen1EnsembleLister
+from pdp_util.ensemble_members import EnsembleMemberLister
 
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
+
+class VicGen1EnsembleLister(EnsembleMemberLister):
+    def list_stuff(self, ensemble):
+        for dfv in ensemble.data_file_variables:
+            yield dfv.file.run.emission.short_name, dfv.file.run.model.short_name, dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
 def portal(dsn, global_config):
 
