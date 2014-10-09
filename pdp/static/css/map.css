@@ -203,19 +203,16 @@ table.metafeatureInfo tr:nth-child(odd) {
 
 div#pdpColorbar {
     position: absolute;
-    width: 50px;
-    height: 500px;
-    color: white;
+    width: 20px;
+    height: 300px;
+    color: #424242;
+    text-shadow: 0 0 0.2em white, 0 0 0.2em white, 0 0 0.2em white;
     font-weight: bold;
     opacity: .75;
-    right: 0px;
-    top: 100px;
-    -webkit-border-top-left-radius: 10px;
-    -khtml-border-radius-topleft: 10px;
-    -moz-border-radius-topleft: 10px;
-    border-top-left-radius: 10px;
-    -webkit-border-bottom-left-radius: 10px;
-    -khtml-border-radius-bottomleft: 10px;
-    -moz-border-radius-bottomleft: 10px;
-    border-bottom-left-radius: 10px;
+    right: 1em;
+    bottom: 80px;
+    -webkit-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
 };

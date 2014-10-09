@@ -110,9 +110,9 @@ function Colorbar(div_id, layer) {
     // create and style the children elements
     $("#" + div_id).html('<div id="minimum"></div><div id="midpoint"></div><div id="maximum"></div>');
     $("#" + div_id).css({border: "2px solid black"});
-    $('#maximum').css({ position: "absolute", top: "0px", right: "0px"});
-    $('#midpoint').css({ position: "absolute", top: "50%", right: "0px"});
-    $('#minimum').css({ position: "absolute", bottom: "0px", right: "0px"});
+    $('#maximum').css({ position: "absolute", top: "-0.5em", right: "20px"});
+    $('#midpoint').css({ position: "absolute", top: "50%", right: "20px"});
+    $('#minimum').css({ position: "absolute", bottom: "-0.5em", right: "20px"});
 
     this.layer.events.register('change', this, this.refresh_values);
 };
@@ -132,7 +132,7 @@ Colorbar.prototype = {
     graphic_url: function() {
 	var palette = this.layer.params.STYLES.split('/')[1];
         return pdp.ncwms_url + "?REQUEST=GetLegendGraphic&COLORBARONLY=true&WIDTH=1" +
-            "&HEIGHT=500" + 
+            "&HEIGHT=300" +
             "&PALETTE=" + palette +
             "&NUMCOLORBANDS=254";
     },    
