@@ -40,8 +40,9 @@ def test_operational_error():
 def test_io_error():
     app = ErrorMiddleware(missing_file_app)
     req = Request.blank('/')
-    resp = req.get_response(app, catch_exc_info=True)
-    assert resp.status_code == 404
+    resp = req.get_response(app, catch_exc_info=True
+    assert 'Retry-After' in resp.headers
+    assert resp.status_code == 503
 
 def test_stream_error():
     app = ErrorMiddleware(streaming_app)
