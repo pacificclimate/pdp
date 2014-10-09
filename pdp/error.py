@@ -27,15 +27,17 @@ class ErrorMiddleware(object):
             yield 'There was an unexpected problem accessing the database\n'
             yield e.message
 
-        except IOError as e:
-            status = "404 Not Found"
+        except EnvironmentError as e:
+        # except IOError as e:
+        # except OSError as e: # OSError: [Errno 107] Transport endpoint is not connected: '/home/data/projects/comp_support'
+            status = "503 Service Unavailable"
             response_headers = [("content-type", "text/plain"),
                                 ("Retry-After", "3600") # one hour 
                                ]
             start_response(status, response_headers, sys.exc_info())
             yield 'We had an unexpected problem accessing on-disk resources\n'
             yield e.message
-            
+
         except Exception as e:
             status = "500 Internal Server Error"
             response_headers = [("content-type", "text/plain")]
@@ -56,4 +58,3 @@ class ErrorMiddleware(object):
                 start_response(status, response_headers, sys.exc_info())
                 yield "There was a serious problem while generating the streamed response: '{}'".format(e.message) + traceback.format_exc()
                 logger.error("Exception raised during streamed response: '{}'\n{}".format(e.message, sys.exc_info()))
-
