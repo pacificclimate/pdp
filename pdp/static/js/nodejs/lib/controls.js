@@ -108,3 +108,85 @@ var getRasterDownloadOptions = function(include_dates_selection) {
     return frag;
 };
 exports.getRasterDownloadOptions = getRasterDownloadOptions;
+
+var round = function(number) {
+    return Math.round(number * 100) / 100;
+};
+
+// Colorbar class
+//
+// Usage is something like this:
+//
+//  var cb = new Colorbar("pdpColorbar", my_ncwms_layer);
+//  cb.refresh_values();
+
+var Colorbar = function(div_id, layer) {
+    this.div_id = div_id;
+    this.layer = layer;
+    this.minimum = 0.0;
+    this.maximum = 0.0;
+
+    // create and style the children elements
+    $("#" + div_id).html('<div id="minimum"></div><div id="midpoint"></div><div id="maximum"></div>');
+    $("#" + div_id).css({border: "2px solid black"});
+    $('#maximum').css({ position: "absolute", top: "-0.5em", right: "20px"});
+    $('#midpoint').css({ position: "absolute", top: "50%", right: "20px"});
+    $('#minimum').css({ position: "absolute", bottom: "-0.5em", right: "20px"});
+
+    this.layer.events.register('change', this, this.refresh_values);
+};
+
+
+Colorbar.prototype = {
+    constructor: Colorbar,
+
+    get midpoint() {
+        if (this.layer.params.LOGSCALE) {
+            return Math.sqrt(this.maximum - this.minimum);
+        } else {
+            return (this.minimum + this.maximum) / 2;
+        }
+    },
+
+    graphic_url: function() {
+    var palette = this.layer.params.STYLES.split('/')[1];
+        return pdp.ncwms_url + "?REQUEST=GetLegendGraphic&COLORBARONLY=true&WIDTH=1" +
+            "&HEIGHT=300" +
+            "&PALETTE=" + palette +
+            "&NUMCOLORBANDS=254";
+    },
+
+    metadata_url: function(lyr_id) {
+    if (lyr_id === undefined) {
+        lyr_id = this.layer.params.LAYERS;
+    }
+
+    return "../metadata.json?request=GetMinMax" +
+            "&id=" + lyr_id.split('/')[0] +
+            "&var=" + lyr_id.split('/')[1];
+
+    },
+    refresh_values: function(lyr_id) {
+        var url = this.metadata_url(lyr_id),
+            request = $.ajax({
+                url: url,
+                context: this
+            });
+
+        request.done(function( data ) {
+            this.minimum = data.min;
+            this.maximum = data.max;
+            this.redraw();
+        });
+    },
+    redraw: function() {
+        var div = $("#" + this.div_id);
+        div.css('background-image', "url(" + this.graphic_url() + ")");
+        div.find("#minimum").html(round(this.minimum));
+        div.find("#maximum").html(round(this.maximum));
+        div.find("#midpoint").html(round(this.midpoint));
+    }
+};
+
+
+exports.Colorbar = Colorbar;

@@ -51,7 +51,7 @@ global_config = {
         'js/OL/OpenLayers-2.13.1.js',
         'js/proj4js-compressed.js',
         'js/multiaccordion.js',
-        'js/nodejs/browser/dist/pdp.0.0.0.min.js'
+        'js/nodejs/browser/dist/pdp.js'
         ],
     'geoserver_url': 'http://atlas.pcic.uvic.ca/geoserver/',
     'ncwms_url': ['http://atlas.pcic.uvic.ca/ncWMS/wms'],

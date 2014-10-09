@@ -87,7 +87,7 @@ function init_prism_map() {
         return map.getLayersByName(selLayerName)[0];
     }
 
-    var cb = new Colorbar("pdpColorbar", ncwms);
+    var cb = new pdp.controls.Colorbar("pdpColorbar", pdp.ncwms);
     cb.refresh_values();
 
     return map
