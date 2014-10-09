@@ -8,8 +8,9 @@ logger = logging.getLogger(__name__)
 
 class ErrorMiddleware(object):
     '''This class is a WSGI Middleware that can be used as a top-level exception handler.
-       It catches `SQLAlchemyError`, `IOError` and general `Exception`s on application call
-       and it catches general `Exception`s during iteration over the response_iter.
+       It catches `SQLAlchemyError`, `EnvironmentError` (and subclasses))
+       and the general `Exception`s on application call.
+       It also catches general `Exception`s during iteration over the response_iter.
     '''
     def __init__(self, wrapped_app):
         self.wrapped_app = wrapped_app
@@ -24,6 +25,7 @@ class ErrorMiddleware(object):
                                 ("Retry-After", "3600") # one hour 
                                ]
             start_response(status, response_headers, sys.exc_info())
+            logger.error("SQLAlchemyError: {}".format(e.message))
             yield 'There was an unexpected problem accessing the database\n'
             yield e.message
 
@@ -35,6 +37,7 @@ class ErrorMiddleware(object):
                                 ("Retry-After", "3600") # one hour 
                                ]
             start_response(status, response_headers, sys.exc_info())
+            logger.error("EnvironmentError:\n  Errno {}\n  strerr: {}\n  filename {}\n{}".format(e.errno, e.strerror, e.filename, e.message))
             yield 'We had an unexpected problem accessing on-disk resources\n'
             yield e.message
 
@@ -42,6 +45,7 @@ class ErrorMiddleware(object):
             status = "500 Internal Server Error"
             response_headers = [("content-type", "text/plain")]
             start_response(status, response_headers, sys.exc_info())
+            logger.error("500 Internal Server Error: {}\n{}".format(e.args, traceback.format_exc()))
             yield 'There was an unhandleable problem with the application\n'
             yield e.message
 
@@ -56,5 +60,6 @@ class ErrorMiddleware(object):
                 status = "500 Internal Server Error"
                 response_headers = [("content-type", "text/plain")]
                 start_response(status, response_headers, sys.exc_info())
-                yield "There was a serious problem while generating the streamed response: '{}'".format(e.message) + traceback.format_exc()
-                logger.error("Exception raised during streamed response: '{}'\n{}".format(e.message, sys.exc_info()))
+                yield "There was a serious problem while generating the streamed response\n{}\n".format(e.args)
+                yield traceback.format_exc()
+                logger.error("Exception raised during streamed response: {}\n{}".format(e.args, traceback.format_exc()))
