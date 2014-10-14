@@ -106,6 +106,7 @@ function Colorbar(div_id, layer) {
     this.layer = layer;
     this.minimum = 0.0;
     this.maximum = 0.0;
+    this.units = "";
  
     // create and style the children elements
     $("#" + div_id).html('<div id="minimum"></div><div id="midpoint"></div><div id="maximum"></div>');
@@ -142,7 +143,7 @@ Colorbar.prototype = {
 	    lyr_id = this.layer.params.LAYERS;
 	}
 
-	return "../metadata.json?request=GetMinMax" +
+	return "../metadata.json?request=GetMinMaxWithUnits" +
             "&id=" + lyr_id.split('/')[0] +
             "&var=" + lyr_id.split('/')[1];
 
@@ -157,15 +158,43 @@ Colorbar.prototype = {
         request.done(function( data ) {
             this.minimum = data.min;
             this.maximum = data.max;
+
+            // reformat known units:
+            // 'mm d-1', '%', 'days', 'meters s-1', 'm', 'mm', 'degrees_C', 'kg m-2', 'degC', 'mm day-1', 'celsius'
+            switch(data.units) {
+            case "degC":
+            case "degrees_C":
+            case "celsius":
+                this.units = "&#8482;"
+                break;
+            case "mm d-1":
+                this.units = "mm/day";
+                break;
+            case "meters s-1":
+                this.units = "m/s";
+                break;
+                this.units = "";
+                break;
+            case "kg m-2":
+                this.units = "kg/m2";
+                break;
+            case "mm day-1":
+                this.units = "mm/day";
+                break;
+            default:
+                this.units = data.units;
+                break;
+            }
+
             this.redraw();
         });
     },
     redraw: function() {
         var div = $("#" + this.div_id);
         div.css('background-image', "url(" + this.graphic_url() + ")");
-        div.find("#minimum").html(round(this.minimum));
-        div.find("#maximum").html(round(this.maximum));
-        div.find("#midpoint").html(round(this.midpoint));
+        div.find("#minimum").html(round(this.minimum) + " " + this.units);
+        div.find("#maximum").html(round(this.maximum) + " " + this.units);
+        div.find("#midpoint").html(round(this.midpoint) + " " + this.units);
     }
 };
 

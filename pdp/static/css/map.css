@@ -208,6 +208,7 @@ div#pdpColorbar {
     color: #424242;
     text-shadow: 0 0 0.2em white, 0 0 0.2em white, 0 0 0.2em white;
     font-weight: bold;
+    white-space: nowrap;
     opacity: .75;
     right: 1em;
     bottom: 80px;
