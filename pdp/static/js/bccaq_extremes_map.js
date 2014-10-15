@@ -17,7 +17,7 @@ var init_raster_map = function() {
 	var percent_data = { COLORSCALERANGE: "0,100", STYLES: 'boxfill/ferret', LOGSCALE: false };
 	var number_days_data = { COLORSCALERANGE: "0, 366", STYLES: 'boxfill/ferret', LOGSCALE: false};
 	var temp_data = { STYLES: 'boxfill/ferret', LOGSCALE: false };
-	var prec_data = { STYLES: 'boxfill/occam_inv', LOGSCALE: false };
+	var prec_data = { STYLES: 'boxfill/occam_inv', LOGSCALE: true };
 
 	var var_data = { 
 	    r1mmETCCDI: number_days_data,
@@ -79,6 +79,7 @@ var init_raster_map = function() {
     
     var params = {
         LAYERS: defaults.dataset + "/" + defaults.variable,
+        LOGSCALE: true,
         transparent: "true",
         numcolorbands: 254,
         version: "1.1.1",
@@ -131,6 +132,48 @@ var init_raster_map = function() {
 
     var cb = new Colorbar("pdpColorbar", ncwms);
     cb.refresh_values();
+
+    map.autoScaleToViewport = function() {
+        // Autoscales the map symbology to the current viewport min/max
+        var params = {
+            REQUEST: "GetMetadata",
+            item: "minmax",
+            LAYERS: ncwms.params.LAYERS,
+            SRS: ncwms.params.SRS,
+            bbox: ncwms.getExtent().toString(),
+            width: map.getSize().w,
+            height: map.getSize().h
+        };
+        var getMinMax = $.ajax(ncwms.url[0], {data: params});
+        getMinMax.done(function(data) {
+            var min = data.min;
+            var max = data.max;
+            ncwms.params.COLORSCALERANGE = data.min + "," + data.max;
+            ncwms.redraw();
+            cb.force_update(min, max);
+        });
+    }
+
+    map.autoScaleToLayer = function() {
+        // Autoscales the map symbology current layer min/max
+        var params = {
+            REQUEST: "GetMetadata",
+            item: "minmax",
+            LAYERS: ncwms.params.LAYERS,
+            SRS: ncwms.params.SRS,
+            bbox: map.options.restrictedExtent.toString(),
+            width: map.getSize().w,
+            height: map.getSize().h
+        };
+        var getMinMax = $.ajax(ncwms.url[0], {data: params});
+        getMinMax.done(function(data) {
+            var min = data.min;
+            var max = data.max;
+            ncwms.params.COLORSCALERANGE = data.min + "," + data.max;
+            ncwms.redraw();
+            cb.force_update(min, max);
+        });
+    }
 
     return map;
 };

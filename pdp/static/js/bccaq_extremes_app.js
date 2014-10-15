@@ -60,4 +60,31 @@ $(document).ready(function() {
     });
     $("#metadata").click(callDownloadMetadata);
 
+    var getAutoScaleButton = function() {
+        var div = pdp.createDiv('', 'control');
+        var ie = document.createElement("input");
+        ie.type = 'button';
+        div.appendChild(ie);
+        ie.value = "Autoscale to View"
+        $(div).click(function() {
+            map.autoScaleToViewport();
+        })
+        return div;
+    }
+    document.getElementById("pdp-controls").appendChild(getAutoScaleButton());
+
+    var getAutoScaleButton = function() {
+        var div = pdp.createDiv('', 'control');
+        var ie = document.createElement("input");
+        ie.type = 'button';
+        div.appendChild(ie);
+        ie.value = "Autoscale to Layer"
+        $(div).click(function() {
+            map.autoScaleToLayer();
+        })
+        return div;
+    }
+    document.getElementById("pdp-controls").appendChild(getAutoScaleButton());
+
+
 });

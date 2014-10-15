@@ -189,6 +189,13 @@ Colorbar.prototype = {
             this.redraw();
         });
     },
+
+    force_update: function(min, max) {
+        this.minimum = min;
+        this.maximum = max;
+        this.redraw();
+    },
+
     redraw: function() {
         var div = $("#" + this.div_id);
         div.css('background-image', "url(" + this.graphic_url() + ")");
