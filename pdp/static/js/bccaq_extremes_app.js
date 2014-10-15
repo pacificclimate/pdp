@@ -65,26 +65,12 @@ $(document).ready(function() {
         var ie = document.createElement("input");
         ie.type = 'button';
         div.appendChild(ie);
-        ie.value = "Autoscale to View"
+        ie.value = "Autoscale"
         $(div).click(function() {
-            map.autoScaleToViewport();
+            map.autoScale("layer");
         })
         return div;
     }
     document.getElementById("pdp-controls").appendChild(getAutoScaleButton());
-
-    var getAutoScaleButton = function() {
-        var div = pdp.createDiv('', 'control');
-        var ie = document.createElement("input");
-        ie.type = 'button';
-        div.appendChild(ie);
-        ie.value = "Autoscale to Layer"
-        $(div).click(function() {
-            map.autoScaleToLayer();
-        })
-        return div;
-    }
-    document.getElementById("pdp-controls").appendChild(getAutoScaleButton());
-
 
 });
