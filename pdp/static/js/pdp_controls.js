@@ -42,7 +42,7 @@ function generateMenuTree(subtree, leafNameMapping) {
             $('<a/>').text(linkText).click(function() {
                 ncwms.params.LAYERS = newlayer;
                 ncwms.events.triggerEvent('change', newlayer);
-                ncwms.redraw();
+                //ncwms.redraw();
                 //$('#map-title').html(newlayer + '<br />' + ncwms.params.TIME);
                 current_dataset = newlayer;
                 processNcwmsLayerMetadata(ncwms);
@@ -115,10 +115,10 @@ function Colorbar(div_id, layer) {
     $('#midpoint').css({ position: "absolute", top: "50%", right: "20px"});
     $('#minimum').css({ position: "absolute", bottom: "-0.5em", right: "20px"});
 
-    this.layer.events.register('change', this, this.refresh_values);
 };
 
 
+// FIXME: We cannot use layer.params.* for anything if we want the event handling to be order agnostic
 Colorbar.prototype = {
     constructor: Colorbar,
 
@@ -179,12 +179,13 @@ Colorbar.prototype = {
                 context: this
             });
 
-        request.done(function( data ) {
+        var promise = request.done(function( data ) {
             this.minimum = data.min;
             this.maximum = data.max;
             this.units = this.format_units(data.units);
             this.redraw();
         });
+	return promise;
     },
     redraw: function() {
         var div = $("#" + this.div_id);

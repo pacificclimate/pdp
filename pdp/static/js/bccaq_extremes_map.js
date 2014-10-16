@@ -128,7 +128,17 @@ var init_raster_map = function() {
 
     current_dataset = ncwms.params.layers;
 
-    ncwms.events.register('change', ncwms, set_ncwms_params);
+    var cb = new Colorbar("pdpColorbar", ncwms);
+
+    ncwms.events.registerPriority('change', ncwms, function (layer_id) {
+        var promise = cb.refresh_values();
+        promise.done(function() {
+            var new_params = ncwms_params(layer_id);
+            delete ncwms.params.COLORSCALERANGE;
+            ncwms.mergeNewParams(new_params); // this does a layer redraw
+        });
+    });
+
     ncwms.events.register('change', ncwms, set_map_title);
     ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
 
@@ -156,7 +166,6 @@ var init_raster_map = function() {
         return map.getLayersByName(selLayerName)[0];
     };
 
-    var cb = new Colorbar("pdpColorbar", ncwms);
     cb.refresh_values();
 
     return map;
