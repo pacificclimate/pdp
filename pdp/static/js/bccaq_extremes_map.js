@@ -68,14 +68,21 @@ var init_raster_map = function() {
 	    r99pETCCDI: prec_data
 	};
 
-	$('#map-title').html(layer_name + '<br />' + this.params.TIME);
 	$.extend(params, var_data[varname])
 
 	return params;
     };
 
-    function set_ncwms_params(layer_name) {
-        this.params = ncwms_params(layer_name);
+    function set_map_title(layer_name) {
+        var d = new Date(this.params.TIME);
+
+	if( layer_name.match(/_yr_/) ) // is yearly
+	    var date = d.getFullYear();
+	else
+	    var date = d.getFullYear() + '/' + (d.getMonth() + 1);
+
+	$('#map-title').html(layer_name + '<br />' + date);
+
         return true;
     }
 
@@ -118,6 +125,7 @@ var init_raster_map = function() {
     current_dataset = ncwms.params.layers;
 
     ncwms.events.register('change', ncwms, set_ncwms_params);
+    ncwms.events.register('change', ncwms, set_map_title);
     ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
 
     (function(globals){

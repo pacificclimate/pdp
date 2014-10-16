@@ -43,7 +43,7 @@ function generateMenuTree(subtree, leafNameMapping) {
                 ncwms.params.LAYERS = newlayer;
                 ncwms.events.triggerEvent('change', newlayer);
                 ncwms.redraw();
-                $('#map-title').html(newlayer + '<br />' + ncwms.params.TIME);
+                //$('#map-title').html(newlayer + '<br />' + ncwms.params.TIME);
                 current_dataset = newlayer;
                 processNcwmsLayerMetadata(ncwms);
             }).addClass('menu-leaf').appendTo(li);
