@@ -28,6 +28,10 @@ var init_raster_map = function() {
 	    params.TIME = "2001-07-02T00:00:00Z";
 	else
            params.TIME = "2001-07-16T00:00:00Z";
+
+        if (cb !== undefined) {
+            var prec_range = "1," + cb.maximum;
+        }
 	
 	var percent_data = { COLORSCALERANGE: "0,100", STYLES: 'boxfill/ferret', LOGSCALE: false };
 	var number_days_data = { COLORSCALERANGE: "0, 366", STYLES: 'boxfill/ferret', LOGSCALE: false};
