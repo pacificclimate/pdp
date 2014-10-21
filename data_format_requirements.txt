@@ -1,5 +1,5 @@
 pydap.handlers.hdf5 ==0.5
-pydap.responses.netcdf ==0.4
+pydap.responses.netcdf ==0.5
 pydap.responses.xls ==0.1
 pydap.responses.aaigrid ==0.5
 pydap.responses.xlsx ==0.1
