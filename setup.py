@@ -30,7 +30,7 @@ def recursive_list(pkg_dir, basedir):
     return [ x for x in find() ]
 
 
-__version__ = '2.1.4'
+__version__ = '2.1.5'
 
 setup(
     name="pdp",
@@ -47,7 +47,7 @@ setup(
                         'static',
                         'pdp-util >=0.2.2',
                         'pydap.handlers.hdf5 >=0.5',
-                        'pydap.responses.netcdf >=0.2',
+                        'pydap.responses.netcdf >=0.5',
                         'pydap.responses.xls',
                         'pydap.responses.aaigrid >=0.5',
                         'pydap.handlers.sql',
