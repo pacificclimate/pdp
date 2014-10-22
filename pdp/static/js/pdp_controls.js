@@ -148,6 +148,28 @@ Colorbar.prototype = {
             "&var=" + lyr_id.split('/')[1];
 
     },
+
+    format_units: function(units) {
+        // reformat known units:
+        // 'mm d-1', '%', 'days', 'meters s-1', 'm', 'mm',
+        // 'degrees_C', 'kg m-2', 'degC', 'mm day-1', 'celsius'
+        switch(units) {
+            case "degC":
+            case "degrees_C":
+            case "celsius":
+                return "&#8482;"
+            case "mm d-1":
+            case "mm day-1":
+                return "mm/day";
+            case "meters s-1":
+                return "m/s";
+            case "kg m-2":
+                return "kg/m<sup>2</sup>";
+                break;
+            return units;
+        }
+    }
+
     refresh_values: function(lyr_id) {
         var url = this.metadata_url(lyr_id),
             request = $.ajax({
@@ -158,34 +180,7 @@ Colorbar.prototype = {
         request.done(function( data ) {
             this.minimum = data.min;
             this.maximum = data.max;
-
-            // reformat known units:
-            // 'mm d-1', '%', 'days', 'meters s-1', 'm', 'mm', 'degrees_C', 'kg m-2', 'degC', 'mm day-1', 'celsius'
-            switch(data.units) {
-            case "degC":
-            case "degrees_C":
-            case "celsius":
-                this.units = "&#8482;"
-                break;
-            case "mm d-1":
-                this.units = "mm/day";
-                break;
-            case "meters s-1":
-                this.units = "m/s";
-                break;
-                this.units = "";
-                break;
-            case "kg m-2":
-                this.units = "kg/m2";
-                break;
-            case "mm day-1":
-                this.units = "mm/day";
-                break;
-            default:
-                this.units = data.units;
-                break;
-            }
-
+            this.units = format_units(data.units);
             this.redraw();
         });
     },
