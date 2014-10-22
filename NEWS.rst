@@ -34,11 +34,14 @@ News / Release Notes
 *Release Date: 21-Oct-2014*
 
 * Hotfix: Bump dependency versions
+
   * Bump pydap.responses.netcdf to version 0.5 - Fixes failure case where dates < 1900
   * Bump pydap.handlers.sql to version 0.9 - Fixes check for empty results during type peeking
 
 2.1.4
 -----
+
+*Release Date: 21-Oct-2014*
 
 * Hotfix: Bump pdp_util version, fixes xls "Bad request" respose
 
