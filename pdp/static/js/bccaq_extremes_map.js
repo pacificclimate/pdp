@@ -79,13 +79,12 @@ var init_raster_map = function() {
 
     function set_map_title(layer_name) {
         var d = new Date(this.params.TIME);
-
-	if( layer_name.match(/_yr_/) ) // is yearly
-	    var date = d.getFullYear();
-	else
-	    var date = d.getFullYear() + '/' + (d.getMonth() + 1);
-
-	$('#map-title').html(layer_name + '<br />' + date);
+        if( layer_name.match(/_yr_/) ) { // is yearly
+            var date = d.getFullYear();
+        } else {
+            var date = d.getFullYear() + '/' + (d.getMonth() + 1);
+        }
+        $('#map-title').html(layer_name + '<br />' + date);
 
         return true;
     }
