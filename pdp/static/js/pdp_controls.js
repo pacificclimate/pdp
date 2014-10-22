@@ -166,9 +166,10 @@ Colorbar.prototype = {
             case "kg m-2":
                 return "kg/m<sup>2</sup>";
                 break;
-            return units;
+            default:
+                return units;
         }
-    }
+    },
 
     refresh_values: function(lyr_id) {
         var url = this.metadata_url(lyr_id),
@@ -180,7 +181,7 @@ Colorbar.prototype = {
         request.done(function( data ) {
             this.minimum = data.min;
             this.maximum = data.max;
-            this.units = format_units(data.units);
+            this.units = this.format_units(data.units);
             this.redraw();
         });
     },
