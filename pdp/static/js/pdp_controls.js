@@ -157,7 +157,7 @@ Colorbar.prototype = {
             case "degC":
             case "degrees_C":
             case "celsius":
-                return "&#8482;"
+                return "&#8451;"
             case "mm d-1":
             case "mm day-1":
                 return "mm/day";
