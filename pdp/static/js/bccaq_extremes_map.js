@@ -22,59 +22,58 @@ var init_raster_map = function() {
             format: 'image/png'
         };
 
-	var varname = layer_name.split('/')[1];
+        var varname = layer_name.split('/')[1];
 
-	if( layer_name.match(/_yr_/) ) // is yearly
-	    params.TIME = "2001-07-02T00:00:00Z";
-	else
-           params.TIME = "2001-07-16T00:00:00Z";
-
+        if( layer_name.match(/_yr_/) ) { // is yearly
+            params.TIME = "2001-07-02T00:00:00Z";
+        } else {
+            params.TIME = "2001-07-16T00:00:00Z";
+        }
         if (cb !== undefined) {
             var prec_range = (cb.minimum <= 0 ? 1 : cb.minimum) + ", " + cb.maximum;
         }
-	
-	var percent_data = { COLORSCALERANGE: "0,100", STYLES: 'boxfill/ferret', LOGSCALE: false };
-	var number_days_data = { COLORSCALERANGE: "0, 366", STYLES: 'boxfill/ferret', LOGSCALE: false};
-	var temp_data = { STYLES: 'boxfill/ferret', LOGSCALE: false };
-	var prec_data = { COLORSCALERANGE: prec_range, STYLES: 'boxfill/occam_inv', LOGSCALE: true };
 
-	var var_data = { 
-	    r1mmETCCDI: number_days_data,
-	    r10mmETCCDI: number_days_data,
-	    r20mmETCCDI: number_days_data,
-	    tn10pETCCDI: percent_data,
-	    tx10pETCCDI: percent_data,
-	    tn90pETCCDI: percent_data,
-	    tx90pETCCDI: percent_data,
-	    dtrETCCDI: temp_data,
-	    tnnETCCDI: temp_data,
-	    tnxETCCDI: temp_data,
-	    txnETCCDI: temp_data,
-	    txxETCCDI: temp_data,
-	    rx5dayETCCDI: prec_data,
-	    rx1dayETCCDI: prec_data,
-	    prcptotETCCDI: prec_data,
-	    gslETCCDI: number_days_data,
-	    suETCCDI: number_days_data,
-	    trETCCDI: number_days_data,
-	    idETCCDI: number_days_data,
-	    fdETCCDI: number_days_data,
-	    sdiiETCCDI: prec_data,
-	    cwdETCCDI: number_days_data,
-	    altcwdETCCDI: number_days_data,
-	    cddETCCDI: number_days_data,
-	    altcddETCCDI: number_days_data,
-	    csdiETCCDI: number_days_data,
-	    altcsdiETCCDI: number_days_data,
-	    wsdiETCCDI: number_days_data,
-	    altwsdiETCCDI: number_days_data,
-	    r95pETCCDI: prec_data,
-	    r99pETCCDI: prec_data
-	};
+        var percent_data = { COLORSCALERANGE: "0,100", STYLES: 'boxfill/ferret', LOGSCALE: false };
+        var number_days_data = { COLORSCALERANGE: "0, 366", STYLES: 'boxfill/ferret', LOGSCALE: false};
+        var temp_data = { STYLES: 'boxfill/ferret', LOGSCALE: false };
+        var prec_data = { COLORSCALERANGE: prec_range, STYLES: 'boxfill/occam_inv', LOGSCALE: true };
 
-	$.extend(params, var_data[varname])
+        var var_data = {
+            r1mmETCCDI: number_days_data,
+            r10mmETCCDI: number_days_data,
+            r20mmETCCDI: number_days_data,
+            tn10pETCCDI: percent_data,
+            tx10pETCCDI: percent_data,
+            tn90pETCCDI: percent_data,
+            tx90pETCCDI: percent_data,
+            dtrETCCDI: temp_data,
+            tnnETCCDI: temp_data,
+            tnxETCCDI: temp_data,
+            txnETCCDI: temp_data,
+            txxETCCDI: temp_data,
+            rx5dayETCCDI: prec_data,
+            rx1dayETCCDI: prec_data,
+            prcptotETCCDI: prec_data,
+            gslETCCDI: number_days_data,
+            suETCCDI: number_days_data,
+            trETCCDI: number_days_data,
+            idETCCDI: number_days_data,
+            fdETCCDI: number_days_data,
+            sdiiETCCDI: prec_data,
+            cwdETCCDI: number_days_data,
+            altcwdETCCDI: number_days_data,
+            cddETCCDI: number_days_data,
+            altcddETCCDI: number_days_data,
+            csdiETCCDI: number_days_data,
+            altcsdiETCCDI: number_days_data,
+            wsdiETCCDI: number_days_data,
+            altwsdiETCCDI: number_days_data,
+            r95pETCCDI: prec_data,
+            r99pETCCDI: prec_data
+        };
 
-	return params;
+        $.extend(params, var_data[varname])
+        return params;
     };
 
     var set_map_title = function (layer_name) {
