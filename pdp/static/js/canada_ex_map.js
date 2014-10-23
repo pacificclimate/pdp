@@ -44,9 +44,9 @@ var init_raster_map = function() {
     var datalayerName = "Climate raster";
     var ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
-		pdp.ncwms_url,
-		params,
-		{
+        pdp.ncwms_url,
+        params,
+        {
             buffer: 1,
             ratio: 1.5,
             wrapDateLine: true,
@@ -54,23 +54,23 @@ var init_raster_map = function() {
             transitionEffect: null,
             tileSize: new OpenLayers.Size(512, 512)
         }
-	);
+    );
 
     $('#map-title').html(params.layers + '<br />' + ncwms.params.TIME);
     current_dataset = params.layers;
 
     function customize_wms_params(layer_name) {
-	var varname = layer_name.split('/')[1];
-	if (varname == 'pr') {
-	    this.params.LOGSCALE = false;
-	    this.params.STYLES = 'boxfill/occam_inv';
-	    this.params.BELOWMINCOLOR = 'transparent';
-	    this.params.COLORSCALERANGE = '0.0,30.0';
-	} else {
-	    this.params.LOGSCALE = false;
-	    this.params.STYLES = 'boxfill/ferret';
-	    this.params.COLORSCALERANGE = '-50,11';
-	}
+        var varname = layer_name.split('/')[1];
+        if (varname == 'pr') {
+            this.params.LOGSCALE = false;
+            this.params.STYLES = 'boxfill/occam_inv';
+            this.params.BELOWMINCOLOR = 'transparent';
+            this.params.COLORSCALERANGE = '0.0,30.0';
+        } else {
+            this.params.LOGSCALE = false;
+            this.params.STYLES = 'boxfill/ferret';
+            this.params.COLORSCALERANGE = '-50,11';
+        }
     };
     ncwms.events.register('change', ncwms, customize_wms_params);
 

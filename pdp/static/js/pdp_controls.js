@@ -12,16 +12,16 @@ function getDateRange() {
         changeMonth: true,
         changeYear: true,
         yearRange: '1870:cc',
-	defaultDate: '1870/01/01'
+        defaultDate: '1870/01/01'
     });
     $('.datepickerend', rangeDiv).datepicker({
-            inline: true,
-            dateFormat: 'yy/mm/dd',
-            changeMonth: true,
-            changeYear: true,
-            yearRange: '1870:cc',
-	    defaultDate: 'cc'
-        });
+        inline: true,
+        dateFormat: 'yy/mm/dd',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: '1870:cc',
+        defaultDate: 'cc'
+    });
 
     return rangeDiv;
 }
@@ -31,12 +31,12 @@ function generateMenuTree(subtree, leafNameMapping) {
     $.each(Object.keys(subtree), function(index, stuff) {
         var li = $('<li/>');
         if(subtree[stuff] instanceof Object) {
-	    li.append($('<a/>').text(stuff)).append(generateMenuTree(subtree[stuff], leafNameMapping));
+            li.append($('<a/>').text(stuff)).append(generateMenuTree(subtree[stuff], leafNameMapping));
         } else {
             var newlayer = subtree[stuff] + "/" + stuff;
-	    var linkText = stuff;
-	    if(typeof leafNameMapping != 'undefined')
-		linkText = leafNameMapping[stuff];
+            var linkText = stuff;
+            if(typeof leafNameMapping != 'undefined')
+                linkText = leafNameMapping[stuff];
 
             li.attr('id', newlayer);
             $('<a/>').text(linkText).click(function() {
@@ -122,7 +122,7 @@ Colorbar.prototype = {
 
     get midpoint() {
         if (this.layer.params.LOGSCALE) {
-	    var min = this.minimum <= 0 ? 1 : this.minimum;
+            var min = this.minimum <= 0 ? 1 : this.minimum;
             return Math.exp((Math.log(this.maximum) - Math.log(min)) / 2);
         } else {
             return (this.minimum + this.maximum) / 2;
@@ -130,19 +130,19 @@ Colorbar.prototype = {
     },
 
     graphic_url: function() {
-	var palette = this.layer.params.STYLES.split('/')[1];
+    var palette = this.layer.params.STYLES.split('/')[1];
         return pdp.ncwms_url + "?REQUEST=GetLegendGraphic&COLORBARONLY=true&WIDTH=1" +
             "&HEIGHT=300" +
             "&PALETTE=" + palette +
             "&NUMCOLORBANDS=254";
-    },    
+    },
 
     metadata_url: function(lyr_id) {
-	if (lyr_id === undefined) {
-	    lyr_id = this.layer.params.LAYERS;
-	}
+        if (lyr_id === undefined) {
+            lyr_id = this.layer.params.LAYERS;
+        }
 
-	return "../metadata.json?request=GetMinMaxWithUnits" +
+        return "../metadata.json?request=GetMinMaxWithUnits" +
             "&id=" + lyr_id.split('/')[0] +
             "&var=" + lyr_id.split('/')[1];
 
