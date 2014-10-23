@@ -42,8 +42,6 @@ function generateMenuTree(subtree, leafNameMapping) {
             $('<a/>').text(linkText).click(function() {
                 ncwms.params.LAYERS = newlayer;
                 ncwms.events.triggerEvent('change', newlayer);
-                //ncwms.redraw();
-                //$('#map-title').html(newlayer + '<br />' + ncwms.params.TIME);
                 current_dataset = newlayer;
                 processNcwmsLayerMetadata(ncwms);
             }).addClass('menu-leaf').appendTo(li);
@@ -173,20 +171,29 @@ Colorbar.prototype = {
     },
 
     refresh_values: function(lyr_id) {
-        var url = this.metadata_url(lyr_id),
-            request = $.ajax({
+        var url = this.metadata_url(lyr_id)
+        var request = $.ajax({
                 url: url,
                 context: this
             });
 
-        var promise = request.done(function( data ) {
+        request.done(function( data ) {
             this.minimum = data.min;
             this.maximum = data.max;
             this.units = this.format_units(data.units);
             this.redraw();
         });
-	return promise;
     },
+
+    force_update: function(min, max, units) {
+        this.minimum = min;
+        this.maximum = max;
+        if (typeof(units) !== "undefined") {
+            this.units = this.format_units(units);
+        }
+        this.redraw();
+    },
+
     redraw: function() {
         var div = $("#" + this.div_id);
         div.css('background-image', "url(" + this.graphic_url() + ")");

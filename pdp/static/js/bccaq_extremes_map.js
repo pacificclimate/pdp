@@ -77,7 +77,8 @@ var init_raster_map = function() {
 	return params;
     };
 
-    function set_map_title(layer_name) {
+    var set_map_title = function (layer_name) {
+        // 'this' must be bound to the ncwms layer object
         var d = new Date(this.params.TIME);
         if( layer_name.match(/_yr_/) ) { // is yearly
             var date = d.getFullYear();
@@ -87,7 +88,7 @@ var init_raster_map = function() {
         $('#map-title').html(layer_name + '<br />' + date);
 
         return true;
-    }
+    };
 
     // Map Config
     var options = na4326_map_options();
@@ -113,9 +114,9 @@ var init_raster_map = function() {
     var datalayerName = "Climate raster";
     var ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
-	pdp.ncwms_url,
-	ncwms_params(defaults.dataset + "/" + defaults.variable),
-	{
+        pdp.ncwms_url,
+        ncwms_params(defaults.dataset + "/" + defaults.variable),
+        {
             buffer: 1,
             ratio: 1.5,
             wrapDateLine: true,
@@ -130,15 +131,24 @@ var init_raster_map = function() {
     var cb = new Colorbar("pdpColorbar", ncwms);
 
     ncwms.events.registerPriority('change', ncwms, function (layer_id) {
-        var promise = cb.refresh_values();
-        promise.done(function() {
+        var params = {
+            id: layer_id.split('/')[0],
+            var: layer_id.split('/')[1]
+        }
+        var metadata_req = $.ajax(
+        {
+            url: "../metadata.json?request=GetMinMaxWithUnits",
+            data: params
+        });
+        metadata_req.done(function(data) {
+            cb.force_update(data.min, data.max, data.units)
             var new_params = ncwms_params(layer_id);
             delete ncwms.params.COLORSCALERANGE;
             ncwms.mergeNewParams(new_params); // this does a layer redraw
         });
     });
 
-    ncwms.events.register('change', ncwms, set_map_title);
+    ncwms.events.register('change', ncwms, set_map_title)
     ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
 
     (function(globals){
