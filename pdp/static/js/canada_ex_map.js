@@ -56,7 +56,6 @@ var init_raster_map = function() {
         }
     );
 
-    $('#map-title').html(params.layers + '<br />' + ncwms.params.TIME);
     current_dataset = params.layers;
 
     function customize_wms_params(layer_name) {
@@ -100,6 +99,39 @@ var init_raster_map = function() {
 
     var cb = new Colorbar("pdpColorbar", ncwms);
     cb.refresh_values();
+
+    var set_map_title = function (layer_name) {
+        // 'this' must be bound to the ncwms layer object
+        var d = new Date(this.params.TIME);
+        if( layer_name.match(/_yr_/) ) { // is yearly
+            var date = d.getFullYear();
+        } else {
+            var date = d.getFullYear() + '/' + (d.getMonth() + 1);
+        }
+        $('#map-title').html(layer_name + '<br />' + date);
+
+        return true;
+    };
+    ncwms.events.register('change', ncwms, set_map_title)
+
+    ncwms.events.registerPriority('change', ncwms, function (layer_id) {
+        var params = {
+            id: layer_id.split('/')[0],
+            var: layer_id.split('/')[1]
+        }
+        var metadata_req = $.ajax(
+        {
+            url: "../metadata.json?request=GetMinMaxWithUnits",
+            data: params
+        });
+        metadata_req.done(function(data) {
+            var new_params = customize_wms_params.call(ncwms, layer_id);
+            ncwms.mergeNewParams(new_params); // this does a layer redraw
+            cb.force_update(data.min, data.max, data.units) // must be called AFTER ncwms params updated
+        });
+    });
+
+    ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
 
     return map;
 };
