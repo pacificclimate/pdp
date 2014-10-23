@@ -141,10 +141,10 @@ var init_raster_map = function() {
             data: params
         });
         metadata_req.done(function(data) {
-            cb.force_update(data.min, data.max, data.units)
             var new_params = ncwms_params(layer_id);
             delete ncwms.params.COLORSCALERANGE;
             ncwms.mergeNewParams(new_params); // this does a layer redraw
+            cb.force_update(data.min, data.max, data.units) // must be called AFTER ncwms params updated
         });
     });
 
