@@ -40,7 +40,7 @@ def portal(global_config):
 
     map_app = wrap_auth(MapApp(**config), required=False)
 
-    data_server = HydroStationDataServer(resource_filename('pdp', 'portals/hydro_stn.yaml'), global_config['app_root'])
+    data_server = wrap_auth(HydroStationDataServer(resource_filename('pdp', 'portals/hydro_stn.yaml'), global_config['app_root']))
     # data_server = wrap_auth(HydroStationDataServer(resource_filename('pdp', 'portals/hydro_stn.yaml'), global_config['app_root']))
 
     return PathDispatcher([
