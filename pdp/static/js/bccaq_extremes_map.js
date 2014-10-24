@@ -7,7 +7,7 @@ var current_dataset;
 
 var init_raster_map = function() {
 
-    function ncwms_params(layer_name) {
+    function ncwms_params(layer_name, colorscale_min, colorscale_max) {
         // common ncWMS parameters for *all* layers
         var params = {
             LAYERS: layer_name,
@@ -29,13 +29,15 @@ var init_raster_map = function() {
         } else {
             params.TIME = "2001-07-16T00:00:00Z";
         }
-        if (cb !== undefined) {
-            var prec_range = (cb.minimum <= 0 ? 1 : cb.minimum) + ", " + cb.maximum;
+        if (typeof(colorscale_min) !== "undefined" &&
+            typeof(colorscale_max) !== "undefined") {
+            var c_range = colorscale_min + ", " + colorscale_max;
+            var prec_range = (colorscale_min <= 0 ? 1 : colorscale_min) + ", " + colorscale_max;
         }
 
-        var percent_data = { COLORSCALERANGE: "0,100", STYLES: 'boxfill/ferret', LOGSCALE: false };
-        var number_days_data = { COLORSCALERANGE: "0, 366", STYLES: 'boxfill/ferret', LOGSCALE: false};
-        var temp_data = { STYLES: 'boxfill/ferret', LOGSCALE: false };
+        var percent_data = { COLORSCALERANGE: c_range, STYLES: 'boxfill/ferret', LOGSCALE: false };
+        var number_days_data = { COLORSCALERANGE: c_range, STYLES: 'boxfill/ferret', LOGSCALE: false};
+        var temp_data = { COLORSCALERANGE: c_range, STYLES: 'boxfill/ferret', LOGSCALE: false };
         var prec_data = { COLORSCALERANGE: prec_range, STYLES: 'boxfill/occam_inv', LOGSCALE: true };
 
         var var_data = {
@@ -140,7 +142,7 @@ var init_raster_map = function() {
             data: params
         });
         metadata_req.done(function(data) {
-            var new_params = ncwms_params(layer_id);
+            var new_params = ncwms_params(layer_id, data.min, data.max);
             delete ncwms.params.COLORSCALERANGE;
             ncwms.mergeNewParams(new_params); // this does a layer redraw
             cb.force_update(data.min, data.max, data.units) // must be called AFTER ncwms params updated
@@ -173,8 +175,6 @@ var init_raster_map = function() {
     map.getSelectionLayer = function() {
         return map.getLayersByName(selLayerName)[0];
     };
-
-    cb.refresh_values();
 
     return map;
 };
