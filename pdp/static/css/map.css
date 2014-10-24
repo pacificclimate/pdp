@@ -200,3 +200,20 @@ table.metafeatureInfo tr:nth-child(odd) {
     border-collapse:collapse;
     background-color:#E8EDEF;
 }
+
+div#pdpColorbar {
+    position: absolute;
+    width: 20px;
+    height: 300px;
+    color: #424242;
+    text-shadow: 0 0 0.2em white, 0 0 0.2em white, 0 0 0.2em white;
+    font-weight: bold;
+    white-space: nowrap;
+    opacity: .75;
+    right: 1em;
+    bottom: 80px;
+    -webkit-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+};

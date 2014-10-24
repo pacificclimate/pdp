@@ -29,6 +29,11 @@ def streaming_app(environ, start_response):
 
     return my_iterable()
 
+def error_instantiating_app(environ, start_response):
+    raise Exception("Foo", "Bar")
+    start_response('200 OK', [])
+    return ["We'll never get", "here"]
+
 def test_operational_error():
     app = ErrorMiddleware(myapp)
     req = Request.blank('/')
@@ -41,7 +46,8 @@ def test_io_error():
     app = ErrorMiddleware(missing_file_app)
     req = Request.blank('/')
     resp = req.get_response(app, catch_exc_info=True)
-    assert resp.status_code == 404
+    assert 'Retry-After' in resp.headers
+    assert resp.status_code == 503
 
 def test_stream_error():
     app = ErrorMiddleware(streaming_app)
@@ -51,7 +57,14 @@ def test_stream_error():
     assert resp.status_code == 500
     for x in resp.app_iter:
         print x
-    
+
+def test_500():
+    app = ErrorMiddleware(error_instantiating_app)
+    req = Request.blank('/')
+    resp = req.get_response(app, catch_exc_info=True)
+
+    assert resp.status_code == 500
+    assert "There was an unhandleable problem with the application" in resp.body
     
 if __name__ == '__main__':
     app = Flask(__name__)

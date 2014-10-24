@@ -1,17 +1,47 @@
 News / Release Notes
 ====================
 
+2.2.0
+-----
+
+*Release Date: 24-Oct-2014*
+
+* Addition of the VIC Modelled Streamflow Data page
+
+  * Wrote new station search control
+  * Wrote new map based selection control
+  * Added station metadata to the repo
+  * Added an app that uses Pydap's CSVHandler to serve the data
+
+* Added a dynamically generated color scalebar to each of the four raster portal pages
+
+  * fetches graphics from ncWMS
+  * fetches variable ranges from pdp
+  * assembles the graphic in the DOM
+
+* Better error handling
+
+  * Wrote error notification pages that are more than just text
+  * Ensured full logging of all exceptions
+
+* Updates to the available OpenID providers
+
+* Added full variable names on the BC PRISM page
+
 2.1.5
 -----
 
 *Release Date: 21-Oct-2014*
 
 * Hotfix: Bump dependency versions
+
   * Bump pydap.responses.netcdf to version 0.5 - Fixes failure case where dates < 1900
   * Bump pydap.handlers.sql to version 0.9 - Fixes check for empty results during type peeking
 
 2.1.4
 -----
+
+*Release Date: 21-Oct-2014*
 
 * Hotfix: Bump pdp_util version, fixes xls "Bad request" respose
 

@@ -2,7 +2,11 @@ function getPRISMControls(ensemble_name) {
     var div = pdp.createDiv('', 'control');
 	var form = pdp.createForm(undefined, undefined, undefined);
     var fieldset = pdp.createFieldset("filterset", "Dataset Selection");
-    fieldset.appendChild(getRasterAccordionMenu(ensemble_name));
+    var varMapping = { 'tmin': "Temperature Climatology (Min.)",
+                       'tmax': "Temperature Climatology (Max.)",
+                       'pr': "Precipitation Climatology"
+                     };
+    fieldset.appendChild(getRasterAccordionMenu(ensemble_name, varMapping));
     form.appendChild(fieldset);
     div.appendChild(form);
     return div;

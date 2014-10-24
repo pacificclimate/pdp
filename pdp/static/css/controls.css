@@ -22,6 +22,18 @@ legend {
     margin-bottom: 0.375em;
 }
 
+.control div.stn_remove {
+    float: left;
+    color: #004361;
+    margin: 0 0.5em 0 0;
+}
+.control div.stn_remove:hover {
+    color: #fff;
+    cursor: pointer;
+    background-color: #004361;
+    margin: 0 0.5em 0 0;
+}
+
 select, input[type=text] {
     border: 1px solid #c8c8c8;
     background-color: #fff;

@@ -44,9 +44,9 @@ var init_raster_map = function() {
     var datalayerName = "Climate raster";
     var ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
-		pdp.ncwms_url,
-		params,
-		{
+        pdp.ncwms_url,
+        params,
+        {
             buffer: 1,
             ratio: 1.5,
             wrapDateLine: true,
@@ -54,23 +54,22 @@ var init_raster_map = function() {
             transitionEffect: null,
             tileSize: new OpenLayers.Size(512, 512)
         }
-	);
+    );
 
-    $('#map-title').html(params.layers + '<br />' + ncwms.params.TIME);
     current_dataset = params.layers;
 
     function customize_wms_params(layer_name) {
-	var varname = layer_name.split('/')[1];
-	if (varname == 'pr') {
-	    this.params.LOGSCALE = false;
-	    this.params.STYLES = 'boxfill/occam_inv';
-	    this.params.BELOWMINCOLOR = 'transparent';
-	    this.params.COLORSCALERANGE = '0.0,30.0';
-	} else {
-	    this.params.LOGSCALE = false;
-	    this.params.STYLES = 'boxfill/ferret';
-	    this.params.COLORSCALERANGE = '-50,11';
-	}
+        var varname = layer_name.split('/')[1];
+        if (varname == 'pr') {
+            this.params.LOGSCALE = false;
+            this.params.STYLES = 'boxfill/occam_inv';
+            this.params.BELOWMINCOLOR = 'transparent';
+            this.params.COLORSCALERANGE = '0.0,30.0';
+        } else {
+            this.params.LOGSCALE = false;
+            this.params.STYLES = 'boxfill/ferret';
+            this.params.COLORSCALERANGE = '-50,11';
+        }
     };
     ncwms.events.register('change', ncwms, customize_wms_params);
 
@@ -97,6 +96,42 @@ var init_raster_map = function() {
     map.getSelectionLayer = function() {
         return map.getLayersByName(selLayerName)[0];
     };
+
+    var cb = new Colorbar("pdpColorbar", ncwms);
+    cb.refresh_values();
+
+    var set_map_title = function (layer_name) {
+        // 'this' must be bound to the ncwms layer object
+        var d = new Date(this.params.TIME);
+        if( layer_name.match(/_yr_/) ) { // is yearly
+            var date = d.getFullYear();
+        } else {
+            var date = d.getFullYear() + '/' + (d.getMonth() + 1);
+        }
+        $('#map-title').html(layer_name + '<br />' + date);
+
+        return true;
+    };
+    ncwms.events.register('change', ncwms, set_map_title)
+
+    ncwms.events.registerPriority('change', ncwms, function (layer_id) {
+        var params = {
+            id: layer_id.split('/')[0],
+            var: layer_id.split('/')[1]
+        }
+        var metadata_req = $.ajax(
+        {
+            url: "../metadata.json?request=GetMinMaxWithUnits",
+            data: params
+        });
+        metadata_req.done(function(data) {
+            var new_params = customize_wms_params.call(ncwms, layer_id);
+            ncwms.mergeNewParams(new_params); // this does a layer redraw
+            cb.force_update(data.min, data.max, data.units) // must be called AFTER ncwms params updated
+        });
+    });
+
+    ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
 
     return map;
 };
