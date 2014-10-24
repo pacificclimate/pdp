@@ -51,7 +51,6 @@ function init_vic_map() {
         }
     );
 
-    $('#map-title').text(params.layers);
     getNCWMSLayerCapabilities(ncwms); // async save into global var ncwmsCapabilities
     current_dataset = params.layers;
 
@@ -75,6 +74,30 @@ function init_vic_map() {
 
     var cb = new Colorbar("pdpColorbar", ncwms);
     cb.refresh_values();
+
+    var set_map_title = function (layer_name) {
+        $('#map-title').html(layer_name);
+        return true;
+    };
+    ncwms.events.register('change', ncwms, set_map_title)
+
+    ncwms.events.registerPriority('change', ncwms, function (layer_id) {
+        var params = {
+            id: layer_id.split('/')[0],
+            var: layer_id.split('/')[1]
+        }
+        var metadata_req = $.ajax(
+        {
+            url: "../metadata.json?request=GetMinMaxWithUnits",
+            data: params
+        });
+        metadata_req.done(function(data) {
+            ncwms.redraw(); // this does a layer redraw
+            cb.force_update(data.min, data.max, data.units) // must be called AFTER ncwms params updated
+        });
+    });
+
+    ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
 
     return map
 };

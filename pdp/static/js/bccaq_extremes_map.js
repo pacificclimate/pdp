@@ -6,54 +6,89 @@
 var current_dataset;
 
 var init_raster_map = function() {
-    function customize_wms_params(layer_name) {
-	var varname = layer_name.split('/')[1];
-	var is_yearly = layer_name.match(/_yr_/)
-	if(is_yearly)
-	    this.params.TIME = "1950-07-02T00:00:00Z";
-	else
-	    this.params.TIME = "1950-07-16T00:00:00Z";
-	
-	var percent_data = { COLORSCALERANGE: "0,100", STYLES: 'boxfill/ferret', LOGSCALE: false };
-	var number_days_data = { COLORSCALERANGE: "0, 366", STYLES: 'boxfill/ferret', LOGSCALE: false};
-	var temp_data = { STYLES: 'boxfill/ferret', LOGSCALE: false };
-	var prec_data = { STYLES: 'boxfill/occam_inv', LOGSCALE: false };
 
-	var var_data = { 
-	    r1mmETCCDI: number_days_data,
-	    r10mmETCCDI: $.extend({ COLORSCALERANGE: "0,150"}, number_days_data),
-	    r20mmETCCDI: $.extend({ COLORSCALERANGE: "0,100"}, number_days_data),
-	    tn10pETCCDI: percent_data, 'tx10pETCCDI': percent_data, 'tn90pETCCDI': percent_data, 'tx90pETCCDI': percent_data,
-	    dtrETCCDI: $.extend({ COLORSCALERANGE: "0,25"}, temp_data),
-	    tnnETCCDI: $.extend({ COLORSCALERANGE: "-80,25"}, temp_data),
-	    tnxETCCDI: $.extend({ COLORSCALERANGE: "-50,35"}, temp_data),
-	    txnETCCDI: $.extend({ COLORSCALERANGE: "-65,45"}, temp_data),
-	    txxETCCDI: $.extend({ COLORSCALERANGE: "-45,55"}, temp_data),
-	    rx5dayETCCDI: $.extend({ COLORSCALERANGE: "0,1500"}, prec_data),
-	    rx1dayETCCDI: $.extend({ COLORSCALERANGE: "0,1000"}, prec_data),
-	    prcptotETCCDI: $.extend({ COLORSCALERANGE: "0,5000"}, prec_data),
-	    gslETCCDI: number_days_data,
-	    suETCCDI: $.extend({ COLORSCALERANGE: "0,200"}, number_days_data), 
-	    trETCCDI: $.extend({ COLORSCALERANGE: "0,150"}, number_days_data),
-	    idETCCDI: number_days_data,
-	    fdETCCDI: number_days_data,
-	    sdiiETCCDI: $.extend({ COLORSCALERANGE: "0,50"}, prec_data),
-	    cwdETCCDI: $.extend({ COLORSCALERANGE: "0,100"}, number_days_data),
-	    altcwdETCCDI: $.extend({ COLORSCALERANGE: "0,100"}, number_days_data),
-	    cddETCCDI: number_days_data,
-	    altcddETCCDI: number_days_data,
-	    csdiETCCDI: $.extend({ COLORSCALERANGE: "0,150"}, number_days_data),
-	    altcsdiETCCDI: $.extend({ COLORSCALERANGE: "0,150"}, number_days_data),
-	    wsdiETCCDI: number_days_data,
-	    altwsdiETCCDI: number_days_data,
-	    r95pETCCDI: $.extend({ COLORSCALERANGE: "0,4000"}, prec_data),
-	    r99pETCCDI: $.extend({ COLORSCALERANGE: "0,4000"}, prec_data)
-	};
+    function ncwms_params(layer_name, colorscale_min, colorscale_max) {
+        // common ncWMS parameters for *all* layers
+        var params = {
+            LAYERS: layer_name,
+            transparent: "true",
+            numcolorbands: 254,
+            version: "1.1.1",
+            SRS: "EPSG:4326",
+            service: "WMS",
+            request: "GetMap",
+            WIDTH: 512,
+            HEIGHT: 512,
+            format: 'image/png'
+        };
 
-	$.extend(this.params, var_data[varname])
-	$('#map-title').html(layer_name + '<br />' + this.params.TIME);
+        var varname = layer_name.split('/')[1];
 
-	return true;
+        if( layer_name.match(/_yr_/) ) { // is yearly
+            params.TIME = "2001-07-02T00:00:00Z";
+        } else {
+            params.TIME = "2001-07-16T00:00:00Z";
+        }
+        if (typeof(colorscale_min) !== "undefined" &&
+            typeof(colorscale_max) !== "undefined") {
+            var c_range = colorscale_min + ", " + colorscale_max;
+            var prec_range = (colorscale_min <= 0 ? 1 : colorscale_min) + ", " + colorscale_max;
+        }
+
+        var percent_data = { COLORSCALERANGE: c_range, STYLES: 'boxfill/ferret', LOGSCALE: false };
+        var number_days_data = { COLORSCALERANGE: c_range, STYLES: 'boxfill/ferret', LOGSCALE: false};
+        var temp_data = { COLORSCALERANGE: c_range, STYLES: 'boxfill/ferret', LOGSCALE: false };
+        var prec_data = { COLORSCALERANGE: prec_range, STYLES: 'boxfill/occam_inv', LOGSCALE: true };
+
+        var var_data = {
+            r1mmETCCDI: number_days_data,
+            r10mmETCCDI: number_days_data,
+            r20mmETCCDI: number_days_data,
+            tn10pETCCDI: percent_data,
+            tx10pETCCDI: percent_data,
+            tn90pETCCDI: percent_data,
+            tx90pETCCDI: percent_data,
+            dtrETCCDI: temp_data,
+            tnnETCCDI: temp_data,
+            tnxETCCDI: temp_data,
+            txnETCCDI: temp_data,
+            txxETCCDI: temp_data,
+            rx5dayETCCDI: prec_data,
+            rx1dayETCCDI: prec_data,
+            prcptotETCCDI: prec_data,
+            gslETCCDI: number_days_data,
+            suETCCDI: number_days_data,
+            trETCCDI: number_days_data,
+            idETCCDI: number_days_data,
+            fdETCCDI: number_days_data,
+            sdiiETCCDI: prec_data,
+            cwdETCCDI: number_days_data,
+            altcwdETCCDI: number_days_data,
+            cddETCCDI: number_days_data,
+            altcddETCCDI: number_days_data,
+            csdiETCCDI: number_days_data,
+            altcsdiETCCDI: number_days_data,
+            wsdiETCCDI: number_days_data,
+            altwsdiETCCDI: number_days_data,
+            r95pETCCDI: prec_data,
+            r99pETCCDI: prec_data
+        };
+
+        $.extend(params, var_data[varname])
+        return params;
+    };
+
+    var set_map_title = function (layer_name) {
+        // 'this' must be bound to the ncwms layer object
+        var d = new Date(this.params.TIME);
+        if( layer_name.match(/_yr_/) ) { // is yearly
+            var date = d.getFullYear();
+        } else {
+            var date = d.getFullYear() + '/' + (d.getMonth() + 1);
+        }
+        $('#map-title').html(layer_name + '<br />' + date);
+
+        return true;
     };
 
     // Map Config
@@ -76,21 +111,13 @@ var init_raster_map = function() {
         dataset: "rx1dayETCCDI_yr_BCCAQ-ANUSPLIN300-CanESM2_historical-rcp26_r1i1p1_1950-2100",
         variable: "rx1dayETCCDI"
     };
-    
-    var params = {
-        LAYERS: defaults.dataset + "/" + defaults.variable,
-        transparent: "true",
-        numcolorbands: 254,
-        version: "1.1.1",
-        srs: "EPSG:4326",
-    };
 
     var datalayerName = "Climate raster";
     var ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
-		pdp.ncwms_url,
-		params,
-		{
+        pdp.ncwms_url,
+        ncwms_params(defaults.dataset + "/" + defaults.variable),
+        {
             buffer: 1,
             ratio: 1.5,
             wrapDateLine: true,
@@ -98,12 +125,32 @@ var init_raster_map = function() {
             transitionEffect: null,
             tileSize: new OpenLayers.Size(512, 512)
         }
-	);
+    );
 
-    current_dataset = params.layers;
+    current_dataset = ncwms.params.layers;
 
-    ncwms.events.register('change', ncwms, customize_wms_params);
-    ncwms.events.triggerEvent('change', defaults.dataset);
+    var cb = new Colorbar("pdpColorbar", ncwms);
+
+    ncwms.events.registerPriority('change', ncwms, function (layer_id) {
+        var params = {
+            id: layer_id.split('/')[0],
+            var: layer_id.split('/')[1]
+        }
+        var metadata_req = $.ajax(
+        {
+            url: "../metadata.json?request=GetMinMaxWithUnits",
+            data: params
+        });
+        metadata_req.done(function(data) {
+            var new_params = ncwms_params(layer_id, data.min, data.max);
+            delete ncwms.params.COLORSCALERANGE;
+            ncwms.mergeNewParams(new_params); // this does a layer redraw
+            cb.force_update(data.min, data.max, data.units) // must be called AFTER ncwms params updated
+        });
+    });
+
+    ncwms.events.register('change', ncwms, set_map_title)
+    ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
 
     (function(globals){
         "use strict"
@@ -128,9 +175,6 @@ var init_raster_map = function() {
     map.getSelectionLayer = function() {
         return map.getLayersByName(selLayerName)[0];
     };
-
-    var cb = new Colorbar("pdpColorbar", ncwms);
-    cb.refresh_values();
 
     return map;
 };
