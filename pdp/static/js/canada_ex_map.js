@@ -116,8 +116,8 @@ var init_raster_map = function() {
 
     ncwms.events.registerPriority('change', ncwms, function (layer_id) {
         var params = {
-            id: layer_id.split('/')[0],
-            var: layer_id.split('/')[1]
+            "id": layer_id.split('/')[0],
+            "var": layer_id.split('/')[1]
         }
         var metadata_req = $.ajax(
         {
