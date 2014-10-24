@@ -1,6 +1,11 @@
 News / Release Notes
 ====================
 
+2.3.0
+-----
+
+*In Development*
+
 2.2.0
 -----
 
