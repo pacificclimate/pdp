@@ -6,6 +6,13 @@ News / Release Notes
 
 *In Development*
 
+2.2.1
+-----
+
+*Release Date: 30-Oct-2014*
+
+* Hotfix: Fix IE8 Colorbar bug
+
 2.2.0
 -----
 

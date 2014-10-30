@@ -116,11 +116,13 @@ function Colorbar(div_id, layer) {
 };
 
 
+
+
 // FIXME: We cannot use layer.params.* for anything if we want the event handling to be order agnostic
 Colorbar.prototype = {
     constructor: Colorbar,
 
-    get midpoint() {
+    midpoint: function () {
         if (this.layer.params.LOGSCALE) {
             var min = this.minimum <= 0 ? 1 : this.minimum;
             return Math.exp((Math.log(this.maximum) - Math.log(min)) / 2);
@@ -199,7 +201,7 @@ Colorbar.prototype = {
         div.css('background-image', "url(" + this.graphic_url() + ")");
         div.find("#minimum").html(round(this.minimum) + " " + this.units);
         div.find("#maximum").html(round(this.maximum) + " " + this.units);
-        div.find("#midpoint").html(round(this.midpoint) + " " + this.units);
+        div.find("#midpoint").html(round(this.midpoint()) + " " + this.units);
     }
 };
 
