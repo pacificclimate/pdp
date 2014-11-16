@@ -1,5 +1,9 @@
+.. _contributors-guide:
+
 Contributor's Guide
 ===================
+
+.. _how-to-report-bugs:
 
 How to report bugs
 ------------------
@@ -27,6 +31,8 @@ Then please follow these guidelines for writing your report:
 I cannot stress enough how important it is to contrast what you expected to happen, with what actually happened. When executing the code does not produce the *advertised* result, there is a bug in the system. When the code does not produce the result that you *wished* it had, this is *not* a bug. We receive far too many reports in the latter category.
 
 Many people attempt to provide a diagnosis when reporting bugs in the hopes that it will be helpful. Please *refrain* from doing this, and stick to reporting known facts: what did you do and what did you observe. If you skip these important things and jump right to what could be an incorrect diagnosis, it is highly likely that you will delay the troubleshooting.
+
+If you're *really* committed to writing a stellar bug report, look through the guidelines for `writing *effective* bug reports <http://www.chiark.greenend.org.uk/~sgtatham/bugs.html>`_.
 
 .. _you can find it here: http://whatismyipaddress.com/
 

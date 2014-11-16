@@ -56,7 +56,8 @@ This is an interesting problem and it turns out that it's because our PRISM data
 Where can I report a bug or request a feature?
 ----------------------------------------------
 
-Good question. In the future, we will accept bug reports through our `Redmine <http://www.redmine.org/>`_ project management software, but it's not yet ready. For now just `send us an email <mailto:climate@pacificclimate.org>`_, and please try to follow guidelines for `writing *effective* bug reports <http://www.chiark.greenend.org.uk/~sgtatham/bugs.html>`_.
+Good question. Please see the :ref:`how-to-report-bugs` section in our :ref:`contributors-guide`.
+
 
 Why is the "CSV" format nothing like what I expect? Why can't I import it into Excel?
 -------------------------------------------------------------------------------------
