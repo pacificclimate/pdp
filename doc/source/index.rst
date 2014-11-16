@@ -13,6 +13,15 @@ The main goal of the PCIC Data Portal boils down to one simple idea: *give users
    raster
    faq
 
+Contributor's Guide
+-------------------
+
+While the Data Portal is a climate service offered by PCIC, the software that runs it is all Free and Open Source Software (FOSS). As such anyone is welcome to contribute to the project under the terms of the GNU General Public License. This doesn't necessarily mean coding though; there are lots of ways to contribute. We do welcome code and GitHub pull requests, but you can also help by reporting or helping to identify a bug, helping users in need of assistance, improving the documentation to answer real user's questions, or simply telling your story about how the data portal has helped your study. See the full Contributor's Guide for more details.
+
+.. toctree::
+   :maxdepth: 2
+
+   CONTRIBUTING
 
 Developer Documentation
 -----------------------
