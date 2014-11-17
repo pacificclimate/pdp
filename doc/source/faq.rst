@@ -1,6 +1,24 @@
 Frequently Asked Questions
 ==========================
 
+How do I get help using the data portal?
+----------------------------------------
+
+We want the data portal to be useful and used by fellow scientists and researchers, and we'd love to help you to make that possible. If you have completely read the user docs and still need help, you're welcome to fill out a support issue and we'll try our best to help you out. Follow the guidelines in our :ref:`bug reporting guide <how-to-report-bugs>`, but tag the issue as "help wanted" instead of "bug". Please respect our time by keeping your questions succinct, specific and direct. If you do, there will be a greater probability that someone will take on the ticket. Open-ended questions titled "help me!!!111" questions will likely be ignored.
+
+We have given several presentations about the data portal throughout its development. While they may not help you *use* the data portal, you are welcome to check out the slides and videos:
+
+* James Hiebert addresses FOSS4G 2014 about why `Serving high-resolution sptatiotemporal climate data is hard <http://vimeo.com/106231595>`_
+* James Hiebert speaks to PCIC staff about `version 2.0 of the PCIC Data Portal <http://www.slideshare.net/james_hiebert/hiebert-20140218-notes>`_
+* James Hiebert addresses FOSS4G NA 2013 about `Web Delivery of Giant Climate Data Sets to Facilitate Open Science <http://www.slideshare.net/james_hiebert/web-delivery-of-giant-climate-data-sets-to-facilitate-open-science>`_
+* James Hiebert speaks at AGU 2012 about `Web Services for Open Meteorological Data in British Columbia <http://www.slideshare.net/james_hiebert/hiebert>`_
+
+Where can I report a bug or request a feature?
+----------------------------------------------
+
+Good question. Please see the :ref:`how-to-report-bugs` section in our :ref:`contributors-guide`.
+
+
 Why do I have to login and what is OpenID?
 ------------------------------------------
 
@@ -34,7 +52,9 @@ Can I download climate model output in a "GIS-friendly" format?
 
 This question is related to the above question about Excel. Like spreadsheets, most (all?) GIS software packages are designed to display data in only two coordinate dimensions (i.e. a map). Suppose that you download daily data for a ten year period, how would your GIS software visualize the resulting 3600 layers? GIS software packages are not designed for this purpose. In general, you're going to need to do additional, needs-specific processing before you can create climate maps with your GIS software.
 
-All that said, if your GIS software can speak WMS and you want to map individual time steps, please review our Power user HOWTO.
+In version 2.1.0, we introduced the availability of the Arc/ASCII Grid format. This format only supports a single layer, so we deliver a Zip archive which contains one grid file per timestep. If downloading daily data, this is not recommended, but it *is* an option.
+
+One final option is that if your GIS software can speak WMS and you want to map individual time steps, please review our :ref:`power user HOWTO <power-user>`.
 
 How do I interpret the date fields in the data responses
 --------------------------------------------------------
@@ -53,13 +73,8 @@ You see something like this?
 This is an interesting problem and it turns out that it's because our PRISM data is actually *too* fine of a resolution. When you're zoomed out on the map, multiple pixels/grid cells of the PRISM raster are actually represented by a single screen pixel. For the web application to request the data subset from the data server, it has to be able to map a screen pixel (i.e. where you click when you select your rectangle) to a data pixel. If there are multiple data pixels per screen pixel (i.e. when you're zoomed out), then it's ambiguous and not determinable. For you to solve this, it *should* be sufficient to just zoom one or two steps. This issue only arises when your selection extends beyond the data area (and only beyond the southern and eastern extent). That's because to do the geographic clipping, the application has to reference yet another coordinate system (geographic). So in that case, the application has to reconcile three different coordinate systems (geographic, screen pixels, and PRISM grid cells) and there's not always enough information to resolve them.
 
 
-Where can I report a bug or request a feature?
-----------------------------------------------
-
-Good question. In the future, we will accept bug reports through our `Redmine <http://www.redmine.org/>`_ project management software, but it's not yet ready. For now just `send us an email <mailto:climate@pacificclimate.org>`_, and please try to follow guidelines for `writing *effective* bug reports <http://www.chiark.greenend.org.uk/~sgtatham/bugs.html>`_.
-
 Why is the "CSV" format nothing like what I expect? Why can't I import it into Excel?
 -------------------------------------------------------------------------------------
 
-Let me respond to the question with a question. What is CSV defined to be? There is not actual answer to that question. CSV is defined as "Character Separated Values", but aside from that, there's no provision for what character is the separator, what information should be included, how many rows/columns should exist, where to include attributes and metadata, and a wide variety of other questions. Essentially, no one, including any of our users, agrees 100% on the structure of a CSV, especially for attributed, multi-dimensional output. We provide CSV as a convenience, but it is impossible to make any guarantees that semantics and structure of CSV output will be unambiguous to all users. If you want well-defined, strucutred, attributed data, you should make the effort to learn and use NetCDF. It will make your life easier.
+Let me respond to the question with a question. What is CSV defined to be? There is not actual answer to that question. CSV is defined as "Character Separated Values", but aside from that, there's no provision for what character is the separator, what information should be included, how many rows/columns should exist, where to include attributes and metadata, and a wide variety of other questions. Essentially, no one, including any of our users, agrees 100% on the structure of a CSV, especially for attributed, multi-dimensional output. We provide CSV as a convenience, but it is impossible to make any guarantees that semantics and structure of CSV output will be unambiguous to all users. If you want well-defined, structured, attributed data, you should make the effort to learn and use NetCDF. It will make your life easier.
 

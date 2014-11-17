@@ -1,6 +1,13 @@
 News / Release Notes
 ====================
 
+2.2.2
+-----
+
+*Release Date: 16-Nov-2014*
+
+* Updates to user docs mostly with respect to filing bug reports and getting support
+
 2.2.1
 -----
 
