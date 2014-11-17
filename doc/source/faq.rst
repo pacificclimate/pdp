@@ -1,6 +1,17 @@
 Frequently Asked Questions
 ==========================
 
+How do I get help using the data portal?
+----------------------------------------
+
+We want the data portal to be useful and used by fellow scientists and researchers, and we'd love to help you to make that possible. If you have completely read the user docs and still need help, you're welcome to fill out a support issue and we'll try our best to help you out. Follow the guidelines in our :ref:`bug reporting guide <how-to-report-bugs>`, but tag the issue as "help wanted" instead of "bug". Please respect our time by keeping your questions succinct, specific and direct. If you do, there will be a greater probability that someone will take on the ticket. Open-ended questions titled "help me!!!111" questions will likely be ignored.
+
+Where can I report a bug or request a feature?
+----------------------------------------------
+
+Good question. Please see the :ref:`how-to-report-bugs` section in our :ref:`contributors-guide`.
+
+
 Why do I have to login and what is OpenID?
 ------------------------------------------
 
@@ -53,12 +64,6 @@ You see something like this?
 .. figure:: images/prism_res_too_high.png
 
 This is an interesting problem and it turns out that it's because our PRISM data is actually *too* fine of a resolution. When you're zoomed out on the map, multiple pixels/grid cells of the PRISM raster are actually represented by a single screen pixel. For the web application to request the data subset from the data server, it has to be able to map a screen pixel (i.e. where you click when you select your rectangle) to a data pixel. If there are multiple data pixels per screen pixel (i.e. when you're zoomed out), then it's ambiguous and not determinable. For you to solve this, it *should* be sufficient to just zoom one or two steps. This issue only arises when your selection extends beyond the data area (and only beyond the southern and eastern extent). That's because to do the geographic clipping, the application has to reference yet another coordinate system (geographic). So in that case, the application has to reconcile three different coordinate systems (geographic, screen pixels, and PRISM grid cells) and there's not always enough information to resolve them.
-
-
-Where can I report a bug or request a feature?
-----------------------------------------------
-
-Good question. Please see the :ref:`how-to-report-bugs` section in our :ref:`contributors-guide`.
 
 
 Why is the "CSV" format nothing like what I expect? Why can't I import it into Excel?
