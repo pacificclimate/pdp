@@ -6,6 +6,13 @@ How do I get help using the data portal?
 
 We want the data portal to be useful and used by fellow scientists and researchers, and we'd love to help you to make that possible. If you have completely read the user docs and still need help, you're welcome to fill out a support issue and we'll try our best to help you out. Follow the guidelines in our :ref:`bug reporting guide <how-to-report-bugs>`, but tag the issue as "help wanted" instead of "bug". Please respect our time by keeping your questions succinct, specific and direct. If you do, there will be a greater probability that someone will take on the ticket. Open-ended questions titled "help me!!!111" questions will likely be ignored.
 
+We have given several presentations about the data portal throughout its development. While they may not help you *use* the data portal, you are welcome to check out the slides and videos:
+
+* James Hiebert addresses FOSS4G 2014 about why `Serving high-resolution sptatiotemporal climate data is hard <http://vimeo.com/106231595>`_
+* James Hiebert speaks to PCIC staff about `version 2.0 of the PCIC Data Portal <http://www.slideshare.net/james_hiebert/hiebert-20140218-notes>`_
+* James Hiebert addresses FOSS4G NA 2013 about `Web Delivery of Giant Climate Data Sets to Facilitate Open Science <http://www.slideshare.net/james_hiebert/web-delivery-of-giant-climate-data-sets-to-facilitate-open-science>`_
+* James Hiebert speaks at AGU 2012 about `Web Services for Open Meteorological Data in British Columbia <http://www.slideshare.net/james_hiebert/hiebert>`_
+
 Where can I report a bug or request a feature?
 ----------------------------------------------
 
@@ -69,5 +76,5 @@ This is an interesting problem and it turns out that it's because our PRISM data
 Why is the "CSV" format nothing like what I expect? Why can't I import it into Excel?
 -------------------------------------------------------------------------------------
 
-Let me respond to the question with a question. What is CSV defined to be? There is not actual answer to that question. CSV is defined as "Character Separated Values", but aside from that, there's no provision for what character is the separator, what information should be included, how many rows/columns should exist, where to include attributes and metadata, and a wide variety of other questions. Essentially, no one, including any of our users, agrees 100% on the structure of a CSV, especially for attributed, multi-dimensional output. We provide CSV as a convenience, but it is impossible to make any guarantees that semantics and structure of CSV output will be unambiguous to all users. If you want well-defined, strucutred, attributed data, you should make the effort to learn and use NetCDF. It will make your life easier.
+Let me respond to the question with a question. What is CSV defined to be? There is not actual answer to that question. CSV is defined as "Character Separated Values", but aside from that, there's no provision for what character is the separator, what information should be included, how many rows/columns should exist, where to include attributes and metadata, and a wide variety of other questions. Essentially, no one, including any of our users, agrees 100% on the structure of a CSV, especially for attributed, multi-dimensional output. We provide CSV as a convenience, but it is impossible to make any guarantees that semantics and structure of CSV output will be unambiguous to all users. If you want well-defined, structured, attributed data, you should make the effort to learn and use NetCDF. It will make your life easier.
 
