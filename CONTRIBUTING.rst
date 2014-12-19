@@ -56,6 +56,6 @@ Even if you don't program for a living there are plenty of ways to help. Not onl
 - If there are `open bug reports`_, see if you can reproduce the problem and verify that it exists. Having bug reports validated and/or clarified by multiple parties is extremely valuable.
 - Tell us your story. If the PCIC Data Portal has helped your research or project, we would love to hear about it. Write a blog post and/or `send us an e-mail`_.
 
-.. _"help wanted" issues: https://github.com/pacificclimate/climdex.pcic/labels/help%20wanted
-.. _open bug reports: https://github.com/pacificclimate/climdex.pcic/labels/bug
+.. _"help wanted" issues: https://github.com/pacificclimate/pdp/labels/help%20wanted
+.. _open bug reports: https://github.com/pacificclimate/pdp/labels/bug
 .. _send us an e-mail: mailto:hiebert@uvic.ca
