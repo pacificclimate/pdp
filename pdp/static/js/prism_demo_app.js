@@ -5,7 +5,7 @@ $(document).ready(function() {
     loginButton = pdp.init_login('login-div');
     pdp.checkLogin(loginButton);
 
-    getCatalog(function (data) { catalog = data});
+    var catalog;
 
     var selector = document.getElementById("pdp-controls").appendChild(getPRISMControls(pdp.ensemble_name));
     var downloader = document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(false));
@@ -13,24 +13,19 @@ $(document).ready(function() {
     ncwmsLayer = map.getClimateLayer();
     selectionLayer = map.getSelectionLayer();
 
-    
-    function callDownload() {
-        download(type, map, selectionLayer, ncwmsLayer, 'data');
-    }
-    function showDownloadLink() {
-	download(type, map, selectionLayer, ncwmsLayer, 'link');
-    }
-    function callDownloadMetadata() {
-	download('das', map, selectionLayer, ncwmsLayer, 'metadata');
-    }
-    $("#download-timeseries").click(function(){
-        type = $('select[name="data-format"]').val()
-        callDownload();
-    });
-    $("#permalink").click(function(){
-	type = $('select[name="data-format"]').val();
-	showDownloadLink();
-    });
-    $("#metadata").click(callDownloadMetadata);
+    var dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', '', '0:13', ':', ':');
+    dlLink.url_template = '{dl_url}.{ext}?climatology_bounds,{var_}[{trange}][{yrange}][{xrange}]&'; // FIXME: this won't work for aig
+    $('#data-format-selector').change(function(evt) {dlLink.onExtensionChange($(this).val())});
+    ncwmsLayer.events.register('change', dlLink, dlLink.onLayerChange);
+    selectionLayer.events.register('featureadded', dlLink, dlLink.onBoxChange);
+    dlLink.register($('#download-timeseries'), function(node) {node.attr('href', dlLink.getUrl())});
+
+    var mdLink = new RasterDownloadLink($('#download-metadata'), ncwmsLayer, undefined, 'das', '', '0:13', ':', ':');
+    ncwmsLayer.events.register('change', mdLink, mdLink.onLayerChange);
+    selectionLayer.events.register('featureadded', mdLink, mdLink.onBoxChange);
+    mdLink.register($('#download-metadata'), function(node) {node.attr('href', mdLink.getUrl())});
+
+    // FIXME: This needs to have error handling and this is horrible
+    getCatalog(function (data) {catalog = dlLink.catalog = mdLink.catalog = data;});
 
 });

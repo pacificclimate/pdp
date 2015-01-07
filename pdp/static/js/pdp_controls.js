@@ -88,7 +88,8 @@ var getRasterDownloadOptions = function (include_dates_selection) {
         downloadFieldset.appendChild(getDateRange());
     }
     downloadFieldset.appendChild(createRasterFormatOptions());
-    downloadFieldset.appendChild(createDownloadButtons("download-buttons", "download-buttons", {"download-timeseries": "Download", "metadata": "Metadata", "permalink": "Permalink"}));
+    //downloadFieldset.appendChild(createDownloadButtons("download-buttons", "download-buttons", {"download-timeseries": "Download", "metadata": "Metadata", "permalink": "Permalink"}));
+    downloadFieldset.appendChild(createDownloadLink("download-links", undefined, {"download-timeseries": "Download", "download-metadata": "Metadata"}));
     return frag;
 };
 
@@ -114,9 +115,6 @@ function Colorbar(div_id, layer) {
     $('#minimum').css({ position: "absolute", bottom: "-0.5em", right: "20px"});
 
 };
-
-
-
 
 // FIXME: We cannot use layer.params.* for anything if we want the event handling to be order agnostic
 Colorbar.prototype = {
@@ -209,3 +207,89 @@ var round = function(number) {
     return Math.round(number * 100) / 100;
 };
 
+function RasterDownloadLink(element, layer, catalog, ext, var_, trange, yrange, xrange) {
+    this.element = element;
+    this.layer = layer;
+    this.catalog = catalog;
+    this.url_template = '{dl_url}.{ext}?{var_}[{trange}][{yrange}][{xrange}]&';
+    this.dl_url = ''; // Needs the catalog to determine this
+    this.ext = ext;
+    this.var_ = var_;
+    this.trange = trange;
+    this.yrange = yrange;
+    this.xrange = xrange;
+    this.registrants = [];
+};
+RasterDownloadLink.prototype = {
+    constructor: RasterDownloadLink,
+
+    register: function (context, fun) {
+	this.registrants.push({'context': context,
+			       'fun': fun});
+    },
+
+    trigger: function() {
+	this.registrants.forEach(
+	    function(currentValue, index, array) {
+		currentValue.fun(currentValue.context)
+	    }, this);
+    },
+    setXYRange: function(raster_index_bounds) {
+        if (raster_index_bounds.toGeometry().getArea() === 0) {
+            alert("Cannot resolve selection to data grid. Please zoom in and select only within the data region.");
+            return;
+        }
+	this.xrange = raster_index_bounds.left + ':' + raster_index_bounds.right;
+	this.yrange = raster_index_bounds.bottom + ':' + raster_index_bounds.top;
+    },
+
+    // Take the URL template and substitute each of the desired state variables
+    getUrl: function() {
+	var url = this.url_template;
+	var matches = url.match(/{[a-z_]+}/g);
+	matches.forEach(
+	    function(pattern, index, array) {
+		var id = pattern.replace(/[{}]/g, ''); // remove curly braces
+		url = url.replace(pattern, this[id]);
+	    }, this
+	);
+	return url;
+    },
+    onLayerChange: function(lyr_id) {
+        if (lyr_id === undefined) {
+            lyr_id = this.layer.params.LAYERS;
+        }
+	var dst = lyr_id.split('/')[0];
+	this.var_ = lyr_id.split('/')[1];
+	this.dl_url = this.catalog[dst];
+	this.trigger();
+    },
+    onExtensionChange: function(ext) {
+	this.ext = ext;
+	this.trigger();
+    },
+    onBoxChange: function(selection) {
+	var lyr_id = this.layer.params.LAYERS;
+	var raster_proj = getRasterNativeProj(ncwmsCapabilities, lyr_id);
+	var selection_proj = selection.feature.layer.projection;
+	var raster_bnds = getRasterBbox(ncwmsCapabilities, lyr_id);
+
+	var selection_bnds = selection.feature.geometry.bounds.clone().
+            transform(selection_proj, raster_proj);
+	if (! raster_bnds.intersectsBounds(selection_bnds)) {
+            alert('Selection area must intersect the raster area');
+            return;
+	}
+	selection_bnds = intersection(raster_bnds, selection_bnds);
+	var that = this; // save a refernce to the object for the callback scope
+	var callback = function(bnds) {
+	    that.setXYRange(bnds);
+	    that.trigger();
+	};
+	rasterBBoxToIndicies(map, this.layer,
+			     selection_bnds,
+			     raster_proj, undefined, callback);
+    },
+
+    // Register for changes with the ncwms layer, the box selection layer, or the download extension
+};
