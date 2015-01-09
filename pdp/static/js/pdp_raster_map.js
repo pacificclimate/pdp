@@ -49,7 +49,7 @@ function ddsToTimeIndex(data) {
 
 function dasToUnitsSince(data) {
     var s = data.match(/time \{[\s\S]*?\}/gm)[0],
-        reg = /units \"((year|month|day|hour|minute|second)s?) since (\d{4}-\d{1,2}-\d{1,2} [\d:]+)\"/g,
+        reg = /units \"((year|month|day|hour|minute|second)s?) since (\d{4}-\d{1,2}-\d{1,2} ?[\d:]*)\"/g,
         m = reg.exec(s),
         units = m[1],
         dateString = m[3],
