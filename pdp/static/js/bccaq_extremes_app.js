@@ -1,23 +1,28 @@
-// Globals ensemble_name, current_dataset, ncwmsCapabilities
+/*jslint browser: true, devel: true */
+/*global $, jQuery, OpenLayers, pdp, map, init_raster_map, getOLClickHandler, processNcwmsLayerMetadata, getRasterControls, getRasterDownloadOptions, getPlotWindow, download, ddsToTimeIndex*/
+
 "use strict";
 
-var catalog;
-var ncwmsCapabilities;
+// Globals
+var catalog, ensemble_name, current_dataset, ncwmsCapabilities, ncwms;
 
-$(document).ready(function() {
-    var map = init_raster_map();
-    var clickHandler = getOLClickHandler(map);
-    map.events.register('click', map, clickHandler)
+$(document).ready(function () {
+    var map, clickHandler, loginButton, ncwmsLayer, selectionLayer,
+        catalogUrl, request, type;
 
-    var loginButton = pdp.init_login("login-div");
+    map = init_raster_map();
+    clickHandler = getOLClickHandler(map);
+    map.events.register('click', map, clickHandler);
+
+    loginButton = pdp.init_login("login-div");
     pdp.checkLogin(loginButton);
 
-    var ncwmsLayer = map.getClimateLayer();
-    var selectionLayer = map.getSelectionLayer();
+    ncwmsLayer = map.getClimateLayer();
+    selectionLayer = map.getSelectionLayer();
 
-    var catalogUrl = "../catalog/catalog.json";
-    var request = $.ajax(catalogUrl, { dataType: "json"} );
-    request.then(function(data) {
+    catalogUrl = "../catalog/catalog.json";
+    request = $.ajax(catalogUrl, { dataType: "json"});
+    request.then(function (data) {
         catalog = data;
         processNcwmsLayerMetadata(ncwmsLayer);
     });
@@ -30,34 +35,32 @@ $(document).ready(function() {
         download(type, map, selectionLayer, ncwmsLayer, 'data');
     }
     function showDownloadLink() {
-	download(type, map, selectionLayer, ncwmsLayer, 'link');
+        download(type, map, selectionLayer, ncwmsLayer, 'link');
     }
     function callDownloadMetadata() {
-	download('das', map, selectionLayer, ncwmsLayer, 'metadata');
-    };
+        download('das', map, selectionLayer, ncwmsLayer, 'metadata');
+    }
 
     function getTimeIndex(layer_name) {
-        var layerUrl = catalog[layer_name.split('/')[0]];
-        var maxTimeReq = $.ajax({
-            url: (layerUrl + ".dds?time").replace("/data/", "/catalog/")
-        });
-        $.when(maxTimeReq).done (function(maxTime, unitsSince) {
+        var layerUrl = catalog[layer_name.split('/')[0]],
+            maxTimeReq = $.ajax({
+                url: (layerUrl + ".dds?time").replace("/data/", "/catalog/")
+            });
+        $.when(maxTimeReq).done(function (maxTime, unitsSince) {
             var maxTimeIndex = ddsToTimeIndex(maxTime);
             ncwms.max_time_index = maxTimeIndex;
         });
-    };
+    }
 
     ncwms.events.register('change', ncwms, getTimeIndex);
 
-    var type;
-    $("#download-timeseries").click(function(){
+    $("#download-timeseries").click(function () {
         type = $('select[name="data-format"]').val();
         callDownload();
     });
-    $("#permalink").click(function(){
-	type = $('select[name="data-format"]').val();
-	showDownloadLink();
+    $("#permalink").click(function () {
+        type = $('select[name="data-format"]').val();
+        showDownloadLink();
     });
     $("#metadata").click(callDownloadMetadata);
-
 });

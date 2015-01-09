@@ -1,19 +1,23 @@
-// Globals ensemble_name, current_dataset, ncwmsCapabilities
+/*jslint browser: true, devel: true */
+/*global $, jQuery, OpenLayers, pdp, map, init_raster_map, processNcwmsLayerMetadata, getRasterControls, getRasterDownloadOptions, download*/
+
 "use strict";
 
-var catalog;
-var ncwmsCapabilities;
+// Globals
+var ensemble_name, current_dataset, ncwmsCapabilities, catalog;
 
-$(document).ready(function() {
-    var map = init_raster_map();
-    var loginButton = pdp.init_login("login-div");
+$(document).ready(function () {
+    var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, request, type;
+
+    map = init_raster_map();
+    loginButton = pdp.init_login("login-div");
     pdp.checkLogin(loginButton);
 
-    var ncwmsLayer = map.getClimateLayer();
-    var selectionLayer = map.getSelectionLayer();
+    ncwmsLayer = map.getClimateLayer();
+    selectionLayer = map.getSelectionLayer();
 
-    var catalogUrl = "../catalog/catalog.json";
-    var request = $.ajax(catalogUrl, { dataType: "json"} );
+    catalogUrl = "../catalog/catalog.json";
+    request = $.ajax(catalogUrl, {dataType: "json"});
 
     document.getElementById("pdp-controls").appendChild(getRasterControls(pdp.ensemble_name));
     document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(true));
