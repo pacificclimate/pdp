@@ -149,14 +149,14 @@ function intersection(b1, b2) {
     );
 }
 
-var getRasterNativeProj = function (capabilities, layer_name) {
+function getRasterNativeProj(capabilities, layer_name) {
     // Return the dataset native projection as an OL.Projection object
     var bbox = capabilities.find('Layer > Name:contains("' + layer_name + '")').parent().find('BoundingBox')[0],
         srs = bbox.attributes.getNamedItem('SRS');
     return new OpenLayers.Projection(srs.value);
-};
+}
 
-var getRasterBbox = function (capabilities, layer_name) {
+function getRasterBbox(capabilities, layer_name) {
     // The WMS layer doesn't seem to have the bbox of the _data_ available, which I would like to have
     // Pull the geographic bounding box out of the appropriate element
     var bbox = capabilities.find('Layer > Name:contains("' + layer_name + '")').parent().find('LatLonBoundingBox')[0],
@@ -164,9 +164,9 @@ var getRasterBbox = function (capabilities, layer_name) {
     real_bounds.extend(new OpenLayers.LonLat(parseFloat(bbox.attributes.getNamedItem('minx').value), parseFloat(bbox.attributes.getNamedItem('miny').value)));
     real_bounds.extend(new OpenLayers.LonLat(parseFloat(bbox.attributes.getNamedItem('maxx').value), parseFloat(bbox.attributes.getNamedItem('maxy').value)));
     return real_bounds;
-};
+}
 
-var getTimeSelected = function (ncwms_layer) {
+function getTimeSelected(ncwms_layer) {
     //var base = new Date($(".datepickerstart").datepicker("option", "minDate")),
     var t0 = $(".datepickerstart").datepicker("getDate"),
         tn = $(".datepickerend").datepicker("getDate"),
@@ -174,9 +174,9 @@ var getTimeSelected = function (ncwms_layer) {
         t0i = ncwms_layer.times.toIndex(t0),
         tni = ncwms_layer.times.toIndex(tn);
     return [t0i, tni];
-};
+}
 
-var rasterBBoxToIndicies = function (map, layer, bnds, extent_proj, extension, callback) {
+function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension, callback) {
     var ul, lr, ul_px, lr_px,
         indexBounds = new OpenLayers.Bounds();
 
