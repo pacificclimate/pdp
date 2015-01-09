@@ -6,11 +6,11 @@
 // NOTE: variables 'gs_url', 'ncwms_url', 'tilecache_url' is expected to be set before this is call
 // Do this in the sourcing html
 // globals
-var gs_url, ncwms_url, tilecache_url, current_dataset;
+var gs_url, ncwms_url, tilecache_url, current_dataset, ncwms;
 
 function init_prism_map() {
     var selectionLayer, options, mapControls, selLayerName, panelControls,
-        map, defaults, params, datalayerName, ncwms, cb;
+        map, defaults, params, datalayerName, cb;
 
     // Map Config
     options = BC3005_map_options();
