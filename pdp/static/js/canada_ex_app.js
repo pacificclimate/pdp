@@ -1,20 +1,24 @@
-// Globals ensemble_name, current_dataset, ncwmsCapabilities
+/*jslint browser: true, devel: true */
+/*global $, jQuery, OpenLayers, pdp, map, init_raster_map, processNcwmsLayerMetadata, getRasterControls, getRasterDownloadOptions, download*/
+
 "use strict";
 
-var catalog;
-var ncwmsCapabilities;
+// Globals
+var ensemble_name, current_dataset, ncwmsCapabilities, catalog;
 
-$(document).ready(function() {
-    var map = init_raster_map();
-    var loginButton = pdp.init_login("login-div");
+$(document).ready(function () {
+    var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, request, type;
+
+    map = init_raster_map();
+    loginButton = pdp.init_login("login-div");
     pdp.checkLogin(loginButton);
 
-    var ncwmsLayer = map.getClimateLayer();
-    var selectionLayer = map.getSelectionLayer();
+    ncwmsLayer = map.getClimateLayer();
+    selectionLayer = map.getSelectionLayer();
 
-    var catalogUrl = "../catalog/catalog.json";
-    var request = $.ajax(catalogUrl, { dataType: "json"} );
-    request.then(function(data) {
+    catalogUrl = "../catalog/catalog.json";
+    request = $.ajax(catalogUrl, {dataType: "json"});
+    request.then(function (data) {
         catalog = data;
         processNcwmsLayerMetadata(ncwmsLayer);
     });
@@ -26,19 +30,18 @@ $(document).ready(function() {
         download(type, map, selectionLayer, ncwmsLayer, 'data');
     }
     function showDownloadLink() {
-	download(type, map, selectionLayer, ncwmsLayer, 'link');
+        download(type, map, selectionLayer, ncwmsLayer, 'link');
     }
     function callDownloadMetadata() {
-	download('das', map, selectionLayer, ncwmsLayer, 'metadata');
+        download('das', map, selectionLayer, ncwmsLayer, 'metadata');
     }
-    var type;
-    $("#download-timeseries").click(function(){
+    $("#download-timeseries").click(function () {
         type = $('select[name="data-format"]').val();
         callDownload();
     });
-    $("#permalink").click(function(){
-	type = $('select[name="data-format"]').val();
-	showDownloadLink();
+    $("#permalink").click(function () {
+        type = $('select[name="data-format"]').val();
+        showDownloadLink();
     });
     $("#metadata").click(callDownloadMetadata);
 
