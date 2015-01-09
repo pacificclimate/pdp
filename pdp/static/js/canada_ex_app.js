@@ -14,32 +14,30 @@ $(document).ready(function() {
 
     var catalogUrl = "../catalog/catalog.json";
     var request = $.ajax(catalogUrl, { dataType: "json"} );
-    request.then(function(data) {
-        catalog = data;
-        processNcwmsLayerMetadata(ncwmsLayer);
-    });
 
     document.getElementById("pdp-controls").appendChild(getRasterControls(pdp.ensemble_name));
     document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(true));
 
-    function callDownload() {
-        download(type, map, selectionLayer, ncwmsLayer, 'data');
-    }
-    function showDownloadLink() {
-	download(type, map, selectionLayer, ncwmsLayer, 'link');
-    }
-    function callDownloadMetadata() {
-	download('das', map, selectionLayer, ncwmsLayer, 'metadata');
-    }
-    var type;
-    $("#download-timeseries").click(function(){
-        type = $('select[name="data-format"]').val();
-        callDownload();
+    var dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', '', ':', ':', ':');
+    $('#data-format-selector').change(function(evt) {dlLink.onExtensionChange($(this).val())});
+    ncwmsLayer.events.register('change', dlLink, dlLink.onLayerChange);
+    selectionLayer.events.register('featureadded', dlLink, dlLink.onBoxChange);
+    // TODO: register events with changes in the calendar control
+    // $(".datepicker").change(function (evt) {
+    // });
+    dlLink.register($('#download-timeseries'), function(node) {node.attr('href', dlLink.getUrl())});
+    dlLInk.trigger()
+
+    var mdLink = new RasterDownloadLink($('#download-metadata'), ncwmsLayer, undefined, 'das', '', ':', ':', ':');
+    ncwmsLayer.events.register('change', mdLink, mdLink.onLayerChange);
+    selectionLayer.events.register('featureadded', mdLink, mdLink.onBoxChange);
+    // TODO: register events with changes in the calendar control
+    mdLink.register($('#download-metadata'), function(node) {node.attr('href', mdLink.getUrl())});
+    mdLink.trigger()
+
+    request.then(function(data) {
+        catalog = dlLink.catalog = mdLink.catalog = data;
+        processNcwmsLayerMetadata(ncwmsLayer);
     });
-    $("#permalink").click(function(){
-	type = $('select[name="data-format"]').val();
-	showDownloadLink();
-    });
-    $("#metadata").click(callDownloadMetadata);
 
 });
