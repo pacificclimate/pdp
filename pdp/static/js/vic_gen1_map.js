@@ -1,12 +1,15 @@
-// NOTE: variables 'gs_url', 'ncwms_url', 'tilecache_url' is expected to be set before this is call
-// Do this in the sourcing html
+/*jslint browser: true, devel: true */
+/*global $, jQuery, OpenLayers, pdp, Colorbar, BC3005_map_options_vic, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getBC3005Bounds_vic, getNCWMSLayerCapabilities, getBC3005OsmBaseLayer, getOpacitySlider*/
 
-var selectionLayer;
+"use strict";
+
+// globals
 var current_dataset;
-var ncwmsCapabilities;
-var selectionBbox;
 
 function init_vic_map() {
+    var options, mapControls, selLayerName, selectionLayer, panelControls,
+        defaults, map, params, datalayerName, ncwms, cb;
+
     // Map Config
     options = BC3005_map_options_vic();
     options.tileManager = null;
@@ -18,14 +21,14 @@ function init_vic_map() {
     panelControls = getEditingToolbar([getHandNav(), getBoxEditor(selectionLayer)]);
     mapControls.push(panelControls);
 
-    options.controls = mapControls
+    options.controls = mapControls;
     map = new OpenLayers.Map('pdp-map', options);
-    
+
     defaults = {
         dataset: "5var_day_CCSM3_A1B_run1_19500101-20991231",
         variable: "sm"
-    }
-    
+    };
+
     params = {
         layers: defaults.dataset + "/" + defaults.variable,
         transparent: 'true',
@@ -35,8 +38,7 @@ function init_vic_map() {
         srs: 'EPSG:3005'
     };
 
-
-    datalayerName = "Climate raster"
+    datalayerName = "Climate raster";
     ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
         pdp.ncwms_url,
@@ -63,41 +65,41 @@ function init_vic_map() {
     );
 
     document.getElementById("pdp-map").appendChild(getOpacitySlider(ncwms));
-    map.zoomToExtent(new OpenLayers.Bounds(611014.125,251336.4375,2070975.0625,1737664.5625), true);
+    map.zoomToExtent(new OpenLayers.Bounds(611014.125, 251336.4375, 2070975.0625, 1737664.5625), true);
 
-    map.getClimateLayer = function() {
+    map.getClimateLayer = function () {
         return map.getLayersByName(datalayerName)[0];
-    }
-    map.getSelectionLayer = function() {
+    };
+    map.getSelectionLayer = function () {
         return map.getLayersByName(selLayerName)[0];
-    }
+    };
 
-    var cb = new Colorbar("pdpColorbar", ncwms);
+    cb = new Colorbar("pdpColorbar", ncwms);
     cb.refresh_values();
 
-    var set_map_title = function (layer_name) {
+    function set_map_title(layer_name) {
         $('#map-title').html(layer_name);
         return true;
-    };
-    ncwms.events.register('change', ncwms, set_map_title)
+    }
+    ncwms.events.register('change', ncwms, set_map_title);
 
     ncwms.events.registerPriority('change', ncwms, function (layer_id) {
-        var params = {
+        var lyr_params, metadata_req;
+        lyr_params = {
             "id": layer_id.split('/')[0],
             "var": layer_id.split('/')[1]
-        }
-        var metadata_req = $.ajax(
-        {
+        };
+        metadata_req = $.ajax({
             url: "../metadata.json?request=GetMinMaxWithUnits",
-            data: params
+            data: lyr_params
         });
-        metadata_req.done(function(data) {
+        metadata_req.done(function (data) {
             ncwms.redraw(); // this does a layer redraw
-            cb.force_update(data.min, data.max, data.units) // must be called AFTER ncwms params updated
+            cb.force_update(data.min, data.max, data.units); // must be called AFTER ncwms params updated
         });
     });
 
     ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
 
-    return map
-};
+    return map;
+}

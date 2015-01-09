@@ -1,34 +1,40 @@
-//var pcds_map; // global so that it's accessible across documents
-// NOTE: variables 'gs_url' is expected to be set before this is call
-// Do this in the sourcing html
+/*jslint browser: true, devel: true */
+/*global $, jQuery, OpenLayers, pdp, map, na4326_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getNaBaseLayer, getOpacitySlider, Colorbar*/
+
 "use strict";
 
-var current_dataset;
+// globls
+// NOTE: variables 'gs_url' is expected to be set before this is call
+// Do this in the sourcing html
+var current_dataset, pcds_map, gs_url;
 
-var init_raster_map = function() {
+function init_raster_map() {
+    var options, mapControls, selLayerName, selectionLayer, panelControls,
+        map, na_osm, defaults, params,
+        datalayerName, ncwms, cb;
 
     // Map Config
-    var options = na4326_map_options();
+    options = na4326_map_options();
     options.tileManager = null;
 
     // Map Controls
-    var mapControls = getBasicControls();
-    var selLayerName = "Box Selection";
-    var selectionLayer = getBoxLayer(selLayerName);
-    var panelControls = getEditingToolbar([getHandNav(), getBoxEditor(selectionLayer)]);
+    mapControls = getBasicControls();
+    selLayerName = "Box Selection";
+    selectionLayer = getBoxLayer(selLayerName);
+    panelControls = getEditingToolbar([getHandNav(), getBoxEditor(selectionLayer)]);
     mapControls.push(panelControls);
 
     options.controls = mapControls;
-    var map = new OpenLayers.Map("pdp-map", options);
+    map = new OpenLayers.Map("pdp-map", options);
 
-    var na_osm = getNaBaseLayer(pdp.tilecache_url, 'North America OpenStreetMap', 'world_4326_osm', mapControls.projection)
+    na_osm = getNaBaseLayer(pdp.tilecache_url, 'North America OpenStreetMap', 'world_4326_osm', mapControls.projection);
 
-    var defaults = {
+    defaults = {
         dataset: "pr-tasmax-tasmin_day_BCSD-ANUSPLIN300-CanESM2_historical-rcp26_r1i1p1_19500101-21001231",
         variable: "tasmax"
     };
-    
-    var params = {
+
+    params = {
         layers: defaults.dataset + "/" + defaults.variable,
         transparent: "true",
         styles: "boxfill/ferret",
@@ -41,8 +47,8 @@ var init_raster_map = function() {
         logscale: false
     };
 
-    var datalayerName = "Climate raster";
-    var ncwms =  new OpenLayers.Layer.WMS(
+    datalayerName = "Climate raster";
+    ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
         pdp.ncwms_url,
         params,
@@ -60,7 +66,7 @@ var init_raster_map = function() {
 
     function customize_wms_params(layer_name) {
         var varname = layer_name.split('/')[1];
-        if (varname == 'pr') {
+        if (varname === 'pr') {
             this.params.LOGSCALE = false;
             this.params.STYLES = 'boxfill/occam_inv';
             this.params.BELOWMINCOLOR = 'transparent';
@@ -70,11 +76,10 @@ var init_raster_map = function() {
             this.params.STYLES = 'boxfill/ferret';
             this.params.COLORSCALERANGE = '-50,11';
         }
-    };
+    }
     ncwms.events.register('change', ncwms, customize_wms_params);
 
-    (function(globals){
-        "use strict"
+    (function (globals) {
         globals.ncwms = ncwms;
     }(window));
 
@@ -89,49 +94,50 @@ var init_raster_map = function() {
     document.getElementById("pdp-map").appendChild(getOpacitySlider(ncwms));
     map.zoomToMaxExtent();
 
-    map.getClimateLayer = function() {
+    map.getClimateLayer = function () {
         return map.getLayersByName(datalayerName)[0];
     };
 
-    map.getSelectionLayer = function() {
+    map.getSelectionLayer = function () {
         return map.getLayersByName(selLayerName)[0];
     };
 
-    var cb = new Colorbar("pdpColorbar", ncwms);
+    cb = new Colorbar("pdpColorbar", ncwms);
     cb.refresh_values();
 
-    var set_map_title = function (layer_name) {
+    function set_map_title(layer_name) {
         // 'this' must be bound to the ncwms layer object
-        var d = new Date(this.params.TIME);
-        if( layer_name.match(/_yr_/) ) { // is yearly
-            var date = d.getFullYear();
+        var d = new Date(this.params.TIME), date;
+        if (layer_name.match(/_yr_/)) { // is yearly
+            date = d.getFullYear();
         } else {
-            var date = d.getFullYear() + '/' + (d.getMonth() + 1);
+            date = d.getFullYear() + '/' + (d.getMonth() + 1);
         }
         $('#map-title').html(layer_name + '<br />' + date);
 
         return true;
-    };
-    ncwms.events.register('change', ncwms, set_map_title)
+    }
+    ncwms.events.register('change', ncwms, set_map_title);
 
     ncwms.events.registerPriority('change', ncwms, function (layer_id) {
-        var params = {
+        var lyr_params, metadata_req;
+
+        lyr_params = {
             "id": layer_id.split('/')[0],
             "var": layer_id.split('/')[1]
-        }
-        var metadata_req = $.ajax(
-        {
+        };
+        metadata_req = $.ajax({
             url: "../metadata.json?request=GetMinMaxWithUnits",
-            data: params
+            data: lyr_params
         });
-        metadata_req.done(function(data) {
+        metadata_req.done(function (data) {
             var new_params = customize_wms_params.call(ncwms, layer_id);
             ncwms.mergeNewParams(new_params); // this does a layer redraw
-            cb.force_update(data.min, data.max, data.units) // must be called AFTER ncwms params updated
+            cb.force_update(data.min, data.max, data.units); // must be called AFTER ncwms params updated
         });
     });
 
     ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
 
     return map;
-};
+}
