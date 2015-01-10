@@ -1,8 +1,12 @@
-/*global pdp, document, $, jquery, OpenLayers, selectionBbox
+/*global pdp, document, $, jquery, OpenLayers
 */
 /*debug true*/
 
 "use strict";
+
+// globals
+var selectionBbox;
+
 // Set standard map properties
 function getProjection(projnum) {
     return new OpenLayers.Projection("EPSG:" + projnum);

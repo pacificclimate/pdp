@@ -253,8 +253,9 @@ RasterDownloadLink.prototype = {
 
     // Take the URL template and substitute each of the desired state variables
     getUrl: function() {
-	var url = this.url_template;
-	var matches = url.match(/{[a-z_]+}/g);
+	var url, matches;
+	url = this.url_template;
+	matches = url.match(/{[a-z_]+}/g);
 	matches.forEach(
 	    function(pattern, index, array) {
 		var id = pattern.replace(/[{}]/g, ''); // remove curly braces
@@ -264,10 +265,11 @@ RasterDownloadLink.prototype = {
 	return url;
     },
     onLayerChange: function(lyr_id) {
+	var dst;
         if (lyr_id === undefined) {
             lyr_id = this.layer.params.LAYERS;
         }
-	var dst = lyr_id.split('/')[0];
+	dst = lyr_id.split('/')[0];
 	this.var_ = lyr_id.split('/')[1];
 	this.dl_url = this.catalog[dst];
 	this.trigger();
@@ -277,24 +279,27 @@ RasterDownloadLink.prototype = {
 	this.trigger();
     },
     onBoxChange: function(selection) {
-	var lyr_id = this.layer.params.LAYERS;
-	var raster_proj = getRasterNativeProj(ncwmsCapabilities, lyr_id);
-	var selection_proj = selection.feature.layer.projection;
-	var raster_bnds = getRasterBbox(ncwmsCapabilities, lyr_id);
+	var lyr_id, raster_proj, selection_proj,
+            raster_bnds, selection_bnds, that;
+	lyr_id = this.layer.params.LAYERS;
+	raster_proj = getRasterNativeProj(ncwmsCapabilities, lyr_id);
+	selection_proj = selection.feature.layer.projection;
+	raster_bnds = getRasterBbox(ncwmsCapabilities, lyr_id);
 
-	var selection_bnds = selection.feature.geometry.bounds.clone().
+	selection_bnds = selection.feature.geometry.bounds.clone().
             transform(selection_proj, raster_proj);
 	if (! raster_bnds.intersectsBounds(selection_bnds)) {
             alert('Selection area must intersect the raster area');
             return;
 	}
 	selection_bnds = intersection(raster_bnds, selection_bnds);
-	var that = this; // save a refernce to the object for the callback scope
-	var callback = function(bnds) {
+
+	that = this; // save a refernce to the object for the callback scope
+	function callback(bnds) {
 	    that.setXYRange(bnds);
 	    that.trigger();
 	};
-	rasterBBoxToIndicies(map, this.layer,
+	rasterBBoxToIndicies(this.layer.map, this.layer,
 			     selection_bnds,
 			     raster_proj, undefined, callback);
     },
