@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, pdp, init_prism_map, download, getCatalog, getPRISMControls, getRasterDownloadOptions, RasterDownloadLink*/
+/*global $, jQuery, pdp, init_prism_map, getCatalog, getPRISMControls, getRasterDownloadOptions, RasterDownloadLink*/
 
 "use strict";
 
@@ -19,32 +19,35 @@ $(document).ready(function () {
     ncwmsLayer = map.getClimateLayer();
     selectionLayer = map.getSelectionLayer();
 
-    // Ensure that climatology_bounds are included in non-aig downloads
+    // Ensure that climatology_bounds are included in non-aig data downloads
     function setBoundsInUrlTemplate() {
-        if (this.ext === 'aig') {
-            this.url_template = '{dl_url}.{ext}?{var_}[{trange}][{yrange}][{xrange}]&';
+        if (dlLink.ext === 'aig') {
+            dlLink.url_template = '{dl_url}.{ext}?{varname}[{trange}][{yrange}][{xrange}]&';
         } else {
-            this.url_template = '{dl_url}.{ext}?climatology_bounds,{var_}[{trange}][{yrange}][{xrange}]&';
+            dlLink.url_template = '{dl_url}.{ext}?climatology_bounds,{varname}[{trange}][{yrange}][{xrange}]&';
         }
+        dlLink.trigger();
     }
 
-    dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', '', '0:13', ':', ':');
+    // Data Download Link
+    dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', 'pr', '0:13', '0:1680', '0:3241');
     $('#data-format-selector').change(
         function (evt) {
             dlLink.onExtensionChange($(this).val());
         }
-    );
+    ).change(setBoundsInUrlTemplate);
     ncwmsLayer.events.register('change', dlLink, dlLink.onLayerChange);
-    ncwmsLayer.events.register('change', dlLink, setBoundsInUrlTemplate);
     selectionLayer.events.register('featureadded', dlLink, dlLink.onBoxChange);
     dlLink.register($('#download-timeseries'), function (node) {
         node.attr('href', dlLink.getUrl());
     }
                    );
+    setBoundsInUrlTemplate();
     dlLink.trigger();
 
-    mdLink = new RasterDownloadLink($('#download-metadata'), ncwmsLayer, undefined, 'das', '', '0:13', ':', ':');
-    mdLink.url_template = '{dl_url}.das?climatology_bounds,{var_}[{trange}][{yrange}][{xrange}]&';
+    // Metadata/Attributes Download Link
+    mdLink = new RasterDownloadLink($('#download-metadata'), ncwmsLayer, undefined, 'das', 'pr', '0:13', '0:1680', '0:3241');
+    mdLink.url_template = '{dl_url}.das?climatology_bounds,{varname}[{trange}][{yrange}][{xrange}]&';
     ncwmsLayer.events.register('change', mdLink, mdLink.onLayerChange);
     selectionLayer.events.register('featureadded', mdLink, mdLink.onBoxChange);
     mdLink.register($('#download-metadata'), function (node) {
@@ -57,6 +60,9 @@ $(document).ready(function () {
     getCatalog(
         function (data) {
             catalog = dlLink.catalog = mdLink.catalog = data;
+            // Set the data URL as soon as it is available
+            dlLink.onLayerChange();
+            mdLink.onLayerChange();
         }
     );
 
