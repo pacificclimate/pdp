@@ -1,9 +1,9 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery */
+/*global $, jQuery, processNcwmsLayerMetadata, createRasterFormatOptions, createDownloadLink, getRasterNativeProj, ncwmsCapabilities, getRasterBbox, rasterBBoxToIndicies, intersection*/
 "use strict";
 
 // globals
-var pdp, ncwms, current_dataset, processNcwmsLayerMetadata, createRasterFormatOptions, createDownloadLink, getRasterNativeProj, ncwmsCapabilities, getRasterBbox, map;
+var pdp, ncwms, current_dataset, map;
 
 function getDateRange() {
     var rangeDiv = pdp.createDiv("date-range");
@@ -215,93 +215,96 @@ Colorbar.prototype = {
 };
 
 
-function RasterDownloadLink(element, layer, catalog, ext, var_, trange, yrange, xrange) {
+function RasterDownloadLink(element, layer, catalog, ext, varname, trange, yrange, xrange) {
     this.element = element;
     this.layer = layer;
     this.catalog = catalog;
-    this.url_template = '{dl_url}.{ext}?{var_}[{trange}][{yrange}][{xrange}]&';
+    this.url_template = '{dl_url}.{ext}?{varname}[{trange}][{yrange}][{xrange}]&';
     this.dl_url = ''; // Needs the catalog to determine this
     this.ext = ext;
-    this.var_ = var_;
+    this.varname = varname;
     this.trange = trange;
     this.yrange = yrange;
     this.xrange = xrange;
     this.registrants = [];
-};
+}
 RasterDownloadLink.prototype = {
     constructor: RasterDownloadLink,
 
     register: function (context, fun) {
-	this.registrants.push({'context': context,
-			       'fun': fun});
+        this.registrants.push({'context': context,
+                               'fun': fun});
     },
 
-    trigger: function() {
-	this.registrants.forEach(
-	    function(currentValue, index, array) {
-		currentValue.fun(currentValue.context)
-	    }, this);
+    trigger: function () {
+        this.registrants.forEach(
+            function (currentValue, index, array) {
+                currentValue.fun(currentValue.context);
+            },
+            this
+        );
     },
-    setXYRange: function(raster_index_bounds) {
+    setXYRange: function (raster_index_bounds) {
         if (raster_index_bounds.toGeometry().getArea() === 0) {
             alert("Cannot resolve selection to data grid. Please zoom in and select only within the data region.");
             return;
         }
-	this.xrange = raster_index_bounds.left + ':' + raster_index_bounds.right;
-	this.yrange = raster_index_bounds.bottom + ':' + raster_index_bounds.top;
+        this.xrange = raster_index_bounds.left + ':' + raster_index_bounds.right;
+        this.yrange = raster_index_bounds.bottom + ':' + raster_index_bounds.top;
     },
 
     // Take the URL template and substitute each of the desired state variables
-    getUrl: function() {
-	var url, matches;
-	url = this.url_template;
-	matches = url.match(/{[a-z_]+}/g);
-	matches.forEach(
-	    function(pattern, index, array) {
-		var id = pattern.replace(/[{}]/g, ''); // remove curly braces
-		url = url.replace(pattern, this[id]);
-	    }, this
-	);
-	return url;
+    getUrl: function () {
+        var url, matches;
+        url = this.url_template;
+        matches = url.match(/\{[a-z_]+\}/g);
+        matches.forEach(
+            function (pattern, index, array) {
+                var id = pattern.replace(/[{}]/g, ''); // remove curly braces
+                url = url.replace(pattern, this[id]);
+            },
+            this
+        );
+        return url;
     },
-    onLayerChange: function(lyr_id) {
-	var dst;
+    onLayerChange: function (lyr_id) {
+        var dst;
         if (lyr_id === undefined) {
             lyr_id = this.layer.params.LAYERS;
         }
-	dst = lyr_id.split('/')[0];
-	this.var_ = lyr_id.split('/')[1];
-	this.dl_url = this.catalog[dst];
-	this.trigger();
+        dst = lyr_id.split('/')[0];
+        this.varname = lyr_id.split('/')[1];
+        this.dl_url = this.catalog[dst];
+        this.trigger();
     },
-    onExtensionChange: function(ext) {
-	this.ext = ext;
-	this.trigger();
+    onExtensionChange: function (ext) {
+        this.ext = ext;
+        this.trigger();
     },
-    onBoxChange: function(selection) {
-	var lyr_id, raster_proj, selection_proj,
+    onBoxChange: function (selection) {
+        var lyr_id, raster_proj, selection_proj,
             raster_bnds, selection_bnds, that;
-	lyr_id = this.layer.params.LAYERS;
-	raster_proj = getRasterNativeProj(ncwmsCapabilities, lyr_id);
-	selection_proj = selection.feature.layer.projection;
-	raster_bnds = getRasterBbox(ncwmsCapabilities, lyr_id);
+        lyr_id = this.layer.params.LAYERS;
+        raster_proj = getRasterNativeProj(ncwmsCapabilities, lyr_id);
+        selection_proj = selection.feature.layer.projection;
+        raster_bnds = getRasterBbox(ncwmsCapabilities, lyr_id);
 
-	selection_bnds = selection.feature.geometry.bounds.clone().
+        selection_bnds = selection.feature.geometry.bounds.clone().
             transform(selection_proj, raster_proj);
-	if (! raster_bnds.intersectsBounds(selection_bnds)) {
+        if (!raster_bnds.intersectsBounds(selection_bnds)) {
             alert('Selection area must intersect the raster area');
             return;
-	}
-	selection_bnds = intersection(raster_bnds, selection_bnds);
+        }
+        selection_bnds = intersection(raster_bnds, selection_bnds);
 
-	that = this; // save a refernce to the object for the callback scope
-	function callback(bnds) {
-	    that.setXYRange(bnds);
-	    that.trigger();
-	};
-	rasterBBoxToIndicies(this.layer.map, this.layer,
-			     selection_bnds,
-			     raster_proj, undefined, callback);
+        that = this; // save a refernce to the object for the callback scope
+        function callback(bnds) {
+            that.setXYRange(bnds);
+            that.trigger();
+        }
+        rasterBBoxToIndicies(this.layer.map, this.layer,
+                             selection_bnds,
+                             raster_proj, undefined, callback);
     },
 
     // Register for changes with the ncwms layer, the box selection layer, or the download extension
