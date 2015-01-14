@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, processNcwmsLayerMetadata, createRasterFormatOptions, createDownloadLink, getRasterNativeProj, ncwmsCapabilities, getRasterBbox, rasterBBoxToIndicies, intersection*/
+/*global $, jQuery, processNcwmsLayerMetadata, createRasterFormatOptions, createDownloadLink, getRasterNativeProj, ncwmsCapabilities, getRasterBbox, rasterBBoxToIndicies, intersection, getTimeSelected*/
 "use strict";
 
 // globals
@@ -297,7 +297,7 @@ RasterDownloadLink.prototype = {
         }
         selection_bnds = intersection(raster_bnds, selection_bnds);
 
-        that = this; // save a refernce to the object for the callback scope
+        that = this; // save a reference to the object for the callback scope
         function callback(bnds) {
             that.setXYRange(bnds);
             that.trigger();
@@ -306,6 +306,17 @@ RasterDownloadLink.prototype = {
                              selection_bnds,
                              raster_proj, undefined, callback);
     },
+    onTimeChange: function () {
+        var start, end;
+
+        start = $(".datepickerstart").datepicker("getDate");
+        start = this.layer.times.toIndex(start);
+        end = $(".datepickerend").datepicker("getDate");
+        end = this.layer.times.toIndex(end);
+
+        this.trange = start + ':' + end;
+        this.trigger();
+    }
 
     // Register for changes with the ncwms layer, the box selection layer, or the download extension
 };
