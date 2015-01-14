@@ -4,19 +4,17 @@
 "use strict";
 
 function createClearSelectionButton() {
-    var container, button;
-    container = pdp.createDiv();
+    var button;
     button = pdp.createInputElement("button", undefined, "reset", "reset", "Reset Selection");
     button.appendChild(document.createTextNode(" "));
     $(button).click(function () {
         map.unselectAll();
     });
-    container.appendChild(button);
-    return container;
+    return button;
 }
 
 function getHydroStnControls() {
-    var frag, div, form, fieldset, sBox, selection, clear;
+    var frag, div, form, fieldset, sBox, selection, clear, container, permalink;
 
     frag = document.createDocumentFragment();
 
@@ -51,22 +49,37 @@ function getHydroStnControls() {
     selection = pdp.createDiv('selectedStations', '');
     fieldset.appendChild(selection);
 
+    container = pdp.createDiv();
+
     clear = createClearSelectionButton();
-    fieldset.appendChild(clear);
+    container.appendChild(clear);
+
+    container.appendChild(document.createTextNode(" "));
+
+    permalink = pdp.createInputElement("button", undefined, "permalink", "permalink", "Permalink");
+    container.appendChild(permalink);
+
+    fieldset.appendChild(container);
 
     return frag;
 }
 
 // Add an item from the Selection sidebar
 function addToSidebar(idx, dataArray) {
-    var item, close;
+    var item, close, link;
     item = pdp.createDiv('stnNo' + idx, '');
     close = item.appendChild(pdp.createDiv('', 'stn_remove'));
     close.textContent = "[X]";
     $(close).click(function () {
         map.toggleSelectFeatureByFid(idx);
     });
-    item.appendChild(document.createTextNode(dataArray[idx].StationName));
+
+    link = document.createElement('a');
+    link.href = "../data/" + dataArray[idx].FileName + '.ascii';
+    link.text = dataArray[idx].StationName;
+
+    item.appendChild(link);
+
     $('#selectedStations').append(item);
 }
 
@@ -80,24 +93,4 @@ function createSearchBox(id, cssClass, data, select_callback) {
     var sbox = pdp.createInputElement("text", cssClass, id, id, '');
     sbox.placeholder = "Station Name or ID";
     return sbox;
-}
-
-function createFormatOptions() {
-    var formatData = {
-        ascii: pdp.mkOpt('CSV/ASCII', 'CSV/ASCII response will return an OPeNDAP plain-text response which is a human readable array notation. For weather station data, the format normally consists of a sequence of fields separated by a comma and a space (e.g. " ,")'),
-    };
-
-    return pdp.getSelectorWithHelp('Output Format', 'data-format', 'data-format', 'data-format-selector', 'csv', formatData, 'View output format descriptions', 450, 450);
-}
-
-function getDownloadOptions() {
-    var frag, div, downloadForm, downloadFieldset;
-
-    frag = document.createDocumentFragment();
-    div = frag.appendChild(pdp.createDiv('', 'control'));
-    downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get"));
-    downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
-    downloadFieldset.appendChild(createFormatOptions());
-    downloadFieldset.appendChild(createDownloadButtons("download-buttons", "download-buttons", {"download": "Download", "permalink": "Permalink"}));
-    return frag;
 }
