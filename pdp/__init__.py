@@ -28,7 +28,7 @@ from pdp.minify import wrap_mini
 here = os.getcwd()
 
 dsn = 'postgresql://httpd_meta@atlas.pcic/pcic_meta'
-pcds_dsn = 'postgresql://httpd@atlas.pcic/crmp?application_name=pcds'
+pcds_dsn = 'postgresql://httpd@atlas.pcic/crmp'
 
 global_config = {
     'app_root': 'http://medusa.pcic.uvic.ca/dataportal',
