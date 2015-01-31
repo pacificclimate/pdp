@@ -28,6 +28,7 @@ def test_am_authorized(pcic_data_portal, authorized_session_id):
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
 
+@pytest.mark.crmpdb
 @pytest.mark.parametrize(('url', 'title', 'body_strings'), [
                          ('/data/pcds/lister/', 'PCDS Data', ["Climatological calculations", "raw/"]),
                          ('/data/pcds/lister/raw/', "Participating CRMP Networks", ["FLNRO-WMB/", "Environment Canada (Canadian Daily Climate Data 2007)"]),
@@ -55,6 +56,7 @@ def test_unsupported_extension(pcic_data_portal, authorized_session_id):
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '400 Bad Request'
 
+@pytest.mark.crmpdb
 @pytest.mark.parametrize('ext', ['ascii', 'csv'])
 def test_ascii_response(pcic_data_portal, authorized_session_id, ext):
     req = Request.blank('/data/pcds/lister/climo/EC/1010066.csql.{0}?station_observations.Precip_Climatology,station_observations.time'.format(ext))
@@ -78,6 +80,7 @@ Precip_Climatology, time
 '''
     assert resp.body == x
 
+@pytest.mark.crmpdb
 def test_xls_response(pcic_data_portal, authorized_session_id):
     req = Request.blank('/data/pcds/lister/climo/EC/1010066.csql.xls?station_observations.Precip_Climatology,station_observations.time')
     req.cookies['beaker.session.id'] = authorized_session_id
@@ -94,6 +97,7 @@ def test_xls_response(pcic_data_portal, authorized_session_id):
     assert attributes.cell_value(1, 2) == '1010066' # station_id
     assert attributes.cell_value(7, 2) == 'ACTIVE PASS' # station name
 
+@pytest.mark.crmpdb
 def test_nc_response(pcic_data_portal, authorized_session_id):
     req = Request.blank('/data/pcds/lister/climo/EC/1010066.csql.nc?station_observations.Precip_Climatology,station_observations.time')
     req.cookies['beaker.session.id'] = authorized_session_id
@@ -117,6 +121,7 @@ def test_nc_response(pcic_data_portal, authorized_session_id):
     nc.close()
     os.remove(f.name)
 
+@pytest.mark.crmpdb
 def test_nc_response_with_null_values(pcic_data_portal, authorized_session_id):
     req = Request.blank('/data/pcds/lister/raw/BCH/AKI.rsql.nc')
     req.cookies['beaker.session.id'] = authorized_session_id
@@ -124,6 +129,7 @@ def test_nc_response_with_null_values(pcic_data_portal, authorized_session_id):
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/x-netcdf'
 
+@pytest.mark.crmpdb
 def test_clip_to_date_one(pcic_data_portal, authorized_session_id):
     base_url = '/data/pcds/agg/?'
     sdate, edate = datetime(2007, 01, 01), None
@@ -172,6 +178,7 @@ def test_clip_to_date_one(pcic_data_portal, authorized_session_id):
 #     resp = req.get_response(pcic_data_portal)
 #     assert resp.status == '200 OK'
 
+@pytest.mark.crmpdb
 @pytest.mark.parametrize(('filters', 'expected'), [
     ({'network-name': 'EC_raw'}, 4),
     ({'from-date': '2000/01/01', 'to-date': '2000/01/31'}, 14),
@@ -193,6 +200,7 @@ def test_station_counts(filters, expected, pcic_data_portal):
     # data = json.loads(resp.body)
     # assert data['stations_selected'] == expected
 
+@pytest.mark.crmpdb
 @pytest.mark.parametrize('filters', [
     {'network-name': 'EC_raw'},
     {'from-date': '2000/01/01', 'to-date': '2000/01/31'},
@@ -209,6 +217,7 @@ def test_record_length(filters, pcic_data_portal):
     assert 'stations_selected' in resp.body
 
 
+@pytest.mark.crmpdb
 @pytest.mark.parametrize(('network', 'color'), [
     ('flnro-wmb.png', (12, 102, 0)), # Forest Green
     ('bch.png', (0, 16, 165)), # Blue
@@ -234,6 +243,7 @@ def test_legend(network, color, pcic_data_portal):
     assert average == color
     os.remove(f.name)
     
+@pytest.mark.crmpdb
 def test_legend_caching(pcic_data_portal):
     url = '/pcds/images/legend/flnro-wmb.png'
     
@@ -296,6 +306,7 @@ def test_climatology_bounds(pcic_data_portal, authorized_session_id):
     nc.close()
     os.remove(f.name)
 
+@pytest.mark.bulk_data
 @pytest.mark.parametrize('url', [
     '/data/downscaled_gcms/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.aig?tasmax[0:30][77:138][129:238]&', # has NODATA values
     '/data/downscaled_gcms/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.aig?tasmax[0:30][144:236][307:348]&',
