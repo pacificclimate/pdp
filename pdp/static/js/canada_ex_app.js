@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, pdp, map, init_raster_map, processNcwmsLayerMetadata, getRasterControls, getRasterDownloadOptions, download*/
+/*global $, jQuery, OpenLayers, pdp, map, init_raster_map, processNcwmsLayerMetadata, getRasterControls, getRasterDownloadOptions, RasterDownloadLink*/
 
 "use strict";
 
@@ -7,7 +7,7 @@
 var ensemble_name, current_dataset, ncwmsCapabilities, catalog;
 
 $(document).ready(function () {
-    var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, request, type;
+    var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, request, dlLink, mdLink;
 
     map = init_raster_map();
     loginButton = pdp.init_login("login-div");
@@ -18,31 +18,50 @@ $(document).ready(function () {
 
     catalogUrl = "../catalog/catalog.json";
     request = $.ajax(catalogUrl, {dataType: "json"});
-    request.then(function (data) {
-        catalog = data;
-        processNcwmsLayerMetadata(ncwmsLayer);
-    });
 
     document.getElementById("pdp-controls").appendChild(getRasterControls(pdp.ensemble_name));
     document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(true));
 
-    function callDownload() {
-        download(type, map, selectionLayer, ncwmsLayer, 'data');
+    // Data Download Link
+    dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', 'tasmax', '0:55152', '0:510', '0:1068');
+    $('#data-format-selector').change(
+        function (evt) {
+            dlLink.onExtensionChange($(this).val());
+        }
+    );
+    ncwmsLayer.events.register('change', dlLink, dlLink.onLayerChange);
+    selectionLayer.events.register('featureadded', dlLink, dlLink.onBoxChange);
+    dlLink.register($('#download-timeseries'), function (node) {
+        node.attr('href', dlLink.getUrl());
     }
-    function showDownloadLink() {
-        download(type, map, selectionLayer, ncwmsLayer, 'link');
+                   );
+    dlLink.trigger();
+
+    // Metadata/Attributes Download Link
+    mdLink = new RasterDownloadLink($('#download-metadata'), ncwmsLayer, undefined, 'das', 'tasmax', '0:55152', '0:510', '0:1068');
+    ncwmsLayer.events.register('change', mdLink, mdLink.onLayerChange);
+    selectionLayer.events.register('featureadded', mdLink, mdLink.onBoxChange);
+    mdLink.register($('#download-metadata'), function (node) {
+        node.attr('href', mdLink.getUrl());
     }
-    function callDownloadMetadata() {
-        download('das', map, selectionLayer, ncwmsLayer, 'metadata');
-    }
-    $("#download-timeseries").click(function () {
-        type = $('select[name="data-format"]').val();
-        callDownload();
+                   );
+    mdLink.trigger();
+
+    // Date picker event for both links
+    $("[class^='datepicker']").change(
+        function (evt) {
+            dlLink.onTimeChange();
+            mdLink.onTimeChange();
+        }
+    );
+
+
+    request.then(function (data) {
+        catalog = dlLink.catalog = mdLink.catalog = data;
+        processNcwmsLayerMetadata(ncwmsLayer);
+        // Set the data URL as soon as it is available
+        dlLink.onLayerChange();
+        mdLink.onLayerChange();
     });
-    $("#permalink").click(function () {
-        type = $('select[name="data-format"]').val();
-        showDownloadLink();
-    });
-    $("#metadata").click(callDownloadMetadata);
 
 });

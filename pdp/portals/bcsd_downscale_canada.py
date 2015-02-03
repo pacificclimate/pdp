@@ -26,7 +26,6 @@ def portal(dsn, global_config):
         'js_files' :
             wrap_mini([
                 'js/canada_ex_map.js',
-                'js/canada_ex_controls.js',
                 'js/canada_ex_app.js'],
                 basename='downscaled_gcms', debug=False
             )

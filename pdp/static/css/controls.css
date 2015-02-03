@@ -144,3 +144,11 @@ span.helplink {
 span.helplink a {
     text-decoration: none;
 }
+
+#download-links {
+    text-align: center;
+}
+
+#download-links a {
+    margin: 5px;
+}

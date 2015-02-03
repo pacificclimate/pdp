@@ -38,6 +38,15 @@ function createDownloadButtons(id, divClass, buttons) {
     return downloadDiv;
 }
 
+function createDownloadLink(id, divClass, links) {
+    var downloadDiv = pdp.createDiv(id);
+    downloadDiv.className = divClass;
+    $.each(links, function(idx, val) {
+	downloadDiv.appendChild(pdp.createLink(idx, "", "", val, "name"));
+    });
+    return downloadDiv;
+};
+
 function getCatalog(callback) {
     $.ajax({'url': '../catalog/' + 'catalog.json',
         'type': 'GET',

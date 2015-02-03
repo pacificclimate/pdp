@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, pdp, init_hydro_stn_map, getHydroStnControls, getDownloadOptions, addToSidebar, removeFromSidebar, download_single, show_permalinks*/
+/*global $, jQuery, OpenLayers, pdp, init_hydro_stn_map, getHydroStnControls, addToSidebar, removeFromSidebar, show_permalinks*/
 
 "use strict";
 
@@ -16,7 +16,6 @@ $(document).ready(function () {
 
     controls = getHydroStnControls();
     document.getElementById("pdp-controls").appendChild(controls);
-    document.getElementById("pdp-controls").appendChild(getDownloadOptions());
 
     function selection_callback(event, ui) {
         map.toggleSelectFeatureByFid(ui.item.value);
@@ -75,27 +74,13 @@ $(document).ready(function () {
         );
     });
 
-    $("#download").click(function () {
-        var extension, fids, i;
-
-        extension = $('select[name="data-format"]').val();
-        fids = map.getSelectedFids();
-        if (fids.length > 6) {
-            alert("Sorry, we can only download up to 6 stations at once. Please select 6 or fewer stations and try again");
-            return;
-        }
-        for (i = fids.length - 1; i >= 0; i -= 1) {
-            download_single(dataArray[fids[i]].url, extension);
-        }
-    });
     $("#permalink").click(function () {
-        var extension, fids, url_list;
-        extension = $('select[name="data-format"]').val();
+        var fids, url_list;
         fids = map.getSelectedFids();
 
         url_list = $.map(fids, function (fid) {
             return dataArray[fid].url;
         });
-        show_permalinks(url_list, extension);
+        show_permalinks(url_list, 'ascii');
     });
 });
