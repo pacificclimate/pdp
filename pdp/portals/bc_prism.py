@@ -3,26 +3,17 @@
 
 from pdp import wrap_auth
 from pdp.dispatch import PathDispatcher
-from pdp_util import session_scope
 from pdp_util.map import MapApp
-from pdp_util.raster import RasterServer, RasterCatalog, RasterMetadata, db_raster_configurator
+from pdp_util.raster import RasterServer, RasterCatalog, RasterMetadata
 from pdp_util.ensemble_members import EnsembleMemberLister
 
 from pdp.minify import wrap_mini
-from pdp.portals import updateConfig
+from pdp.portals import updateConfig, raster_conf
 
 class PrismEnsembleLister(EnsembleMemberLister):
     def list_stuff(self, ensemble):
         for dfv in ensemble.data_file_variables:
             yield dfv.file.run.model.short_name, dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
-
-def raster_conf(dsn, global_config, ensemble_name):
-    with session_scope(dsn) as sesh:
-        conf = db_raster_configurator(sesh, "Download Data", 0.1, 0, ensemble_name,
-            root_url=global_config['app_root'].rstrip('/') + '/' +
-             'data/' + ensemble_name + '/'
-        )
-    return conf
 
 def data_server(dsn, global_config, ensemble_name):
     conf = raster_conf(dsn, global_config, ensemble_name)

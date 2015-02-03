@@ -112,6 +112,7 @@ from portals.bc_prism import data_server as bc_prism_data_server
 
 from portals.hydro_stn import portal as hydro_stn
 from portals.bcsd_downscale_canada import portal as bcsd_canada
+from portals.bcsd_downscale_canada import data_server as bcsd_canada_data_server
 
 from portals.bccaq_extremes import portal as bccaq_extremes
 
@@ -119,6 +120,7 @@ from portals.vic_gen1 import portal as vic_gen1
 
 data = PathDispatcher([
     ('^/bc_prism/.*$', bc_prism_data_server(dsn, global_config, 'bc_prism')),
+    ('^/downscaled_gcms/.*$', bcsd_canada_data_server(dsn, global_config, 'bcsd_downscale_canada')),
     ])
 
 auth = PathDispatcher([
