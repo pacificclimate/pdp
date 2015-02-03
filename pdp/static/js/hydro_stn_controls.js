@@ -18,6 +18,7 @@ function getHydroStnControls() {
 
     frag = document.createDocumentFragment();
 
+    // Create search box control/form
     div = pdp.createDiv('', 'control');
     frag.appendChild(div);
 
@@ -25,12 +26,12 @@ function getHydroStnControls() {
     $(form).submit(false);
     div.appendChild(form);
 
-    fieldset = pdp.createFieldset("filterset", "Selection");
+    fieldset = pdp.createFieldset("filterset", "Station Search");
     form.appendChild(fieldset);
 
     sBox = createSearchBox("searchBox");
     fieldset.appendChild(sBox);
-    frag.sBox = sBox;
+    frag.sBox = sBox; // sBox must be accessible through frag
 
     $(sBox).focus(function () {
         var input = $(this);
@@ -46,19 +47,26 @@ function getHydroStnControls() {
         }
     }).blur();
 
+    // Create download links control
+    div = pdp.createDiv('', 'control');
+    frag.appendChild(div);
+    fieldset = pdp.createFieldset("filterset", "Downoad Links");
+    div.appendChild(fieldset)
     selection = pdp.createDiv('selectedStations', '');
     fieldset.appendChild(selection);
 
-    container = pdp.createDiv();
+    var placeholder = pdp.createDiv('stn_placeholder', '');
+    placeholder.textContent = "None yet. Click or search for stations";
+    placeholder.style.color = 'grey';
+    selection.appendChild(placeholder);
 
+    // Station listing container
+    container = pdp.createDiv();
     clear = createClearSelectionButton();
     container.appendChild(clear);
-
     container.appendChild(document.createTextNode(" "));
-
     permalink = pdp.createInputElement("button", undefined, "permalink", "permalink", "Permalink");
     container.appendChild(permalink);
-
     fieldset.appendChild(container);
 
     return frag;
@@ -67,6 +75,7 @@ function getHydroStnControls() {
 // Add an item from the Selection sidebar
 function addToSidebar(idx, dataArray) {
     var item, close, link;
+    document.getElementById('stn_placeholder').remove()
     item = pdp.createDiv('stnNo' + idx, '');
     close = item.appendChild(pdp.createDiv('', 'stn_remove'));
     close.textContent = "[X]";
@@ -86,6 +95,12 @@ function addToSidebar(idx, dataArray) {
 // Remove an item from the Selection sidebar
 function removeFromSidebar(idx) {
     $('#stnNo' + idx).remove();
+    if ($('#selectedStations > *').length < 1) {
+        var placeholder = pdp.createDiv('stn_placeholder', '');
+        placeholder.textContent = "None yet. Click or search for stations";
+        placeholder.style.color = 'grey';
+        $('#selectedStations').append(placeholder);
+    };
 }
 
 // Create a search box using jquery ui's autocomplete control.
