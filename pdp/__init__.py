@@ -108,6 +108,7 @@ dispatch_app = wrap_auth(PcdsDispatcher(templates=resource_filename('pdp_util', 
                         required=False)
 
 from portals.bc_prism import portal as bc_prism
+from portals.bc_prism import data_server as bc_prism_data_server
 
 from portals.hydro_stn import portal as hydro_stn
 from portals.bcsd_downscale_canada import portal as bcsd_canada
@@ -115,6 +116,10 @@ from portals.bcsd_downscale_canada import portal as bcsd_canada
 from portals.bccaq_extremes import portal as bccaq_extremes
 
 from portals.vic_gen1 import portal as vic_gen1
+
+data = PathDispatcher([
+    ('^/bc_prism/.*$', bc_prism_data_server(dsn, global_config, 'bc_prism')),
+    ])
 
 auth = PathDispatcher([
     ('^/pcds/.*$', dispatch_app),
@@ -138,6 +143,7 @@ main = PathDispatcher([
     ('^/downscaled_gcms/.*$', bcsd_canada(dsn, global_config)),
     ('^/downscaled_gcm_extremes/.*$', bccaq_extremes(dsn, global_config)),
     ('^/auth.*$', auth),
+    ('^/data/.*$', data),
     ('^/apps/.*$', apps),
     ('^/docs/.*$', docs_app),
     ],

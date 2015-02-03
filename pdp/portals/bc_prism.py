@@ -16,6 +16,19 @@ class PrismEnsembleLister(EnsembleMemberLister):
         for dfv in ensemble.data_file_variables:
             yield dfv.file.run.model.short_name, dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
+def raster_conf(dsn, global_config, ensemble_name):
+    with session_scope(dsn) as sesh:
+        conf = db_raster_configurator(sesh, "Download Data", 0.1, 0, ensemble_name,
+            root_url=global_config['app_root'].rstrip('/') + '/' +
+             'data/' + ensemble_name + '/'
+        )
+    return conf
+
+def data_server(dsn, global_config, ensemble_name):
+    conf = raster_conf(dsn, global_config, ensemble_name)
+    data_server = wrap_auth(RasterServer(dsn, conf))
+    return data_server
+
 def portal(dsn, global_config):
 
     ensemble_name = 'bc_prism'
@@ -33,13 +46,8 @@ def portal(dsn, global_config):
     portal_config = updateConfig(global_config, portal_config)
     map_app = wrap_auth(MapApp(**portal_config), required=False)
 
-    with session_scope(dsn) as sesh:
-        conf = db_raster_configurator(sesh, "Download Data", 0.1, 0, ensemble_name, 
-            root_url=global_config['app_root'].rstrip('/') + '/' + 
-            ensemble_name + '/data/'
-        )
-        data_server = wrap_auth(RasterServer(dsn, conf))
-        catalog_server = RasterCatalog(dsn, conf) #No Auth
+    conf = raster_conf(dsn, global_config, ensemble_name)
+    catalog_server = RasterCatalog(dsn, conf) #No Auth
 
     menu = PrismEnsembleLister(dsn)
 
@@ -48,7 +56,6 @@ def portal(dsn, global_config):
     return PathDispatcher([
         ('^/map/?.*$', map_app),
         ('^/catalog/.*$', catalog_server),
-        ('^/data/.*$', data_server),
         ('^/menu.json.*$', menu),
         ('^/metadata.json.*$', metadata),
     ])

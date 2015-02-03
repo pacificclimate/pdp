@@ -27,7 +27,7 @@ def test_hdf5_to_netcdf(pcic_data_portal, authorized_session_id):
     os.remove(f.name)
 
 def test_prism_response(pcic_data_portal, authorized_session_id):
-    req = Request.blank('/bc_prism/data/tmin_monClim_PRISM_historical_run1_197101-200012.nc.html')
+    req = Request.blank('/data/bc_prism/tmin_monClim_PRISM_historical_run1_197101-200012.nc.html')
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
