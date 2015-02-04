@@ -10,20 +10,20 @@ from pdp_util.ensemble_members import EnsembleMemberLister
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig, raster_conf
 
+ensemble_name = 'bcsd_downscale_canada'
+url_base = 'downscaled_gcms'
+
 class DownscaledEnsembleLister(EnsembleMemberLister):
     def list_stuff(self, ensemble):
         for dfv in ensemble.data_file_variables:
             yield dfv.file.run.emission.short_name, dfv.file.run.model.short_name, dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
 def data_server(dsn, global_config, ensemble_name):
-    conf = raster_conf(dsn, global_config, ensemble_name, 'downscaled_gcms')
+    conf = raster_conf(dsn, global_config, ensemble_name, url_base)
     data_server = wrap_auth(RasterServer(dsn, conf))
     return data_server
 
 def portal(dsn, global_config):
-
-    ensemble_name = 'bcsd_downscale_canada'
-
     portal_config = {
         'title': 'Statistically Downscaled GCM Scenarios',
         'ensemble_name': ensemble_name,
@@ -31,14 +31,14 @@ def portal(dsn, global_config):
             wrap_mini([
                 'js/canada_ex_map.js',
                 'js/canada_ex_app.js'],
-                basename='downscaled_gcms', debug=False
+                basename=url_base, debug=False
             )
     }
 
     portal_config = updateConfig(global_config, portal_config)
     map_app = wrap_auth(MapApp(**portal_config), required=False)
 
-    conf = raster_conf(dsn, global_config, ensemble_name, 'downscaled_gcms')
+    conf = raster_conf(dsn, global_config, ensemble_name, url_base)
     catalog_server = RasterCatalog(dsn, conf) #No Auth
 
     menu = DownscaledEnsembleLister(dsn)

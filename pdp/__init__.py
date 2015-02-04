@@ -107,24 +107,29 @@ dispatch_app = wrap_auth(PcdsDispatcher(templates=resource_filename('pdp_util', 
                                         ),
                         required=False)
 
-from portals.bc_prism import portal as bc_prism
+import portals.bc_prism as bc_prism
+from portals.bc_prism import portal as bc_prism_portal
 from portals.bc_prism import data_server as bc_prism_data_server
 
 from portals.hydro_stn import portal as hydro_stn
-from portals.bcsd_downscale_canada import portal as bcsd_canada
+
+import portals.bcsd_downscale_canada as bcsd_canada
+from portals.bcsd_downscale_canada import portal as bcsd_canada_portal
 from portals.bcsd_downscale_canada import data_server as bcsd_canada_data_server
 
-from portals.bccaq_extremes import portal as bccaq_extremes
+import portals.bccaq_extremes as bccaq_extremes
+from portals.bccaq_extremes import portal as bccaq_extremes_portal
 from portals.bccaq_extremes import data_server as bccaq_extremes_data_server
 
-from portals.vic_gen1 import portal as vic_gen1
+import portals.vic_gen1 as vic_gen1
+from portals.vic_gen1 import portal as vic_gen1_portal
 from portals.vic_gen1 import data_server as vic_gen1_data_server
 
 data = PathDispatcher([
-    ('^/bc_prism/.*$', bc_prism_data_server(dsn, global_config, 'bc_prism')),
-    ('^/downscaled_gcms/.*$', bcsd_canada_data_server(dsn, global_config, 'bcsd_downscale_canada')),
-    ('^/hydro_model_out/.*$', vic_gen1_data_server(dsn, global_config, 'vic_gen1')),
-    ('^/downscaled_gcm_extremes/.*$', bccaq_extremes_data_server(dsn, global_config, 'bccaq_extremes')),
+    ('^/{}/.*$'.format(bc_prism.url_base), bc_prism_data_server(dsn, global_config, bc_prism.ensemble_name)),
+    ('^/{}/.*$'.format(bcsd_canada.url_base), bcsd_canada_data_server(dsn, global_config, bcsd_canada.ensemble_name)),
+    ('^/{}/.*$'.format(vic_gen1.url_base), vic_gen1_data_server(dsn, global_config, vic_gen1.ensemble_name)),
+    ('^/{}/.*$'.format(bccaq_extremes.url_base), bccaq_extremes_data_server(dsn, global_config, bccaq_extremes.ensemble_name)),
     ])
 
 auth = PathDispatcher([
@@ -144,10 +149,10 @@ main = PathDispatcher([
     ('^/check_auth_app/?$', check_auth),
     ('^/pcds_map/.*$', pcds_map(pcds_dsn, global_config)),
     ('^/hydro_stn/.*$', hydro_stn(global_config)),
-    ('^/bc_prism/.*$', bc_prism(dsn, global_config)),
-    ('^/hydro_model_out/.*$', vic_gen1(dsn, global_config)),
-    ('^/downscaled_gcms/.*$', bcsd_canada(dsn, global_config)),
-    ('^/downscaled_gcm_extremes/.*$', bccaq_extremes(dsn, global_config)),
+    ('^/{}/.*$'.format(bc_prism.url_base), bc_prism_portal(dsn, global_config)),
+    ('^/{}/.*$'.format(vic_gen1.url_base), vic_gen1_portal(dsn, global_config)),
+    ('^/{}/.*$'.format(bcsd_canada.url_base), bcsd_canada_portal(dsn, global_config)),
+    ('^/{}/.*$'.format(bccaq_extremes.url_base), bccaq_extremes_portal(dsn, global_config)),
     ('^/auth.*$', auth),
     ('^/data/.*$', data),
     ('^/apps/.*$', apps),

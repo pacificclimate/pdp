@@ -10,6 +10,9 @@ from pdp_util.ensemble_members import EnsembleMemberLister
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig, raster_conf
 
+ensemble_name = 'bc_prism'
+url_base = 'bc_prism'
+
 class PrismEnsembleLister(EnsembleMemberLister):
     def list_stuff(self, ensemble):
         for dfv in ensemble.data_file_variables:
@@ -21,9 +24,6 @@ def data_server(dsn, global_config, ensemble_name):
     return data_server
 
 def portal(dsn, global_config):
-
-    ensemble_name = 'bc_prism'
-
     portal_config = {
         'title': 'High-Resolution PRISM Climatology',
         'ensemble_name': ensemble_name,
@@ -31,7 +31,7 @@ def portal(dsn, global_config):
             'js/prism_demo_map.js',
             'js/prism_demo_controls.js',
             'js/prism_demo_app.js'],
-            basename='bc_prism', debug=False)
+            basename=url_base, debug=False)
     }
 
     portal_config = updateConfig(global_config, portal_config)
