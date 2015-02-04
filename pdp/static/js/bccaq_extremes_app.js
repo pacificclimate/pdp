@@ -53,8 +53,12 @@ $(document).ready(function () {
     mdLink.trigger();
 
     function getTimeIndex(layer_name) {
-        var layerUrl = catalog[layer_name.split('/')[0]],
-            maxTimeReq = $.ajax({
+        var layerUrl = catalog[layer_name.split('/')[0]]
+        var reg = /.*\/data\/(.*?)\/.*/g;
+        var m = reg.exec(layerUrl);
+        layerUrl = layerUrl.replace("data/" + m[1], m[1] + "/catalog")
+
+        var maxTimeReq = $.ajax({
                 url: (layerUrl + ".dds?time").replace("/data/", "/catalog/")
             });
         $.when(maxTimeReq).done(function (maxTime, unitsSince) {
