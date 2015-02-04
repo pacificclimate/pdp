@@ -351,3 +351,13 @@ ccsm3_A2run1
 132.928482
 194.308685
 882.569519''')
+
+def test_hydro_model_out_catalog(pcic_data_portal):
+    url = '/hydro_model_out/catalog/'
+    req = Request.blank(url)
+    resp = req.get_response(pcic_data_portal)
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'application/json'
+    assert 'hydro_model_out/5var_day_HadCM_B1_run1_19500101-20981231.nc' in resp.body
+    data = json.loads(resp.body)
+    assert len(data) == 24
