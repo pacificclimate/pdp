@@ -16,16 +16,24 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 from bs4 import BeautifulSoup
 
-@pytest.mark.parametrize('url', ['/', '/pcds/map/', '/js/crmp_map.js', '/css/main.css', '/images/banner.png', '/pcds/count_stations/'])
+@pytest.mark.parametrize('url', ['/js/crmp_map.js', '/css/main.css', '/images/banner.png'])
+def test_static(static_url_space, url):
+    req = Request.blank(url)
+    resp = req.get_response(static_url_space)
+    assert resp.status == '200 OK'
+
+@pytest.mark.crmpdb
+@pytest.mark.parametrize('url', ['/', '/pcds_map/', '/apps/count_stations/'])
 def test_no_404s(pcic_data_portal, url):
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
 
-def test_am_authorized(pcic_data_portal, authorized_session_id):
-    req = Request.blank('/check_auth_app')
+    
+def test_am_authorized(check_auth_app, authorized_session_id):
+    req = Request.blank('')
     req.cookies['beaker.session.id'] = authorized_session_id
-    resp = req.get_response(pcic_data_portal)
+    resp = req.get_response(check_auth_app)
     assert resp.status == '200 OK'
 
 @pytest.mark.crmpdb
@@ -48,7 +56,8 @@ def test_climo_index(pcic_data_portal, authorized_session_id, url, title, body_s
     assert title in soup.title.string
     for string in body_strings:
         assert string in resp.body
-    
+
+@pytest.mark.crmpdb
 def test_unsupported_extension(pcic_data_portal, authorized_session_id):
     req = Request.blank('/data/pcds/agg/?data-format=foo')
     req.cookies['beaker.session.id'] = authorized_session_id
@@ -267,6 +276,7 @@ def test_legend_caching(pcic_data_portal):
     resp = req.get_response(pcic_data_portal)
     assert resp.status.startswith('200')
 
+@pytest.mark.bulk_data
 def test_climatology_bounds(pcic_data_portal, authorized_session_id):
     url = '/data/bc_prism/tmin_monClim_PRISM_historical_run1_197101-200012.nc.nc?climatology_bounds,tmin[0:12][826:1095][1462:1888]&'
     req = Request.blank(url)
@@ -319,10 +329,10 @@ def test_aaigrid_response(pcic_data_portal, authorized_session_id, url):
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/zip'
 
-def test_hydro_stn_data_catalog(pcic_data_portal, authorized_session_id):
+@pytest.mark.bulk_data
+def test_hydro_stn_data_catalog(pcic_data_portal):
     url = '/data/hydro_stn/catalog.json'
     req = Request.blank(url)
-    req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/json'
@@ -330,6 +340,7 @@ def test_hydro_stn_data_catalog(pcic_data_portal, authorized_session_id):
     data = json.loads(resp.body)
     # assert len(data) == 114
 
+@pytest.mark.bulk_data
 def test_hydro_stn_data_csv_csv(pcic_data_portal, authorized_session_id):
     url = '/data/hydro_stn/BCHSCA_Campbell.csv.csv'
     req = Request.blank(url)
@@ -344,6 +355,7 @@ def test_hydro_stn_data_csv_csv(pcic_data_portal, authorized_session_id):
 
     assert False, "Data line for 1950/1/1 does not exist"
 
+@pytest.mark.bulk_data
 def test_hydro_stn_data_csv_selection_projection(pcic_data_portal, authorized_session_id):
     url = '/data/hydro_stn/BCHSCA_Campbell.csv.csv?sequence.ccsm3_A2run1&sequence.ccsm3_A2run1>100'
     req = Request.blank(url)
@@ -365,6 +377,7 @@ ccsm3_A2run1
 146.530792
 137.407532''')
 
+@pytest.mark.bulk_data
 def test_hydro_model_out_catalog(pcic_data_portal):
     url = '/hydro_model_out/catalog/'
     req = Request.blank(url)

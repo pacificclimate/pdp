@@ -148,7 +148,7 @@ if __name__ == '__main__':
     listener = _tcp_listener(('0.0.0.0', args.port))
     
     def serve_forever(listener):
-        pywsgi.WSGIServer(listener, main).serve_forever()
+        pywsgi.WSGIServer(listener, main()).serve_forever()
     
     if args.processors == 0:
         num_proc = cpu_count() * 2 + 1

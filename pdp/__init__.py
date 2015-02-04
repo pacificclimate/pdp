@@ -3,6 +3,8 @@
    instantiates all of the responder applications and binds them to various PathDispatchers.
 '''
 
+__all__ = ['get_config', 'wrap_auth']
+
 import os
 from os.path import dirname
 import atexit
@@ -11,7 +13,6 @@ from pkg_resources import resource_filename, resource_stream, get_distribution
 from tempfile import mkdtemp
 from shutil import rmtree
 import yaml
-
 import static
 from beaker.middleware import SessionMiddleware
 

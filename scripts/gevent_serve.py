@@ -16,5 +16,5 @@ if __name__ == '__main__':
     basicConfig(format='%(levelname)s:%(name)s:%(asctime)s %(message)s', stream=sys.stdout, level=DEBUG)
     
     print 'Starting server on port {}'.format(args.port)
-    server = pywsgi.WSGIServer(('0.0.0.0', args.port), main)
+    server = pywsgi.WSGIServer(('0.0.0.0', args.port), main())
     server.serve_forever()

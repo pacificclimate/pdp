@@ -15,7 +15,7 @@ if __name__ == '__main__':
     basicConfig(format='%(levelname)s:%(name)s:%(asctime)s %(message)s', stream=sys.stdout, level=DEBUG)
 
     server = wsgiserver.CherryPyWSGIServer(
-        ('0.0.0.0', args.port), main
+        ('0.0.0.0', args.port), main()
         )
     try:
         server.start()
