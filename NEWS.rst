@@ -6,6 +6,21 @@ News / Release Notes
 
 *In Development*
 
+2.2.4
+-----
+
+*Release Date: 30-Jan-2015*
+
+* Tweaks to the usage of SQLAlchemy's database connection pools
+
+2.2.3
+-----
+
+*Release Date: 05-Dec-2014*
+
+* Fixed a bug in the PCDS Portal where using the "Clip time series to filter date range" could possibly return a station file with zero observations
+* Tuned network/station listings in the PCDS Portal to require less data and avoid possible database timeouts with large groups of stations
+
 2.2.2
 -----
 
