@@ -129,10 +129,12 @@ function processNcwmsLayerMetadata(ncwms_layer) {
 
 function setTimeAvailable(begin, end) {
     //TODO: only present times available in ncwms capabilities for this layer
+    var yearRange = begin.getFullYear().toString(10) + ":" + end.getFullYear().toString(10);
 
     $.each([".datepickerstart", ".datepickerend"], function (idx, val) {
         $(val).datepicker("option", "minDate", begin);
         $(val).datepicker("option", "maxDate", end);
+        $(val).datepicker("option", "yearRange", yearRange);
     });
     $(".datepicker").datepicker("setDate", begin);
     $(".datepickerstart").datepicker("setDate", begin);
@@ -228,4 +230,4 @@ function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension, callback
     lr_px = map.getPixelFromLonLat(lr);
     requestIndex(ul_px.x, ul_px.y);
     requestIndex(lr_px.x, lr_px.y);
-};
+}
