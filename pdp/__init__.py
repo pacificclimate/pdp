@@ -111,7 +111,9 @@ import portals.bc_prism as bc_prism
 from portals.bc_prism import portal as bc_prism_portal
 from portals.bc_prism import data_server as bc_prism_data_server
 
-from portals.hydro_stn import portal as hydro_stn
+import portals.hydro_stn as hydro_stn
+from portals.hydro_stn import portal as hydro_stn_portal
+from portals.hydro_stn import data_server as hydro_stn_data_server
 
 import portals.bcsd_downscale_canada as bcsd_canada
 from portals.bcsd_downscale_canada import portal as bcsd_canada_portal
@@ -130,6 +132,7 @@ data = PathDispatcher([
     ('^/{}/.*$'.format(bcsd_canada.url_base), bcsd_canada_data_server(dsn, global_config, bcsd_canada.ensemble_name)),
     ('^/{}/.*$'.format(vic_gen1.url_base), vic_gen1_data_server(dsn, global_config, vic_gen1.ensemble_name)),
     ('^/{}/.*$'.format(bccaq_extremes.url_base), bccaq_extremes_data_server(dsn, global_config, bccaq_extremes.ensemble_name)),
+    ('^/{}/.*$'.format(hydro_stn.url_base), hydro_stn_data_server(global_config)),
     ])
 
 auth = PathDispatcher([
@@ -148,7 +151,7 @@ main = PathDispatcher([
     ('^/css/(default|pcic).css$', static.Cling(resource_filename('pdp_util', 'data'))), # a bit of a hack for now
     ('^/check_auth_app/?$', check_auth),
     ('^/pcds_map/.*$', pcds_map(pcds_dsn, global_config)),
-    ('^/hydro_stn/.*$', hydro_stn(global_config)),
+    ('^/{}/.*$'.format(hydro_stn.url_base), hydro_stn_portal(global_config)),
     ('^/{}/.*$'.format(bc_prism.url_base), bc_prism_portal(dsn, global_config)),
     ('^/{}/.*$'.format(vic_gen1.url_base), vic_gen1_portal(dsn, global_config)),
     ('^/{}/.*$'.format(bcsd_canada.url_base), bcsd_canada_portal(dsn, global_config)),
