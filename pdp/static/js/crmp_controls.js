@@ -82,20 +82,20 @@ function createNetworkOptions(map) {
     var networkOptionData, netSel;
     networkOptionData = {
         '': pdp.mkOpt('All'),
-        'AGRI': pdp.mkOpt('AGRI', {icon: 'http://tools.pacificclimate.org/data_portal/images/legend/agri.png', name: 'BC Ministry of Agriculture'}),
-        'ARDA': pdp.mkOpt('ARDA', {icon: 'http://tools.pacificclimate.org/data_portal/images/legend/arda.png', name: 'Agricultural and Rural Development Act Network'}),
-        'BCH': pdp.mkOpt('BCH', {icon: 'http://tools.pacificclimate.org/data_portal/images/legend/bch.png', name: 'BC Hydro'}),
-        'EC': pdp.mkOpt('EC', {icon: 'http://tools.pacificclimate.org/data_portal/images/legend/ec.png', name: 'Environment Canada (Canadian Daily Climate Data 2007)'}),
-        'EC_raw': pdp.mkOpt('EC_raw', {icon: 'http://tools.pacificclimate.org/data_portal/images/legend/ec_raw.png', name: 'Environment Canada (raw observations from "Climate Data Online")'}),
-        'ENV-AQN': pdp.mkOpt('ENV-AQN', {icon: 'http://tools.pacificclimate.org/data_portal/images/legend/env-aqn.png', name: 'BC Ministry of Environment - Air Quality Network'}),
-        'ENV-ASP': pdp.mkOpt('ENV-ASP', {icon: 'http://tools.pacificclimate.org/data_portal/images/legend/env-asp.png', name: 'BC Ministry of Environment - Automated Snow Pillow Network'}),
-        'FLNRO-FERN': pdp.mkOpt('FLNRO-FERN', {icon: 'http://tools.pacificclimate.org/data_portal/images/legend/flnro-fern.png', name: 'BC Ministry of Forests, Lands, and Natural Resource Operations - Forest Ecosystems Research Network'}),
-        'FLNRO-WMB': pdp.mkOpt('FLNRO-WMB', {icon: 'http://tools.pacificclimate.org/data_portal/images/legend/flnro-wmb.png', name: 'BC Ministry of Forests, Lands, and Natural Resource Operations - Wild Fire Managment Branch'}),
-        'FRBC': pdp.mkOpt('FRBC', {icon: 'http://tools.pacificclimate.org/data_portal/images/legend/frbc.png', name: 'Forest Renewal British Columbia'}),
-        'MoTIe': pdp.mkOpt('MoTIe', {icon: 'http://tools.pacificclimate.org/data_portal/images/legend/motie.png', name: 'Ministry of Transportation and Infrastructure (electronic)'}),
-        'MoTIm': pdp.mkOpt('MoTIm', {icon: 'http://tools.pacificclimate.org/data_portal/images/legend/motim.png', name: 'Ministry of Transportation and Infrastructure (manual)'}),
-        'MVan': pdp.mkOpt('MVan', {icon: 'http://tools.pacificclimate.org/data_portal/images/legend/mvan.png', name: 'Metro Vancouver'}),
-        'RTA': pdp.mkOpt('RTA', {icon: 'http://tools.pacificclimate.org/data_portal/images/legend/rta.png', name: 'RioTintoAlcan'})
+        'AGRI': pdp.mkOpt('AGRI', {icon: '../images/legend/agri.png', name: 'BC Ministry of Agriculture'}),
+        'ARDA': pdp.mkOpt('ARDA', {icon: '../images/legend/arda.png', name: 'Agricultural and Rural Development Act Network'}),
+        'BCH': pdp.mkOpt('BCH', {icon: '../images/legend/bch.png', name: 'BC Hydro'}),
+        'EC': pdp.mkOpt('EC', {icon: '../images/legend/ec.png', name: 'Environment Canada (Canadian Daily Climate Data 2007)'}),
+        'EC_raw': pdp.mkOpt('EC_raw', {icon: '../images/legend/ec_raw.png', name: 'Environment Canada (raw observations from "Climate Data Online")'}),
+        'ENV-AQN': pdp.mkOpt('ENV-AQN', {icon: '../images/legend/env-aqn.png', name: 'BC Ministry of Environment - Air Quality Network'}),
+        'ENV-ASP': pdp.mkOpt('ENV-ASP', {icon: '../images/legend/env-asp.png', name: 'BC Ministry of Environment - Automated Snow Pillow Network'}),
+        'FLNRO-FERN': pdp.mkOpt('FLNRO-FERN', {icon: '../images/legend/flnro-fern.png', name: 'BC Ministry of Forests, Lands, and Natural Resource Operations - Forest Ecosystems Research Network'}),
+        'FLNRO-WMB': pdp.mkOpt('FLNRO-WMB', {icon: '../images/legend/flnro-wmb.png', name: 'BC Ministry of Forests, Lands, and Natural Resource Operations - Wild Fire Managment Branch'}),
+        'FRBC': pdp.mkOpt('FRBC', {icon: '../images/legend/frbc.png', name: 'Forest Renewal British Columbia'}),
+        'MoTIe': pdp.mkOpt('MoTIe', {icon: '../images/legend/motie.png', name: 'Ministry of Transportation and Infrastructure (electronic)'}),
+        'MoTIm': pdp.mkOpt('MoTIm', {icon: '../images/legend/motim.png', name: 'Ministry of Transportation and Infrastructure (manual)'}),
+        'MVan': pdp.mkOpt('MVan', {icon: '../images/legend/mvan.png', name: 'Metro Vancouver'}),
+        'RTA': pdp.mkOpt('RTA', {icon: '../images/legend/rta.png', name: 'RioTintoAlcan'})
     };
     netSel = pdp.getSelectorWithHelp('Network Name', 'network-name', 'network-name', 'input-network', '', networkOptionData, 'View table of network names', 800, 450, 'table', getNetworkHelp);
     $(netSel).change(pdp.curry(netChange, map)).change(pdp.curry(CRMPFilterChange, map));

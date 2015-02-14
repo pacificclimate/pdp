@@ -97,7 +97,7 @@ function update_station_count(box) {
         box.readonly = 'readonly';
     }
 
-    $.ajax({'url': pdp.app_root + '/apps/count_stations',
+    $.ajax({'url': '../count_stations',
             'data': $('form').serialize(),
             'type': 'GET',
             'dataType': 'json',
@@ -119,7 +119,7 @@ function update_record_length(box) {
         box.readonly = 'readonly';
     }
 
-    $.ajax({'url': pdp.app_root + '/apps/record_length',
+    $.ajax({'url': '../record_length',
             'data': $('form').serialize(),
             'type': 'GET',
             'dataType': 'json',

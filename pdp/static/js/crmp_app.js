@@ -14,7 +14,7 @@ $(document).ready(function () {
 
     filtChange = pdp.curry(CRMPFilterChange, map);
 
-    downloadForm = pdp.createForm("download-form", "download-form", "get", pdp.app_root + "/auth/agg/");
+    downloadForm = pdp.createForm("download-form", "download-form", "get", "../../data/pcds/agg/");
     document.getElementById("pdp-controls").appendChild(downloadForm);
 
     downloadForm.appendChild(getCRMPControls(map));
