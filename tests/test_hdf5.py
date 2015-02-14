@@ -10,7 +10,7 @@ def test_can_instantiate_raster_pydap(raster_pydap):
     assert isinstance(raster_pydap, object)
 
 def test_hdf5_to_netcdf(pcic_data_portal, authorized_session_id):
-    req = Request.blank('/downscaled_gcms/data/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CCSM4_historical+rcp26_r2i1p1_19500101-21001231.nc.nc?pr[0:1:1][116:167][84:144]&')
+    req = Request.blank('/data/downscaled_gcms/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CCSM4_historical+rcp26_r2i1p1_19500101-21001231.nc.nc?pr[0:1:1][116:167][84:144]&')
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
 
@@ -27,14 +27,14 @@ def test_hdf5_to_netcdf(pcic_data_portal, authorized_session_id):
     os.remove(f.name)
 
 def test_prism_response(pcic_data_portal, authorized_session_id):
-    req = Request.blank('/bc_prism/data/tmin_monClim_PRISM_historical_run1_197101-200012.nc.html')
+    req = Request.blank('/data/bc_prism/tmin_monClim_PRISM_historical_run1_197101-200012.nc.html')
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'text/html'
     
 def test_dds_response(pcic_data_portal, authorized_session_id):
-    req = Request.blank('/downscaled_gcms/data/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CCSM4_historical+rcp26_r2i1p1_19500101-21001231.nc.dds')
+    req = Request.blank('/data/downscaled_gcms/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CCSM4_historical+rcp26_r2i1p1_19500101-21001231.nc.dds')
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'

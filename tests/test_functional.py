@@ -258,7 +258,7 @@ def test_legend_caching(pcic_data_portal):
     assert resp.status.startswith('200')
 
 def test_climatology_bounds(pcic_data_portal, authorized_session_id):
-    url = '/bc_prism/data/tmin_monClim_PRISM_historical_run1_197101-200012.nc.nc?climatology_bounds,tmin[0:12][826:1095][1462:1888]&'
+    url = '/data/bc_prism/tmin_monClim_PRISM_historical_run1_197101-200012.nc.nc?climatology_bounds,tmin[0:12][826:1095][1462:1888]&'
     req = Request.blank(url)
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
@@ -297,8 +297,8 @@ def test_climatology_bounds(pcic_data_portal, authorized_session_id):
     os.remove(f.name)
 
 @pytest.mark.parametrize('url', [
-    '/downscaled_gcms/data/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.aig?tasmax[0:30][77:138][129:238]&', # has NODATA values
-    '/downscaled_gcms/data/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.aig?tasmax[0:30][144:236][307:348]&',
+    '/data/downscaled_gcms/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.aig?tasmax[0:30][77:138][129:238]&', # has NODATA values
+    '/data/downscaled_gcms/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.aig?tasmax[0:30][144:236][307:348]&',
 ])
 def test_aaigrid_response(pcic_data_portal, authorized_session_id, url):
     req = Request.blank(url)
@@ -351,3 +351,13 @@ ccsm3_A2run1
 132.928482
 194.308685
 882.569519''')
+
+def test_hydro_model_out_catalog(pcic_data_portal):
+    url = '/hydro_model_out/catalog/'
+    req = Request.blank(url)
+    resp = req.get_response(pcic_data_portal)
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'application/json'
+    assert 'hydro_model_out/5var_day_HadCM_B1_run1_19500101-20981231.nc' in resp.body
+    data = json.loads(resp.body)
+    assert len(data) == 24

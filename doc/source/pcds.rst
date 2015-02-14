@@ -67,9 +67,9 @@ There are a few nuances to the aggregated data download that work the way the us
 Station Listings
 ^^^^^^^^^^^^^^^^
 
-If one is interested in exploring the station offerings in a hiearchical listing format (as opposed to a map), we offer a station listings interface available at the URL http://tools.pacificclimate.org/dataportal/auth/pcds/
+If one is interested in exploring the station offerings in a hiearchical listing format (as opposed to a map), we offer a station listings interface available at the URL http://tools.pacificclimate.org/dataportal/data/pcds/lister
 
-These listing pages lay out the stations in a hierarchy splitting on raw data vs. climatology ("raw|climo"), CRMP network, and finally station. For example, to list all of the climatologies available for the BC Hydro network, one would navigate to http://tools.pacificclimate.org/dataportal/auth/pcds/climo/BCH/
+These listing pages lay out the stations in a hierarchy splitting on raw data vs. climatology ("raw|climo"), CRMP network, and finally station. For example, to list all of the climatologies available for the BC Hydro network, one would navigate to http://tools.pacificclimate.org/dataportal/data/pcds/lister/climo/BCH/
 
 The page for a single station includes a simple HTML page that lists all global metadata, all variables for the station, and it provides some form controls to download individual variables. Please note that you must select the checkbox for *each and every* variable that you want to download. None are selected by default, so clicking "Download" without any prior action will result in a bad request.
 
@@ -78,9 +78,9 @@ Advanced/Programmatic Usage
 
 In theory, the whole data portal is written using open protocols and an advanced user with some scripting abilities should be able to reasonably script up a bulk download (assuming that the filters on the user interface do not cover your use case).
 
-For your purposes of demonstration, let's assume that a user is interested in downloading data from a whole bunch of Wildfire Management Branch stations, network code "FLNRO-WMB". From our instance of Pydap, you can get a station listing from the `data listing pages <http://tools.pacificclimate.org/data_portal/auth/pydap/pcds/raw/FLNRO-WMB/>`_.
+For your purposes of demonstration, let's assume that a user is interested in downloading data from a whole bunch of Wildfire Management Branch stations, network code "FLNRO-WMB". From our instance of Pydap, you can get a station listing from the `data listing pages <http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/FLNRO-WMB/>`_.
 
-If you have a list of network_name/station_ids (where station_id is the id by which it is called *by the network*, then you can patch together a URL for the full data download. For example, if you wanted to download FLNRO-WMB data for station "1002", the URL would be http://tools.pacificclimate.org/data_portal/auth/pydap/pcds/raw/FLNRO-WMB/1002.rsql.csv
+If you have a list of network_name/station_ids (where station_id is the id by which it is called *by the network*, then you can patch together a URL for the full data download. For example, if you wanted to download FLNRO-WMB data for station "1002", the URL would be http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/FLNRO-WMB/1002.rsql.csv
 
 The file format extension on the end can be [csv|xls|ascii|nc].
 

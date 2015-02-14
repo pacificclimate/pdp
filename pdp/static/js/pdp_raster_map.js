@@ -100,14 +100,19 @@ function processNcwmsLayerMetadata(ncwms_layer) {
 
     getNCWMSLayerCapabilities(ncwms_layer);
 
+    // transform the data_server url into the un-authed catalog based url for metadata
     layerUrl = catalog[getNcwmsLayerId(ncwms_layer)];
+    var reg = /.*\/data\/(.*?)\/.*/g;
+    var m = reg.exec(layerUrl);
+    layerUrl = layerUrl.replace("data/" + m[1], m[1] + "/catalog")
+
     // Request time variables
     maxTimeReq = $.ajax({
-        url: (layerUrl + ".dds?time").replace("/data/", "/catalog/")
+        url: (layerUrl + ".dds?time")
     });
 
     unitsSinceReq = $.ajax({
-        url: (layerUrl + ".das").replace("/data/", "/catalog/")
+        url: (layerUrl + ".das")
     });
 
     // Process times when both returned

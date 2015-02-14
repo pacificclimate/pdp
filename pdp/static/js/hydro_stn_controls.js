@@ -84,7 +84,7 @@ function addToSidebar(idx, dataArray) {
     });
 
     link = document.createElement('a');
-    link.href = "../data/" + dataArray[idx].FileName + '.ascii';
+    link.href = "../../data/hydro_stn/" + dataArray[idx].FileName + '.ascii';
     link.text = dataArray[idx].StationName;
 
     item.appendChild(link);
