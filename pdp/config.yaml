@@ -1,0 +1,16 @@
+app_root: 'http://atlas.pcic.uvic.ca/bv_pdp'
+title: "CRMP Network Data"
+ensemble_name: ''
+dsn: postgresql://httpd_meta@atlas.pcic/pcic_meta
+pcds_dsn: postgresql://httpd@atlas.pcic/crmp
+js_min: false
+geoserver_url: http://atlas.pcic.uvic.ca/geoserver/
+ncwms_url: 
+    - http://atlas.pcic.uvic.ca/ncWMS/wms
+tilecache_url: 
+    - http://a.tiles.pacificclimate.org/tilecache/tilecache.py
+    - http://b.tiles.pacificclimate.org/tilecache/tilecache.py
+    - http://c.tiles.pacificclimate.org/tilecache/tilecache.py
+session_dir: default
+clean_session_dir: True
+
