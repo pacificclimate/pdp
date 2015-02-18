@@ -16,7 +16,7 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 from bs4 import BeautifulSoup
 
-@pytest.mark.parametrize('url', ['/', '/pcds_map/', '/js/crmp_map.js', '/css/main.css', '/images/banner.png', '/apps/count_stations/'])
+@pytest.mark.parametrize('url', ['/', '/pcds/map/', '/js/crmp_map.js', '/css/main.css', '/images/banner.png', '/pcds/count_stations/'])
 def test_no_404s(pcic_data_portal, url):
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
@@ -29,9 +29,9 @@ def test_am_authorized(pcic_data_portal, authorized_session_id):
     assert resp.status == '200 OK'
 
 @pytest.mark.parametrize(('url', 'title', 'body_strings'), [
-                         ('/auth/pcds/', 'PCDS Data', ["Climatological calculations", "raw/"]),
-                         ('/auth/pcds/raw/', "Participating CRMP Networks", ["FLNRO-WMB/", "Environment Canada (Canadian Daily Climate Data 2007)"]),
-                         ('/auth/pcds/raw/AGRI/', "Stations for network AGRI", ["de107/", "Deep Creek"]),
+                         ('/data/pcds/lister/', 'PCDS Data', ["Climatological calculations", "raw/"]),
+                         ('/data/pcds/lister/raw/', "Participating CRMP Networks", ["FLNRO-WMB/", "Environment Canada (Canadian Daily Climate Data 2007)"]),
+                         ('/data/pcds/lister/raw/AGRI/', "Stations for network AGRI", ["de107/", "Deep Creek"]),
                          ]
 )
 def test_climo_index(pcic_data_portal, authorized_session_id, url, title, body_strings):
@@ -49,7 +49,7 @@ def test_climo_index(pcic_data_portal, authorized_session_id, url, title, body_s
         assert string in resp.body
     
 def test_unsupported_extension(pcic_data_portal, authorized_session_id):
-    req = Request.blank('/auth/agg/?data-format=foo')
+    req = Request.blank('/data/pcds/agg/?data-format=foo')
     req.cookies['beaker.session.id'] = authorized_session_id
     req.method = 'POST'
     resp = req.get_response(pcic_data_portal)
@@ -57,7 +57,7 @@ def test_unsupported_extension(pcic_data_portal, authorized_session_id):
 
 @pytest.mark.parametrize('ext', ['ascii', 'csv'])
 def test_ascii_response(pcic_data_portal, authorized_session_id, ext):
-    req = Request.blank('/auth/pcds/climo/EC/1010066.csql.{0}?station_observations.Precip_Climatology,station_observations.time'.format(ext))
+    req = Request.blank('/data/pcds/lister/climo/EC/1010066.csql.{0}?station_observations.Precip_Climatology,station_observations.time'.format(ext))
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
@@ -79,7 +79,7 @@ Precip_Climatology, time
     assert resp.body == x
 
 def test_xls_response(pcic_data_portal, authorized_session_id):
-    req = Request.blank('/auth/pcds/climo/EC/1010066.csql.xls?station_observations.Precip_Climatology,station_observations.time')
+    req = Request.blank('/data/pcds/lister/climo/EC/1010066.csql.xls?station_observations.Precip_Climatology,station_observations.time')
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
@@ -95,7 +95,7 @@ def test_xls_response(pcic_data_portal, authorized_session_id):
     assert attributes.cell_value(7, 2) == 'ACTIVE PASS' # station name
 
 def test_nc_response(pcic_data_portal, authorized_session_id):
-    req = Request.blank('/auth/pcds/climo/EC/1010066.csql.nc?station_observations.Precip_Climatology,station_observations.time')
+    req = Request.blank('/data/pcds/lister/climo/EC/1010066.csql.nc?station_observations.Precip_Climatology,station_observations.time')
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
@@ -118,14 +118,14 @@ def test_nc_response(pcic_data_portal, authorized_session_id):
     os.remove(f.name)
 
 def test_nc_response_with_null_values(pcic_data_portal, authorized_session_id):
-    req = Request.blank('/auth/pcds/raw/BCH/AKI.rsql.nc')
+    req = Request.blank('/data/pcds/lister/raw/BCH/AKI.rsql.nc')
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/x-netcdf'
 
 def test_clip_to_date_one(pcic_data_portal, authorized_session_id):
-    base_url = '/auth/agg/?'
+    base_url = '/data/pcds/agg/?'
     sdate, edate = datetime(2007, 01, 01), None
     params = {'from-date': sdate.strftime('%Y/%m/%d'),
               'network-name': 'RTA', 'data-format': 'csv',
@@ -184,7 +184,7 @@ def test_clip_to_date_one(pcic_data_portal, authorized_session_id):
 #({'input-polygon': 'POLYGON((-123.240336 50.074796,-122.443323 49.762922,-121.992837 49.416394,-122.235407 48.654034,-123.725474 48.792645,-123.864085 49.728269,-123.240336 50.074796))'}, 7),
     ])
 def test_station_counts(filters, expected, pcic_data_portal):
-    req = Request.blank('/apps/count_stations?' + urlencode(filters))
+    req = Request.blank('/pcds/count_stations?' + urlencode(filters))
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/json'
@@ -202,7 +202,7 @@ def test_station_counts(filters, expected, pcic_data_portal):
     # We _should_ ignore a bad value for a filter (or return a HTTP BadRequest?)
     {'only-with-climatology': 'bad-value'}])
 def test_record_length(filters, pcic_data_portal):
-    req = Request.blank('/apps/count_stations?' + urlencode(filters))
+    req = Request.blank('/pcds/count_stations?' + urlencode(filters))
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/json'
@@ -215,7 +215,7 @@ def test_record_length(filters, pcic_data_portal):
     ('no_network.png', (255, 255, 255)) # White
     ])
 def test_legend(network, color, pcic_data_portal):
-    req = Request.blank('/images/legend/' + network)
+    req = Request.blank('/pcds/images/legend/' + network)
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/png'
@@ -235,7 +235,7 @@ def test_legend(network, color, pcic_data_portal):
     os.remove(f.name)
     
 def test_legend_caching(pcic_data_portal):
-    url = '/images/legend/flnro-wmb.png'
+    url = '/pcds/images/legend/flnro-wmb.png'
     
     pre_load_time = datetime.now() - timedelta(1) # yesterday
     post_load_time = datetime.now() + timedelta(1) # tomorrow
