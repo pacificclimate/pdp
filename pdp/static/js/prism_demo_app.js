@@ -40,10 +40,15 @@ $(document).ready(function () {
     selectionLayer.events.register('featureadded', dlLink, dlLink.onBoxChange);
     dlLink.register($('#download-timeseries'), function (node) {
         node.attr('href', dlLink.getUrl());
-    }
-                   );
+    });
     setBoundsInUrlTemplate();
     dlLink.trigger();
+    $('#download-timeseries').click(function(e) {
+        if (!$(loginButton).prop("loggedIn")) {
+            alert("Please log in before downloading data");
+            e.preventDefault();
+        }
+    });
 
     // Metadata/Attributes Download Link
     mdLink = new RasterDownloadLink($('#download-metadata'), ncwmsLayer, undefined, 'das', 'pr', '0:13', '0:1680', '0:3241');
@@ -52,9 +57,14 @@ $(document).ready(function () {
     selectionLayer.events.register('featureadded', mdLink, mdLink.onBoxChange);
     mdLink.register($('#download-metadata'), function (node) {
         node.attr('href', mdLink.getUrl());
-    }
-                   );
+    });
     mdLink.trigger();
+    $('#download-metadata').click(function(e) {
+        if (!$(loginButton).prop("loggedIn")) {
+            alert("Please log in before downloading data");
+            e.preventDefault();
+        }
+    });
 
     // FIXME: This needs to have error handling and this is horrible
     getCatalog(
