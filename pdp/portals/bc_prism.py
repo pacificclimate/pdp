@@ -33,7 +33,7 @@ def portal(config):
             'js/prism_demo_map.js',
             'js/prism_demo_controls.js',
             'js/prism_demo_app.js'],
-            basename=url_base, debug=True)
+            basename=url_base, debug=(not config['js_min']))
     }
 
     portal_config = updateConfig(config, portal_config)

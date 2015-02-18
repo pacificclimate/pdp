@@ -34,7 +34,7 @@ def portal(config):
                 'js/vic_gen1_map.js',
                 'js/vic_gen1_controls.js',
                 'js/vic_gen1_app.js'],
-                basename=url_base, debug=False)
+                basename=url_base, debug=(not config['js_min']))
     }
 
     portal_config = updateConfig(config, portal_config)

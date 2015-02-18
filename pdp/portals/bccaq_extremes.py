@@ -38,7 +38,7 @@ def portal(config):
                 'js/bccaq_extremes_map.js',
                 'js/bccaq_extremes_controls.js',
                 'js/bccaq_extremes_app.js'],
-                basename=url_base, debug=False
+                basename=url_base, debug=(not config['js_min'])
             )
     }
 

@@ -33,7 +33,7 @@ def portal(config):
             wrap_mini([
                 'js/canada_ex_map.js',
                 'js/canada_ex_app.js'],
-                basename=url_base, debug=False
+                basename=url_base, debug=(not config['js_min'])
             )
     }
 

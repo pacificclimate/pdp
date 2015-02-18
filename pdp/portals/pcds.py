@@ -45,7 +45,7 @@ def portal(config):
             'js/crmp_download.js',
             'js/crmp_filters.js',
             'js/crmp_app.js'], 
-            basename=url_base, debug=False
+            basename=url_base, debug=(not config['js_min'])
         )
     }
 

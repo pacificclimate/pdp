@@ -26,8 +26,7 @@ def data_server(global_config):
     data_server = wrap_auth(HydroStationDataServer(resource_filename('pdp', 'portals/hydro_stn.yaml'), global_config['app_root']))
     return data_server
 
-def portal(global_config):
-
+def portal(config):
     hydro_stn_config = {
         'title': 'Modelled Streamflow Data',
         'js_files' :
@@ -37,11 +36,11 @@ def portal(global_config):
                 'js/hydro_stn_map.js',
                 'js/hydro_stn_controls.js',
                 'js/hydro_stn_app.js'],
-                  basename=url_base, debug=False
+                  basename=url_base, debug=(not config['js_min'])
                   )
         }
-    config = updateConfig(global_config, hydro_stn_config)
 
+    config = updateConfig(config, hydro_stn_config)
     map_app = wrap_auth(MapApp(**config), required=False)
 
     return PathDispatcher([
