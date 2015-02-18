@@ -17,11 +17,12 @@ from pdp_util.pcds_dispatch import PcdsDispatcher
 
 url_base = 'pcds'
 
-def data_server(dsn, global_config):
+def data_server(config):
+    dsn = config['pcds_dsn']
     dispatch_app = PcdsDispatcher(
         templates=resource_filename('pdp_util', 'templates'),
         ol_path=None, #global_config['ol_path'],
-        app_root=global_config['app_root'],
+        app_root=config['app_root'],
         conn_params=dsn
         )
     dispatch_app = wrap_auth(dispatch_app, required=False)
@@ -34,7 +35,8 @@ def data_server(dsn, global_config):
             ])
     return app
 
-def portal(dsn, global_config):
+def portal(config):
+    dsn = config['pcds_dsn']
     pcds_config = {
         'title': 'BC Station Data - PCDS',
         'js_files' : wrap_mini([
@@ -51,7 +53,7 @@ def portal(dsn, global_config):
     record_length_app = CountRecordLengthApp(dsn, max_stns=100)
     legend_app = LegendApp(dsn)
 
-    pcds_map_config = updateConfig(global_config, pcds_config)
+    pcds_map_config = updateConfig(config, pcds_config)
     map_app = wrap_auth(MapApp(**pcds_map_config), required=False)
 
     return PathDispatcher([

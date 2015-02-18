@@ -114,23 +114,23 @@ def dev_server():
     static_app = static.Cling(resource_filename('pdp', 'static'))
 
     data = PathDispatcher([
-        ('^/{}/.*$'.format(bc_prism.url_base), bc_prism_data_server(dsn, global_config, bc_prism.ensemble_name)),
-        ('^/{}/.*$'.format(bcsd_canada.url_base), bcsd_canada_data_server(dsn, global_config, bcsd_canada.ensemble_name)),
-        ('^/{}/.*$'.format(vic_gen1.url_base), vic_gen1_data_server(dsn, global_config, vic_gen1.ensemble_name)),
-        ('^/{}/.*$'.format(bccaq_extremes.url_base), bccaq_extremes_data_server(dsn, global_config, bccaq_extremes.ensemble_name)),
+        ('^/{}/.*$'.format(bc_prism.url_base), bc_prism_data_server(global_config, bc_prism.ensemble_name)),
+        ('^/{}/.*$'.format(bcsd_canada.url_base), bcsd_canada_data_server(global_config, bcsd_canada.ensemble_name)),
+        ('^/{}/.*$'.format(vic_gen1.url_base), vic_gen1_data_server(global_config, vic_gen1.ensemble_name)),
+        ('^/{}/.*$'.format(bccaq_extremes.url_base), bccaq_extremes_data_server(global_config, bccaq_extremes.ensemble_name)),
         ('^/{}/.*$'.format(hydro_stn.url_base), hydro_stn_data_server(global_config)),
-        ('^/{}/.*$'.format(pcds.url_base), pcds_data_server(pcds_dsn, global_config)),
+        ('^/{}/.*$'.format(pcds.url_base), pcds_data_server(global_config)),
         ])
 
     main = PathDispatcher([
         ('^/css/(default|pcic).css$', static.Cling(resource_filename('pdp_util', 'data'))), # a bit of a hack for now
         ('^/check_auth_app/?$', check_auth),
-        ('^/{}/.*$'.format(pcds.url_base), pcds_portal(pcds_dsn, global_config)),
+        ('^/{}/.*$'.format(pcds.url_base), pcds_portal(global_config)),
         ('^/{}/.*$'.format(hydro_stn.url_base), hydro_stn_portal(global_config)),
-        ('^/{}/.*$'.format(bc_prism.url_base), bc_prism_portal(dsn, global_config)),
-        ('^/{}/.*$'.format(vic_gen1.url_base), vic_gen1_portal(dsn, global_config)),
-        ('^/{}/.*$'.format(bcsd_canada.url_base), bcsd_canada_portal(dsn, global_config)),
-        ('^/{}/.*$'.format(bccaq_extremes.url_base), bccaq_extremes_portal(dsn, global_config)),
+        ('^/{}/.*$'.format(bc_prism.url_base), bc_prism_portal(global_config)),
+        ('^/{}/.*$'.format(vic_gen1.url_base), vic_gen1_portal(global_config)),
+        ('^/{}/.*$'.format(bcsd_canada.url_base), bcsd_canada_portal(global_config)),
+        ('^/{}/.*$'.format(bccaq_extremes.url_base), bccaq_extremes_portal(global_config)),
         ('^/data/.*$', data),
         ('^/docs/.*$', docs_app),
         ],

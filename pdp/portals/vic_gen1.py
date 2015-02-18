@@ -18,14 +18,14 @@ class VicGen1EnsembleLister(EnsembleMemberLister):
         for dfv in ensemble.data_file_variables:
             yield dfv.file.run.emission.short_name, dfv.file.run.model.short_name, dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
-def data_server(dsn, global_config, ensemble_name):
-    conf = raster_conf(dsn, global_config, ensemble_name, url_base)
+def data_server(config, ensemble_name):
+    dsn = config['dsn']
+    conf = raster_conf(dsn, config, ensemble_name, url_base)
     data_server = wrap_auth(RasterServer(dsn, conf))
     return data_server
 
-def portal(dsn, global_config):
-
-
+def portal(config):
+    dsn = config['dsn']
     portal_config = {
         'title': 'Gridded Hydrologic Model Output',
         'ensemble_name': ensemble_name,
@@ -37,10 +37,10 @@ def portal(dsn, global_config):
                 basename=url_base, debug=False)
     }
 
-    portal_config = updateConfig(global_config, portal_config)
+    portal_config = updateConfig(config, portal_config)
     map_app = wrap_auth(MapApp(**portal_config), required=False)
 
-    conf = raster_conf(dsn, global_config, ensemble_name, url_base)
+    conf = raster_conf(dsn, config, ensemble_name, url_base)
     catalog_server = RasterCatalog(dsn, conf) #No Auth
 
     menu = VicGen1EnsembleLister(dsn)
