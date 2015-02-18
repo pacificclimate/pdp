@@ -29,8 +29,8 @@ def pcic_data_portal():
 
 @pytest.fixture(scope="module")
 def pcds_map_app():
-    from pdp import pcds_map
-    return pcds_map
+    from pdp.portals.pcds import portal
+    return portal
 
 @pytest.fixture(scope="module")
 def check_auth_app():
