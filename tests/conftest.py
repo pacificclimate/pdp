@@ -24,8 +24,8 @@ def prism_portal():
 
 @pytest.fixture(scope="module")
 def pcic_data_portal():
-    from pdp import dev_server
-    return dev_server()
+    from pdp.wsgi import dev_server
+    return dev_server
 
 @pytest.fixture(scope="module")
 def pcds_map_app():
@@ -34,7 +34,7 @@ def pcds_map_app():
 
 @pytest.fixture(scope="module")
 def check_auth_app():
-    from pdp import check_auth
+    from pdp.wsgi import check_auth
     return check_auth
 
 @pytest.fixture(scope="module")
