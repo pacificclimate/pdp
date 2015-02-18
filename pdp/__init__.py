@@ -22,8 +22,6 @@ from pdp.dispatch import PathDispatcher
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
 
-here = os.getcwd()
-
 def get_config():
     config = yaml.load(resource_stream('pdp', 'config.yaml'))
     global_config = {
@@ -54,7 +52,7 @@ def get_config():
             'js/pdp_raster_map.js',
             'js/pdp_vector_map.js'
             ], debug=(not config['js_min'])),
-        'templates': os.path.join(here, 'pdp', 'templates'),
+        'templates': resource_filename('pdp', 'templates'),
         'version': get_distribution('pdp').version
         }
 
