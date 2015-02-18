@@ -58,13 +58,6 @@ $(document).ready(function () {
     mdLink.register($('#download-metadata'), function (node) {
         node.attr('href', mdLink.getUrl());
     });
-    mdLink.trigger();
-    $('#download-metadata').click(function(e) {
-        if (!$(loginButton).prop("loggedIn")) {
-            alert("Please log in before downloading data");
-            e.preventDefault();
-        }
-    });
 
     // FIXME: This needs to have error handling and this is horrible
     getCatalog(
