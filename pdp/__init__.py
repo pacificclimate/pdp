@@ -137,7 +137,7 @@ def dev_server():
         default=static_app
     )
 
-    main = AnalyticsMiddleware(main, 'UA-20166041-3')
+    main = AnalyticsMiddleware(main, global_config['analytics'])
     main = SessionMiddleware(main, auto=1, data_dir=global_config['session_dir'])
     main = ErrorMiddleware(main)
     return main
