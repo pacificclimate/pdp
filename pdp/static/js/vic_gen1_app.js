@@ -34,6 +34,12 @@ $(document).ready(function () {
     }
                    );
     dlLink.trigger();
+    $('#download-timeseries').click(function (e) {
+        if (!$(loginButton).prop("loggedIn")) {
+            alert("Please log in before downloading data");
+            e.preventDefault();
+        }
+    });
 
     // Metadata/Attributes Download Link
     mdLink = new RasterDownloadLink($('#download-metadata'), ncwmsLayer, undefined, 'das', 'sm', '0:54787', '0:163', '0:215');

@@ -41,6 +41,12 @@ $(document).ready(function () {
     }
                    );
     dlLink.trigger();
+    $('#download-timeseries').click(function (e) {
+        if (!$(loginButton).prop("loggedIn")) {
+            alert("Please log in before downloading data");
+            e.preventDefault();
+        }
+    });
 
     // Metadata/Attributes Download Link
     mdLink = new RasterDownloadLink($('#download-metadata'), ncwmsLayer, undefined, 'das', 'rx1dayETCCDI', '0:151', '0:510', '0:1068');
@@ -53,7 +59,7 @@ $(document).ready(function () {
     mdLink.trigger();
 
     function getTimeIndex(layer_name) {
-        var layerUrl = catalog[layer_name.split('/')[0]]
+        var layerUrl = catalog[layer_name.split('/')[0]];
         var reg = /.*\/data\/(.*?)\/.*/g;
         var m = reg.exec(layerUrl);
         layerUrl = layerUrl.replace("data/" + m[1], m[1] + "/catalog")
