@@ -7,9 +7,10 @@ import os
 from os.path import dirname
 import atexit
 
-from pkg_resources import resource_filename, get_distribution
+from pkg_resources import resource_filename, resource_stream, get_distribution
 from tempfile import mkdtemp
 from shutil import rmtree
+import yaml
 
 import static
 from beaker.middleware import SessionMiddleware
@@ -19,51 +20,52 @@ from ga_wsgi_client import AnalyticsMiddleware
 from pdp.error import ErrorMiddleware
 from pdp.dispatch import PathDispatcher
 from pdp.minify import wrap_mini
+from pdp.portals import updateConfig
 
 here = os.getcwd()
 
-dsn = 'postgresql://httpd_meta@atlas.pcic/pcic_meta'
-pcds_dsn = 'postgresql://httpd@atlas.pcic/crmp'
+def config():
+    config = yaml.load(resource_stream('pdp', 'config.yaml'))
+    global_config = {
+        'css_files': [
+            'css/jquery-ui-1.10.2.custom.css',
+            'css/reset.css',
+            'css/main.css',
+            'css/map.css',
+            'css/header.css',
+            'css/footer.css',
+            'css/login.css',
+            'css/controls.css',
+            'css/menu.css'],
+        'js_files': [
+            'js/ie8.js', # must be included before OL
+            'js/jquery-1.10.2.js',
+            'js/jquery-ui-1.10.2.custom.js',
+            'js/zebra.js',
+            'js/OL/OpenLayers-2.13.1.js',
+            'js/proj4js-compressed.js',
+            'js/multiaccordion.js'] +
+            wrap_mini(['js/pdp_dom_library.js',
+            'js/pdp_controls.js',
+            'js/pdp_download.js',
+            'js/pdp_filters.js',
+            'js/pdp_map.js',
+            'js/pdp_auth.js',
+            'js/pdp_raster_map.js',
+            'js/pdp_vector_map.js'
+            ], debug=(not config['js_min'])),
+        'templates': os.path.join(here, 'pdp', 'templates'),
+        'version': get_distribution('pdp').version
+        }
 
-global_config = {
-    'app_root': 'http://medusa.pcic.uvic.ca/dataportal',
-    'title': "CRMP Network Data",
-    'css_files': [
-        'css/jquery-ui-1.10.2.custom.css',
-        'css/reset.css',
-        'css/main.css',
-        'css/map.css',
-        'css/header.css',
-        'css/footer.css',
-        'css/login.css',
-        'css/controls.css',
-        'css/menu.css'],
-    'js_files': [
-        'js/ie8.js', # must be included before OL
-        'js/jquery-1.10.2.js',
-        'js/jquery-ui-1.10.2.custom.js',
-        'js/zebra.js',
-        'js/OL/OpenLayers-2.13.1.js',
-        'js/proj4js-compressed.js',
-        'js/multiaccordion.js'] +
-        wrap_mini(['js/pdp_dom_library.js',
-        'js/pdp_controls.js',
-        'js/pdp_download.js',
-        'js/pdp_filters.js',
-        'js/pdp_map.js',
-        'js/pdp_auth.js',
-        'js/pdp_raster_map.js',
-        'js/pdp_vector_map.js'
-        ], debug=True),
-    'geoserver_url': 'http://atlas.pcic.uvic.ca/geoserver/',
-    'ncwms_url': ['http://atlas.pcic.uvic.ca/ncWMS/wms'],
-    'tilecache_url': ['http://a.tiles.pacificclimate.org/tilecache/tilecache.py', 'http://b.tiles.pacificclimate.org/tilecache/tilecache.py', 'http://c.tiles.pacificclimate.org/tilecache/tilecache.py'],
-    'ensemble_name': '',
-    'templates': os.path.join(here, 'pdp', 'templates'),
-    'session_dir': mkdtemp(),
-    'clean_session_dir': True,
-    'version': get_distribution('pdp').version
-    }
+    config = updateConfig(global_config, config)
+    if config['session_dir'] == 'default':
+        config['session_dir'] = resource_filename('pdp', 'pdp_session_dir')
+    return config
+
+global_config = config()
+dsn = global_config['dsn']
+pcds_dsn = global_config['pcds_dsn']
 
 def clean_session_dir(session_dir, should_I):
     if should_I:
@@ -138,4 +140,3 @@ main = AnalyticsMiddleware(main, 'UA-20166041-3')
 main = SessionMiddleware(main, auto=1, data_dir=global_config['session_dir'])
 main = ErrorMiddleware(main)
 
-# main
