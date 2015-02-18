@@ -43,12 +43,7 @@ $(document).ready(function () {
     });
     setBoundsInUrlTemplate();
     dlLink.trigger();
-    $('#download-timeseries').click(function(e) {
-        if (!$(loginButton).prop("loggedIn")) {
-            alert("Please log in before downloading data");
-            e.preventDefault();
-        }
-    });
+    $('#download-timeseries').click(loginButton, pdp.checkAuthBeforeDownload);
 
     // Metadata/Attributes Download Link
     mdLink = new RasterDownloadLink($('#download-metadata'), ncwmsLayer, undefined, 'das', 'pr', '0:13', '0:1680', '0:3241');

@@ -260,5 +260,13 @@ window.pdp = (function (my, $) {
         return loginForm;
     };
 
+    my.checkAuthBeforeDownload = function(e) {
+	var loginButton = e.data;
+        if (!$(loginButton).prop("loggedIn")) {
+            alert("Please log in before downloading data");
+            e.preventDefault();
+        }
+    };
+
     return my;
 }(window.pdp, jQuery));
