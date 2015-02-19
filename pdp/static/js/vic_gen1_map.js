@@ -101,5 +101,10 @@ function init_vic_map() {
 
     ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
 
+    // Expose ncwms as a global
+    (function (globals) {
+        globals.ncwms = ncwms;
+    }(window));
+
     return map;
 }
