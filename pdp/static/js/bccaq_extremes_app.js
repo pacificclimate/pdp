@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, pdp, map, init_raster_map, getOLClickHandler, processNcwmsLayerMetadata, getRasterControls, getRasterDownloadOptions, getPlotWindow, ddsToTimeIndex, RasterDownloadLink*/
+/*global $, jQuery, OpenLayers, pdp, map, init_raster_map, getOLClickHandler, processNcwmsLayerMetadata, getRasterControls, getRasterDownloadOptions, getPlotWindow, ddsToTimeIndex, RasterDownloadLink, MetadataDownloadLink*/
 
 "use strict";
 
@@ -44,9 +44,8 @@ $(document).ready(function () {
     $('#download-timeseries').click(loginButton, pdp.checkAuthBeforeDownload);
 
     // Metadata/Attributes Download Link
-    mdLink = new RasterDownloadLink($('#download-metadata'), ncwmsLayer, undefined, 'das', 'rx1dayETCCDI', '0:151', '0:510', '0:1068');
+    mdLink = new MetadataDownloadLink($('#download-metadata'), ncwmsLayer, undefined);
     ncwmsLayer.events.register('change', mdLink, mdLink.onLayerChange);
-    selectionLayer.events.register('featureadded', mdLink, mdLink.onBoxChange);
     mdLink.register($('#download-metadata'), function (node) {
         node.attr('href', mdLink.getUrl());
     }

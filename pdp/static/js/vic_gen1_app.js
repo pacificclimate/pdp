@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, pdp, getCatalog, init_vic_map, processNcwmsLayerMetadata, getVICControls, getRasterDownloadOptions, RasterDownloadLink*/
+/*global $, jQuery, OpenLayers, pdp, getCatalog, init_vic_map, processNcwmsLayerMetadata, getVICControls, getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
 
 "use strict";
 
@@ -37,9 +37,8 @@ $(document).ready(function () {
     $('#download-timeseries').click(loginButton, pdp.checkAuthBeforeDownload);
 
     // Metadata/Attributes Download Link
-    mdLink = new RasterDownloadLink($('#download-metadata'), ncwmsLayer, undefined, 'das', 'sm', '0:54787', '0:163', '0:215');
+    mdLink = new MetadataDownloadLink($('#download-metadata'), ncwmsLayer, undefined);
     ncwmsLayer.events.register('change', mdLink, mdLink.onLayerChange);
-    selectionLayer.events.register('featureadded', mdLink, mdLink.onBoxChange);
     mdLink.register($('#download-metadata'), function (node) {
         node.attr('href', mdLink.getUrl());
     }
@@ -50,7 +49,6 @@ $(document).ready(function () {
     $("[class^='datepicker']").change(
         function (evt) {
             dlLink.onTimeChange();
-            mdLink.onTimeChange();
         }
     );
 
