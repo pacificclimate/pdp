@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, pdp, init_prism_map, getCatalog, getPRISMControls, getRasterDownloadOptions, RasterDownloadLink*/
+/*global $, jQuery, pdp, init_prism_map, getCatalog, getPRISMControls, getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
 
 "use strict";
 
@@ -40,21 +40,17 @@ $(document).ready(function () {
     selectionLayer.events.register('featureadded', dlLink, dlLink.onBoxChange);
     dlLink.register($('#download-timeseries'), function (node) {
         node.attr('href', dlLink.getUrl());
-    }
-                   );
+    });
     setBoundsInUrlTemplate();
     dlLink.trigger();
+    $('#download-timeseries').click(loginButton, pdp.checkAuthBeforeDownload);
 
     // Metadata/Attributes Download Link
-    mdLink = new RasterDownloadLink($('#download-metadata'), ncwmsLayer, undefined, 'das', 'pr', '0:13', '0:1680', '0:3241');
-    mdLink.url_template = '{dl_url}.das?climatology_bounds,{varname}[{trange}][{yrange}][{xrange}]&';
+    mdLink = new MetadataDownloadLink($('#download-metadata'), ncwmsLayer, undefined);
     ncwmsLayer.events.register('change', mdLink, mdLink.onLayerChange);
-    selectionLayer.events.register('featureadded', mdLink, mdLink.onBoxChange);
     mdLink.register($('#download-metadata'), function (node) {
         node.attr('href', mdLink.getUrl());
-    }
-                   );
-    mdLink.trigger();
+    });
 
     // FIXME: This needs to have error handling and this is horrible
     getCatalog(

@@ -320,3 +320,36 @@ RasterDownloadLink.prototype = {
 
     // Register for changes with the ncwms layer, the box selection layer, or the download extension
 };
+
+function MetadataDownloadLink(element, layer, catalog) {
+    this.element = element;
+    this.layer = layer;
+    this.catalog = catalog;
+    this.url_template = '{dl_url}.das';
+    this.dl_url = ''; // Needs the catalog to determine this
+    this.registrants = [];
+}
+MetadataDownloadLink.prototype = {
+    constructor: MetadataDownloadLink,
+
+    register: RasterDownloadLink.prototype.register,
+    trigger: RasterDownloadLink.prototype.trigger,
+    getUrl: RasterDownloadLink.prototype.getUrl,
+
+    onLayerChange: function (lyr_id) {
+        var dst, url, reg, matches;
+        if (lyr_id === undefined) {
+            lyr_id = this.layer.params.LAYERS;
+        }
+        dst = lyr_id.split('/')[0];
+        this.varname = lyr_id.split('/')[1];
+        url = this.catalog[dst];
+        reg = /.*\/data\/(.*?)\/.*/g;
+        matches = reg.exec(url);
+        url = url.replace("data/" + matches[1], matches[1] + "/catalog");
+
+        this.dl_url = url;
+        this.trigger();
+    }
+    // Register for changes with the ncwms layer
+};
