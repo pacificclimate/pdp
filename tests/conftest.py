@@ -12,12 +12,19 @@ import py
 import webob
 import pytest
 from webob.request import Request
+from beaker.middleware import SessionMiddleware
 
-from pdp import static_app
+from pdp.wsgi import frontend
+
+@pytest.fixture(scope="module")
+def session_dir(request):
+    dirname = py.path.local(mkdtemp())
+    request.addfinalizer(lambda: dirname.remove(rec=1, ignore_errors=True))
+    return str(dirname)
 
 @pytest.fixture(scope="module")
 def static_url_space():
-    return static_app
+    return frontend
 
 @pytest.fixture(scope="function")
 def raster_pydap():
@@ -30,9 +37,9 @@ def prism_portal():
     return portal
 
 @pytest.fixture(scope="module")
-def pcic_data_portal():
+def pcic_data_portal(session_dir):
     from pdp.wsgi import dev_server
-    return dev_server
+    return SessionMiddleware(dev_server, auto=1, data_dir=session_dir)
 
 @pytest.fixture(scope="module")
 def pcds_map_app():
@@ -40,12 +47,9 @@ def pcds_map_app():
     return portal
 
 @pytest.fixture(scope="module")
-def check_auth_app(request):
+def check_auth_app(session_dir):
     from pdp.wsgi import check_auth
-    from beaker.middleware import SessionMiddleware
-    session_dir = py.path.local(mkdtemp())
-    request.addfinalizer(lambda: session_dir.remove(rec=1))
-    return SessionMiddleware(check_auth(), auto=1, data_dir=str(session_dir))
+    return SessionMiddleware(check_auth, auto=1, data_dir=session_dir)
 
 @pytest.fixture(scope="module")
 def authorized_session_id(check_auth_app):

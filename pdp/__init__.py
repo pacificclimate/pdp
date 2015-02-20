@@ -63,7 +63,7 @@ def get_config():
     return config
 
 def clean_session_dir(session_dir, should_I):
-    if should_I:
+    if should_I and os.path.exists(session_dir):
         print('Removing session directory {}'.format(session_dir))
         rmtree(session_dir)
 

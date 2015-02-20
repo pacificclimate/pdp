@@ -23,7 +23,7 @@ def test_static(static_url_space, url):
     assert resp.status == '200 OK'
 
 @pytest.mark.crmpdb
-@pytest.mark.parametrize('url', ['/', '/pcds_map/', '/apps/count_stations/'])
+@pytest.mark.parametrize('url', ['/', '/pcds/map/', '/pcds/count_stations/'])
 def test_no_404s(pcic_data_portal, url):
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
@@ -330,9 +330,10 @@ def test_aaigrid_response(pcic_data_portal, authorized_session_id, url):
     assert resp.content_type == 'application/zip'
 
 @pytest.mark.bulk_data
-def test_hydro_stn_data_catalog(pcic_data_portal):
+def test_hydro_stn_data_catalog(pcic_data_portal, authorized_session_id):
     url = '/data/hydro_stn/catalog.json'
     req = Request.blank(url)
+    req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/json'

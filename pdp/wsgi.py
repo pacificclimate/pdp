@@ -57,9 +57,6 @@ backend = PathDispatcher([
     ('^/{}/.*$'.format(hydro_stn.url_base), hydro_stn_data_server(global_config)),
     ('^/{}/.*$'.format(pcds.url_base), pcds_data_server(global_config))
     ])
-backend = AnalyticsMiddleware(backend, global_config['analytics'])
-backend = SessionMiddleware(backend, auto=1, data_dir=global_config['session_dir'])
-backend = ErrorMiddleware(backend)
 
 ## Frontend server with all portal pages and required resources
 frontend = PathDispatcher([
@@ -74,14 +71,15 @@ frontend = PathDispatcher([
     ('^/docs/.*$', docs_app),
     ], default=static_app)
 
-frontend = AnalyticsMiddleware(frontend, global_config['analytics'])
-frontend = SessionMiddleware(frontend, auto=1, data_dir=global_config['session_dir'])
-frontend = ErrorMiddleware(frontend)
-
 ## Development server
 dev_server = DispatcherMiddleware(frontend, {
     '/data': backend
 })
-dev_server = AnalyticsMiddleware(dev_server, global_config['analytics'])
-dev_server = SessionMiddleware(dev_server, auto=1, data_dir=global_config['session_dir'])
-dev_server = ErrorMiddleware(dev_server)
+
+backend = AnalyticsMiddleware(backend, global_config['analytics'])
+backend = SessionMiddleware(backend, auto=1, data_dir=global_config['session_dir'])
+backend = ErrorMiddleware(backend)
+
+frontend = AnalyticsMiddleware(frontend, global_config['analytics'])
+frontend = SessionMiddleware(frontend, auto=1, data_dir=global_config['session_dir'])
+frontend = ErrorMiddleware(frontend)
