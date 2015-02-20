@@ -73,7 +73,7 @@ function getHydroStnControls() {
 }
 
 // Add an item from the Selection sidebar
-function addToSidebar(idx, dataArray) {
+function addToSidebar(idx, dataArray, loginButton) {
     var item, close, link;
 
     var placeholder = document.getElementById('stn_placeholder');
@@ -90,7 +90,7 @@ function addToSidebar(idx, dataArray) {
     link = document.createElement('a');
     link.href = "../../data/hydro_stn/" + dataArray[idx].FileName + '.ascii';
     link.text = dataArray[idx].StationName;
-
+    $(link).click(loginButton, pdp.checkAuthBeforeDownload);
     item.appendChild(link);
 
     $('#selectedStations').append(item);
