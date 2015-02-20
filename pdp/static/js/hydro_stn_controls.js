@@ -75,7 +75,11 @@ function getHydroStnControls() {
 // Add an item from the Selection sidebar
 function addToSidebar(idx, dataArray) {
     var item, close, link;
-    document.getElementById('stn_placeholder').remove()
+
+    var placeholder = document.getElementById('stn_placeholder');
+    if (placeholder) {
+        placeholder.remove();
+    }
     item = pdp.createDiv('stnNo' + idx, '');
     close = item.appendChild(pdp.createDiv('', 'stn_remove'));
     close.textContent = "[X]";
