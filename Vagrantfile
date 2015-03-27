@@ -6,10 +6,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
-  # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "dummy"
+  config.vm.box = "ubuntu-14.04"
 
   config.vm.provider :aws do |aws, override|
+
+    # Do this before hand
+    # $ vagrant plugin install vagrant-aws
+    # $ vagrant box add dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box
+    override.vm.box = "dummy"
+
     config.nfs.functional = false
 
     # Configure these outside of the repo in your user-specific Vagrantfile
@@ -20,6 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #aws.keypair_name = "user@host"
     #override.ssh.private_key_path = "/home/user/.ssh/id_rsa"
 
+    # ubuntu/images/hvm/ubuntu-trusty-14.04-amd64-server-20150305
     aws.ami = "ami-35143705"
 
     aws.region = "us-west-2"
@@ -38,7 +44,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #puppet.options = "--verbose --debug"
   end
 
-  config.vm.network :forwarded_port, guest: 80, host: 8080
+  config.vm.network :forwarded_port, guest: 80, host: 8888
   config.vm.synced_folder ".tox/", "devenv/", disabled: true
   
 end

@@ -36,6 +36,7 @@
 # Copyright 2015 James Hiebert, Basil Veerman
 #
 class pcic-pdp {
+
   exec { "apt-get update":
     path => "/usr/bin",
   }
@@ -60,8 +61,8 @@ export C_INCLUDE_PATH=/usr/include/gdal
 
   file { ["/var/www/dataportal", "/var/www/dataportal/logs"]:
     ensure => "directory",
-    owner => "ubuntu",
-    group => "ubuntu",
+    owner => $id,
+    group => $id,
     mode => "775",
   }
 
@@ -92,7 +93,7 @@ export C_INCLUDE_PATH=/usr/include/gdal
     content => "[program:pdp_backend]
 command=gunicorn -b 0.0.0.0:8011 --pid=gunicorn_pdp_backend.pid -w 3 -t 3600 --log-level=debug --access-logfile=backend_access.log --error-logfile=backend_error.log pdp.wsgi:backend
 directory=/var/www/dataportal
-user=ubuntu
+user=${id}
 autostart=true
 autorestart=true
 redirect_stderr=True
@@ -106,7 +107,7 @@ redirect_stderr=True
     content => "[program:pdp_frontend]
 command=gunicorn -b 0.0.0.0:8010 --pid=gunicorn_pdp_frontend.pid --log-level=debug --access-logfile=frontend_access.log --error-logfile=frontend_error.log pdp.wsgi:frontend
 directory=/var/www/dataportal
-user=ubuntu
+user=${id}
 autostart=true
 autorestart=true
 redirect_stderr=True
