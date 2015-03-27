@@ -30,8 +30,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provision :shell, :inline => "sudo apt-get install -qq puppet"
-  config.vm.provision :puppet
+  config.vm.provision :shell do |shell|
+      shell.inline = "mkdir -p /etc/puppet/modules;
+                      puppet module install puppetlabs-apache;"
+  end
+  config.vm.provision "puppet" do |puppet|
+    puppet.module_path = "puppet_modules"
+    #puppet.options = "--verbose --debug"
+  end
 
+  config.vm.network :forwarded_port, guest: 80, host: 8080
   config.vm.synced_folder ".tox/", "devenv/", disabled: true
   
 end
