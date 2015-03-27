@@ -29,10 +29,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   end
 
-  config.vm.provision :shell, :inline => "sudo apt-get install -qq puppet"
+  config.vm.provision :shell, :inline => "dpkg -l puppet || sudo apt-get install -qq puppet"
   config.vm.provision :shell do |shell|
-      shell.inline = "mkdir -p /etc/puppet/modules;
-                      puppet module install puppetlabs-apache;"
+      shell.inline = "(puppet module list | grep puppetlabs-apache) || (mkdir -p /etc/puppet/modules; puppet module install puppetlabs-apache;)"
   end
   config.vm.provision "puppet" do |puppet|
     puppet.module_path = "puppet_modules"

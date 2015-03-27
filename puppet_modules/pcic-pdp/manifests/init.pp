@@ -40,11 +40,6 @@ class pcic-pdp {
     path => "/usr/bin",
   }
 
-  package { ["apache2", "libapache2-mod-wsgi"]:
-    ensure  => present,
-    require => Exec["apt-get update"],
-  }
-
   $library_deps = ["libhdf5-dev", "libnetcdf-dev", "libgdal-dev"]
   package { $library_deps:
               ensure => "installed",
@@ -78,27 +73,6 @@ export C_INCLUDE_PATH=/usr/include/gdal
     require => [ Package[$python_deps], Package[$library_deps], File["/etc/profile.d/gdal_paths.sh"] ],
   }
 
-  # Apache
-  service { "apache2":
-    ensure  => "running",
-    require => Package["apache2"],
-  }
-  file { "/var/www/html/sample-webapp":
-    ensure  => "link",
-    target  => "/vagrant/sample-webapp",
-    require => Package["apache2"],
-    notify  => Service["apache2"],
-  }
-  file { "/etc/apache2/sites-enabled/000-default.conf":
-    ensure => absent,
-  }
-  file { "/etc/apache2/sites-enabled/000-pdp.conf":
-    ensure => "link",
-    target => "/vagrant/puppet_modules/pcic-pdp/files/apache.conf",
-    require => Package["apache2"],
-    notify  => Service["apache2"],           
-  }
-
   # Supervisord
   package { "supervisor":
     ensure  => present,
@@ -128,8 +102,8 @@ redirect_stderr=True
   }
 
   file { "/etc/supervisor/conf.d/pdp_frontend.conf":
-  ensure => "present",
-  content => "[program:pdp_frontend]
+    ensure => "present",
+    content => "[program:pdp_frontend]
 command=gunicorn -b 0.0.0.0:8010 --pid=gunicorn_pdp_frontend.pid --log-level=debug --access-logfile=frontend_access.log --error-logfile=frontend_error.log pdp.wsgi:frontend
 directory=/var/www/dataportal
 user=ubuntu
@@ -139,5 +113,22 @@ redirect_stderr=True
 ",
     require => Package["supervisor"],
     notify => Service["supervisor"],
+  }
+
+  class { 'apache':
+    default_confd_files => false,
+  }
+  apache::vhost { 'My-VHost':
+    ip => $::ipaddress,
+    ip_based => true,
+    port => '80',
+    docroot => '/var/www/html',
+    add_listen => false,
+    proxy_pass => [
+      { 'path' => '/data/', 'url' => 'http://localhost:8011/',
+                                  'reverse_urls' => ['http://localhost:8011/']},
+      { 'path' => '/', 'url' => 'http://localhost:8010/',
+                                  'reverse_urls' => ['http://localhost:8010/']},
+    ]
   }
 }
