@@ -61,8 +61,8 @@ export C_INCLUDE_PATH=/usr/include/gdal
 
   file { ["/var/www/dataportal", "/var/www/dataportal/logs"]:
     ensure => "directory",
-    owner => $id,
-    group => $id,
+    owner => www-data,
+    group => www-data,
     mode => "775",
   }
 
@@ -74,46 +74,21 @@ export C_INCLUDE_PATH=/usr/include/gdal
     require => [ Package[$python_deps], Package[$library_deps], File["/etc/profile.d/gdal_paths.sh"] ],
   }
 
-  # Supervisord
-  package { "supervisor":
-    ensure  => present,
-    require => Exec["apt-get update"],
-  }
-  service { "supervisor":
-    ensure  => "running",
-    require => Package["supervisor"],
-  }
+  include ::supervisord
 
-  file { "/etc/supervisor/conf.d/pdp_prod.conf":
-    ensure => absent,
+  supervisord::program { 'pdp_backend':
+    command     => 'gunicorn -b localhost:8011 --pid=gunicorn_pdp_backend.pid -w 3 -t 3600 --log-level=debug --access-logfile=backend_access.log --error-logfile=backend_error.log pdp.wsgi:backend',
+    autostart => true,
+    autorestart => true,
+    redirect_stderr => true,
+    user => www-data,
   }
-
-  file { "/etc/supervisor/conf.d/pdp_backend.conf":
-    ensure => "present",
-    content => "[program:pdp_backend]
-command=gunicorn -b 0.0.0.0:8011 --pid=gunicorn_pdp_backend.pid -w 3 -t 3600 --log-level=debug --access-logfile=backend_access.log --error-logfile=backend_error.log pdp.wsgi:backend
-directory=/var/www/dataportal
-user=${id}
-autostart=true
-autorestart=true
-redirect_stderr=True
-",
-    require => Package["supervisor"],
-    notify => Service["supervisor"],
-  }
-
-  file { "/etc/supervisor/conf.d/pdp_frontend.conf":
-    ensure => "present",
-    content => "[program:pdp_frontend]
-command=gunicorn -b 0.0.0.0:8010 --pid=gunicorn_pdp_frontend.pid --log-level=debug --access-logfile=frontend_access.log --error-logfile=frontend_error.log pdp.wsgi:frontend
-directory=/var/www/dataportal
-user=${id}
-autostart=true
-autorestart=true
-redirect_stderr=True
-",
-    require => Package["supervisor"],
-    notify => Service["supervisor"],
+  supervisord::program { 'pdp_frontend':
+    command     => 'gunicorn -b localhost:8010 --pid=gunicorn_pdp_frontend.pid -w 3 -t 3600 --log-level=debug --access-logfile=frontend_access.log --error-logfile=frontend_error.log pdp.wsgi:frontend',
+    autostart => true,
+    autorestart => true,
+    redirect_stderr => true,
+    user => www-data,
   }
 
   class { 'apache':

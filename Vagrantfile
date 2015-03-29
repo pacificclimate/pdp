@@ -1,3 +1,4 @@
+
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
@@ -37,7 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision :shell, :inline => "dpkg -l puppet || sudo apt-get install -qq puppet"
   config.vm.provision :shell do |shell|
-      shell.inline = "(puppet module list | grep puppetlabs-apache) || (mkdir -p /etc/puppet/modules; puppet module install puppetlabs-apache;)"
+      shell.inline = "for module in puppetlabs-apache stankevich-python ajcrowe-supervisord; do (puppet module list | grep ${module}) || (mkdir -p /etc/puppet/modules; puppet module install ${module};); done"
   end
   config.vm.provision "puppet" do |puppet|
     puppet.module_path = "puppet_modules"
