@@ -59,11 +59,19 @@ export C_INCLUDE_PATH=/usr/include/gdal
 "
   }
 
-  file { ["/var/www/dataportal", "/var/www/dataportal/logs"]:
+  file { ["/var/www/dataportal", "/var/www/dataportal/logs", "/var/www/dataportal/auth_sessions"]:
     ensure => "directory",
     owner => www-data,
     group => www-data,
     mode => "775",
+  }
+
+  file { "/var/www/dataportal/config.yaml":
+    ensure => present,
+    owner => www-data,
+    group => www-data,
+    mode => "600",
+    source => "/vagrant/pdp/config.yaml",
   }
 
   exec { "create_pdp_environment":
@@ -77,18 +85,20 @@ export C_INCLUDE_PATH=/usr/include/gdal
   include ::supervisord
 
   supervisord::program { 'pdp_backend':
-    command     => 'gunicorn -b localhost:8011 --pid=gunicorn_pdp_backend.pid -w 3 -t 3600 --log-level=debug --access-logfile=backend_access.log --error-logfile=backend_error.log pdp.wsgi:backend',
+    command     => 'gunicorn -b localhost:8011 --pid=gunicorn_pdp_backend.pid -w 3 -t 3600 --worker-class gevent --log-level=debug --access-logfile=backend_access.log --error-logfile=backend_error.log pdp.wsgi:backend',
     autostart => true,
     autorestart => true,
     redirect_stderr => true,
     user => www-data,
+    directory => '/var/www/dataportal/',
   }
   supervisord::program { 'pdp_frontend':
-    command     => 'gunicorn -b localhost:8010 --pid=gunicorn_pdp_frontend.pid -w 3 -t 3600 --log-level=debug --access-logfile=frontend_access.log --error-logfile=frontend_error.log pdp.wsgi:frontend',
+    command     => 'gunicorn -b localhost:8010 --pid=gunicorn_pdp_frontend.pid -w 3 -t 3600 --worker-class gevent --log-level=debug --access-logfile=frontend_access.log --error-logfile=frontend_error.log pdp.wsgi:frontend',
     autostart => true,
     autorestart => true,
     redirect_stderr => true,
     user => www-data,
+    directory => '/var/www/dataportal/',
   }
 
   class { 'apache':
