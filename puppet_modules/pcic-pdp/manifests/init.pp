@@ -134,6 +134,10 @@ export C_INCLUDE_PATH=/usr/include/gdal
     docroot => '/var/www/html',
     add_listen => false,
     proxy_pass => [
+      { 'path' => '/geoserver', 'url' => 'http://atlas.pcic.uvic.ca:8080/geoserver',
+                                'reverse_urls' => ['http://atlas.pcic.uvic.ca:8080/geoserver']},
+      { 'path' => '/ncWMS', 'url' => 'http://atlas.pcic.uvic.ca:8080/ncWMS',
+                                'reverse_urls' => ['http://atlas.pcic.uvic.ca:8080/ncWMS']},
       { 'path' => '/data/', 'url' => 'http://localhost:8011/',
                                   'reverse_urls' => ['http://localhost:8011/']},
       { 'path' => '/', 'url' => 'http://localhost:8010/',
