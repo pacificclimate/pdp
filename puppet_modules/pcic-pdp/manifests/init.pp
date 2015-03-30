@@ -43,7 +43,7 @@ class pcic-pdp {
 
   # Symlinks for the PCIC specific bulk data
   # /home/data/climate/hydrology/vic/gen1/
-  file { ["/home", "/home/data", "/home/data/climate", "/home/data/climate/hydrology", "/home/data/climate/hydrology/vic", "/home/data/climate/downscale", "/home/data/climate/PRISM"]:
+  file { ["/home", "/home/data", "/home/data/climate", "/home/data/climate/hydrology", "/home/data/climate/hydrology/vic", "/home/data/climate/downscale", "/home/data/climate/PRISM", "/home/data/projects", "/home/data/projects/hydrology", "/home/data/projects/hydrology/vic_gen1_followup/"]:
     ensure => "directory",
   }
   file { "/home/data/climate/hydrology/vic/gen1/":
@@ -61,6 +61,11 @@ class pcic-pdp {
   file { "/home/data/climate/PRISM/dataportal/":
     ensure => "link",
     target => "/datasets/data4/climate/PRISM/dataportal",
+  }
+  # /home/data/projects/hydrology/vic_gen1_followup/vic_gen1_routed
+  file { "/home/data/projects/hydrology/vic_gen1_followup/vic_gen1_routed":
+    ensure => "link",
+    target => "/datasets/projects-hydrology/vic_gen1_followup/vic_gen1_routed",
   }
 
   $library_deps = ["libhdf5-dev", "libnetcdf-dev", "libgdal-dev"]

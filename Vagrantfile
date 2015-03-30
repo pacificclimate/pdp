@@ -57,6 +57,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Part of above
   # /home/data/climate/PRISM/dataportal/
   config.vm.synced_folder "/datasets/data4/climate/PRISM/dataportal", "/datasets/data4/climate/PRISM/dataportal", type: "virtualbox"
+  # /home/data/projects/hydrology/vic_gen1_followup/vic_gen1_routed
+  config.vm.synced_folder "/datasets/projects-hydrology", "/datasets/projects-hydrology", type: "virtualbox"
 
   
 end
