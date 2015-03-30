@@ -41,6 +41,28 @@ class pcic-pdp {
     path => "/usr/bin",
   }
 
+  # Symlinks for the PCIC specific bulk data
+  # /home/data/climate/hydrology/vic/gen1/
+  file { ["/home", "/home/data", "/home/data/climate", "/home/data/climate/hydrology", "/home/data/climate/hydrology/vic", "/home/data/climate/downscale", "/home/data/climate/PRISM"]:
+    ensure => "directory",
+  }
+  file { "/home/data/climate/hydrology/vic/gen1/":
+    ensure => "link",
+    target => "/datasets/climate-hydrology-vic-gen1",
+  }
+  # /home/data/climate/downscale/CMIP5/
+  file { "/home/data/climate/downscale/CMIP5/":
+    ensure => "link",
+    target => "/datasets/climate-downscale-CMIP5",
+  }
+  # /home/data/climate/downscale/CMIP5/BCCAQ/climdex/
+  # Part of above
+  # /home/data/climate/PRISM/dataportal/
+  file { "/home/data/climate/PRISM/dataportal/":
+    ensure => "link",
+    target => "/datasets/data4/climate/PRISM/dataportal",
+  }
+
   $library_deps = ["libhdf5-dev", "libnetcdf-dev", "libgdal-dev"]
   package { $library_deps:
               ensure => "installed",
@@ -103,6 +125,7 @@ export C_INCLUDE_PATH=/usr/include/gdal
 
   class { 'apache':
     default_confd_files => false,
+    sendfile => off,
   }
   apache::vhost { 'My-VHost':
     ip => $::ipaddress,

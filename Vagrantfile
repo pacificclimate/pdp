@@ -47,5 +47,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.network :forwarded_port, guest: 80, host: 8888
   config.vm.synced_folder ".tox/", "devenv/", disabled: true
+
+  # FIXME: This is all system specific garbage
+  # /home/data/climate/hydrology/vic/gen1/
+  config.vm.synced_folder "/datasets/climate-hydrology-vic-gen1", "/datasets/climate-hydrology-vic-gen1", type: "virtualbox"
+  # /home/data/climate/downscale/CMIP5/
+  config.vm.synced_folder "/datasets/climate-downscale-CMIP5", "/datasets/climate-downscale-CMIP5", type: "virtualbox"
+  # /home/data/climate/downscale/CMIP5/BCCAQ/climdex/
+  # Part of above
+  # /home/data/climate/PRISM/dataportal/
+  config.vm.synced_folder "/datasets/data4/climate/PRISM/dataportal", "/datasets/data4/climate/PRISM/dataportal", type: "virtualbox"
+
   
 end
