@@ -14,10 +14,13 @@ import pytest
 from webob.request import Request
 from beaker.middleware import SessionMiddleware
 
-from pdp.wsgi import frontend
-
 @pytest.fixture(scope="module")
 def session_dir(request):
+    '''For testing we should manage the session directory ourselves so that:
+       a) we don't stomp on existing session directories
+       b) we don't require run time configuration
+       c) we ensure that everything gets properly cleaned up after the test run
+    '''
     dirname = py.path.local(mkdtemp())
     request.addfinalizer(lambda: dirname.remove(rec=1, ignore_errors=True))
     return str(dirname)
@@ -38,7 +41,9 @@ def prism_portal():
 
 @pytest.fixture(scope="module")
 def pcic_data_portal(session_dir):
-    from pdp.wsgi import dev_server
+    from pdp.main import initialize_dev_server
+    from pdp import get_config
+    dev_server = initialize_dev_server(get_config(), False, False)
     return SessionMiddleware(dev_server, auto=1, data_dir=session_dir)
 
 @pytest.fixture(scope="module")
@@ -48,7 +53,9 @@ def pcds_map_app():
 
 @pytest.fixture(scope="module")
 def check_auth_app(session_dir):
-    from pdp.wsgi import check_auth
+    from pdp import wrap_auth
+    from pdp_util.auth import check_authorized_return_email
+    check_auth = wrap_auth(check_authorized_return_email, required=False)
     return SessionMiddleware(check_auth, auto=1, data_dir=session_dir)
 
 @pytest.fixture(scope="module")

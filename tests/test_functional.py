@@ -17,9 +17,9 @@ from numpy.testing import assert_almost_equal
 from bs4 import BeautifulSoup
 
 @pytest.mark.parametrize('url', ['/js/crmp_map.js', '/css/main.css', '/images/banner.png'])
-def test_static(static_url_space, url):
+def test_static(pcic_data_portal, url):
     req = Request.blank(url)
-    resp = req.get_response(static_url_space)
+    resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
 
 @pytest.mark.crmpdb
