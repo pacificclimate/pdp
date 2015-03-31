@@ -25,10 +25,6 @@ def session_dir(request):
     request.addfinalizer(lambda: dirname.remove(rec=1, ignore_errors=True))
     return str(dirname)
 
-@pytest.fixture(scope="module")
-def static_url_space():
-    return frontend
-
 @pytest.fixture(scope="function")
 def raster_pydap():
     from pdp.portals.bcsd_downscale_canada import portal
