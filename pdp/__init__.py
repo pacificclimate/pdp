@@ -24,7 +24,9 @@ from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
 
 def get_config():
-    config = yaml.load(resource_stream('pdp', 'config.yaml'))
+    config_filename = os.environ.get('PDP_CONFIG', '/var/www/dataportal/config.yaml')
+    with open(config_filename) as f:
+        config = yaml.load(f)
     global_config = {
         'css_files': [
             'css/jquery-ui-1.10.2.custom.css',

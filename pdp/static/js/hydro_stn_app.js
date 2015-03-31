@@ -32,7 +32,7 @@ $(document).ready(function () {
     stnLayer = map.getStnLayer();
     stnLayer.events.on({
         'featureselected': function (feature) {
-            addToSidebar(feature.feature.fid, dataArray);
+            addToSidebar(feature.feature.fid, dataArray, loginButton);
         },
         'featureunselected': function (feature) {
             removeFromSidebar(feature.feature.fid);
