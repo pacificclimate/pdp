@@ -6,6 +6,13 @@ News / Release Notes
 
 *In Development*
 
+2.2.5
+-----
+
+*Release Date: 30-Mar-2015*
+
+* Pull in updated pupynere-pdp version by incrementing pydap.handlers.hdf5 and pydap.responses.netcdf versions - Fixes streaming netcdfs without unlimited dimensions
+
 2.2.4
 -----
 
