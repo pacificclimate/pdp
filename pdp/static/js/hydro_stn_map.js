@@ -1,11 +1,18 @@
+/*jslint browser: true, devel: true */
+/*global $, jQuery, OpenLayers, pdp, map, BC3005_map_options, getBasicControls, getEditingToolbar, getHandNav, getPolyEditor, getBC3005OsmBaseLayer, getBC3005Bounds*/
+
+"use strict";
+
 //var map; // global so that it's accessible across documents
 // NOTE: variables 'gs_url' is expected to be set before this is call
 // Do this in the sourcing html
-
-var map;
-var selectionLayer;
+var map, selectionLayer, gs_url;
 
 function init_hydro_stn_map() {
+    var options, mapControls, panelControls, stationLayer,
+        defaultStyle, selectStyle, hoverStyle, styleMap, selectionLayer,
+        highlightCtrl, selectCtrl;
+
     // Map Config
     options = BC3005_map_options();
     options.tileManager = null;
@@ -26,99 +33,96 @@ function init_hydro_stn_map() {
     map = new OpenLayers.Map('pdp-map', options);
 
     // Set up default, hover, and selected styles
-    var defaultStyle = new OpenLayers.Style({
+    defaultStyle = new OpenLayers.Style({
         externalGraphic: pdp.app_root + "/images/hydro_marker.svg",
         graphicWidth: 18,
         graphicHeight: 24,
         graphicXOffset: -9,
         graphicYOffset: -22.8
     });
-    var selectStyle = new OpenLayers.Style({
+    selectStyle = new OpenLayers.Style({
         externalGraphic: pdp.app_root + "/images/hydro_marker-s.svg",
         graphicWidth: 18,
         graphicHeight: 24,
         graphicXOffset: -9,
         graphicYOffset: -22.8
     });
-    var hoverStyle = new OpenLayers.Style({
+    hoverStyle = new OpenLayers.Style({
         externalGraphic: pdp.app_root + "/images/hydro_marker-h.svg",
         graphicWidth: 18,
         graphicHeight: 24,
         graphicXOffset: -9,
         graphicYOffset: -22.8
     });
-    var styleMap = new OpenLayers.StyleMap({
-        'default':defaultStyle,
+    styleMap = new OpenLayers.StyleMap({
+        'default': defaultStyle,
         'select': selectStyle,
         'temporary': hoverStyle
     });
 
     // Set up station layer and apply styles/selection control
-    var stationLayer = new OpenLayers.Layer.Vector(
+    stationLayer = new OpenLayers.Layer.Vector(
         "Stations",
         {
             styleMap: styleMap
         }
     );
 
-    var highlightCtrl = new OpenLayers.Control.SelectFeature(stationLayer, 
-        {
-            hover: true,
-            highlightOnly: true,
-            renderIntent: "temporary",
+    highlightCtrl = new OpenLayers.Control.SelectFeature(stationLayer, {
+        hover: true,
+        highlightOnly: true,
+        renderIntent: "temporary",
     });
     map.addControl(highlightCtrl);
     highlightCtrl.activate();
 
-    var selectCtrl = new OpenLayers.Control.SelectFeature(stationLayer,
-        {
-            multiple: true,
-            toggle: true,
-            clickoutFeature: true,
-        }
-    );
+    selectCtrl = new OpenLayers.Control.SelectFeature(stationLayer, {
+        multiple: true,
+        toggle: true,
+        clickoutFeature: true,
+    });
     map.addControl(selectCtrl);
     selectCtrl.activate();
 
     selectionLayer.events.on({
-        beforefeatureadded: function(event) {
-            poly = event.feature.geometry;
-            for (var i = stationLayer.features.length - 1; i >= 0; i--) {
+        beforefeatureadded: function (event) {
+            var i, poly = event.feature.geometry;
+            for (i = stationLayer.features.length - 1; i >= 0; i -= 1) {
                 if (poly.intersects(stationLayer.features[i].geometry)) {
                     map.toggleSelectFeatureByFid(stationLayer.features[i].fid);
                 }
-            };
+            }
         }
     });
 
     map.addLayers(
         [
-        stationLayer,
-        getBC3005OsmBaseLayer(pdp.tilecache_url, 'BC OpenStreeMap', 'bc_osm')
+            stationLayer,
+            getBC3005OsmBaseLayer(pdp.tilecache_url, 'BC OpenStreeMap', 'bc_osm')
         ]
     );
     map.zoomToMaxExtent();
     map.zoomToExtent(getBC3005Bounds(), true);
 
-    map.getStnLayer = function() {
+    map.getStnLayer = function () {
         return map.getLayersByName("Stations")[0];
     };
-    map.getPolySelectLayer = function() {
+    map.getPolySelectLayer = function () {
         return map.getLayersByName("Polygon selection")[0];
     };
 
-    map.selectFeatureByFid = function(fid) {
+    map.selectFeatureByFid = function (fid) {
         var feature = stationLayer.getFeatureByFid(fid);
         selectCtrl.select(feature);
     };
-    map.unselectFeatureByFid = function(fid) {
+    map.unselectFeatureByFid = function (fid) {
         var feature = stationLayer.getFeatureByFid(fid);
         selectCtrl.unselect(feature);
     };
-    map.unselectAll = function() {
+    map.unselectAll = function () {
         selectCtrl.unselectAll();
     };
-    map.toggleSelectFeatureByFid = function(fid) {
+    map.toggleSelectFeatureByFid = function (fid) {
         var feature = stationLayer.getFeatureByFid(fid);
         if ($.inArray(feature, stationLayer.selectedFeatures) === -1) {
             selectCtrl.select(feature);
@@ -127,14 +131,13 @@ function init_hydro_stn_map() {
         }
     };
 
-    map.getSelectedFids = function() {
-        var fids = [];
+    map.getSelectedFids = function () {
+        var i, fids = [], selected;
         selected = stationLayer.selectedFeatures;
-        for (var i = selected.length - 1; i >= 0; i--) {
+        for (i = selected.length - 1; i >= 0; i -= 1) {
             fids.push(selected[i].fid);
-        };
+        }
         return fids;
     };
-
     return map;
 }

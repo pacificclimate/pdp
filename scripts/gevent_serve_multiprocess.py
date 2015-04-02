@@ -7,7 +7,7 @@ from gevent.baseserver import _tcp_listener
 from gevent import pywsgi
 from gevent.monkey import patch_all; patch_all()
 
-from pdp import main
+from pdp.wsgi import dev_server
 
 if __name__ == '__main__':
     '''
@@ -136,7 +136,7 @@ if __name__ == '__main__':
     
     '''
     
-    parser = ArgumentParser(description='Start a development pdp:main Flask instance')
+    parser = ArgumentParser(description='Start a development pdp.wsgi:dev_server Flask instance')
     parser.add_argument('-p', '--port', type=int, required=True,
                         help='Indicate the port on which to bind the application')
     parser.add_argument('--processors', type=int, required=True,
@@ -148,7 +148,7 @@ if __name__ == '__main__':
     listener = _tcp_listener(('0.0.0.0', args.port))
     
     def serve_forever(listener):
-        pywsgi.WSGIServer(listener, main).serve_forever()
+        pywsgi.WSGIServer(listener, dev_server).serve_forever()
     
     if args.processors == 0:
         num_proc = cpu_count() * 2 + 1

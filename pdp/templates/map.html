@@ -16,8 +16,6 @@
     <py:for each="url in ncwms_url">
       ncwmsUrls.push('${url}');
     </py:for>
-    (function( global, undefined) {
-      "use strict"
       var pdp = {
         VERSION: '0.1',
         app_root: '${app_root}',
@@ -26,8 +24,6 @@
         tilecache_url: tcUrls,
         ensemble_name: '${ensemble_name}'     
       };
-      global.pdp = pdp
-    }(typeof window === 'undefined' ? this : window));
     
     </script>
 

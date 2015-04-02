@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 
 from flask import Flask
 
-from pdp import main
+from pdp.wsgi import dev_server
 
 if __name__ == '__main__':
 
@@ -22,6 +22,5 @@ if __name__ == '__main__':
     port = args.port
 
     app = Flask(__name__)
-    app.wsgi_app = main
-    app.debug = True
-    app.run('0.0.0.0', port, use_reloader=True, debug=True, use_debugger=True, threaded=args.threaded)
+    app.wsgi_app = dev_server
+    app.run('0.0.0.0', port, use_reloader=True, debug=True, use_debugger=True, threaded=args.threaded, extra_files=['pdp/config.yaml'])

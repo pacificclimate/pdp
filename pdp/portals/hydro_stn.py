@@ -2,13 +2,13 @@ from pkg_resources import resource_filename
 
 from pdp import wrap_auth
 from pdp.dispatch import PathDispatcher
-from pdp_util import session_scope
 from pdp_util.map import MapApp
-from pdp_util.raster import RasterServer, RasterCatalog, db_raster_configurator
 from pydap.wsgi.app import DapServer
 
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
+
+url_base = 'hydro_stn'
 
 class HydroStationDataServer(DapServer):
     '''WSGI app which is a subclass of PyDap's DapServer that directly configures the app's root_url'''
@@ -22,8 +22,11 @@ class HydroStationDataServer(DapServer):
         self._config['root_url'] = self.root_url
         return self._config
 
-def portal(global_config):
+def data_server(global_config):
+    data_server = wrap_auth(HydroStationDataServer(resource_filename('pdp', 'portals/hydro_stn.yaml'), global_config['app_root']))
+    return data_server
 
+def portal(config):
     hydro_stn_config = {
         'title': 'Modelled Streamflow Data',
         'js_files' :
@@ -33,19 +36,14 @@ def portal(global_config):
                 'js/hydro_stn_map.js',
                 'js/hydro_stn_controls.js',
                 'js/hydro_stn_app.js'],
-                  basename='hydro_stn', debug=True
+                  basename=url_base, debug=(not config['js_min'])
                   )
         }
-    config = updateConfig(global_config, hydro_stn_config)
 
+    config = updateConfig(config, hydro_stn_config)
     map_app = wrap_auth(MapApp(**config), required=False)
-
-    data_server = wrap_auth(HydroStationDataServer(resource_filename('pdp', 'portals/hydro_stn.yaml'), global_config['app_root']))
-    # data_server = wrap_auth(HydroStationDataServer(resource_filename('pdp', 'portals/hydro_stn.yaml'), global_config['app_root']))
 
     return PathDispatcher([
         ('^/map/?.*$', map_app),
-        # Catalog can be found at /data/catalog.json
-        ('^/data/.*$', data_server),
     ])
 

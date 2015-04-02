@@ -1,0 +1,16 @@
+app_root: 'http://tools.pacificclimate.org/dataportal'
+title: ''
+ensemble_name: ''
+dsn: postgresql://httpd_meta@atlas.pcic/pcic_meta # add password for production
+pcds_dsn: postgresql://httpd@atlas.pcic/crmp # add password for production
+js_min: false
+geoserver_url: http://atlas.pcic.uvic.ca/geoserver/ # change for production
+ncwms_url: 
+    - http://atlas.pcic.uvic.ca/ncWMS/wms # change for production
+tilecache_url: 
+    - http://a.tiles.pacificclimate.org/tilecache/tilecache.py
+    - http://b.tiles.pacificclimate.org/tilecache/tilecache.py
+    - http://c.tiles.pacificclimate.org/tilecache/tilecache.py
+session_dir: default
+clean_session_dir: True # change for production
+analytics: UA-20166041-3 # change for production
