@@ -1,5 +1,6 @@
 import sys
 from logging import basicConfig, DEBUG
+from os import environ
 from argparse import ArgumentParser
 
 from flask import Flask
@@ -23,4 +24,5 @@ if __name__ == '__main__':
 
     app = Flask(__name__)
     app.wsgi_app = dev_server
-    app.run('0.0.0.0', port, use_reloader=True, debug=True, use_debugger=True, threaded=args.threaded, extra_files=['pdp/config.yaml'])
+    config_filename = environ.get('PDP_CONFIG', '/var/www/dataportal/config.yaml')
+    app.run('0.0.0.0', port, use_reloader=True, debug=True, use_debugger=True, threaded=args.threaded, extra_files=[config_filename])
