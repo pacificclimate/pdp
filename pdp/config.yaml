@@ -11,6 +11,8 @@ tilecache_url:
     - http://a.tiles.pacificclimate.org/tilecache/tilecache.py
     - http://b.tiles.pacificclimate.org/tilecache/tilecache.py
     - http://c.tiles.pacificclimate.org/tilecache/tilecache.py
+use_auth: True
 session_dir: default
 clean_session_dir: True # change for production
+use_analytics: True
 analytics: UA-20166041-3 # change for production
