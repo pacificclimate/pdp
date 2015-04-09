@@ -23,7 +23,7 @@ class HydroStationDataServer(DapServer):
         return self._config
 
 def data_server(global_config):
-    data_server = wrap_auth(HydroStationDataServer(resource_filename('pdp', 'portals/hydro_stn.yaml'), global_config['app_root']))
+    data_server = wrap_auth(HydroStationDataServer(resource_filename('pdp', 'portals/hydro_stn.yaml'), global_config['data_root'].rstrip('/') + '/'))
     return data_server
 
 def portal(config):

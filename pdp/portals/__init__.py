@@ -17,7 +17,5 @@ def raster_conf(dsn, global_config, ensemble_name, data_base=None):
         data_base = ensemble_name
     with session_scope(dsn) as sesh:
         conf = db_raster_configurator(sesh, "Download Data", 0.1, 0, ensemble_name,
-            root_url=global_config['app_root'].rstrip('/') + '/' +
-             'data/' + data_base + '/'
-        )
+            root_url=global_config['data_root'].rstrip('/') + '/' + data_base + '/')
     return conf
