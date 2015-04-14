@@ -6,7 +6,6 @@
 function createClearSelectionButton() {
     var button;
     button = pdp.createInputElement("button", undefined, "reset", "reset", "Reset Selection");
-    button.appendChild(document.createTextNode(" "));
     $(button).click(function () {
         map.unselectAll();
     });
@@ -78,7 +77,7 @@ function addToSidebar(idx, dataArray, loginButton) {
 
     var placeholder = document.getElementById('stn_placeholder');
     if (placeholder) {
-        placeholder.remove();
+        $(placeholder).remove();
     }
     item = pdp.createDiv('stnNo' + idx, '');
     close = item.appendChild(pdp.createDiv('', 'stn_remove'));
@@ -89,7 +88,7 @@ function addToSidebar(idx, dataArray, loginButton) {
 
     link = document.createElement('a');
     link.href = "../../data/hydro_stn/" + dataArray[idx].FileName + '.ascii';
-    link.text = dataArray[idx].StationName;
+    link.appendChild(document.createTextNode(dataArray[idx].StationName));
     $(link).click(loginButton, pdp.checkAuthBeforeDownload);
     item.appendChild(link);
 

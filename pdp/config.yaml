@@ -1,4 +1,5 @@
 app_root: 'http://tools.pacificclimate.org/dataportal'
+data_root: 'http://tools.pacificclimate.org/dataportal/data'
 title: ''
 ensemble_name: ''
 dsn: postgresql://httpd_meta@atlas.pcic/pcic_meta # add password for production

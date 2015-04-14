@@ -9,6 +9,10 @@ $(document).ready(function () {
     var map, loginButton, mapProj, controls, dataArray,
         stnLayer, searchData;
 
+    if (window.shittyIE) {
+        alert("This portal does not support IE8. Please upgrade your browser or use an alternative.");
+        return;
+    }
     map = init_hydro_stn_map();
     loginButton = pdp.init_login("login-div");
     pdp.checkLogin(loginButton);

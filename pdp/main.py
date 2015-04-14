@@ -57,6 +57,7 @@ def initialize_frontend(global_config, use_auth=False, use_analytics=False):
         ('^/css/(default|pcic).css$', static.Cling(resource_filename('pdp_util', 'data'))), # a bit of a hack for now
         ('^/check_auth_app/?$', check_auth),
         ('^/{}/.*$'.format(pcds.url_base), pcds_portal(global_config)),
+        ('^/pcds_map/.*$', pcds_portal(global_config)), ## legacy url support
         ('^/{}/.*$'.format(hydro_stn.url_base), hydro_stn_portal(global_config)),
         ('^/{}/.*$'.format(bc_prism.url_base), bc_prism_portal(global_config)),
         ('^/{}/.*$'.format(vic_gen1.url_base), vic_gen1_portal(global_config)),

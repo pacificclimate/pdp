@@ -4,7 +4,13 @@ News / Release Notes
 2.3.0
 -----
 
-*In Development*
+*Release Date: 13-Apr-2015*
+
+* Downloads initialted on user action with reactive links
+* Split front/back end to separate wsgi callables
+* Source config file from system environment
+* JSlint all frontend js code
+
 
 2.2.5
 -----
