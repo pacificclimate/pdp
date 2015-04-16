@@ -9,19 +9,7 @@ window.pdp = (function (my, $) {
         var providers, signupUrls, button, form;
 
         // Will we ever want to have different providers by application?
-        providers = {
-            "Launchpad": "https://login.launchpad.net/",
-            "Verisign": "http://pip.verisignlabs.com",
-            "Google": "https://www.google.com/accounts/o8/id",
-            "Yahoo": "http://open.login.yahooapis.com/openid20/www.yahoo.com/xrds"
-        };
-
-        signupUrls = {
-            "Launchpad": "https://login.launchpad.net/pBkz56vSM5432lMr/+new_account",
-            "Verisign": "https://pip.verisignlabs.com/register.do",
-            "Google": "https://accounts.google.com/NewAccount",
-            "Yahoo": "https://edit.yahoo.com/registration?.src=fpctx&.intl=ca&.done=http%3A%2F%2Fca.yahoo.com%2F"
-        };
+        providers = ["google", "windows", "facebook", "dropbox", "yahoo", "linkedin"];
 
         button = document.getElementById(loginDivId).appendChild(
             pdp.createLink("login-button", undefined, undefined, "Login with OpenID")
@@ -189,66 +177,59 @@ window.pdp = (function (my, $) {
 
         var loginForm;
 
-        function createProviderSelect(id, name, providers) {
-            var select = document.createElement("select");
-            if (id !== undefined) { select.id = id; }
-            if (name !== undefined) { select.name = name; }
-            $.each(providers, function (idx, val) {
-                select.appendChild(pdp.createOption(val, idx));
-            });
-            return select;
-        }
 
         function createLoginFieldset(providers) {
+            var div = pdp.createDiv();
 
-            var fieldset, div, providersDiv, select, loginDiv, loginButton,
-                seperatorDiv, signupDiv, signupButton;
 
-            fieldset = pdp.createFieldset(undefined, "Login");
-            div = fieldset.appendChild(pdp.createDiv("login-or-signup"));
-            div.appendChild(pdp.createLabel(undefined, "OpenID Provider"));
+            for (var i = providers.length - 1; i >= 0; i--) {
+                var button = document.createElement("button");
+                button.className = 'zocial ' + providers[i];
+                button.appendChild(document.createTextNode('Login with ' + providers[i]));
+                button.onclick = function () {
+                    hello(providers[i]).login();
+                }
+                div.appendChild(button);
+            };
 
-            providersDiv = div.appendChild(pdp.createDiv());
-            select = createProviderSelect(undefined, "openid-provider", providers);
-            providersDiv.appendChild(select);
+            var button = document.createElement("button");
+            button.className = "zocial google";
+            button.appendChild(document.createTextNode('Login with google'));
+            button.onclick = function () {
+                hello("google").login();
+            }
+            div.appendChild(button);
 
-            loginDiv = div.appendChild(pdp.createDiv());
-            loginButton = pdp.createInputElement("button", undefined, "do-login", undefined, "Open login window");
-            loginDiv.appendChild(loginButton);
-
-            seperatorDiv = div.appendChild(pdp.createDiv());
-            seperatorDiv.appendChild(document.createTextNode("--- or ---"));
-
-            signupDiv = div.appendChild(pdp.createDiv());
-            signupButton = pdp.createInputElement("button", undefined, "do-signup", undefined, "Open sign up window");
-            signupDiv.appendChild(signupButton);
-            return fieldset;
+            return div;
         }
 
         function createWorksFieldset() {
-            var fieldset, p, a, linkText;
-            fieldset = pdp.createFieldset(undefined, "How it works");
-            p = fieldset.appendChild(document.createElement("p"));
+            var div = pdp.createDiv();
+            var h = div.appendChild(document.createElement("h2"));
+            h.appendChild(document.createTextNode("How it works"));
+
+            var p = div.appendChild(document.createElement("p"));
             p.appendChild(document.createTextNode("Click \"Login\" to use an existing OpenID account. " +
                                                   "A new window will open asking you to sign in with the account provider. " +
                                                   "Once signed in, you will be returned to the data portal. " +
                                                   "PCIC uses OpenID to allow us to communicate with users via e-mail. " +
                                                   "If you don't have an OpenID account, click \"Sign up\"." +
                                                   "For information about OpenID click "));
-            a = document.createElement("a");
-            linkText = document.createTextNode("here");
-            a.appendChild(linkText);
+            var a = document.createElement("a");
+            a.appendChild(document.createTextNode("here"));
             a.href = "http://openid.net/get-an-openid/what-is-openid/";
             p.appendChild(a);
-            return fieldset;
+            return div;
         }
 
         function createWhyFieldset() {
-            var fieldset = pdp.createFieldset(undefined, "Why do you want my e-mail address?"),
-                p = fieldset.appendChild(document.createElement("p"));
+            var div = pdp.createDiv();
+            var h = div.appendChild(document.createElement('h2'));
+            h.appendChild(document.createTextNode("Why do you want my e-mail address?"));
+            var p = div.appendChild(document.createElement("p"));
             p.appendChild(document.createTextNode("PCIC will use your address only to contact you in the event major errors  are found in the data or when major changes to the data in the portal are made. " +
                                                   "Your e-mail address is the only personal information that PCIC will gather and will be kept secure."));
-            return fieldset;
+            return div;
         }
 
         loginForm = pdp.createForm("login-form", "login-form", "get");
