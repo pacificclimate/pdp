@@ -71,7 +71,7 @@ def clean_session_dir(session_dir, should_I):
 
 
 # auth wrappers
-def wrap_auth(app, required=True):
+def wrap_auth(app, required=False):
     '''This function wraps a WSGI application with the PcicOidMiddleware for session management and optional authentication
     '''
     config = get_config()

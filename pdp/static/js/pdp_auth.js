@@ -261,11 +261,12 @@ window.pdp = (function (my, $) {
     };
 
     my.checkAuthBeforeDownload = function(e) {
-	var loginButton = e.data;
-        if (!$(loginButton).prop("loggedIn")) {
-            alert("Please log in before downloading data");
-            e.preventDefault();
-        }
+        return;
+        // var loginButton = e.data;
+        // if (!$(loginButton).prop("loggedIn")) {
+        //     alert("Please log in before downloading data");
+        //     e.preventDefault();
+        // }
     };
 
     return my;

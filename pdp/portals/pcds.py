@@ -25,9 +25,9 @@ def data_server(config):
         app_root=config['app_root'],
         conn_params=dsn
         )
-    dispatch_app = wrap_auth(dispatch_app, required=False)
+    dispatch_app = wrap_auth(dispatch_app)
 
-    zip_app = wrap_auth(PcdsZipApp(dsn), True)
+    zip_app = wrap_auth(PcdsZipApp(dsn))
 
     app = PathDispatcher([
             ('^/lister/.*$', dispatch_app),
