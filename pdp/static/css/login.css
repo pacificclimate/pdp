@@ -1,6 +1,9 @@
 #login-button {
     text-decoration: underline;
 }
+#logout-button {
+    text-decoration: underline;
+}
 #login-button:hover, #login-button:active {
     text-decoration: none;
     color: #000;

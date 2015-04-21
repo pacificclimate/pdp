@@ -10,7 +10,6 @@ $(document).ready(function () {
     map = init_crmp_map();
 
     loginButton = pdp.init_login("login-div");
-    pdp.checkLogin(loginButton);
 
     filtChange = pdp.curry(CRMPFilterChange, map);
 

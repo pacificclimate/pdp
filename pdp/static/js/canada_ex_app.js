@@ -11,7 +11,6 @@ $(document).ready(function () {
 
     map = init_raster_map();
     loginButton = pdp.init_login("login-div");
-    pdp.checkLogin(loginButton);
 
     ncwmsLayer = map.getClimateLayer();
     selectionLayer = map.getSelectionLayer();

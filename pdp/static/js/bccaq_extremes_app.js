@@ -15,7 +15,6 @@ $(document).ready(function () {
     map.events.register('click', map, clickHandler);
 
     loginButton = pdp.init_login("login-div");
-    pdp.checkLogin(loginButton);
 
     ncwmsLayer = map.getClimateLayer();
     selectionLayer = map.getSelectionLayer();

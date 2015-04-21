@@ -16,7 +16,7 @@ import yaml
 import static
 from beaker.middleware import SessionMiddleware
 
-from pdp_util.auth import PcicOidMiddleware, check_authorized_return_email
+from pdp_util.auth import PcicAuthMiddleware, check_authorized_return_email
 from ga_wsgi_client import AnalyticsMiddleware
 from pdp.error import ErrorMiddleware
 from pdp.dispatch import PathDispatcher
@@ -76,9 +76,5 @@ def clean_session_dir(session_dir, should_I):
 def wrap_auth(app, required=True):
     '''This function wraps a WSGI application with the PcicOidMiddleware for session management and optional authentication
     '''
-    config = get_config()
-    app = PcicOidMiddleware(app,
-                            templates=resource_filename('pdp', 'templates'),
-                            root=config['app_root'],
-                            auth_required=required)
+    app = PcicAuthMiddleware(app, auth_required=required)
     return app

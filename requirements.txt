@@ -18,7 +18,7 @@ itsdangerous==0.24
 modelmeta==0.0.5
 numpy  # Allow pip or system install for travis
 openid2rp==1.12
-pdp-util==0.2.4
+pdp-util==0.2.5-dev
 ply==3.4
 psycopg2==2.6
 pydap-pdp==3.2.4
