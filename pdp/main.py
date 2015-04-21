@@ -10,6 +10,7 @@ from werkzeug.wsgi import DispatcherMiddleware
 
 #from pdp import get_config, wrap_auth, clean_session_dir
 from pdp import wrap_auth, clean_session_dir
+from auth import user_manager
 
 from pdp.error import ErrorMiddleware
 from pdp.dispatch import PathDispatcher
@@ -56,6 +57,7 @@ def initialize_frontend(global_config, use_auth=False, use_analytics=False):
     wsgi_app = PathDispatcher([
         ('^/css/(default|pcic).css$', static.Cling(resource_filename('pdp_util', 'data'))), # a bit of a hack for now
         ('^/check_auth_app/?$', check_auth),
+        ('^/user/.*$', user_manager()),
         ('^/{}/.*$'.format(pcds.url_base), pcds_portal(global_config)),
         ('^/pcds_map/.*$', pcds_portal(global_config)), ## legacy url support
         ('^/{}/.*$'.format(hydro_stn.url_base), hydro_stn_portal(global_config)),

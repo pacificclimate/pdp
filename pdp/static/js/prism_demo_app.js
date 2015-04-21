@@ -11,7 +11,6 @@ $(document).ready(function () {
 
     map = init_prism_map();
     loginButton = pdp.init_login('login-div');
-    pdp.checkLogin(loginButton);
 
     document.getElementById("pdp-controls").appendChild(getPRISMControls(pdp.ensemble_name));
     document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(false));

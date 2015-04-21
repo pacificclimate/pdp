@@ -6,16 +6,11 @@ window.pdp = (function (my, $) {
 
     my.init_login = function (loginDivId) {
 
-        var providers, signupUrls, button, form;
+        var user, providers, signupUrls, loginButton, logoutButton, form;
 
-        // Will we ever want to have different providers by application?
-        providers = ["google", "windows", "facebook", "dropbox", "yahoo", "linkedin"];
-
-        button = document.getElementById(loginDivId).appendChild(
-            pdp.createLink("login-button", undefined, undefined, "Login with OpenID")
-        );
-        form = document.getElementById(loginDivId).appendChild(pdp.getLoginForm(providers));
-        form = $("#login-form").dialog({
+        // Set up login splash
+        form = document.body.appendChild(pdp.getLoginForm());
+        form = $("#login-dialog").dialog({
             appendTo: "#main",
             autoOpen: false,
             title: "login",
@@ -29,116 +24,65 @@ window.pdp = (function (my, $) {
             }
         });
 
-        button = $("#login-button");
-        button.prop("loggedIn", false);
+        // Create login/logout buttons
+        loginButton = document.getElementById(loginDivId).appendChild(
+            pdp.createLink("login-button", undefined, undefined, "Login with OpenAuthentication")
+        );
+        loginButton = $(loginButton);
+        loginButton.prop("loggedIn", false);
+        loginButton.click(function(){form.dialog("open")});
 
-        /*jslint unparam: true*/
-        function startLogin(evt, onSuccess, onFailure) {
-            var return_to, oid, loginWindow, pattern, id;
-            // spawn new window, hook the onClose with checkLogin()
-            return_to = pdp.app_root + "/check_auth_app/";
-            oid = $("select[name='openid-provider']")[0].value;
-            loginWindow = window.open(pdp.app_root + "/check_auth_app/?openid_identifier=" + oid + "&return_to=" + return_to);
-            pattern = new RegExp("^" + return_to);
-            id = setInterval(function () {
-                try {
-                    if (loginWindow.closed) {
-                        clearInterval(id);
-                        form.dialog("close");
-                        pdp.checkLogin(button, onSuccess, onFailure);
-                    } else if (pattern.test(loginWindow.location.href)) { // FIXME: check whether it"s XSS first
-                        clearInterval(id);
-                        loginWindow.close();
-                        form.dialog("close");
-                        pdp.checkLogin(button, onSuccess, onFailure);
-                    }
-                } catch (ignore) {
-                    // Permission denied on loginWindow.location.* ... ignore
-                }
-            }, 500);
-            /*jslint unparam: false*/
+        logoutButton = pdp.createLink("login-button", undefined, undefined, "Logout")
+        $(logoutButton).hide();
+        document.getElementById(loginDivId).appendChild(logoutButton);
 
-        }
-
-        function doLogout(evt) {
-            pdp.eraseCookie("beaker.session.id");
-            $.ajax({
-                url: "./?openid_logout",
-
-                // We can remain on the page, probably just update the logged-in status
-                success: function () {
-                    button.prop("loggedIn", false);
-                    button.html("Login with OpenID");
-                    alert("Logout successful.");
-                },
-                // On 401, we are now unauthorized, redirect somewhere?
-                error: function () {
-                    alert("We're not authorized! I'm not sure what to do. Abort! Abort!");
-                }
-            });
-            return false;
-        }
-
-        function startSignup(evt) {
-            var name = $("select[name='openid-provider'] option:selected").html(),
-                url = signupUrls[name];
-            window.open(url);
-        }
-
-        /*jslint unparam: true*/
-        function doSubmitAfterLogin(evt) {
-            $("#filter").submit();
-            $("#do-login").unbind("click");
-            $("#do-login").click(startLogin); // clear doSubmit as the login onSuccess event handler
-        }
-
-        function showLogin(evt) {
-            form.dialog("open");
-            return false;
-        }
-
-        function toggleLogin(evt) {
-            if (button.prop("loggedIn")) {
-                // Log out
-                doLogout(evt);
-            } else {
-                // Log in
-                showLogin(evt);
-            }
-        }
-        /*jslint unparam: false*/
-
-        pdp.checkLogin(button);
-        button.click(toggleLogin);
-        $("#do-login").click(startLogin);
-        $("#do-signup").click(startSignup);
-
-        return button;
-    };
-
-    my.checkLogin = function (button, onSuccess, onFailure) {
-        $.ajax({
-            url: pdp.app_root + "/check_auth_app/",
-            dataType: "json",
-
-            // show logged-in status
-            success: function (data) {
-                button.prop("loggedIn", true);
-                button.html("Logout as: " + data.email);
-                if (onSuccess) {
-                    onSuccess();
-                }
-            },
-
-            // show link to login
-            error: function () {
-                button.prop("loggedIn", false);
-                button.html("Login with OpenID");
-                if (onFailure) {
-                    onFailure();
-                }
-            }
+        // Set up OAuth with Hello.js
+        providers = ["google", "windows", "facebook", "dropbox", "yahoo", "linkedin"];
+        hello.init({
+            google: '593322243760-o5qmvn1lgico4tfh2f6c170mghttmojq.apps.googleusercontent.com',
+            dropbox: '5r9nfwgz5efltpv',
+            linkedin: '750qnahuwtlcxm',
+            github: '1d1a2b283af770155dd3'
+        },{
+            scope: 'email'
         });
+
+        hello.on('auth.login', function(auth) {
+            form.dialog("close");
+            hello( auth.network ).api( '/me' ).then( function(r){
+                user = r;
+
+                // Create logout button
+                loginButton.prop("loggedIn", true);
+                loginButton.hide();
+                var link = document.createElement("a");
+                link.id = "logout-button"
+                link.appendChild(document.createTextNode("Logout as " + user.email));
+                $(link).click(function() {
+                    hello.logout(auth.network);
+                    $.ajax({
+                        url: pdp.app_root + '/user/logout',
+                    })
+                });
+                document.getElementById(loginDivId).appendChild(link);
+
+                // Log into the server
+                $.ajax({
+                    type: "POST",
+                    url: pdp.app_root + '/user/login',
+                    data: {
+                        "email": user.email
+                    }
+                })
+            });
+        });
+        hello.on('auth.logout', function(auth) {
+            user = undefined;
+            $(document.getElementById("logout-button")).remove();
+            loginButton.show();
+        });
+
+        return loginButton;
     };
 
     my.createCookie = function (name, value, days) {
@@ -173,34 +117,47 @@ window.pdp = (function (my, $) {
         pdp.createCookie(name, "", -1);
     };
 
-    my.getLoginForm = function (providers) {
+    my.getLoginForm = function () {
 
         var loginForm;
 
 
-        function createLoginFieldset(providers) {
+        function createLoginFieldset() {
             var div = pdp.createDiv();
-
-
-            for (var i = providers.length - 1; i >= 0; i--) {
-                var button = document.createElement("button");
-                button.className = 'zocial ' + providers[i];
-                button.appendChild(document.createTextNode('Login with ' + providers[i]));
-                button.onclick = function () {
-                    hello(providers[i]).login();
-                }
-                div.appendChild(button);
-            };
 
             var button = document.createElement("button");
             button.className = "zocial google";
-            button.appendChild(document.createTextNode('Login with google'));
+            button.appendChild(document.createTextNode('Login with Google'));
             button.onclick = function () {
-                hello("google").login();
+                hello("google", {redirect_uri: '.'}).login();
             }
             div.appendChild(button);
 
-            return div;
+            var button = document.createElement("button");
+            button.className = "zocial linkedin";
+            button.appendChild(document.createTextNode('Login with LinkedIn'));
+            button.onclick = function () {
+                hello("linkedin").login();
+            }
+            div.appendChild(button);
+
+            var button = document.createElement("button");
+            button.className = "zocial github";
+            button.appendChild(document.createTextNode('Login with GitHub'));
+            button.onclick = function () {
+                hello("github", {redirect_uri: '.'}).login();
+            }
+            div.appendChild(button);
+
+            var button = document.createElement("button");
+            button.className = "zocial dropbox";
+            button.appendChild(document.createTextNode('Login with Dropbox'));
+            button.onclick = function () {
+                hello("dropbox", {redirect_uri: '.'}).login();
+            }
+            div.appendChild(button);
+
+                        return div;
         }
 
         function createWorksFieldset() {
@@ -232,13 +189,11 @@ window.pdp = (function (my, $) {
             return div;
         }
 
-        loginForm = pdp.createForm("login-form", "login-form", "get");
-        // var closeDiv = loginForm.appendChild(createDiv("close-login"));
-        // var closeButton = closeDiv.appendChild(document.createElement("button"));
-        loginForm.appendChild(createLoginFieldset(providers));
-        loginForm.appendChild(createWorksFieldset());
-        loginForm.appendChild(createWhyFieldset());
-        return loginForm;
+        var div = pdp.createDiv('login-dialog');
+        div.appendChild(createLoginFieldset());
+        div.appendChild(createWorksFieldset());
+        div.appendChild(createWhyFieldset());
+        return div;
     };
 
     my.checkAuthBeforeDownload = function(e) {
