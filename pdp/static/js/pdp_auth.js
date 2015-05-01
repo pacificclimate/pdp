@@ -126,13 +126,15 @@ window.pdp = (function (my, $) {
                 button.appendChild(document.createTextNode('Login with ' + provider));
                 button.onclick = function () {
                     $(loginDialog).dialog("close");
-                    hello(provider, {redirect_uri: '.'}).login();
+                    hello(provider).login();
                 }
                 return button;
             };
 
             div.appendChild(providerButton('google'));
             div.appendChild(providerButton('linkedin'));
+            div.appendChild(providerButton('github'));
+            div.appendChild(providerButton('dropbox'));
             return div;
         }
 
