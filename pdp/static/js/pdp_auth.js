@@ -6,7 +6,7 @@ window.pdp = (function (my, $) {
 
     my.init_login = function (loginDivId) {
 
-        var user, providers, signupUrls, loginButton, logoutButton, form;
+        var user, providers, signupUrls, loginButton, form;
 
         // Set up login splash
         form = document.body.appendChild(pdp.getLoginForm());
@@ -31,10 +31,6 @@ window.pdp = (function (my, $) {
         loginButton = $(loginButton);
         loginButton.prop("loggedIn", false);
         loginButton.click(function(){form.dialog("open")});
-
-        logoutButton = pdp.createLink("login-button", undefined, undefined, "Logout")
-        $(logoutButton).hide();
-        document.getElementById(loginDivId).appendChild(logoutButton);
 
         // Set up OAuth with Hello.js
         providers = ["google", "windows", "facebook", "dropbox", "yahoo", "linkedin"];
