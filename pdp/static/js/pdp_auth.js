@@ -48,7 +48,6 @@ window.pdp = (function (my, $) {
         });
 
         hello.on('auth.login', function(auth) {
-            form.dialog("close");
             hello( auth.network ).api( '/me' ).then( function(r){
                 user = r;
 
@@ -119,45 +118,26 @@ window.pdp = (function (my, $) {
 
     my.getLoginForm = function () {
 
-        var loginForm;
-
+        var loginDialog = pdp.createDiv('login-dialog');
 
         function createLoginFieldset() {
             var div = pdp.createDiv();
 
-            var button = document.createElement("button");
-            button.className = "zocial google";
-            button.appendChild(document.createTextNode('Login with Google'));
-            button.onclick = function () {
-                hello("google", {redirect_uri: '.'}).login();
-            }
-            div.appendChild(button);
 
-            var button = document.createElement("button");
-            button.className = "zocial linkedin";
-            button.appendChild(document.createTextNode('Login with LinkedIn'));
-            button.onclick = function () {
-                hello("linkedin").login();
-            }
-            div.appendChild(button);
+            var providerButton = function(provider) {
+                var button = document.createElement("button");
+                button.className = "zocial" + provider;
+                button.appendChild(document.createTextNode('Login with ' + provider));
+                button.onclick = function () {
+                    $(loginDialog).dialog("close");
+                    hello(provider, {redirect_uri: '.'}).login();
+                }
+                return button;
+            };
 
-            var button = document.createElement("button");
-            button.className = "zocial github";
-            button.appendChild(document.createTextNode('Login with GitHub'));
-            button.onclick = function () {
-                hello("github", {redirect_uri: '.'}).login();
-            }
-            div.appendChild(button);
-
-            var button = document.createElement("button");
-            button.className = "zocial dropbox";
-            button.appendChild(document.createTextNode('Login with Dropbox'));
-            button.onclick = function () {
-                hello("dropbox", {redirect_uri: '.'}).login();
-            }
-            div.appendChild(button);
-
-                        return div;
+            div.appendChild(providerButton('google'));
+            div.appendChild(providerButton('linkedin'));
+            return div;
         }
 
         function createWorksFieldset() {
@@ -189,11 +169,10 @@ window.pdp = (function (my, $) {
             return div;
         }
 
-        var div = pdp.createDiv('login-dialog');
-        div.appendChild(createLoginFieldset());
-        div.appendChild(createWorksFieldset());
-        div.appendChild(createWhyFieldset());
-        return div;
+        loginDialog.appendChild(createLoginFieldset());
+        loginDialog.appendChild(createWorksFieldset());
+        loginDialog.appendChild(createWhyFieldset());
+        return loginDialog;
     };
 
     my.checkAuthBeforeDownload = function(e) {
