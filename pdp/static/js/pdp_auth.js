@@ -40,7 +40,8 @@ window.pdp = (function (my, $) {
             linkedin: '750qnahuwtlcxm',
             github: '1d1a2b283af770155dd3'
         },{
-            scope: 'email'
+            scope: 'email',
+            redirect_uri: pdp.app_root + '/redirect.html'
         });
 
         hello.on('auth.login', function(auth) {
