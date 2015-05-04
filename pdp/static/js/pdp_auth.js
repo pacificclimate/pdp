@@ -41,7 +41,8 @@ window.pdp = (function (my, $) {
             github: '1d1a2b283af770155dd3'
         },{
             scope: 'email',
-            redirect_uri: pdp.app_root + '/redirect.html'
+            redirect_uri: pdp.app_root + '/redirect.html',
+            oauth_proxy: 'https://fierce-castle-5261.herokuapp.com/oauthproxy',
         });
 
         hello.on('auth.login', function(auth) {
@@ -72,6 +73,7 @@ window.pdp = (function (my, $) {
                 })
             });
         });
+
         hello.on('auth.logout', function(auth) {
             user = undefined;
             $(document.getElementById("logout-button")).remove();
