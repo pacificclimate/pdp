@@ -32,55 +32,42 @@ window.pdp = (function (my, $) {
         loginButton.prop("loggedIn", false);
         loginButton.click(function(){form.dialog("open")});
 
-        // Set up OAuth with Hello.js
-        providers = ["google", "windows", "facebook", "dropbox", "yahoo", "linkedin"];
-        hello.init({
-            google: '593322243760-o5qmvn1lgico4tfh2f6c170mghttmojq.apps.googleusercontent.com',
-            dropbox: '5r9nfwgz5efltpv',
-            linkedin: '750qnahuwtlcxm',
-            github: '1d1a2b283af770155dd3'
-        },{
-            scope: 'email',
-            redirect_uri: pdp.app_root + '/redirect.html',
-            oauth_proxy: 'https://fierce-castle-5261.herokuapp.com/oauthproxy',
-        });
-
-        hello.on('auth.login', function(auth) {
-            hello( auth.network ).api( '/me' ).then( function(r){
-                user = r;
-
-                // Create logout button
-                loginButton.prop("loggedIn", true);
-                loginButton.hide();
-                var link = document.createElement("a");
-                link.id = "logout-button"
-                link.appendChild(document.createTextNode("Logout as " + user.email));
-                $(link).click(function() {
-                    hello.logout(auth.network);
-                    $.ajax({
-                        url: pdp.app_root + '/user/logout',
-                    })
-                });
-                document.getElementById(loginDivId).appendChild(link);
-
-                // Log into the server
-                $.ajax({
-                    type: "POST",
-                    url: pdp.app_root + '/user/login',
-                    data: {
-                        "email": user.email
-                    }
-                })
-            });
-        });
-
-        hello.on('auth.logout', function(auth) {
-            user = undefined;
-            $(document.getElementById("logout-button")).remove();
-            loginButton.show();
-        });
+        // Set up OAuth with Oauth.io
+        OAuth.initialize('xtOY6mmfmnDcnKqBfV4O8oIScew');
 
         return loginButton;
+    };
+
+    my.login = function(email) {
+
+        // Create logout button
+        $("#login-button").prop("loggedIn", true);
+        $("#login-button").hide();
+        var link = document.createElement("a");
+        link.id = "logout-button"
+        link.appendChild(document.createTextNode("Logout as " + email));
+        $(link).click(function() {
+            pdp.logout();
+         });
+        document.getElementById("login-button").parentElement.appendChild(link);
+
+        // Log into the server
+        $.ajax({
+            type: "POST",
+            url: pdp.app_root + '/user/login',
+            data: {
+                "email": email
+            }
+        })
+    };
+
+    my.logout = function() {
+        OAuth.clearCache();
+        $.ajax({
+            url: pdp.app_root + '/user/logout',
+        })
+        $(document.getElementById("logout-button")).remove();
+        $("#login-button").show();
     };
 
     my.createCookie = function (name, value, days) {
@@ -122,14 +109,27 @@ window.pdp = (function (my, $) {
         function createLoginFieldset() {
             var div = pdp.createDiv();
 
-
             var providerButton = function(provider) {
                 var button = document.createElement("button");
                 button.className = "zocial" + provider;
                 button.appendChild(document.createTextNode('Login with ' + provider));
                 button.onclick = function () {
-                    $(loginDialog).dialog("close");
-                    hello(provider).login();
+                    $("#login-dialog").dialog("close");
+                    OAuth.popup(provider, {cache: true})
+                    .done(function(result) {
+                        result.me()
+                        .done(function(user) {
+                            console.log(user);
+                            pdp.login(user.email);
+                            console.log(user.email);
+                        })
+                        .fail(function(err) {
+                            console.log("Errors retrieving user data", err);
+                        });
+                    })
+                    .fail(function(err){
+                        console.log("Errors with authentication process", err)
+                    });
                 }
                 return button;
             };

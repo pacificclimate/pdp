@@ -43,7 +43,7 @@ def get_config():
             'js/ie8.js', # must be included before OL
             'js/jquery-1.10.2.js',
             'js/jquery-ui-1.10.2.custom.js',
-            'js/hello.all.min.js',
+            'js/oauth.min.js',
             'js/zebra.js',
             'js/OL/OpenLayers-2.13.1.js',
             'js/proj4js-compressed.js',
