@@ -58,7 +58,7 @@ function dasToUnitsSince(data) {
     reg = /(\d{4})-(\d{1,2})-(\d{1,2})( |T)(\d{1,2}):(\d{1,2}):(\d{1,2})/g;
     m = reg.exec(dateString);
     if (m) {
-        sDate = new Date(m[1], parseInt(m[2], 10) + 1, // Account for 0 based month index in js
+        sDate = new Date(m[1], parseInt(m[2], 10) - 1, // Months in das result are 1-12, js needs 0-11
                          m[3], m[5], m[6], m[7], 0);
         return [units, sDate];
     }
@@ -66,7 +66,7 @@ function dasToUnitsSince(data) {
     reg = /(\d{4})-(\d{1,2})-(\d{1,2})/g;
     m = reg.exec(dateString);
     if (m) {
-        return [units, new Date(m[1], parseInt(m[2], 10) + 1, m[3])];
+        return [units, new Date(m[1], parseInt(m[2], 10) - 1, m[3])];
     }
     // Well, crap.
     return undefined;
