@@ -11,7 +11,7 @@ function init_vic_map() {
         defaults, map, params, datalayerName, ncwms, cb;
 
     // Map Config
-    options = BC3005_map_options_vic();
+    options = BC3005_map_options();
     options.tileManager = null;
 
     // Map Controls
