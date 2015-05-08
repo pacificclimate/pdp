@@ -34,15 +34,10 @@ window.pdp = (function (my, $) {
 
         // Set up OAuth with Hello.js
         providers = ["google", "windows", "facebook", "dropbox", "yahoo", "linkedin"];
-        hello.init({
-            google: '593322243760-o5qmvn1lgico4tfh2f6c170mghttmojq.apps.googleusercontent.com',
-            dropbox: '5r9nfwgz5efltpv',
-            linkedin: '750qnahuwtlcxm',
-            github: '1d1a2b283af770155dd3'
-        },{
+        hello.init(CLIENT_IDS_ALL,
+        {
             scope: 'email',
-            redirect_uri: pdp.app_root + '/redirect.html',
-            oauth_proxy: 'https://fierce-castle-5261.herokuapp.com/oauthproxy',
+            redirect_uri: location.protocol + '//' + window.location.hostname + '/oauth/redirect.html',
         });
 
         hello.on('auth.login', function(auth) {
@@ -125,7 +120,7 @@ window.pdp = (function (my, $) {
 
             var providerButton = function(provider) {
                 var button = document.createElement("button");
-                button.className = "zocial" + provider;
+                button.className = "zocial " + provider;
                 button.appendChild(document.createTextNode('Login with ' + provider));
                 button.onclick = function () {
                     $(loginDialog).dialog("close");
@@ -135,9 +130,7 @@ window.pdp = (function (my, $) {
             };
 
             div.appendChild(providerButton('google'));
-            div.appendChild(providerButton('linkedin'));
-            div.appendChild(providerButton('github'));
-            div.appendChild(providerButton('dropbox'));
+            div.appendChild(providerButton('windows'));
             return div;
         }
 
@@ -147,16 +140,12 @@ window.pdp = (function (my, $) {
             h.appendChild(document.createTextNode("How it works"));
 
             var p = div.appendChild(document.createElement("p"));
-            p.appendChild(document.createTextNode("Click \"Login\" to use an existing OpenID account. " +
+            p.appendChild(document.createTextNode("Click \"Login\" to use an existing OpenAuthentication account. " +
                                                   "A new window will open asking you to sign in with the account provider. " +
                                                   "Once signed in, you will be returned to the data portal. " +
                                                   "PCIC uses OpenID to allow us to communicate with users via e-mail. " +
                                                   "If you don't have an OpenID account, click \"Sign up\"." +
                                                   "For information about OpenID click "));
-            var a = document.createElement("a");
-            a.appendChild(document.createTextNode("here"));
-            a.href = "http://openid.net/get-an-openid/what-is-openid/";
-            p.appendChild(a);
             return div;
         }
 
@@ -186,4 +175,19 @@ window.pdp = (function (my, $) {
     };
 
     return my;
-}(window.pdp, jQuery));
+}(window.pdp, jQuery, hello));
+
+var GOOGLE_CLIENT_ID = {
+    'atlas.pcic.uvic.ca' : '893332401445-1h9k4h7msol4dedu4nqgb50fib16ui7p.apps.googleusercontent.com',
+    'tools.pacificclimate.org' : '915572015142-k9lo6a17a6vcpqriqmt8mibg6i7fkhu8.apps.googleusercontent.com',
+}[window.location.hostname];
+
+var WINDOWS_CLIENT_ID = {
+    'atlas.pcic.uvic.ca' : '000000004414E918',
+    'tools.pacificclimate.org' : '000000004015551A',
+}[window.location.hostname];
+
+var CLIENT_IDS_ALL = {
+    windows: WINDOWS_CLIENT_ID,
+    google: GOOGLE_CLIENT_ID
+};
