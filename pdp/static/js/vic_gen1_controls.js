@@ -12,7 +12,17 @@ function getVICControls(ensemble_name) {
     div = pdp.createDiv('', 'control');
     form = pdp.createForm(undefined, undefined, undefined);
     fieldset = pdp.createFieldset("filterset", "Dataset Selection");
-    varMapping = { 'bf': "Base Flow", 'R': "Runoff", 'swe': "Snow Water Equivalent", 'aet': "Actual Evapotranspiration", 'sm': "Column Total Soil Moisture" };
+    varMapping = {
+        'bf': "Base Flow",
+        'R': "Runoff",
+        'swe': "Snow Water Equivalent",
+        'aet': "Actual Evapotranspiration",
+        'sm': "Column Total Soil Moisture",
+        'tasmax': 'Maximum Temperature',
+        'tasmin': 'Minimum Temperature',
+        'pr': 'Precipitation',
+        'wind': 'Wind',
+         };
     fieldset.appendChild(getRasterAccordionMenu(ensemble_name, varMapping));
     form.appendChild(fieldset);
     div.appendChild(form);

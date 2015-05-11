@@ -1,6 +1,13 @@
 News / Release Notes
 ====================
 
+2.3.1
+-----
+
+*Release Date: 6-May-2015*
+
+* Fix raster portal date parsing bug
+
 2.3.0
 -----
 
