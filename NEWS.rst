@@ -1,6 +1,15 @@
 News / Release Notes
 ====================
 
+2.3.2
+-----
+
+*Release Date: 11-May-2015*
+
+* Add VIC input data to Gridded Hydrologic Data portal (ensemble updated in mddb)
+
+  * Add input variable name mapping, update restricted extent
+
 2.3.1
 -----
 
