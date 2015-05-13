@@ -6,14 +6,46 @@ window.pdp = (function (my, $) {
 
     my.init_login = function (loginDivId) {
 
-        var user, providers, signupUrls, loginButton, form;
+        var user, loginButton;
 
         // Set up login splash
-        form = document.body.appendChild(pdp.getLoginForm());
-        form = $("#login-dialog").dialog({
+        var loginDialog = document.body.appendChild(pdp.getLoginForm());
+        loginDialog = $("#login-dialog").dialog({
             appendTo: "#main",
             autoOpen: false,
             title: "login",
+            width: "40%",
+            modal: true,
+            dialogClass: "no-title",
+            buttons: {
+                "Close": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        // Register by email dialog
+        var emailRegistrationDialog = document.body.appendChild(pdp.getEmailRegistrationDialog());
+        emailRegistrationDialog = $("#email-dialog").dialog({
+            appendTo: "#main",
+            autoOpen: false,
+            title: "email",
+            width: "40%",
+            modal: true,
+            dialogClass: "no-title",
+            buttons: {
+                "Close": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        // Oauth failed dialog
+        var oauthErrorDialog = document.body.appendChild(pdp.getOauthErrorDialog());
+        oauthErrorDialog = $("#oauth-error-dialog").dialog({
+            appendTo: "#main",
+            autoOpen: false,
+            title: "email",
             width: "40%",
             modal: true,
             dialogClass: "no-title",
@@ -30,10 +62,9 @@ window.pdp = (function (my, $) {
         );
         loginButton = $(loginButton);
         loginButton.prop("loggedIn", false);
-        loginButton.click(function(){form.dialog("open")});
+        loginButton.click(function(){loginDialog.dialog("open")});
 
         // Set up OAuth with Hello.js
-        providers = ["google", "windows", "facebook", "dropbox", "yahoo", "linkedin"];
         hello.init(CLIENT_IDS_ALL,
         {
             scope: 'email',
@@ -44,28 +75,11 @@ window.pdp = (function (my, $) {
             hello( auth.network ).api( '/me' ).then( function(r){
                 user = r;
 
-                // Create logout button
-                loginButton.prop("loggedIn", true);
-                loginButton.hide();
-                var link = document.createElement("a");
-                link.id = "logout-button"
-                link.appendChild(document.createTextNode("Logout as " + user.email));
-                $(link).click(function() {
-                    hello.logout(auth.network);
-                    $.ajax({
-                        url: pdp.app_root + '/user/logout',
-                    })
-                });
-                document.getElementById(loginDivId).appendChild(link);
-
-                // Log into the server
-                $.ajax({
-                    type: "POST",
-                    url: pdp.app_root + '/user/login',
-                    data: {
-                        "email": user.email
-                    }
-                })
+                if (pdp.validateEmail(user.email)) {
+                    pdp.login(user.email, auth.network);
+                } else {
+                    oauthErrorDialog.dialog("open");
+                }
             });
         });
 
@@ -75,8 +89,48 @@ window.pdp = (function (my, $) {
             loginButton.show();
         });
 
+        // FIXME: check if session has registered email already
+
         return loginButton;
     };
+
+    my.login = function (email, network) {
+
+        // Register login through button
+        var loginButton = $("#login-button")
+        loginButton.prop("loggedIn", true);
+        loginButton.hide();
+
+        // Create logout button
+        var link = document.createElement("a");
+        link.id = "logout-button"
+        link.appendChild(document.createTextNode("Logout as " + email));
+        $(link).click(function() {
+            pdp.logout(network);
+        });
+        document.getElementById("login-button").parentElement.appendChild(link);
+
+        // Log into the server
+        $.ajax({
+            type: "POST",
+            url: pdp.app_root + '/user/login',
+            data: {
+                "email": email
+            }
+        })
+        // FIXME Add failure handler
+    }
+
+    my.logout = function(network) {
+        pdp.eraseCookie('beaker.session.id');
+        if (network) {
+            hello.logout(network);
+        }
+        loginButton.prop("loggedIn", true);
+        $.ajax({
+            url: pdp.app_root + '/user/logout',
+        });
+    }
 
     my.createCookie = function (name, value, days) {
         var expires, date;
@@ -110,18 +164,86 @@ window.pdp = (function (my, $) {
         pdp.createCookie(name, "", -1);
     };
 
+    my.validateEmail = function (email) {
+        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        return re.test(email);
+    }
+
+    my.getOauthErrorDialog = function() {
+        var dialog = pdp.createDiv('oauth-error-dialog');
+
+        var h = dialog.appendChild(document.createElement('h2'));
+        h.appendChild(document.createTextNode("OpenAuthentication Error"));
+
+        var p = dialog.appendChild(document.createElement("p"));
+        p.appendChild(document.createTextNode("Something had happened during the authentication process and we " + 
+            "were not able to retrieve your verified email address. Please simply register by email address below."));
+
+        dialog.appendChild(pdp.getEmailForm('oauth-error-dialog'));
+
+        return dialog;
+    }
+
+    my.getEmailRegistrationDialog = function() {
+        var dialog = pdp.createDiv('email-dialog');
+
+        var h = dialog.appendChild(document.createElement('h2'));
+        h.appendChild(document.createTextNode("Registration by email"));
+        dialog.appendChild(pdp.getEmailForm('email-dialog'));
+
+        return dialog;
+    }
+
+    my.getEmailForm = function(dialogId) {
+
+        var form = pdp.createDiv('email-form');
+
+        var label = document.createElement('label')
+        label.appendChild(document.createTextNode("Email: "));
+        label.for = 'email';
+        form.appendChild(label);
+        var inputEmail = pdp.createInputElement('text', undefined, 'email', 'email');
+        form.appendChild(inputEmail);
+
+        var invalidEmail = pdp.createDiv();
+        invalidEmail.style.display = 'none';
+        invalidEmail.appendChild(document.createTextNode("Email does not appear valid"));
+        form.appendChild(invalidEmail);
+
+        var clear = pdp.createDiv('', 'clear')
+        form.appendChild(clear);
+        form.appendChild(document.createElement('br'));
+
+        var submit = document.createElement("button");
+        submit.appendChild(document.createTextNode("Submit"));
+        submit.onclick = function() {
+            var email = inputEmail.value;
+            if (pdp.validateEmail(email)) {
+                $("#" + dialogId).dialog("close");
+                pdp.login(email);
+            } else {
+                invalidEmail.style.display = 'block';
+            }
+
+        }
+        form.appendChild(submit);
+
+        return form;
+    }
+
     my.getLoginForm = function () {
 
         var loginDialog = pdp.createDiv('login-dialog');
 
         function createLoginFieldset() {
             var div = pdp.createDiv();
-
+            var h = div.appendChild(document.createElement('h2'));
+            h.appendChild(document.createTextNode("OpenAuthentication Providers"));
 
             var providerButton = function(provider) {
                 var button = document.createElement("button");
                 button.className = "zocial " + provider;
-                button.appendChild(document.createTextNode('Login with ' + provider));
+                button.appendChild(document.createTextNode('Login with ' + pdp.toTitleCase(provider)));
                 button.onclick = function () {
                     $(loginDialog).dialog("close");
                     hello(provider).login();
@@ -140,12 +262,18 @@ window.pdp = (function (my, $) {
             h.appendChild(document.createTextNode("How it works"));
 
             var p = div.appendChild(document.createElement("p"));
-            p.appendChild(document.createTextNode("Click \"Login\" to use an existing OpenAuthentication account. " +
+            p.appendChild(document.createTextNode("Click \"Login with...\" to use an existing OpenAuthentication account. " +
                                                   "A new window will open asking you to sign in with the account provider. " +
                                                   "Once signed in, you will be returned to the data portal. " +
-                                                  "PCIC uses OpenID to allow us to communicate with users via e-mail. " +
-                                                  "If you don't have an OpenID account, click \"Sign up\"." +
-                                                  "For information about OpenID click "));
+                                                  "If you do not have an account with one of the available providers either " +
+                                                  "sign up using the pop up window or click "));
+            var a = document.createElement("a");
+            a.appendChild(document.createTextNode("here"));
+            a.onclick = function() {
+                $("#email-dialog").dialog("open");
+                $("#login-dialog").dialog("close");
+            }
+            p.appendChild(a);
             return div;
         }
 
