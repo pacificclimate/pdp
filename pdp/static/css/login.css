@@ -9,30 +9,13 @@
     color: #000;
 }
 
-/*#login-form {
-    z-index: 100;
-    position: fixed;
-    width: 30%;
-    top: 30%;
-    left: 30%;
-    background-color: white;
-    padding: 0px;
-    border: 1px solid #69a1ba;
-}*/
-
-#login-form fieldset {
-    margin-left: 12px;
-    margin-right: 12px;
-    margin-top: 5px;
-}
-
 #login-or-signup div, label {
     text-align: center;
     margin-top: 0px;
 }
 
-#login-form input[type="button"] {
-    width: auto;
+#login-dialog button {
+    margin-right: 1em;
 }
 
 #close-login {
