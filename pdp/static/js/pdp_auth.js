@@ -180,11 +180,13 @@ window.pdp = (function (my, $) {
 var GOOGLE_CLIENT_ID = {
     'atlas.pcic.uvic.ca' : '893332401445-1h9k4h7msol4dedu4nqgb50fib16ui7p.apps.googleusercontent.com',
     'tools.pacificclimate.org' : '915572015142-k9lo6a17a6vcpqriqmt8mibg6i7fkhu8.apps.googleusercontent.com',
+    'basalt.pcic.uvic.ca' : 'j6vnKGoSR9iiYzX0OqqdjTV-M3gLgsrQ,'
 }[window.location.hostname];
 
 var WINDOWS_CLIENT_ID = {
     'atlas.pcic.uvic.ca' : '000000004414E918',
     'tools.pacificclimate.org' : '000000004015551A',
+    'basalt.pcic.uvic.ca' : '0000000048156D90',
 }[window.location.hostname];
 
 var CLIENT_IDS_ALL = {
