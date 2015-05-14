@@ -85,11 +85,11 @@ window.pdp = (function (my, $) {
 
         hello.on('auth.logout', function(auth) {
             user = undefined;
-            $(document.getElementById("logout-button")).remove();
-            loginButton.show();
         });
 
-        // FIXME: check if session has registered email already
+        /* FIXME: check if session has registered email already. Since hellojs
+        automatically logs back in if the session is valid, this must only be
+        done if we know hellojs does not have a valid session. */
 
         return loginButton;
     };
@@ -122,13 +122,32 @@ window.pdp = (function (my, $) {
     }
 
     my.logout = function(network) {
-        pdp.eraseCookie('beaker.session.id');
+
+        // oauth logout
         if (network) {
             hello.logout(network);
         }
-        loginButton.prop("loggedIn", false);
+
+        // backend logout (also removes session cookie)
         $.ajax({
             url: pdp.app_root + '/user/logout',
+        });
+
+        // Show the login button, remove logout
+        $("#logout-button").remove();
+        var loginButton = $("#login-button")
+        loginButton.prop("loggedIn", false);
+        loginButton.show();
+    }
+
+    my.checkLogin = function() {
+        $.ajax({
+            dataType: 'json',
+            url: pdp.app_root + '/user/profile',
+        }).done(function(data) {
+            if (pdp.validateEmail(data.email)) {
+                pdp.login(data.email);
+            }
         });
     }
 

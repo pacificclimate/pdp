@@ -36,7 +36,7 @@ def user_profile(environ, start_response):
     email = session.get('email', None) 
     if email:
         start_response('200 OK', [('Content-type', 'text/html; charset=utf-8')])
-        return json.dumps({'session_id': session.id, 'email': session.email})
+        return json.dumps({'session_id': session.id, 'email': email})
     else:
         start_response('401 Permission Denied', [('Content-type','text/plain')])
         return ['Authentication Required']
