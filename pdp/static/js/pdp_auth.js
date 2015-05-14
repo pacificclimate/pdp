@@ -126,7 +126,7 @@ window.pdp = (function (my, $) {
         if (network) {
             hello.logout(network);
         }
-        loginButton.prop("loggedIn", true);
+        loginButton.prop("loggedIn", false);
         $.ajax({
             url: pdp.app_root + '/user/logout',
         });
