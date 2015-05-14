@@ -40,6 +40,18 @@ https://github.com/robertodealmeida/pydap
 
 Where to go? Nobody knows. I fear that we may need to maintain our own fork in perpetuity.
 
+OAuth
+-----
+
+Client side OAuth is used to capture a verified email. All development and production hosts must have a valid `client_id` configured with each provider and host the `hellojs redirect <https://github.com/pacificclimate/hellojs-redirect>`_ at `http://hostname/oauth/`.
+
+To add a new developement host, the approximate steps would be:
+
+1. Create an application at a specified provider (`Google <https://console.developers.google.com>`_, `Microsoft <https://account.live.com/developers/applications>`_)
+2. Configure the application with the `redirect_uri` to point to `https://<dev_hostname>/oauth/redirect.html`
+3. Add the `client_id` to `pdp/static/js/pdp_auth.js`
+4. Clone the `hellojs redirect <https://github.com/pacificclimate/hellojs-redirect>`_ to a directory which is served at `https://<dev_hostname>/oauth/`
+
 Data Interfaces
 ---------------
 

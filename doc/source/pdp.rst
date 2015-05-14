@@ -17,6 +17,9 @@ The pdp module
 .. automodule:: pdp.minify
    :members:
 
+.. automodule:: pdp.auth
+   :members:
+
 .. automodule:: pdp.portals.bccaq_extremes
    :members:
 

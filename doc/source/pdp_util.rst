@@ -47,8 +47,11 @@ pdp_util.pcds_index
    :members:
    :special-members:
 
-OpenID Authentication
-=====================
+Authentication
+==============
+
+Authentication is enforced server side by adding a user's email address to the session. Email verification is expected to happen client side using an OAuth provider.
+
 pdp_util.auth
 -------------
 
