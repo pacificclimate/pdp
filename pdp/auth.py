@@ -22,10 +22,10 @@ def user_login(environ, start_response):
         start_response('200 OK', [('Content-type', 'text/html; charset=utf-8')])
         return json.dumps({'session_id': session.id})
 
-    if request.method == 'GET':
+    else:
         # FIXME: return a form to submit an email address
         start_response('400 BAD REQUEST', [('Content-type', 'text/html; charset=utf-8')])
-        return ['Login handler does not support GET requests']
+        return ['Login handler only supports POST requests']
 
 def user_profile(environ, start_response):
     '''
