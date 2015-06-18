@@ -9,7 +9,7 @@ geoserver_url: https://atlas.pcic.uvic.ca/geoserver/ # change for production
 ncwms_url: 
     - https://atlas.pcic.uvic.ca/ncWMS/wms # change for production
 tilecache_url: 
-    - http://tiles.pacificclimate.org/tilecache/tilecache.py
+    - https://tiles.pacificclimate.org/tilecache/tilecache.py
 use_auth: True
 session_dir: default
 clean_session_dir: True # change for production
