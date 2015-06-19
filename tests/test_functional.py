@@ -278,7 +278,7 @@ def test_legend_caching(pcic_data_portal):
 
 @pytest.mark.bulk_data
 def test_climatology_bounds(pcic_data_portal, authorized_session_id):
-    url = '/data/bc_prism/tmin_monClim_PRISM_historical_run1_197101-200012.nc.nc?climatology_bounds,tmin[0:12][826:1095][1462:1888]&'
+    url = '/data/bc_prism/tmin_monClim_PRISM_historical_run1_197101-200012.nc.nc?climatology_bounds&'
     req = Request.blank(url)
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
@@ -309,10 +309,6 @@ def test_climatology_bounds(pcic_data_portal, authorized_session_id):
                                   [   304.,  11292.],
                                   [   334.,  11323.],
                                   [     0.,  11323.]], dtype=np.float32))
-
-    assert 'tmin' in nc.variables
-    assert nc.variables['tmin'].shape == (13, 270, 427)
-
     nc.close()
     os.remove(f.name)
 
