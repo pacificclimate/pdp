@@ -16,6 +16,7 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 from bs4 import BeautifulSoup
 
+@pytest.mark.crmpdb
 @pytest.mark.parametrize('url', ['/js/crmp_map.js', '/css/main.css', '/images/banner.png'])
 def test_static(pcic_data_portal, url):
     req = Request.blank(url)
@@ -276,6 +277,7 @@ def test_legend_caching(pcic_data_portal):
     resp = req.get_response(pcic_data_portal)
     assert resp.status.startswith('200')
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_climatology_bounds(pcic_data_portal, authorized_session_id):
     url = '/data/bc_prism/tmin_monClim_PRISM_historical_run1_197101-200012.nc.nc?climatology_bounds&'
@@ -312,6 +314,7 @@ def test_climatology_bounds(pcic_data_portal, authorized_session_id):
     nc.close()
     os.remove(f.name)
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('url', [
     '/data/downscaled_gcms/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.aig?tasmax[0:30][77:138][129:238]&', # has NODATA values
@@ -325,6 +328,7 @@ def test_aaigrid_response(pcic_data_portal, authorized_session_id, url):
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/zip'
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_hydro_stn_data_catalog(pcic_data_portal, authorized_session_id):
     url = '/data/hydro_stn/catalog.json'
@@ -337,6 +341,7 @@ def test_hydro_stn_data_catalog(pcic_data_portal, authorized_session_id):
     data = json.loads(resp.body)
     # assert len(data) == 114
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_hydro_stn_data_csv_csv(pcic_data_portal, authorized_session_id):
     url = '/data/hydro_stn/BCHSCA_Campbell.csv.csv'
@@ -352,6 +357,7 @@ def test_hydro_stn_data_csv_csv(pcic_data_portal, authorized_session_id):
 
     assert False, "Data line for 1950/1/1 does not exist"
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_hydro_stn_data_csv_selection_projection(pcic_data_portal, authorized_session_id):
     url = '/data/hydro_stn/BCHSCA_Campbell.csv.csv?sequence.ccsm3_A2run1&sequence.ccsm3_A2run1>100'
@@ -374,6 +380,7 @@ ccsm3_A2run1
 146.530792
 137.407532''')
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_hydro_model_out_catalog(pcic_data_portal):
     url = '/hydro_model_out/catalog/'

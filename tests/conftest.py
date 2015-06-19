@@ -43,6 +43,12 @@ def pcic_data_portal(session_dir):
     return SessionMiddleware(dev_server, auto=1, data_dir=session_dir)
 
 @pytest.fixture(scope="module")
+def user_manager_fixture(session_dir):
+    from pdp.auth import user_manager
+    return SessionMiddleware(user_manager(), auto=1, data_dir=session_dir)
+
+
+@pytest.fixture(scope="module")
 def pcds_map_app():
     from pdp.portals.pcds import portal
     return portal
@@ -55,12 +61,12 @@ def check_auth_app(session_dir):
     return SessionMiddleware(check_auth, auto=1, data_dir=session_dir)
 
 @pytest.fixture(scope="module")
-def authorized_session_id(pcic_data_portal):
+def authorized_session_id(user_manager_fixture):
 
-    req = Request.blank('/user/login', POST='email:email@provider.com')
+    req = Request.blank('/login', POST='email:email@provider.com')
     req.body = 'email=fake_email@provider.com'
 
-    resp = req.get_response(pcic_data_portal)
+    resp = req.get_response(user_manager_fixture)
     assert resp.status == '200 OK'
     assert 'Set-cookie' in resp.headers
     return resp.json['session_id']
