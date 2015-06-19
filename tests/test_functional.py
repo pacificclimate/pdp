@@ -383,4 +383,4 @@ def test_hydro_model_out_catalog(pcic_data_portal):
     assert resp.content_type == 'application/json'
     assert 'hydro_model_out/5var_day_HadCM_B1_run1_19500101-20981231.nc' in resp.body
     data = json.loads(resp.body)
-    assert len(data) == 24
+    assert len(data) > 0
