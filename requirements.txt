@@ -1,5 +1,5 @@
 Beaker==1.6.4
-Cython==0.22
+Cython
 Flask==0.10.1
 Genshi==0.7
 GeoAlchemy==0.7.3
@@ -40,10 +40,10 @@ wsgiref==0.1.2
 GDAL # Allow pip or system install for travis
 XlsxWriter==0.7.2
 coards==1.0.5
-h5py==2.5.0
+h5py
 pupynere-pdp==1.1.3
 pydap.handlers.hdf5==0.5.1
-pydap.responses.aaigrid==0.5
+pydap.responses.aaigrid==0.6
 pydap.responses.netcdf==0.5.1
 pydap.responses.xls==0.1
 pydap.responses.xlsx==0.1
