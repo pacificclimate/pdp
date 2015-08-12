@@ -3,9 +3,6 @@
 
 "use strict";
 
-// globals
-var current_dataset;
-
 function init_vic_map() {
     var options, mapControls, selLayerName, selectionLayer, panelControls,
         defaults, map, params, datalayerName, ncwms, cb;
@@ -54,7 +51,6 @@ function init_vic_map() {
     );
 
     getNCWMSLayerCapabilities(ncwms); // async save into global var ncwmsCapabilities
-    current_dataset = params.layers;
 
     map.addLayers(
         [

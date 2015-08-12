@@ -3,7 +3,7 @@
 
 "use strict";
 
-var ncwms, catalog, current_dataset;
+var ncwms, catalog;
 
 function getPlotWindow() {
     var frag = document.createDocumentFragment(),

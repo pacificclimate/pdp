@@ -6,7 +6,7 @@
 // NOTE: variables 'gs_url', 'ncwms_url', 'tilecache_url' is expected to be set before this is call
 // Do this in the sourcing html
 // globals
-var gs_url, ncwms_url, tilecache_url, current_dataset, ncwms;
+var gs_url, ncwms_url, tilecache_url, ncwms;
 
 function init_prism_map() {
     var selectionLayer, options, mapControls, selLayerName, panelControls,
@@ -59,7 +59,6 @@ function init_prism_map() {
     );
 
     getNCWMSLayerCapabilities(ncwms); // async save into global var ncwmsCapabilities
-    current_dataset = params.layers;
 
     function set_map_title(layer_name) {
         // 'this' must be bound to the ncwms layer object

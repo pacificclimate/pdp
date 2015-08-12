@@ -4,7 +4,7 @@
 "use strict";
 
 //globals
-var catalog, current_dataset;
+var catalog;
 
 function getPRISMControls(ensemble_name) {
     var div, form, fieldset, varMapping;

@@ -4,7 +4,7 @@
 "use strict";
 
 // Globals
-var ensemble_name, current_dataset, ncwmsCapabilities, catalog;
+var ensemble_name, ncwmsCapabilities, catalog;
 
 $(document).ready(function () {
     var map, loginButton, ncwmsLayer, selectionLayer, dlLink, mdLink;

@@ -6,7 +6,7 @@
 //var pcds_map; // global so that it's accessible across documents
 // NOTE: variables 'gs_url' is expected to be set before this is call
 // Do this in the sourcing html
-var pcds_map, gs_url, current_dataset, map, ncwms;
+var pcds_map, gs_url, map, ncwms;
 
 function init_raster_map() {
 
@@ -134,8 +134,6 @@ function init_raster_map() {
             tileSize: new OpenLayers.Size(512, 512)
         }
     );
-
-    current_dataset = ncwms.params.layers;
 
     cb = new Colorbar("pdpColorbar", ncwms);
 

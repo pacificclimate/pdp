@@ -3,7 +3,7 @@
 "use strict";
 
 // globals
-var pdp, ncwms, current_dataset, map;
+var pdp, ncwms, map;
 
 function getDateRange() {
     var rangeDiv = pdp.createDiv("date-range");
@@ -51,7 +51,6 @@ function generateMenuTree(subtree, leafNameMapping) {
             $('<a/>').text(linkText).click(function () {
                 ncwms.params.LAYERS = newlayer;
                 ncwms.events.triggerEvent('change', newlayer);
-                current_dataset = newlayer;
                 processNcwmsLayerMetadata(ncwms);
             }).addClass('menu-leaf').appendTo(li);
         }

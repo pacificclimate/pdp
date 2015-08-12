@@ -6,7 +6,7 @@
 // globls
 // NOTE: variables 'gs_url' is expected to be set before this is call
 // Do this in the sourcing html
-var current_dataset, pcds_map, gs_url;
+var pcds_map, gs_url;
 
 function init_raster_map() {
     var options, mapControls, selLayerName, selectionLayer, panelControls,
@@ -61,8 +61,6 @@ function init_raster_map() {
             tileSize: new OpenLayers.Size(512, 512)
         }
     );
-
-    current_dataset = params.layers;
 
     function customize_wms_params(layer_name) {
         var varname = layer_name.split('/')[1];
