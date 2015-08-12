@@ -37,6 +37,7 @@ $(document).ready(function () {
         }
     ).change(setBoundsInUrlTemplate);
     ncwmsLayer.events.register('change', dlLink, dlLink.onLayerChange);
+    ncwmsLayer.events.register('change', dlLink, dlLink.onBoxChange);
     selectionLayer.events.register('featureadded', dlLink, dlLink.onBoxChange);
     dlLink.register($('#download-timeseries'), function (node) {
         node.attr('href', dlLink.getUrl());

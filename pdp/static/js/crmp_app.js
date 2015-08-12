@@ -20,13 +20,13 @@ $(document).ready(function () {
     downloadForm.appendChild(getCRMPControls(map));
     downloadForm.appendChild(getCRMPDownloadOptions());
 
-    $(downloadForm).submit(function (event) {
-        //This doesn't really check if we're logged in... but it's a quick fix
-        if (!$(loginButton).prop("loggedIn")) {
-            alert("Please log in before downloading data");
-            event.preventDefault();
-        }
-    });
+    // $(downloadForm).submit(function (event) {
+    //     //This doesn't really check if we're logged in... but it's a quick fix
+    //     if (!$(loginButton).prop("loggedIn")) {
+    //         alert("Please log in before downloading data");
+    //         event.preventDefault();
+    //     }
+    // });
 
     map.filters = {};
     map.filters.values = getActiveFilters;

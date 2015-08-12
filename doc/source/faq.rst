@@ -4,7 +4,7 @@ Frequently Asked Questions
 How do I get help using the data portal?
 ----------------------------------------
 
-We want the data portal to be useful and used by fellow scientists and researchers, and we'd love to help you to make that possible. If you have completely read the user docs and still need help, you're welcome to fill out a support issue and we'll try our best to help you out. Follow the guidelines in our :ref:`bug reporting guide <how-to-report-bugs>`, but tag the issue as "help wanted" instead of "bug". Please respect our time by keeping your questions succinct, specific and direct. If you do, there will be a greater probability that someone will take on the ticket. Open-ended questions titled "help me!!!111" questions will likely be ignored.
+We want the data portal to be useful and used by fellow scientists and researchers, and we'd love to help you to make that possible. If you have completely read the user docs and still need help, you're welcome to fill out a support issue and we'll try our best to help you out. Follow the guidelines in our :ref:`bug reporting guide <how-to-report-bugs>`, but tag the issue as "help wanted" instead of "bug". Please respect our time by keeping your questions succinct, specific and direct. If you do, there will be a greater probability that someone will take on the ticket. Open-ended questions titled "help me!!!111" will likely be ignored.
 
 We have given several presentations about the data portal throughout its development. While they may not help you *use* the data portal, you are welcome to check out the slides and videos:
 
@@ -52,16 +52,48 @@ Can I download climate model output in a "GIS-friendly" format?
 
 This question is related to the above question about Excel. Like spreadsheets, most (all?) GIS software packages are designed to display data in only two coordinate dimensions (i.e. a map). Suppose that you download daily data for a ten year period, how would your GIS software visualize the resulting 3600 layers? GIS software packages are not designed for this purpose. In general, you're going to need to do additional, needs-specific processing before you can create climate maps with your GIS software.
 
-In version 2.1.0, we introduced the availability of the Arc/ASCII Grid format. This format only supports a single layer, so we deliver a Zip archive which contains one grid file per timestep. If downloading daily data, this is not recommended, but it *is* an option.
+In `version 2.1.0 <https://github.com/pacificclimate/pdp/blob/master/NEWS.rst#210>`_, we introduced the availability of the Arc/ASCII Grid format. This format only supports a single layer, so we deliver a Zip archive which contains one grid file per timestep. If downloading daily data, this is not recommended, but it *is* an option.
 
 One final option is that if your GIS software can speak WMS and you want to map individual time steps, please review our :ref:`power user HOWTO <power-user>`.
 
 How do I interpret the date fields in the data responses
 --------------------------------------------------------
 
-Unfortunately the `Open-source Project for a Network Data Access Protocol (OPeNDAP) <http://opendap.org/>`_ protocol does not support a native date type. Therefore, all of our data responses which include dates (i.e. nearly all of them) have to encode the dates using a floating point number. Typically, these dates are encoded as "days since 1970/01/01", however you should always check the units of the data response to be sure.
+Unfortunately the `Open-source Project for a Network Data Access Protocol (OPeNDAP) <http://opendap.org/>`_ protocol does not support a native date type. Therefore, all of our data responses which include dates (i.e. nearly all of them) have to encode the dates using a floating point number. Typically, these dates are encoded as "days since 1970/01/01", however please always check the units of the data response to be sure.
+
+Note that much of the data in PCDS are irregular timeseries with changing frequency of measurement, or long gaps between measurements. Because of this, the values in the timevariable are *not* expected nor guaranteed to be of a regular frequency (e.g. daily or hourly). The data response only includes data for time value for which there exist measurements at that time.
 
 If you're loading data files from the PCDS Portal into a spreadsheet program, typically you can see the human-readable dates by simply configuring the cell type for the time column to be of type "date".
+
+For loading the NetCDF data files from the PCDS Portal, a recipe for getting the dates in Python looks something like this the following. First download a NetCDF file of the time variable: ::
+
+    $ curl http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC/1054920.rsql.nc?station_observations.time > 1054920.nc
+
+Then extract the time values into native datetime types: ::
+
+    import netCDF4
+    from datetime import datetime, timedelta
+    
+    ds = netCDF4.Dataset('1054920.nc')
+    t = ds.variables['time']
+    
+    epoch = datetime(1970, 1, 1)
+    times = [ epoch + timedelta(days=x) for x in t[:].tolist() ]
+
+    for time in times[0:10]:
+        print(time.isoformat())
+
+Which will output: ::
+
+    2011-10-16T00:00:00
+    2011-10-16T01:00:28.125000
+    2011-10-16T13:59:31.875000
+    2011-10-16T15:00:00
+    2011-10-16T16:00:28.125000
+    2011-10-16T16:59:31.875000
+    2011-10-16T18:00:00
+    2011-10-16T19:00:28.125000
+    2011-10-16T19:59:31.875000
 
 When I try to download PRISM data, I'm told that the map "Cannot resolve selection to data grid". Why?
 ------------------------------------------------------------------------------------------------------
@@ -76,5 +108,4 @@ This is an interesting problem and it turns out that it's because our PRISM data
 Why is the "CSV" format nothing like what I expect? Why can't I import it into Excel?
 -------------------------------------------------------------------------------------
 
-Let me respond to the question with a question. What is CSV defined to be? There is not actual answer to that question. CSV is defined as "Character Separated Values", but aside from that, there's no provision for what character is the separator, what information should be included, how many rows/columns should exist, where to include attributes and metadata, and a wide variety of other questions. Essentially, no one, including any of our users, agrees 100% on the structure of a CSV, especially for attributed, multi-dimensional output. We provide CSV as a convenience, but it is impossible to make any guarantees that semantics and structure of CSV output will be unambiguous to all users. If you want well-defined, structured, attributed data, you should make the effort to learn and use NetCDF. It will make your life easier.
-
+Let me respond to the question with a question. What is CSV defined to be? There is not actual answer to that question. CSV is defined as "Character Separated Values", but aside from that, there's no provision for what character is the separator, what information should be included, how many rows/columns should exist, where to include attributes and metadata, and a wide variety of other questions. Essentially, no one, including any of our users, agrees 100% on the structure of a CSV, especially for attributed, multi-dimensional output. We provide CSV as a convenience, but it is impossible to make any guarantees that semantics and structure of CSV output will be unambiguous to all users. If you want well-defined, structured, attributed data, we recommend that you make the effort to learn and use NetCDF. We promise that it will make your life easier.
