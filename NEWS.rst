@@ -1,6 +1,13 @@
 News / Release Notes
 ====================
 
+2.3.3
+-----
+
+*Release Date: 12-Aug-2015*
+
+* Ensure changes to climate layer on raster portals updates download link
+
 2.3.2
 -----
 
