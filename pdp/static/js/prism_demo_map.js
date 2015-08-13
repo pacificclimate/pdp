@@ -5,7 +5,7 @@
 
 function init_prism_map() {
     var selectionLayer, options, mapControls, selLayerName, panelControls,
-        map, defaults, params, datalayerName, cb;
+        map, defaults, params, datalayerName, cb, ncwms;
 
     // Map Config
     options = BC3005_map_options();
@@ -39,7 +39,7 @@ function init_prism_map() {
 
 
     datalayerName = "Climate raster";
-    var ncwms =  new OpenLayers.Layer.WMS(
+    ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
         pdp.ncwms_url,
         params,

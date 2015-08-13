@@ -1,11 +1,11 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, pdp, Colorbar, BC3005_map_options_vic, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getBC3005Bounds_vic, getBC3005OsmBaseLayer, getOpacitySlider*/
+/*global $, jQuery, OpenLayers, pdp, Colorbar, BC3005_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getBC3005Bounds_vic, getBC3005OsmBaseLayer, getOpacitySlider*/
 
 "use strict";
 
 function init_vic_map() {
     var options, mapControls, selLayerName, selectionLayer, panelControls,
-        defaults, map, params, datalayerName, cb;
+        defaults, map, params, datalayerName, cb, ncwms;
 
     // Map Config
     options = BC3005_map_options();
@@ -36,7 +36,7 @@ function init_vic_map() {
     };
 
     datalayerName = "Climate raster";
-    var ncwms =  new OpenLayers.Layer.WMS(
+    ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
         pdp.ncwms_url,
         params,

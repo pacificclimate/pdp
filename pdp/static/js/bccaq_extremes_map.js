@@ -6,7 +6,7 @@
 function init_raster_map() {
 
     var map, options, mapControls, selLayerName, selectionLayer, panelControls,
-        na_osm, defaults, datalayerName, cb;
+        na_osm, defaults, datalayerName, cb, ncwms;
 
     function ncwms_params(layer_name, colorscale_min, colorscale_max) {
         var params, varname, c_range, prec_range, percent_data, number_days_data,
@@ -116,7 +116,7 @@ function init_raster_map() {
     };
 
     datalayerName = "Climate raster";
-    var ncwms =  new OpenLayers.Layer.WMS(
+    ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
         pdp.ncwms_url,
         ncwms_params(defaults.dataset + "/" + defaults.variable),

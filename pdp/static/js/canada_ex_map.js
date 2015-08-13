@@ -5,8 +5,7 @@
 
 function init_raster_map() {
     var options, mapControls, selLayerName, selectionLayer, panelControls,
-        map, na_osm, defaults, params,
-        datalayerName, cb;
+        map, na_osm, defaults, params, ncwms, datalayerName, cb;
 
     // Map Config
     options = na4326_map_options();
@@ -43,7 +42,7 @@ function init_raster_map() {
     };
 
     datalayerName = "Climate raster";
-    var ncwms =  new OpenLayers.Layer.WMS(
+    ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
         pdp.ncwms_url,
         params,
