@@ -35,7 +35,7 @@ $(document).ready(function () {
             }
         });
     });
-    ncwmsLayer.events.registerPriority('change', dlLink, dlLink.onLayerChange);
+    ncwmsLayer.events.register('change', dlLink, dlLink.onLayerChange);
 
     selectionLayer.events.register('featureadded', dlLink, dlLink.onBoxChange);
 
