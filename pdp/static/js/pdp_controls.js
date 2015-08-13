@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, processNcwmsLayerMetadata, createRasterFormatOptions, createDownloadLink, getRasterNativeProj, ncwmsCapabilities, getRasterBbox, rasterBBoxToIndicies, intersection, getTimeSelected*/
+/*global $, jQuery, createRasterFormatOptions, createDownloadLink, getRasterNativeProj, ncwmsCapabilities, getRasterBbox, rasterBBoxToIndicies, intersection, getTimeSelected*/
 "use strict";
 
 // globals
@@ -51,7 +51,6 @@ function generateMenuTree(subtree, leafNameMapping) {
             $('<a/>').text(linkText).click(function () {
                 ncwms.params.LAYERS = newlayer;
                 ncwms.events.triggerEvent('change', newlayer);
-                processNcwmsLayerMetadata(ncwms);
             }).addClass('menu-leaf').appendTo(li);
         }
         li.appendTo(ul);

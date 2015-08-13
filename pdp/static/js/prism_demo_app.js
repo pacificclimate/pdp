@@ -1,13 +1,13 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, pdp, init_prism_map, getPRISMControls, getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
+/*global $, jQuery, pdp, init_prism_map, processNcwmsLayerMetadata, getPRISMControls, getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
 
 "use strict";
 
 // Globals
-var ensemble_name, ncwmsCapabilities, catalog;
+var ensemble_name, ncwmsCapabilities;
 
 $(document).ready(function () {
-    var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, dlLink, mdLink;
+    var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog, dlLink, mdLink;
 
     map = init_prism_map();
     loginButton = pdp.init_login('login-div');
@@ -41,6 +41,7 @@ $(document).ready(function () {
     ).change(setBoundsInUrlTemplate);
 
     ncwmsLayer.events.register('change', dlLink, function () {
+        processNcwmsLayerMetadata(ncwmsLayer, catalog);
         getNCWMSLayerCapabilities(ncwmsLayer).done(function() {
             if (selectionLayer.features.length > 0) {
                 dlLink.onBoxChange({feature: selectionLayer.features[0]});
@@ -67,7 +68,7 @@ $(document).ready(function () {
 
     catalog_request.done(function (data) {
         catalog = dlLink.catalog = mdLink.catalog = data;
-        processNcwmsLayerMetadata(ncwmsLayer);
+        processNcwmsLayerMetadata(ncwmsLayer, catalog);
         // Set the data URL as soon as it is available
         dlLink.onLayerChange();
         mdLink.onLayerChange();

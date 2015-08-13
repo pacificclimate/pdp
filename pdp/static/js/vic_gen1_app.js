@@ -3,11 +3,8 @@
 
 "use strict";
 
-// globals
-var catalog;
-
 $(document).ready(function () {
-    var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, catalog_request,
+    var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog,
         dlLink, mdLink;
 
     map = init_vic_map();
@@ -32,6 +29,7 @@ $(document).ready(function () {
     );
 
     ncwmsLayer.events.register('change', dlLink, function () {
+        processNcwmsLayerMetadata(ncwmsLayer, catalog);
         getNCWMSLayerCapabilities(ncwmsLayer).done(function() {
             if (selectionLayer.features.length > 0) {
                 dlLink.onBoxChange({feature: selectionLayer.features[0]});
@@ -67,7 +65,7 @@ $(document).ready(function () {
 
     catalog_request.done(function (data) {
         catalog = dlLink.catalog = mdLink.catalog = data;
-        processNcwmsLayerMetadata(ncwmsLayer);
+        processNcwmsLayerMetadata(ncwmsLayer, catalog);
         // Set the data URL as soon as it is available
         dlLink.onLayerChange();
         mdLink.onLayerChange();

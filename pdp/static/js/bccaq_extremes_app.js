@@ -4,11 +4,11 @@
 "use strict";
 
 // Globals
-var catalog, ensemble_name, ncwmsCapabilities, ncwms;
+var ensemble_name, ncwmsCapabilities, ncwms;
 
 $(document).ready(function () {
     var map, clickHandler, loginButton, ncwmsLayer, selectionLayer,
-        dlLink, mdLink, catalogUrl, catalog_request;
+        dlLink, mdLink, catalogUrl, catalog_request, catalog;
 
     map = init_raster_map();
     clickHandler = getOLClickHandler(map);
@@ -36,6 +36,7 @@ $(document).ready(function () {
     );
 
     ncwmsLayer.events.register('change', dlLink, function () {
+        processNcwmsLayerMetadata(ncwmsLayer, catalog);
         getNCWMSLayerCapabilities(ncwmsLayer).done(function() {
             if (selectionLayer.features.length > 0) {
                 dlLink.onBoxChange({feature: selectionLayer.features[0]});
@@ -84,7 +85,7 @@ $(document).ready(function () {
 
     catalog_request.done(function (data) {
         catalog = dlLink.catalog = mdLink.catalog = data;
-        processNcwmsLayerMetadata(ncwmsLayer);
+        processNcwmsLayerMetadata(ncwmsLayer, catalog);
         // Set the data URL as soon as it is available
         dlLink.onLayerChange();
         mdLink.onLayerChange();

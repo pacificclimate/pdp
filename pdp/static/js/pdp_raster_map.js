@@ -101,7 +101,7 @@ function getNCWMSLayerCapabilities(ncwms_layer) {
     return deferred.promise();
 }
 
-function processNcwmsLayerMetadata(ncwms_layer) {
+function processNcwmsLayerMetadata(ncwms_layer, catalog) {
 
     var layerUrl, maxTimeReq, unitsSinceReq;
 
