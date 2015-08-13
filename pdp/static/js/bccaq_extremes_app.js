@@ -34,9 +34,18 @@ $(document).ready(function () {
             dlLink.onExtensionChange($(this).val());
         }
     );
-    ncwmsLayer.events.register('change', dlLink, dlLink.onLayerChange);
-    ncwmsLayer.events.register('change', dlLink, dlLink.onBoxChange);
+
+    ncwmsLayer.events.register('change', dlLink, function () {
+        getNCWMSLayerCapabilities(ncwmsLayer).done(function() {
+            if (selectionLayer.features.length > 0) {
+                dlLink.onBoxChange({feature: selectionLayer.features[0]});
+            }
+        });
+    });
+    ncwmsLayer.events.registerPriority('change', dlLink, dlLink.onLayerChange);
+
     selectionLayer.events.register('featureadded', dlLink, dlLink.onBoxChange);
+
     dlLink.register($('#download-timeseries'), function (node) {
         node.attr('href', dlLink.getUrl());
     }

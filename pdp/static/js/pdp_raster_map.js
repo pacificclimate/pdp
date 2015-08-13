@@ -79,26 +79,31 @@ function getNCWMSLayerCapabilities(ncwms_layer) {
     // and then have another fail() fallthrough handler .That is impossible, however.
     // see: http://domenic.me/2012/10/14/youre-missing-the-point-of-promises/
 
+    var deferred = $.Deferred();
+
     var params = {
         REQUEST: "GetCapabilities",
         SERVICE: "WMS",
         VERSION: "1.1.1",
         DATASET: ncwms_layer.params.LAYERS.split("/")[0]
     };
-    $.ajax({url: ncwms_layer.url,
-            data: params,
-           })
-        .fail(handle_ie8_xml)
-        .always(function (response, status, jqXHR) {
-            window.ncwmsCapabilities = $(jqXHR.responseXML);
-        });
+
+    $.ajax({
+        url: ncwms_layer.url,
+        data: params,
+    })
+    .fail(handle_ie8_xml)
+    .always(function (response, status, jqXHR) {
+        window.ncwmsCapabilities = $(jqXHR.responseXML);
+        deferred.resolve();
+    });
+
+    return deferred.promise();
 }
 
 function processNcwmsLayerMetadata(ncwms_layer) {
 
     var layerUrl, maxTimeReq, unitsSinceReq;
-
-    getNCWMSLayerCapabilities(ncwms_layer);
 
     // transform the data_server url into the un-authed catalog based url for metadata
     layerUrl = catalog[getNcwmsLayerId(ncwms_layer)];
