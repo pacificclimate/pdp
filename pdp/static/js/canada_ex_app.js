@@ -3,9 +3,6 @@
 
 "use strict";
 
-// Globals
-var ensemble_name, ncwmsCapabilities;
-
 $(document).ready(function () {
     var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog, dlLink, mdLink;
 

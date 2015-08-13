@@ -6,7 +6,7 @@
 //var pcds_map; // global so that it's accessible across documents
 // NOTE: variables 'gs_url' is expected to be set before this is call
 // Do this in the sourcing html
-var pcds_map, gs_url, map, ncwms;
+var pcds_map, gs_url, map;
 
 function init_raster_map() {
 
@@ -121,7 +121,7 @@ function init_raster_map() {
     };
 
     datalayerName = "Climate raster";
-    ncwms =  new OpenLayers.Layer.WMS(
+    var ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
         pdp.ncwms_url,
         ncwms_params(defaults.dataset + "/" + defaults.variable),
@@ -158,10 +158,6 @@ function init_raster_map() {
     ncwms.events.register('change', ncwms, set_map_title);
     ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
 
-    (function (globals) {
-        globals.ncwms = ncwms;
-    }(window));
-
     map.addLayers(
         [
             ncwms,
@@ -180,6 +176,10 @@ function init_raster_map() {
     map.getSelectionLayer = function () {
         return map.getLayersByName(selLayerName)[0];
     };
+
+    (function (globals) {
+        globals.ncwms = ncwms;
+    }(window));
 
     return map;
 }

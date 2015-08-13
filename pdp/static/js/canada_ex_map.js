@@ -11,7 +11,7 @@ var pcds_map, gs_url;
 function init_raster_map() {
     var options, mapControls, selLayerName, selectionLayer, panelControls,
         map, na_osm, defaults, params,
-        datalayerName, ncwms, cb;
+        datalayerName, cb;
 
     // Map Config
     options = na4326_map_options();
@@ -48,7 +48,7 @@ function init_raster_map() {
     };
 
     datalayerName = "Climate raster";
-    ncwms =  new OpenLayers.Layer.WMS(
+    var ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
         pdp.ncwms_url,
         params,
@@ -76,10 +76,6 @@ function init_raster_map() {
         }
     }
     ncwms.events.register('change', ncwms, customize_wms_params);
-
-    (function (globals) {
-        globals.ncwms = ncwms;
-    }(window));
 
     map.addLayers(
         [
@@ -136,6 +132,10 @@ function init_raster_map() {
     });
 
     ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
+
+    (function (globals) {
+        globals.ncwms = ncwms;
+    }(window));
 
     return map;
 }

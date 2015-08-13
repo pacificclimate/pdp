@@ -5,7 +5,7 @@
 
 function init_vic_map() {
     var options, mapControls, selLayerName, selectionLayer, panelControls,
-        defaults, map, params, datalayerName, ncwms, cb;
+        defaults, map, params, datalayerName, cb;
 
     // Map Config
     options = BC3005_map_options();
@@ -36,7 +36,7 @@ function init_vic_map() {
     };
 
     datalayerName = "Climate raster";
-    ncwms =  new OpenLayers.Layer.WMS(
+    var ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
         pdp.ncwms_url,
         params,

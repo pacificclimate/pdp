@@ -6,7 +6,7 @@
 // NOTE: variables 'gs_url', 'ncwms_url', 'tilecache_url' is expected to be set before this is call
 // Do this in the sourcing html
 // globals
-var gs_url, ncwms_url, tilecache_url, ncwms;
+var gs_url, ncwms_url, tilecache_url;
 
 function init_prism_map() {
     var selectionLayer, options, mapControls, selLayerName, panelControls,
@@ -44,7 +44,7 @@ function init_prism_map() {
 
 
     datalayerName = "Climate raster";
-    ncwms =  new OpenLayers.Layer.WMS(
+    var ncwms =  new OpenLayers.Layer.WMS(
         datalayerName,
         pdp.ncwms_url,
         params,
@@ -123,6 +123,11 @@ function init_prism_map() {
 
     ncwms.events.register('change', ncwms, set_map_title);
     ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
+
+    // Expose ncwms as a global
+    (function (globals) {
+        globals.ncwms = ncwms;
+    }(window));
 
     return map;
 }
