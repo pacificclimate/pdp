@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, pdp, Colorbar, BC3005_map_options_vic, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getBC3005Bounds_vic, getNCWMSLayerCapabilities, getBC3005OsmBaseLayer, getOpacitySlider*/
+/*global $, jQuery, OpenLayers, pdp, Colorbar, BC3005_map_options_vic, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getBC3005Bounds_vic, getBC3005OsmBaseLayer, getOpacitySlider*/
 
 "use strict";
 
@@ -49,8 +49,6 @@ function init_vic_map() {
             tileSize: new OpenLayers.Size(512, 512)
         }
     );
-
-    getNCWMSLayerCapabilities(ncwms); // async save into global var ncwmsCapabilities
 
     map.addLayers(
         [

@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, pdp, BC3005_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getBC3005Bounds, getNCWMSLayerCapabilities, getBC3005OsmBaseLayer, getOpacitySlider, Colorbar*/
+/*global $, jQuery, OpenLayers, pdp, BC3005_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getBC3005Bounds, getBC3005OsmBaseLayer, getOpacitySlider, Colorbar*/
 
 "use strict";
 
@@ -57,8 +57,6 @@ function init_prism_map() {
             tileSize: new OpenLayers.Size(512, 512)
         }
     );
-
-    getNCWMSLayerCapabilities(ncwms); // async save into global var ncwmsCapabilities
 
     function set_map_title(layer_name) {
         // 'this' must be bound to the ncwms layer object
