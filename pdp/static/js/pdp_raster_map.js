@@ -94,8 +94,7 @@ function getNCWMSLayerCapabilities(ncwms_layer) {
     })
     .fail(handle_ie8_xml)
     .always(function (response, status, jqXHR) {
-        window.ncwmsCapabilities = $(jqXHR.responseXML);
-        deferred.resolve();
+        deferred.resolve($(jqXHR.responseXML));
     });
 
     return deferred.promise();

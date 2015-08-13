@@ -279,7 +279,7 @@ RasterDownloadLink.prototype = {
         this.ext = ext;
         this.trigger();
     },
-    onBoxChange: function (selection) {
+    onBoxChange: function (selection, ncwmsCapabilities) {
         var lyr_id, raster_proj, selection_proj,
             raster_bnds, selection_bnds, that;
         lyr_id = this.layer.params.LAYERS;

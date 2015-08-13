@@ -5,7 +5,8 @@
 
 $(document).ready(function () {
     var map, clickHandler, loginButton, ncwmsLayer, selectionLayer,
-        dlLink, mdLink, catalogUrl, catalog_request, catalog;
+        dlLink, mdLink, catalogUrl, catalog_request, catalog,
+        capabilities_request, ncwms_capabilities;
 
     map = init_raster_map();
     clickHandler = getOLClickHandler(map);
@@ -19,6 +20,8 @@ $(document).ready(function () {
 
     catalogUrl = "../catalog/catalog.json";
     catalog_request = $.ajax(catalogUrl, { dataType: "json"});
+
+    capabilities_request = getNCWMSLayerCapabilities(ncwmsLayer);
 
     document.getElementById("pdp-controls").appendChild(getRasterControls(pdp.ensemble_name));
     document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(false));
@@ -34,15 +37,22 @@ $(document).ready(function () {
 
     ncwmsLayer.events.register('change', dlLink, function () {
         processNcwmsLayerMetadata(ncwmsLayer, catalog);
-        getNCWMSLayerCapabilities(ncwmsLayer).done(function() {
+        capabilities_request = getNCWMSLayerCapabilities(ncwmsLayer);
+        capabilities_request.done(function(data) {
+            ncwms_capabilities = data;
             if (selectionLayer.features.length > 0) {
-                dlLink.onBoxChange({feature: selectionLayer.features[0]});
+                dlLink.onBoxChange({feature: selectionLayer.features[0]}, ncwms_capabilities);
             }
         });
     });
     ncwmsLayer.events.register('change', dlLink, dlLink.onLayerChange);
 
-    selectionLayer.events.register('featureadded', dlLink, dlLink.onBoxChange);
+    selectionLayer.events.register('featureadded', dlLink, function (selection){
+        capabilities_request.done(function(data) {
+            ncwms_capabilities = data;
+            dlLink.onBoxChange(selection, data);
+        });
+    });
 
     dlLink.register($('#download-timeseries'), function (node) {
         node.attr('href', dlLink.getUrl());
@@ -80,6 +90,9 @@ $(document).ready(function () {
 
     ncwms.events.register('change', ncwms, getTimeIndex);
 
+    capabilities_request.done(function (data) {
+        ncwms_capabilities = data;
+    });
     catalog_request.done(function (data) {
         catalog = dlLink.catalog = mdLink.catalog = data;
         processNcwmsLayerMetadata(ncwmsLayer, catalog);
