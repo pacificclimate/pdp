@@ -3,11 +3,6 @@
 
 "use strict";
 
-// NOTE: variables 'gs_url', 'ncwms_url', 'tilecache_url' is expected to be set before this is call
-// Do this in the sourcing html
-// globals
-var gs_url, ncwms_url, tilecache_url;
-
 function init_prism_map() {
     var selectionLayer, options, mapControls, selLayerName, panelControls,
         map, defaults, params, datalayerName, cb;

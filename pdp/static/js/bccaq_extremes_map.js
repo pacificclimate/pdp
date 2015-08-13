@@ -3,14 +3,9 @@
 
 "use strict";
 
-//var pcds_map; // global so that it's accessible across documents
-// NOTE: variables 'gs_url' is expected to be set before this is call
-// Do this in the sourcing html
-var pcds_map, gs_url, map;
-
 function init_raster_map() {
 
-    var options, mapControls, selLayerName, selectionLayer, panelControls,
+    var map, options, mapControls, selLayerName, selectionLayer, panelControls,
         na_osm, defaults, datalayerName, cb;
 
     function ncwms_params(layer_name, colorscale_min, colorscale_max) {

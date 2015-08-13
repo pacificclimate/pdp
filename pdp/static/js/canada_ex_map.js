@@ -3,11 +3,6 @@
 
 "use strict";
 
-// globls
-// NOTE: variables 'gs_url' is expected to be set before this is call
-// Do this in the sourcing html
-var pcds_map, gs_url;
-
 function init_raster_map() {
     var options, mapControls, selLayerName, selectionLayer, panelControls,
         map, na_osm, defaults, params,
