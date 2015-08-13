@@ -1,9 +1,7 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, d3, pdp, map, DOMParser, handle_ie8_xml, getRasterNativeProj, ncwmsCapabilities, getRasterBbox, rasterBBoxToIndicies, intersection*/
+/*global $, jQuery, OpenLayers, d3, pdp, map, ncwms, DOMParser, handle_ie8_xml, getRasterNativeProj, ncwmsCapabilities, getRasterBbox, rasterBBoxToIndicies, intersection*/
 
 "use strict";
-
-var ncwms, catalog;
 
 function getPlotWindow() {
     var frag = document.createDocumentFragment(),
