@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, pdp, init_prism_map, getCatalog, getPRISMControls, getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
+/*global $, jQuery, pdp, init_prism_map, getPRISMControls, getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
 
 "use strict";
 
@@ -7,7 +7,7 @@
 var ensemble_name, ncwmsCapabilities, catalog;
 
 $(document).ready(function () {
-    var map, loginButton, ncwmsLayer, selectionLayer, dlLink, mdLink;
+    var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, dlLink, mdLink;
 
     map = init_prism_map();
     loginButton = pdp.init_login('login-div');
@@ -18,6 +18,9 @@ $(document).ready(function () {
 
     ncwmsLayer = map.getClimateLayer();
     selectionLayer = map.getSelectionLayer();
+
+    catalogUrl = "../catalog/catalog.json";
+    catalog_request = $.ajax(catalogUrl, {dataType: "json"});
 
     // Ensure that climatology_bounds are included in non-aig data downloads
     function setBoundsInUrlTemplate() {
@@ -62,14 +65,12 @@ $(document).ready(function () {
         node.attr('href', mdLink.getUrl());
     });
 
-    // FIXME: This needs to have error handling and this is horrible
-    getCatalog(
-        function (data) {
-            catalog = dlLink.catalog = mdLink.catalog = data;
-            // Set the data URL as soon as it is available
-            dlLink.onLayerChange();
-            mdLink.onLayerChange();
-        }
-    );
+    catalog_request.done(function (data) {
+        catalog = dlLink.catalog = mdLink.catalog = data;
+        processNcwmsLayerMetadata(ncwmsLayer);
+        // Set the data URL as soon as it is available
+        dlLink.onLayerChange();
+        mdLink.onLayerChange();
+    });
 
 });

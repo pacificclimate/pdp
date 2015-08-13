@@ -8,7 +8,7 @@ var catalog, ensemble_name, ncwmsCapabilities, ncwms;
 
 $(document).ready(function () {
     var map, clickHandler, loginButton, ncwmsLayer, selectionLayer,
-        dlLink, mdLink, catalogUrl, request;
+        dlLink, mdLink, catalogUrl, catalog_request;
 
     map = init_raster_map();
     clickHandler = getOLClickHandler(map);
@@ -21,7 +21,7 @@ $(document).ready(function () {
     selectionLayer = map.getSelectionLayer();
 
     catalogUrl = "../catalog/catalog.json";
-    request = $.ajax(catalogUrl, { dataType: "json"});
+    catalog_request = $.ajax(catalogUrl, { dataType: "json"});
 
     document.getElementById("pdp-controls").appendChild(getRasterControls(pdp.ensemble_name));
     document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(false));
@@ -82,7 +82,7 @@ $(document).ready(function () {
 
     ncwms.events.register('change', ncwms, getTimeIndex);
 
-    request.then(function (data) {
+    catalog_request.done(function (data) {
         catalog = dlLink.catalog = mdLink.catalog = data;
         processNcwmsLayerMetadata(ncwmsLayer);
         // Set the data URL as soon as it is available

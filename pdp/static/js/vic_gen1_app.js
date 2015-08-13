@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, pdp, getCatalog, init_vic_map, processNcwmsLayerMetadata, getVICControls, getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
+/*global $, jQuery, OpenLayers, pdp, init_vic_map, processNcwmsLayerMetadata, getVICControls, getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
 
 "use strict";
 
@@ -7,7 +7,7 @@
 var catalog;
 
 $(document).ready(function () {
-    var map, loginButton, ncwmsLayer, selectionLayer,
+    var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, catalog_request,
         dlLink, mdLink;
 
     map = init_vic_map();
@@ -16,6 +16,9 @@ $(document).ready(function () {
 
     ncwmsLayer = map.getClimateLayer();
     selectionLayer = map.getSelectionLayer();
+
+    catalogUrl = "../catalog/catalog.json";
+    catalog_request = $.ajax(catalogUrl, {dataType: "json"});
 
     document.getElementById("pdp-controls").appendChild(getVICControls(pdp.ensemble_name));
     document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(true));
@@ -62,7 +65,7 @@ $(document).ready(function () {
         }
     );
 
-    getCatalog(function (data) {
+    catalog_request.done(function (data) {
         catalog = dlLink.catalog = mdLink.catalog = data;
         processNcwmsLayerMetadata(ncwmsLayer);
         // Set the data URL as soon as it is available
