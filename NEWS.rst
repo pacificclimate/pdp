@@ -1,6 +1,13 @@
 News / Release Notes
 ====================
 
+2.3.4
+-----
+
+*Release Date: 13-Aug-2015*
+
+* Fixes multiple race conditions due to global variable use.
+
 2.3.3
 -----
 
