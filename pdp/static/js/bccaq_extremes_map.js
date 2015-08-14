@@ -3,15 +3,10 @@
 
 "use strict";
 
-//var pcds_map; // global so that it's accessible across documents
-// NOTE: variables 'gs_url' is expected to be set before this is call
-// Do this in the sourcing html
-var pcds_map, gs_url, current_dataset, map, ncwms;
-
 function init_raster_map() {
 
-    var options, mapControls, selLayerName, selectionLayer, panelControls,
-        na_osm, defaults, datalayerName, cb;
+    var map, options, mapControls, selLayerName, selectionLayer, panelControls,
+        na_osm, defaults, datalayerName, cb, ncwms;
 
     function ncwms_params(layer_name, colorscale_min, colorscale_max) {
         var params, varname, c_range, prec_range, percent_data, number_days_data,
@@ -135,8 +130,6 @@ function init_raster_map() {
         }
     );
 
-    current_dataset = ncwms.params.layers;
-
     cb = new Colorbar("pdpColorbar", ncwms);
 
     ncwms.events.registerPriority('change', ncwms, function (layer_id) {
@@ -160,10 +153,6 @@ function init_raster_map() {
     ncwms.events.register('change', ncwms, set_map_title);
     ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
 
-    (function (globals) {
-        globals.ncwms = ncwms;
-    }(window));
-
     map.addLayers(
         [
             ncwms,
@@ -182,6 +171,10 @@ function init_raster_map() {
     map.getSelectionLayer = function () {
         return map.getLayersByName(selLayerName)[0];
     };
+
+    (function (globals) {
+        globals.ncwms = ncwms;
+    }(window));
 
     return map;
 }

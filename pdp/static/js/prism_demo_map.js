@@ -1,16 +1,11 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, pdp, BC3005_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getBC3005Bounds, getNCWMSLayerCapabilities, getBC3005OsmBaseLayer, getOpacitySlider, Colorbar*/
+/*global $, jQuery, OpenLayers, pdp, BC3005_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getBC3005Bounds, getBC3005OsmBaseLayer, getOpacitySlider, Colorbar*/
 
 "use strict";
 
-// NOTE: variables 'gs_url', 'ncwms_url', 'tilecache_url' is expected to be set before this is call
-// Do this in the sourcing html
-// globals
-var gs_url, ncwms_url, tilecache_url, current_dataset, ncwms;
-
 function init_prism_map() {
     var selectionLayer, options, mapControls, selLayerName, panelControls,
-        map, defaults, params, datalayerName, cb;
+        map, defaults, params, datalayerName, cb, ncwms;
 
     // Map Config
     options = BC3005_map_options();
@@ -57,9 +52,6 @@ function init_prism_map() {
             tileSize: new OpenLayers.Size(512, 512)
         }
     );
-
-    getNCWMSLayerCapabilities(ncwms); // async save into global var ncwmsCapabilities
-    current_dataset = params.layers;
 
     function set_map_title(layer_name) {
         // 'this' must be bound to the ncwms layer object
@@ -126,6 +118,11 @@ function init_prism_map() {
 
     ncwms.events.register('change', ncwms, set_map_title);
     ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
+
+    // Expose ncwms as a global
+    (function (globals) {
+        globals.ncwms = ncwms;
+    }(window));
 
     return map;
 }

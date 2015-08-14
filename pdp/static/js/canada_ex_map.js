@@ -3,15 +3,9 @@
 
 "use strict";
 
-// globls
-// NOTE: variables 'gs_url' is expected to be set before this is call
-// Do this in the sourcing html
-var current_dataset, pcds_map, gs_url;
-
 function init_raster_map() {
     var options, mapControls, selLayerName, selectionLayer, panelControls,
-        map, na_osm, defaults, params,
-        datalayerName, ncwms, cb;
+        map, na_osm, defaults, params, ncwms, datalayerName, cb;
 
     // Map Config
     options = na4326_map_options();
@@ -62,8 +56,6 @@ function init_raster_map() {
         }
     );
 
-    current_dataset = params.layers;
-
     function customize_wms_params(layer_name) {
         var varname = layer_name.split('/')[1];
         if (varname === 'pr') {
@@ -78,10 +70,6 @@ function init_raster_map() {
         }
     }
     ncwms.events.register('change', ncwms, customize_wms_params);
-
-    (function (globals) {
-        globals.ncwms = ncwms;
-    }(window));
 
     map.addLayers(
         [
@@ -138,6 +126,10 @@ function init_raster_map() {
     });
 
     ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
+
+    (function (globals) {
+        globals.ncwms = ncwms;
+    }(window));
 
     return map;
 }

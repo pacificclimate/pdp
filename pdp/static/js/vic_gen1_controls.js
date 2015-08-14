@@ -3,9 +3,6 @@
 
 "use strict";
 
-// globals
-var catalog, current_dataset;
-
 function getVICControls(ensemble_name) {
     var div, form, fieldset, varMapping;
 

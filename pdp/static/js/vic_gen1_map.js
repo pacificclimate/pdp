@@ -1,14 +1,11 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, pdp, Colorbar, BC3005_map_options_vic, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getBC3005Bounds_vic, getNCWMSLayerCapabilities, getBC3005OsmBaseLayer, getOpacitySlider*/
+/*global $, jQuery, OpenLayers, pdp, Colorbar, BC3005_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getBC3005Bounds_vic, getBC3005OsmBaseLayer, getOpacitySlider*/
 
 "use strict";
 
-// globals
-var current_dataset;
-
 function init_vic_map() {
     var options, mapControls, selLayerName, selectionLayer, panelControls,
-        defaults, map, params, datalayerName, ncwms, cb;
+        defaults, map, params, datalayerName, cb, ncwms;
 
     // Map Config
     options = BC3005_map_options();
@@ -52,9 +49,6 @@ function init_vic_map() {
             tileSize: new OpenLayers.Size(512, 512)
         }
     );
-
-    getNCWMSLayerCapabilities(ncwms); // async save into global var ncwmsCapabilities
-    current_dataset = params.layers;
 
     map.addLayers(
         [

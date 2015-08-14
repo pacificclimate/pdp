@@ -1,13 +1,11 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, pdp, init_prism_map, getCatalog, getPRISMControls, getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
+/*global $, jQuery, pdp, init_prism_map, processNcwmsLayerMetadata, getPRISMControls, getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
 
 "use strict";
 
-// Globals
-var ensemble_name, current_dataset, ncwmsCapabilities, catalog;
-
 $(document).ready(function () {
-    var map, loginButton, ncwmsLayer, selectionLayer, dlLink, mdLink;
+    var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog,
+        dlLink, mdLink, capabilities_request, ncwms_capabilities;
 
     map = init_prism_map();
     loginButton = pdp.init_login('login-div');
@@ -18,6 +16,11 @@ $(document).ready(function () {
 
     ncwmsLayer = map.getClimateLayer();
     selectionLayer = map.getSelectionLayer();
+
+    catalogUrl = "../catalog/catalog.json";
+    catalog_request = $.ajax(catalogUrl, {dataType: "json"});
+
+    capabilities_request = getNCWMSLayerCapabilities(ncwmsLayer);
 
     // Ensure that climatology_bounds are included in non-aig data downloads
     function setBoundsInUrlTemplate() {
@@ -36,9 +39,26 @@ $(document).ready(function () {
             dlLink.onExtensionChange($(this).val());
         }
     ).change(setBoundsInUrlTemplate);
+
+    ncwmsLayer.events.register('change', dlLink, function () {
+        processNcwmsLayerMetadata(ncwmsLayer, catalog);
+        capabilities_request = getNCWMSLayerCapabilities(ncwmsLayer);
+        capabilities_request.done(function(data) {
+            ncwms_capabilities = data;
+            if (selectionLayer.features.length > 0) {
+                dlLink.onBoxChange({feature: selectionLayer.features[0]}, ncwms_capabilities);
+            }
+        });
+    });
     ncwmsLayer.events.register('change', dlLink, dlLink.onLayerChange);
-    ncwmsLayer.events.register('change', dlLink, dlLink.onBoxChange);
-    selectionLayer.events.register('featureadded', dlLink, dlLink.onBoxChange);
+
+    selectionLayer.events.register('featureadded', dlLink, function (selection){
+        capabilities_request.done(function(data) {
+            ncwms_capabilities = data;
+            dlLink.onBoxChange(selection, data);
+        });
+    });
+
     dlLink.register($('#download-timeseries'), function (node) {
         node.attr('href', dlLink.getUrl());
     });
@@ -53,14 +73,15 @@ $(document).ready(function () {
         node.attr('href', mdLink.getUrl());
     });
 
-    // FIXME: This needs to have error handling and this is horrible
-    getCatalog(
-        function (data) {
-            catalog = dlLink.catalog = mdLink.catalog = data;
-            // Set the data URL as soon as it is available
-            dlLink.onLayerChange();
-            mdLink.onLayerChange();
-        }
-    );
+    capabilities_request.done(function (data) {
+        ncwms_capabilities = data;
+    });
+    catalog_request.done(function (data) {
+        catalog = dlLink.catalog = mdLink.catalog = data;
+        processNcwmsLayerMetadata(ncwmsLayer, catalog);
+        // Set the data URL as soon as it is available
+        dlLink.onLayerChange();
+        mdLink.onLayerChange();
+    });
 
 });
