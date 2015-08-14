@@ -3,12 +3,10 @@
 
 "use strict";
 
-// Globals
-var catalog, ensemble_name, current_dataset, ncwmsCapabilities, ncwms;
-
 $(document).ready(function () {
     var map, clickHandler, loginButton, ncwmsLayer, selectionLayer,
-        dlLink, mdLink, catalogUrl, request;
+        dlLink, mdLink, catalogUrl, catalog_request, catalog,
+        capabilities_request, ncwms_capabilities;
 
     map = init_raster_map();
     clickHandler = getOLClickHandler(map);
@@ -21,7 +19,9 @@ $(document).ready(function () {
     selectionLayer = map.getSelectionLayer();
 
     catalogUrl = "../catalog/catalog.json";
-    request = $.ajax(catalogUrl, { dataType: "json"});
+    catalog_request = $.ajax(catalogUrl, { dataType: "json"});
+
+    capabilities_request = getNCWMSLayerCapabilities(ncwmsLayer);
 
     document.getElementById("pdp-controls").appendChild(getRasterControls(pdp.ensemble_name));
     document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(false));
@@ -34,9 +34,26 @@ $(document).ready(function () {
             dlLink.onExtensionChange($(this).val());
         }
     );
+
+    ncwmsLayer.events.register('change', dlLink, function () {
+        processNcwmsLayerMetadata(ncwmsLayer, catalog);
+        capabilities_request = getNCWMSLayerCapabilities(ncwmsLayer);
+        capabilities_request.done(function(data) {
+            ncwms_capabilities = data;
+            if (selectionLayer.features.length > 0) {
+                dlLink.onBoxChange({feature: selectionLayer.features[0]}, ncwms_capabilities);
+            }
+        });
+    });
     ncwmsLayer.events.register('change', dlLink, dlLink.onLayerChange);
-    ncwmsLayer.events.register('change', dlLink, dlLink.onBoxChange);
-    selectionLayer.events.register('featureadded', dlLink, dlLink.onBoxChange);
+
+    selectionLayer.events.register('featureadded', dlLink, function (selection){
+        capabilities_request.done(function(data) {
+            ncwms_capabilities = data;
+            dlLink.onBoxChange(selection, data);
+        });
+    });
+
     dlLink.register($('#download-timeseries'), function (node) {
         node.attr('href', dlLink.getUrl());
     }
@@ -73,9 +90,12 @@ $(document).ready(function () {
 
     ncwms.events.register('change', ncwms, getTimeIndex);
 
-    request.then(function (data) {
+    capabilities_request.done(function (data) {
+        ncwms_capabilities = data;
+    });
+    catalog_request.done(function (data) {
         catalog = dlLink.catalog = mdLink.catalog = data;
-        processNcwmsLayerMetadata(ncwmsLayer);
+        processNcwmsLayerMetadata(ncwmsLayer, catalog);
         // Set the data URL as soon as it is available
         dlLink.onLayerChange();
         mdLink.onLayerChange();

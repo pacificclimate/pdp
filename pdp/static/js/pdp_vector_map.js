@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global pdp, $, OpenLayers, catalog, setTimeAvailable, handle_ie8_xml, DOMParser
+/*global pdp, $, OpenLayers, setTimeAvailable, handle_ie8_xml, DOMParser
 */
 
 "use strict";

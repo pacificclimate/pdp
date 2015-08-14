@@ -1,9 +1,9 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, processNcwmsLayerMetadata, createRasterFormatOptions, createDownloadLink, getRasterNativeProj, ncwmsCapabilities, getRasterBbox, rasterBBoxToIndicies, intersection, getTimeSelected*/
+/*global $, jQuery, createRasterFormatOptions, createDownloadLink, getRasterNativeProj, ncwmsCapabilities, getRasterBbox, rasterBBoxToIndicies, intersection, getTimeSelected*/
 "use strict";
 
 // globals
-var pdp, ncwms, current_dataset, map;
+var pdp, ncwms, map;
 
 function getDateRange() {
     var rangeDiv = pdp.createDiv("date-range");
@@ -51,8 +51,6 @@ function generateMenuTree(subtree, leafNameMapping) {
             $('<a/>').text(linkText).click(function () {
                 ncwms.params.LAYERS = newlayer;
                 ncwms.events.triggerEvent('change', newlayer);
-                current_dataset = newlayer;
-                processNcwmsLayerMetadata(ncwms);
             }).addClass('menu-leaf').appendTo(li);
         }
         li.appendTo(ul);
@@ -281,7 +279,7 @@ RasterDownloadLink.prototype = {
         this.ext = ext;
         this.trigger();
     },
-    onBoxChange: function (selection) {
+    onBoxChange: function (selection, ncwmsCapabilities) {
         var lyr_id, raster_proj, selection_proj,
             raster_bnds, selection_bnds, that;
         lyr_id = this.layer.params.LAYERS;

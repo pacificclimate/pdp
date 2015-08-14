@@ -46,14 +46,3 @@ function createDownloadLink(id, divClass, links) {
     });
     return downloadDiv;
 };
-
-function getCatalog(callback) {
-    $.ajax({'url': '../catalog/' + 'catalog.json',
-        'type': 'GET',
-        'dataType': 'json',
-        'success': function (data, textStatus, jqXHR) {
-            callback(data);
-        }
-        }
-        );
-}
