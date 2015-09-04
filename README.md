@@ -59,8 +59,8 @@ pyenv/bin/pip install -i http://atlas.pcic.uvic.ca/pypiserver/ -r requirements.t
 Install and build the docs
 
 ```bash
-pyenv/bin/python setup.py install
 pyenv/bin/python setup.py build_sphinx
+pyenv/bin/python setup.py install
 ```
 
 ## Configuration
