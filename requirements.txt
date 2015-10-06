@@ -3,6 +3,7 @@ Flask==0.10.1
 Genshi==0.7
 ga-wsgi-client==0.1
 pdp-util==0.2.4
+PyCDS<2.0.0
 slimit==0.8.1
 static==1.0.2
 cython
