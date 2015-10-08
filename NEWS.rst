@@ -1,6 +1,14 @@
 News / Release Notes
 ====================
 
+2.3.5
+-----
+
+*Release Date: 8-Oct-2015*
+
+* Add capability to serve PRISM 1981-2010 climatologies
+* Fix Colorbar logarithmic midpoint calculation
+
 2.3.4
 -----
 
