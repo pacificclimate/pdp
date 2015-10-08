@@ -77,11 +77,11 @@ function init_prism_map() {
         }
 
         if (varname === 'pr') {
-            this.params.COLORSCALERANGE = '10,12500';
+            this.params.COLORSCALERANGE = '200,12500';
         } else if (varname == 'tmax') {
-            this.params.COLORSCALERANGE = '-20,30';
+            this.params.COLORSCALERANGE = '-10,20';
         } else if (varname == 'tmin' ) {
-            this.params.COLORSCALERANGE = '-30,20';
+            this.params.COLORSCALERANGE = '-15,10';
         }
 
         var uniqueID = layer_name.split('/')[0].split('_');
