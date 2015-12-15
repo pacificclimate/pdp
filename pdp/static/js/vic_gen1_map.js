@@ -32,7 +32,8 @@ function init_vic_map() {
         // styles: '',
         numcolorbands: 254,
         version: '1.1.1',
-        srs: 'EPSG:3005'
+        srs: 'EPSG:3005',
+        TIME: '2000-01-01T00:00:00Z'
     };
 
     datalayerName = "Climate raster";
