@@ -1,6 +1,13 @@
 News / Release Notes
 ====================
 
+2.3.6
+-----
+
+*Release Date: 4-Jan-2016*
+
+* Fix VIC model output default display time
+
 2.3.5
 -----
 
