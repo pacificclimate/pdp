@@ -3,10 +3,8 @@ FROM pcic/geospatial-python
 ADD . /app
 WORKDIR /app
 
-RUN pip install -i http://tools.pacificclimate.org/pypiserver/ .
-
-COPY .pgpass ~/.pgpass
-ENV PDP_CONFIG pdp/config.yaml
+RUN pip install -U pip;
+RUN pip install --trusted-host tools.pacificclimate.org -i http://tools.pacificclimate.org/pypiserver/ .
 
 EXPOSE 8000
 

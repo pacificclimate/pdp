@@ -65,14 +65,27 @@ pyenv/bin/python setup.py build_sphinx
 
 ## Configuration
 
-A sample config file is stored in `pdp/config.yaml`. Copy this file to a new location and set an environment variable `PDP_CONFIG` to point to it.
-
-```bash
-cp pdp/config.yaml ~/pdp_config.yaml
-export PDP_CONFIG ~/pdp_config.yaml
-```
+Configuration is sourced from the host's environment.
 
 ### Config Items
+
+| Environment Variable | Internal variable name | Default |
+| -------------------- | ---------------------- | ------- |
+| APP_ROOT | http://tools.pacificclimate.org/dataportal |
+| DATA_ROOT | http://tools.pacificclimate.org/dataportal/data |
+| DSN | postgresql://httpd_meta@atlas.pcic/pcic_meta |
+| PCDS_DSN | postgresql://httpd@atlas.pcic/crmp |
+| JS_MIN | FALSE |
+| GEOSERVER_URL | http://atlas.pcic.uvic.ca/geoserver/ |
+| NCWMS_URL | http://atlas.pcic.uvic.ca/ncWMS/wms |
+| TILECACHE_URL | http://a.tiles.pacificclimate.org/tilecache/tilecache.py |
+| USE_AUTH | TRUE |
+| SESSION_DIR | default |
+| CLEAN_SESSION_DIR | TRUE |
+| USE_ANALYTICS | TRUE |
+| ANALYTICS | UA-20166041-3 |
+
+### Config Items Info
 
 ###### `app_root`
 
@@ -141,7 +154,18 @@ pyenv/bin/py.test -vv --tb=short tests
 Provided you installed everything with `tox`, you should be able to run a development server with 
 
 ```bash
+export DSN=postgresql://<user>:<pass>@<host>/pcic_meta
+export PCDS_DSN=postgresql://<user>:<pass>@<host>/crmp
 devenv/bin/python scripts/rast_serve -p <port> [-t]
+```
+
+### Docker
+
+To run in docker, you need to build the image (or pull it down) and set all the appropriate configuration items as well as link in the data volumes when running the container
+
+```bash
+sudo docker build -t registry.pcic.uvic.ca/pdp .
+sudo docker run --rm -it -v $(pwd):/app -p <external_port>:8000 -e 'DSN=postgresql://<user>:<pass>@<host>/pcic_meta' -e 'PCDS_DSN=postgresql://<user>:<pass>@<host>/crmp' registry.pcic.uvic.ca/pdp
 ```
 
 ### Production

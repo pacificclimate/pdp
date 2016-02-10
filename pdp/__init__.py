@@ -23,10 +23,29 @@ from pdp.dispatch import PathDispatcher
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
 
+
+s2bool = lambda x: x.lower() in ('true', 'yes', 't', '1')
+
+environment_config = {
+    'app_root': os.environ.get('APP_ROOT', 'http://tools.pacificclimate.org/dataportal'),
+    'data_root': os.environ.get('DATA_ROOT', 'http://tools.pacificclimate.org/dataportal/data'),
+    'dsn': os.environ.get('DSN', 'postgresql://httpd_meta@atlas.pcic.uvic.ca/pcic_meta'),
+    'pcds_dsn': os.environ.get('PCDS_DSN', 'postgresql://httpd@atlas.pcic.uvic.ca/crmp'),
+    'js_min': s2bool(os.environ.get('JS_MIN', 'FALSE')),
+    'geoserver_url': os.environ.get('GEOSERVER_URL', 'http://atlas.pcic.uvic.ca/geoserver/'),
+    'ncwms_url': os.environ.get('NCWMS_URL',
+                                'http://tools.pacificclimate.org/ncWMS-PCIC/wms').split(','),
+    'tilecache_url': os.environ.get('TILECACHE_URL',
+                                    'http://tiles.pacificclimate.org/tilecache/tilecache.py').split(','),
+    'use_auth': s2bool(os.environ.get('USE_AUTH', 'TRUE')),
+    'session_dir': os.environ.get('SESSION_DIR', 'default'),
+    'clean_session_dir': s2bool(os.environ.get('CLEAN_SESSION_DIR', 'TRUE')),
+    'use_analytics': s2bool(os.environ.get('USE_ANALYTICS', 'TRUE')),
+    'analytics': os.environ.get('ANALYTICS', 'UA-20166041-3'),
+    'ensemble_name': os.environ.get('ENSEMBLE_NAME', ''),
+}
+
 def get_config():
-    config_filename = os.environ.get('PDP_CONFIG', '/var/www/dataportal/config.yaml')
-    with open(config_filename) as f:
-        config = yaml.load(f)
     global_config = {
         'css_files': [
             'css/jquery-ui-1.10.2.custom.css',
@@ -54,12 +73,12 @@ def get_config():
             'js/pdp_auth.js',
             'js/pdp_raster_map.js',
             'js/pdp_vector_map.js'
-            ], debug=(not config['js_min'])),
+            ], debug=(not environment_config['js_min'])),
         'templates': resource_filename('pdp', 'templates'),
         'version': get_distribution('pdp').version
         }
 
-    config = updateConfig(global_config, config)
+    config = updateConfig(global_config, environment_config)
     if config['session_dir'] == 'default':
         config['session_dir'] = resource_filename('pdp', 'pdp_session_dir')
     return config
