@@ -161,11 +161,33 @@ devenv/bin/python scripts/rast_serve -p <port> [-t]
 
 ### Docker
 
-To run in docker, you need to build the image (or pull it down) and set all the appropriate configuration items as well as link in the data volumes when running the container
+To run in docker, you need to build the image (or pull it down) and set all the appropriate configuration items as well as link in the data volumes when running the container.
+
+Data expectation:
+- hydro_model_out
+  - /home/data/climate/hydrology/vic/gen1
+  - /home/data/projects/dataportal/data/vic_gen1_input
+- bcsd_downscale_canada
+  - /home/data/climate/downscale/CMIP5/BCCAQ
+  - /home/data/climate/downscale/CMIP5/BCSD
+- bccaq_extremes
+  - /home/data/climate/downscale/CMIP5/BCCAQ/climdex
+- bc_prism
+  - /home/data/climate/PRISM/dataportal
+
+This would make a bare bones Docker setup something like this:
 
 ```bash
 sudo docker build -t registry.pcic.uvic.ca/pdp .
-sudo docker run --rm -it -v $(pwd):/app -p <external_port>:8000 -e 'DSN=postgresql://<user>:<pass>@<host>/pcic_meta' -e 'PCDS_DSN=postgresql://<user>:<pass>@<host>/crmp' registry.pcic.uvic.ca/pdp
+sudo docker run --rm -it \
+  -v $(pwd):/app \
+  -v /datasets/climate-hydrology-vic-gen1:/home/data/climate/hydrology/vic/gen1:ro \
+  -v /mnt/storage/projects-dataportal/nobackup/vic_gen1_input:/home/data/projects/dataportal/data/vic_gen1_input:ro \
+  -v /datasets/climate-downscale-CMIP5/nobackup/BCCAQ:/home/data/climate/downscale/CMIP5/BCCAQ:ro \
+  -v /datasets/climate-downscale-CMIP5/nobackup/BCSD:/home/data/climate/downscale/CMIP5/BCSD:ro \
+  -v /datasets/climate-downscale-CMIP5/nobackup/BCCAQ/climdex:/home/data/climate/downscale/CMIP5/BCCAQ/climdex:ro \
+  -v /mnt/storage/data4/climate/PRISM/dataportal:/home/data/climate/PRISM/dataportal:ro \
+  -p <external_port>:8000 -e 'DSN=postgresql://<user>:<pass>@<host>/pcic_meta' -e 'PCDS_DSN=postgresql://<user>:<pass>@<host>/crmp' registry.pcic.uvic.ca/pdp
 ```
 
 ### Production
