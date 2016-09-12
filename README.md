@@ -70,7 +70,7 @@ A sample config file is stored in `pdp/config.yaml`. Copy this file to a new loc
 
 ```bash
 cp pdp/config.yaml ~/pdp_config.yaml
-export PDP_CONFIG ~/pdp_config.yaml
+export PDP_CONFIG=~/pdp_config.yaml
 ```
 
 ### Config Items
@@ -139,7 +139,7 @@ pyenv/bin/py.test -vv --tb=short tests
 
 ### Development
 
-Provided you installed everything with `tox`, you should be able to run a development server with 
+Provided you installed everything with `tox`, you should be able to run a development server with
 
 ```bash
 devenv/bin/python scripts/rast_serve -p <port> [-t]
@@ -181,7 +181,7 @@ killasgroup=True
 Back end config
 
 ```ini
-[program:pdp_frontend-v.v.v]
+[program:pdp_backend-v.v.v]
 command=/install/location/pyenv/bin/gunicorn -b 0.0.0.0:<port> --workers 10 --worker-class gevent -t 3600 --pid=<pid_file_path> --access-logfile=<access_logfile> --error-logfile=<error_logfile> pdp.wsgi:backend
 directory=/install/location/
 user=www-data
