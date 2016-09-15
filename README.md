@@ -162,13 +162,38 @@ pyenv/bin/gunicorn -b 0.0.0.0:<port2> pdp.wsgi:backend
 
 #### Supervisord
 
-Supervisord config is stored in `/etc/supervisor/conf.d/pdp_[frontend|backend].conf
+Set up the Supervisord config file using
+```bash
+pyenv/bin/echo_supervisord_conf > /install/location/supervisord.conf
+```
+
+In order to run Supervisord, the config file must have a `[supervisord]` section. Here's a sample section:
+
+```ini
+[supervisord]
+logfile=/install/location/etc/<supervisord_logfile>      ; (main log file;default $CWD/supervisord.log)
+loglevel=info     ; (log level;default info; others: debug,warn,trace)
+nodaemon=true     ; (start in foreground if true; useful for debugging)
+```
+
+Supervisorctl is a command line utility that lets you see the status and output of processes and start, stop and restart them. The following will set up supervisorctl using a unix socket file, but it is also possible to monitor processes using a web interface if you wish to do so.
+
+```ini
+[unix_http_server]
+file = /tmp/supervisord.sock
+
+[supervisorctl]
+serverurl = unix:///tmp/supervisord.sock
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+```
 
 Front end config
 
 ```ini
 [program:pdp_frontend-v.v.v]
-command=/install/location/pyenv/bin/gunicorn -b 0.0.0.0:<port> --pid=<pid_file_path> --access-logfile=<access_logfile> --error-logfile=<error_logfile> pdp.wsgi:frontend
+command=/install/location/pyenv/bin/gunicorn -b 0.0.0.0:<port> --access-logfile=<access_logfile> --error-logfile=<error_logfile> pdp.wsgi:frontend
 directory=/install/location/
 user=www-data
 environment=PDP_CONFIG="/install/location/pdp_config.yaml"
@@ -182,7 +207,7 @@ Back end config
 
 ```ini
 [program:pdp_backend-v.v.v]
-command=/install/location/pyenv/bin/gunicorn -b 0.0.0.0:<port> --workers 10 --worker-class gevent -t 3600 --pid=<pid_file_path> --access-logfile=<access_logfile> --error-logfile=<error_logfile> pdp.wsgi:backend
+command=/install/location/pyenv/bin/gunicorn -b 0.0.0.0:<port> --workers 10 --worker-class gevent -t 3600 --access-logfile=<access_logfile> --error-logfile=<error_logfile> pdp.wsgi:backend
 directory=/install/location/
 user=www-data
 environment=PDP_CONFIG="/install/location/pdp_config.yaml"
@@ -192,17 +217,29 @@ redirect_stderr=True
 killasgroup=True
 ```
 
-To make starting/stop easier, add a group to the Supervisord `groups.conf`
+To make starting/stop easier, add a group to `supervisord.conf`
 
 ```ini
 [group:v.v.v]
 programs=pdp_frontend-v.v.v,pdp_backend-v.v.v
 ```
 
-When upgrading, it's easist to simply copy the existing config and update the paths/version number.
+Once the config file has been set up, start the processes with the following command:
+
+```bash
+pyenv/bin/supervisord -c path/to/supervisord.conf
+```
+
+After invoking Supervisord, use supervisorctl to monitor and update the running processes
+
+```bash
+pyenv/bin/supervisorctl
+```
+
+When upgrading, it's easiest to simply copy the existing config and update the paths/version number.
 
 **IMPORTANT**: When adding a new version, make sure to set the old version `autostart` and `autorestart` to false.
 
 Using `supervisorctl`, you should then be able to `reread` the new config, `update` the old version config (so it stops, picks up new autostart/autorestart=false), and `update` the new version.
 
-If there are any errors, they can be found in /var/log/supervisord. Errors starting gunicorn can be found in the `error_logfile`.
+If there are any errors, they can be found in the `supervisord_logfile`. Errors starting gunicorn can be found in the `error_logfile`.
