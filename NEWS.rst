@@ -1,6 +1,21 @@
 News / Release Notes
 ====================
 
+2.3.6
+-----
+
+*Release Date: 4-Jan-2016*
+
+* Fix VIC model output default display time
+
+2.3.5
+-----
+
+*Release Date: 8-Oct-2015*
+
+* Add capability to serve PRISM 1981-2010 climatologies
+* Fix Colorbar logarithmic midpoint calculation
+
 2.3.4
 -----
 

@@ -75,6 +75,24 @@ function init_prism_map() {
             this.params.LOGSCALE = false;
             this.params.STYLES = 'boxfill/ferret';
         }
+
+        if (varname === 'pr') {
+            this.params.COLORSCALERANGE = '200,12500';
+        } else if (varname == 'tmax') {
+            this.params.COLORSCALERANGE = '-10,20';
+        } else if (varname == 'tmin' ) {
+            this.params.COLORSCALERANGE = '-15,10';
+        }
+
+        var uniqueID = layer_name.split('/')[0].split('_');
+        var timeRange = uniqueID[uniqueID.length -1];
+        if (timeRange === '197101-200012') {
+            this.params.TIME = '1985-06-30';
+        } else if (timeRange === '198101-201012') {
+            this.params.TIME = '1996-06-30';
+        }
+
+        return this.params
     }
 
     map.addLayers(
@@ -112,7 +130,9 @@ function init_prism_map() {
         metadata_req.done(function (data) {
             var new_params = ncwms_params.call(ncwms, layer_id);
             ncwms.mergeNewParams(new_params); // this does a layer redraw
-            cb.force_update(data.min, data.max, data.units); // must be called AFTER ncwms params updated
+            cb.force_update(parseFloat(ncwms.params.COLORSCALERANGE.split(',')[0]),
+                            parseFloat(ncwms.params.COLORSCALERANGE.split(',')[1]),
+                            data.units); // must be called AFTER ncwms params updated
         });
     });
 

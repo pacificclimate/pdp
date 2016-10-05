@@ -14,9 +14,12 @@ ensemble_name = 'bc_prism'
 url_base = 'bc_prism'
 
 class PrismEnsembleLister(EnsembleMemberLister):
+    def parse_date_range(self, unique_id):
+        return '-'.join([x[:4] for x in unique_id.split('_')[-1].split('-')])
+
     def list_stuff(self, ensemble):
         for dfv in ensemble.data_file_variables:
-            yield dfv.file.run.model.short_name, dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
+            yield self.parse_date_range(dfv.file.unique_id), dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
 def data_server(config, ensemble_name):
     dsn = config['dsn']

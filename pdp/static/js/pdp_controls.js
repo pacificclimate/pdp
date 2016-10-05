@@ -134,7 +134,7 @@ Colorbar.prototype = {
     midpoint: function () {
         if (this.layer.params.LOGSCALE) {
             var min = this.minimum <= 0 ? 1 : this.minimum;
-            return Math.exp((Math.log(this.maximum) - Math.log(min)) / 2);
+            return Math.exp(((Math.log(this.maximum) - Math.log(min)) / 2 ) + Math.log(min));
         }
         return (this.minimum + this.maximum) / 2;
     },

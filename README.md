@@ -56,11 +56,12 @@ The pdp will run in any WSGI container. This guide uses gunicorn.
 pyenv/bin/pip install -i http://atlas.pcic.uvic.ca/pypiserver/ -r requirements.txt -r data_format_requirements.txt -r test_requirements.txt sphinx gunicorn gevent
 ```
 
-Install and build the docs
+Install and build the docs. Building the docs requires the package to be installed, then installed again after the docs are built.
 
 ```bash
 pyenv/bin/python setup.py install
 pyenv/bin/python setup.py build_sphinx
+pyenv/bin/python setup.py install
 ```
 
 ## Configuration
