@@ -117,6 +117,7 @@ function Colorbar(div_id, layer) {
     this.layer = layer;
     this.minimum = 0.0;
     this.maximum = 0.0;
+    this.midpoint = 0.0;
     this.units = "";
 
     // create and style the children elements
@@ -131,7 +132,7 @@ function Colorbar(div_id, layer) {
 Colorbar.prototype = {
     constructor: Colorbar,
 
-    midpoint: function () {
+    calculate_midpoint: function () {
         if (this.layer.params.LOGSCALE) {
             var min = this.minimum <= 0 ? 1 : this.minimum;
             return Math.exp(((Math.log(this.maximum) - Math.log(min)) / 2 ) + Math.log(min));
@@ -179,6 +180,35 @@ Colorbar.prototype = {
         }
     },
 
+    round_to_nearest: function (mult) {
+      this.minimum = Math.round(this.minimum / mult) * mult;
+      this.maximum = Math.round(this.maximum / mult) * mult;
+      this.midpoint = Math.round(this.midpoint / mult) * mult;
+    },
+
+    apply_precision: function (sig) {
+      this.minimum = this.minimum.toFixed(sig);
+      this.maximum = this.maximum.toFixed(sig);
+      this.midpoint = this.midpoint.toFixed(sig);
+    },
+
+    estimate_precision: function () {
+      var range = this.maximum - this.minimum;
+      if (range > 10000) {
+        this.round_to_nearest(100);
+        return 0;
+      } else if (range > 100) {
+        this.round_to_nearest(10);
+        return 0;
+      } else if (range > 10) {
+        return 0;
+      } else if (range > 1) {
+        return 1;
+      } else {
+        return 2;
+      }
+    },
+
     refresh_values: function (lyr_id) {
         var url = this.metadata_url(lyr_id),
             request = $.ajax({
@@ -204,14 +234,15 @@ Colorbar.prototype = {
     },
 
     redraw: function () {
+        this.midpoint = this.calculate_midpoint();
+        this.apply_precision(this.estimate_precision());
         var div = $("#" + this.div_id);
         div.css('background-image', "url(" + this.graphic_url() + ")");
-        div.find("#minimum").html(round(this.minimum) + " " + this.units);
-        div.find("#maximum").html(round(this.maximum) + " " + this.units);
-        div.find("#midpoint").html(round(this.midpoint()) + " " + this.units);
+        div.find("#minimum").html(this.minimum + " " + this.units);
+        div.find("#maximum").html(this.maximum + " " + this.units);
+        div.find("#midpoint").html(this.midpoint + " " + this.units);
     }
 };
-
 
 function RasterDownloadLink(element, layer, catalog, ext, varname, trange, yrange, xrange) {
     this.element = element;
