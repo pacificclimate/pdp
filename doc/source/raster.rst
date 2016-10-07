@@ -38,6 +38,12 @@ To switch back to navigating mode after selecting, you must re-select the hand i
 
 .. figure:: images/pan_on.png
 
+Each of the raster portals will display a colorbar legend indicating the range of values for the selected dataset. The minimum and maximum values are determined from the entire dataset, regardless of whether a subset was selected or not.
+
+.. figure:: images/colorbar.png
+
+This scale is linear for temperature variables and logarithmic for precipitation.
+
 Dataset selection
 -----------------
 
