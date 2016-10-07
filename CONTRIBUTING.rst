@@ -57,8 +57,8 @@ Even if you don't program for a living there are plenty of ways to help. Not onl
 - Tell us your story. If the PCIC Data Portal has helped your research or project, we would love to hear about it. Write a blog post and/or `send us an e-mail`_.
 
 .. _"help wanted" issues: https://github.com/pacificclimate/pdp/labels/help%20wanted
-   .. _open bug reports: https://github.com/pacificclimate/pdp/labels/bug
-      .. _send us an e-mail: mailto:hiebert@uvic.ca
+.. _open bug reports: https://github.com/pacificclimate/pdp/labels/bug
+.. _send us an e-mail: mailto:hiebert@uvic.ca
 
 .. _deployment-guide:
 
@@ -128,7 +128,7 @@ Once the image has been built, you should see it under ``docker images``. Now it
 
 Docker containers will remain up as long as there is an active process running within them. Use the ``-it`` options to begin an interactive container, or ``-d`` to run the container as a background process.
 
-**Note**: If you wish to run the pdp container interactively, change the final ``CMD`` in the pdp Dockerfile to specify ``/bin/bash`` rather than ``supervisord`` and rebuild the image.
+**Note**: If you wish to run the pdp container interactively, change the final ``CMD`` in the pdp Dockerfile to specify ``/bin/bash`` rather than ``supervisord`` and rebuild the image. To detach from a running docker container use the escape sequence ``ctrl+p`` + ``ctrl+q``. Re-attach with ``docker attach <container_name>``.
 
 By default, the pdp Dockerfile exposes port 8000 (the port that gunicorn will run on inside the container) but in order to access the container it needs to be published to the outside world using ``-p <host_port>:<container_port>``
 
