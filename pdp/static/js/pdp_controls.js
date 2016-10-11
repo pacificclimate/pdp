@@ -117,7 +117,6 @@ function Colorbar(div_id, layer) {
     this.layer = layer;
     this.minimum = 0.0;
     this.maximum = 0.0;
-    this.midpoint = 0.0;
     this.units = "";
 
     // create and style the children elements
@@ -180,32 +179,32 @@ Colorbar.prototype = {
         }
     },
 
-    round_to_nearest: function (mult) {
-      this.minimum = Math.round(this.minimum / mult) * mult;
-      this.maximum = Math.round(this.maximum / mult) * mult;
-      this.midpoint = Math.round(this.midpoint / mult) * mult;
+    round_to_nearest: function (value, mult) {
+      if (mult > 0) {
+        return Math.round(value / mult) * mult;
+      }
+      return value;
     },
 
-    apply_precision: function (sig) {
-      this.minimum = this.minimum.toFixed(sig);
-      this.maximum = this.maximum.toFixed(sig);
-      this.midpoint = this.midpoint.toFixed(sig);
+    apply_precision: function (value, sig) {
+      return value.toFixed(sig);
     },
 
-    estimate_precision: function () {
-      var range = this.maximum - this.minimum;
+    // Returns an object which specifies the precision.
+    //    round: round to the nearest value (0 indicates no rounding)
+    //    sig: the number of digits to appear after the decimal point
+    estimate_precision: function (min, max) {
+      var range = max - min;
       if (range > 10000) {
-        this.round_to_nearest(100);
-        return 0;
+        return { round: 100, sig: 0 };
       } else if (range > 100) {
-        this.round_to_nearest(10);
-        return 0;
+        return { round: 10, sig: 0 };
       } else if (range > 10) {
-        return 0;
+        return { round: 1, sig: 0 };
       } else if (range > 1) {
-        return 1;
+        return { round: 0, sig: 1 };
       } else {
-        return 2;
+        return { round: 0, sig: 2 };
       }
     },
 
@@ -234,13 +233,12 @@ Colorbar.prototype = {
     },
 
     redraw: function () {
-        this.midpoint = this.calculate_midpoint();
-        this.apply_precision(this.estimate_precision());
+        var prec = this.estimate_precision(this.minimum, this.maximum);
         var div = $("#" + this.div_id);
         div.css('background-image', "url(" + this.graphic_url() + ")");
-        div.find("#minimum").html(this.minimum + " " + this.units);
-        div.find("#maximum").html(this.maximum + " " + this.units);
-        div.find("#midpoint").html(this.midpoint + " " + this.units);
+        div.find("#minimum").html(this.apply_precision(this.round_to_nearest(this.minimum, prec.round), prec.sig)  + " " + this.units);
+        div.find("#maximum").html(this.apply_precision(this.round_to_nearest(this.maximum, prec.round), prec.sig) + " " + this.units);
+        div.find("#midpoint").html(this.apply_precision(this.round_to_nearest(this.calculate_midpoint(), prec.round), prec.sig) + " " + this.units);
     }
 };
 
