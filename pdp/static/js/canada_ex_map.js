@@ -36,6 +36,7 @@ function init_raster_map() {
         numcolorbands: 254,
         version: "1.1.1",
         srs: "EPSG:4326",
+        colorscalerange: "-50,11",
         logscale: false
     };
 
@@ -54,18 +55,17 @@ function init_raster_map() {
         }
     );
 
-    function customize_wms_params(layer_name, colorscale_min, colorscale_max) {
+    function customize_wms_params(layer_name) {
         var varname = layer_name.split('/')[1];
         if (varname === 'pr') {
-            this.params.LOGSCALE = false;
+            this.params.LOGSCALE = true;
             this.params.STYLES = 'boxfill/occam_inv';
             this.params.BELOWMINCOLOR = 'transparent';
+            this.params.COLORSCALERANGE = '0.0,30.0';
         } else {
             this.params.LOGSCALE = false;
             this.params.STYLES = 'boxfill/ferret';
-        }
-        if (colorscale_min !== undefined && colorscale_max !== undefined) {
-            this.params.COLORSCALERANGE = colorscale_min + "," + colorscale_max;
+            this.params.COLORSCALERANGE = '-50,11';
         }
     }
     ncwms.events.register('change', ncwms, customize_wms_params);
@@ -90,7 +90,6 @@ function init_raster_map() {
     };
 
     cb = new Colorbar("pdpColorbar", ncwms);
-    cb.refresh_values();
 
     function set_map_title(layer_name) {
         // 'this' must be bound to the ncwms layer object
@@ -107,7 +106,7 @@ function init_raster_map() {
     ncwms.events.register('change', ncwms, set_map_title);
 
     ncwms.events.registerPriority('change', ncwms, function (layer_id) {
-        var lyr_params, metadata_req, min, max;
+        var lyr_params, metadata_req;
 
         lyr_params = {
             "id": layer_id.split('/')[0],
@@ -118,18 +117,11 @@ function init_raster_map() {
             data: lyr_params
         });
         metadata_req.done(function (data) {
-            // Hardcode the min,max values for precipitation
-            // to show some degree of spatial variation
-            if (lyr_params.var === "pr") {
-                min = 0.0;
-                max = 80.0;
-            } else {
-                min = data.min;
-                max = data.max;
-            }
-            var new_params = customize_wms_params.call(ncwms, layer_id, min, max);
+            var new_params = customize_wms_params.call(ncwms, layer_id);
             ncwms.mergeNewParams(new_params); // this does a layer redraw
-            cb.force_update(min, max, data.units); // must be called AFTER ncwms params updated
+            cb.force_update(parseFloat(ncwms.params.COLORSCALERANGE.split(",")[0]),
+                            parseFloat(ncwms.params.COLORSCALERANGE.split(",")[1]),
+                            data.units); // must be called AFTER ncwms params updated
         });
     });
 
