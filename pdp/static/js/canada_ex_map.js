@@ -58,7 +58,7 @@ function init_raster_map() {
     function customize_wms_params(layer_name) {
         var varname = layer_name.split('/')[1];
         if (varname === 'pr') {
-            this.params.LOGSCALE = true;
+            this.params.LOGSCALE = false;
             this.params.STYLES = 'boxfill/occam_inv';
             this.params.BELOWMINCOLOR = 'transparent';
             this.params.COLORSCALERANGE = '0.0,30.0';
