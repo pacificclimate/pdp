@@ -1,0 +1,16 @@
+version: '2'
+services:
+  pdp:
+    image: pdp
+    container_name: pdp
+    ports:
+      - "8000:8000"  # frontend
+      - "8001:8001"  # backend
+    volumes_from:
+      - container:pdp_data:ro
+
+  nginx:
+    image: nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "8080:8080"
