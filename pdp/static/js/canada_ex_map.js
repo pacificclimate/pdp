@@ -32,12 +32,11 @@ function init_raster_map() {
         layers: defaults.dataset + "/" + defaults.variable,
         transparent: "true",
         styles: "boxfill/ferret",
-        // colorscalerange: 'auto', //FIXME: after layer update, set colorscalerange based on map extent
         time: "2000-01-01",
         numcolorbands: 254,
         version: "1.1.1",
         srs: "EPSG:4326",
-        colorscalerange: "-50,11.0",
+        colorscalerange: "-50,11",
         logscale: false
     };
 
@@ -91,7 +90,6 @@ function init_raster_map() {
     };
 
     cb = new Colorbar("pdpColorbar", ncwms);
-    cb.refresh_values();
 
     function set_map_title(layer_name) {
         // 'this' must be bound to the ncwms layer object
@@ -121,7 +119,9 @@ function init_raster_map() {
         metadata_req.done(function (data) {
             var new_params = customize_wms_params.call(ncwms, layer_id);
             ncwms.mergeNewParams(new_params); // this does a layer redraw
-            cb.force_update(data.min, data.max, data.units); // must be called AFTER ncwms params updated
+            cb.force_update(parseFloat(ncwms.params.COLORSCALERANGE.split(",")[0]),
+                            parseFloat(ncwms.params.COLORSCALERANGE.split(",")[1]),
+                            data.units); // must be called AFTER ncwms params updated
         });
     });
 
