@@ -114,7 +114,7 @@ This image automates the build process for the PDP Data Portal. Using Ubuntu 16.
 
 To build the image, navigate to ``pdp/docker/`` and run ``docker build -t pdp ./``. The ``-t`` option will name the image; if no name is specified, docker will randomly generate one for you.
 
-The Dockerfile will default to building an image from the ``master`` branch of the pdp repo. If you wish to checkout a different branch, specify a build-time arg:
+The Dockerfile will default to building an image from the ``dev`` branch of the pdp repo. If you wish to checkout a different branch, specify a build-time arg:
 
 .. code:: bash
 
@@ -141,13 +141,15 @@ The container is now accessible on the docker host by visiting ``http://<host>:8
 Data Volume Container
 ^^^^^^^^^^^^^^^^^^^^^
 
-Not all data is accessible to the pdp remotely, some of it (the hydro station output, for example) is stored in the host environment. Docker provides a nice utility called ``volumes`` which makes host directories accessible to Docker containers, but to avoid constantly having to specify the paths when creating a new Docker container we can use what's called a "data volume container". The following command will create a data volume container and mount the target host directory (most likely /storage/data/). ``:ro`` signifies that this is a "read-only" volume.
+Not all data is accessible to the pdp remotely, some of it (the hydro station output, for example) is stored in the host environment. Docker provides a nice utility called ``volumes`` which makes host directories accessible to Docker containers, but to avoid constantly having to specify the paths when creating a new Docker container we can use what's called a "data volume container". The following command will create a data volume container and mount the target host directories (most likely in /storage/data/). ``:ro`` signifies that this is a "read-only" volume.
 
 .. code:: bash
 
-    docker run --name pdp_data -v /path/to/data/on/host/:/storage/data/:ro ubuntu:16.04
+    docker run --name pdp_data -v /storage/data/climate/:/storage/data/climate/:ro \
+                               -v /storage/data/projects/hydrology/vic_gen1_followup/:/home/data/projects/hydrology/vic_gen1_followup/:ro \
+                               ubuntu:16.04
 
-Once the data volume container has been created, this volume can be brought into other containers at runtime:
+Once the data volume container has been created, these volumes can be brought into other containers at runtime:
 
 .. code:: bash
 
@@ -197,7 +199,7 @@ The geoserver and ncWMS locations correspond to the ``geoserver_url`` and ``ncwm
 Docker Compose
 ^^^^^^^^^^^^^^
 
-`Docker Compose`_ can be used to simplify the deployment of multi-container applications. In order to use Docker Compose, runtime behaviour for the individual containers is defined in a ``docker-compose.yaml`` file (make sure the pdp image runs the ``supervisord`` CMD on startup). Once configured, run ``docker-compose up`` to start the entire app.
+`Docker Compose`_ can be used to simplify the deployment of multi-container applications. In order to use Docker Compose, runtime behaviour for the individual containers is defined in a ``docker-compose.yaml`` file (make sure the pdp image runs the ``supervisord`` CMD on startup). Once configured, run ``docker-compose up`` to start the reverse-proxy in conjunction with the pdp application.
 
 .. _here: https://github.com/pacificclimate/pdp/blob/master/README.md
 .. _jinja2: http://jinja.pocoo.org/
