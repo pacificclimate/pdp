@@ -1,0 +1,5 @@
+sphinx
+gunicorn
+gevent
+supervisor
+j2cli[yaml]

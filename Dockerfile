@@ -6,46 +6,36 @@
 FROM ubuntu:16.04
 MAINTAINER Carl Masri <cmasri@uvic.ca>
 
-# Get the system level dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update
+RUN apt-get install -y \
     python-dev \
-    python-virtualenv \
+    python-pip \
     build-essential \
     libhdf5-dev \
     libgdal-dev \
-    libnetcdf-dev \
-    git
+    libnetcdf-dev
+
+RUN pip install --upgrade pip
+
+COPY . /root/pdp
+WORKDIR /root/pdp
 
 # Set up environment variables
 ENV CPLUS_INCLUDE_PATH /usr/include/gdal
 ENV C_INCLUDE_PATH /usr/include/gdal
 ENV PDP_CONFIG /root/pdp_config.yaml
-ENV PATH /root/pdp/pyenv/bin:$PATH
-ARG BRANCH=dev
-
-# Clone repo and set up virtualenv
-WORKDIR /root/
-RUN git clone https://github.com/pacificclimate/pdp -b ${BRANCH}
-WORKDIR /root/pdp/
-RUN virtualenv pyenv
-
-# Install local dependencies and fix SSL issue
-RUN pip install numpy requests[security]
-# Separate RUN statement for gdal install is required!
-RUN pip install gdal==1.11.2
 
 # Remove netCDF4 version requirement
 RUN sed -i 's/netCDF4==1.1.1/netCDF4/' test_requirements.txt
 
-# Install dependencies
+# Install dependencies (separate RUN
+# statement for GDAL is required)
+RUN pip install numpy Cython
+RUN pip install gdal==1.11.2
 RUN pip install -i https://pypi.pacificclimate.org/simple/ \
     -r requirements.txt \
     -r test_requirements.txt \
-    sphinx \
-    gunicorn \
-    gevent \
-    supervisor \
-    j2cli[yaml]
+    -r deploy_requirements.txt
 
 # Install and build the docs
 RUN python setup.py install
@@ -56,13 +46,13 @@ RUN python setup.py install
 RUN mkdir etc/
 
 # Add the template config files
-COPY templates/ /templates/
-COPY docker-entrypoint.sh /root/pdp/
+COPY docker/templates/ /templates/
+COPY docker/docker-entrypoint.sh /root/pdp/
 
 EXPOSE 8000 8001
 
 # Build template files
 ENTRYPOINT ["/root/pdp/docker-entrypoint.sh"]
 
-CMD ["supervisord", "-c", "/etc/supervisord.conf"]
-# CMD ["/bin/bash"]
+# CMD ["supervisord", "-c", "/etc/supervisord.conf"]
+CMD ["/bin/bash"]
