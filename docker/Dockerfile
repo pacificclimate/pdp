@@ -21,7 +21,7 @@ ENV CPLUS_INCLUDE_PATH /usr/include/gdal
 ENV C_INCLUDE_PATH /usr/include/gdal
 ENV PDP_CONFIG /root/pdp_config.yaml
 ENV PATH /root/pdp/pyenv/bin:$PATH
-ARG BRANCH=master
+ARG BRANCH=dev
 
 # Clone repo and set up virtualenv
 WORKDIR /root/
@@ -40,7 +40,6 @@ RUN sed -i 's/netCDF4==1.1.1/netCDF4/' test_requirements.txt
 # Install dependencies
 RUN pip install -i https://pypi.pacificclimate.org/simple/ \
     -r requirements.txt \
-    -r data_format_requirements.txt \
     -r test_requirements.txt \
     sphinx \
     gunicorn \
@@ -65,5 +64,5 @@ EXPOSE 8000 8001
 # Build template files
 ENTRYPOINT ["/root/pdp/docker-entrypoint.sh"]
 
-# CMD ["supervisord", "-c", "/etc/supervisord.conf"]
-CMD ["/bin/bash"]
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]
+# CMD ["/bin/bash"]
