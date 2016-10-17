@@ -165,7 +165,7 @@ If no environment variables are specified at runtime, the default values (stated
 Nginx
 ^^^^^
 
-`Nginx`_ is used as a reverse proxy in front of the pdp. To build the image from the nginx Dockerfile, edit ``docker/proxy/nginx.conf`` then run:
+`Nginx`_ is used as a reverse proxy in front of the pdp. To build the image from the nginx Dockerfile, edit ``docker/proxy/nginx.template`` then run:
 
 .. code:: bash
 
@@ -174,15 +174,9 @@ Nginx
 Configuration
 """""""""""""
 
-Nginx should be configured to listen on the same port as the container running the proxy server. For example, if the server is listening at port 8080 then the container running the proxy should be published to the same port on the host:
+In order to see the application running at ``http://<host>:8080``, the root location ``proxy_pass`` directive needs to point to the container running the pdp. If the pdp container has been published on port 8000, this would look like:
 
 .. code:: bash
-
-    docker run --name nginx-proxy -p 8080:8080 -d nginx-proxy
-
-In order to see the application running at ``http://<host>:8080``, specify the root location ``proxy_pass`` directive to point to the container running the pdp. If the pdp container has been published on port 8000, this would look like:
-
-.. code::
 
     location / {
         proxy_pass    http://<host>:8000;
@@ -190,12 +184,33 @@ In order to see the application running at ``http://<host>:8080``, specify the r
 
 The geoserver and ncWMS locations correspond to the ``geoserver_url`` and ``ncwms_url`` values in ``pdp_config.yaml``, respectively. These should be proxied to the production servers at ``tools.pacificclimate.org/[geoserver|ncWMS-PCIC/wms]``.
 
+To allow for more flexible development, a template configuration file is used (``docker/proxy/nginx.template``) which defines the docker host URL/port running the pdp as variables which can be passed in at container runtime using the ``-e`` option:
+
+.. code:: bash
+
+    docker run --name nginx-proxy -e APP_HOST=<host> -e APP_PORT=<port> nginx-proxy
+
+Alternatively, ``docker-compose`` can be used (see the section on Docker Compose below).
+
+Nginx should be configured to listen on the same port as the container running the proxy server. For example, if the server is listening at port 8080 then the container running the proxy should be published to the same port on the host:
+
+.. code:: bash
+
+    docker run --name nginx-proxy -e APP_HOST=<host> -e APP_PORT=<port> -p 8080:8080 -d nginx-proxy
 
 Docker Compose
 ^^^^^^^^^^^^^^
 *(requires docker-compose v1.6.0+)*
 
-`Docker Compose`_ can be used to simplify the deployment of multi-container applications. In order to use Docker Compose, runtime behaviour for the individual containers is defined in a ``docker-compose.yaml`` file (make sure the pdp image runs the ``supervisord`` CMD on startup). Once configured, run ``docker-compose up`` to start the reverse-proxy in conjunction with the pdp application.
+`Docker Compose`_ can be used to simplify the deployment of multi-container applications. In order to use Docker Compose, runtime behaviour for the individual containers is defined in a ``docker-compose.yaml`` file (make sure the pdp image runs the ``supervisord`` CMD on startup). Once configured, run ``docker/docker-compose up`` to start the reverse-proxy in conjunction with the pdp application.
+
+Compose can also be used to simplify the ``run`` command for a single container application. For example, the nginx container requires several environment variables to be specified in order to run properly. This can be done easily by navigating to ``docker/proxy/`` and running:
+
+.. code:: bash
+
+    docker-compose up
+
+which will name and start the container, add the environment variables, and publish it to port 8080 (as specified in the ``docker-compose.yaml`` file).
 
 .. _here: https://github.com/pacificclimate/pdp/blob/master/README.md
 .. _jinja2: http://jinja.pocoo.org/
