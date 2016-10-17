@@ -70,12 +70,10 @@ The following guide will get you set up running the PCIC Data Portal with an Ngi
 Installation
 ------------
 
-Clone this repo and navigate to the directory containing the Docker files:
-
 .. code:: bash
 
     git clone https://github.com/pacificclimate/pdp
-    cd pdp/docker/
+    cd pdp
 
 Quickstart
 ----------
@@ -91,12 +89,13 @@ Build the pdp and nginx docker images:
 .. code:: bash
 
     docker build -t pdp .
-    docker build -t nginx-proxy proxy/.
+    docker build -t nginx-proxy docker/proxy/.
 
 Start the containers using ``docker-compose`` (use ``-d`` if you want to run them in the background):
 
 .. code:: bash
 
+    cd docker
     docker-compose up
 
 The dataportal will be accessible on port 8080 of the docker host.
@@ -112,13 +111,9 @@ pdp
 
 This image automates the build process for the PDP Data Portal. Using Ubuntu 16.04 as a base, all the required steps are performed to create a working environment (dependencies installed, environment variables set, etc). The Dockerfile outlines each of these steps in greater detail.
 
-To build the image, navigate to ``pdp/docker/`` and run ``docker build -t pdp ./``. The ``-t`` option will name the image; if no name is specified, docker will randomly generate one for you.
+To build the image, run ``docker build -t pdp .`` from the root pdp directory. The ``-t`` option will name the image; if no name is specified, docker will randomly generate one for you.
 
-The Dockerfile will default to building an image from the ``dev`` branch of the pdp repo. If you wish to checkout a different branch, specify a build-time arg:
-
-.. code:: bash
-
-    docker build --build-arg BRANCH=<branch> -t <image_name> .
+The Dockerfile will default to building an image from the current branch of the pdp repo. If you wish to build from a different branch, use ``git checkout <branch>`` before building the image.
 
 Once the image has been built, you should see it under ``docker images``. Now it is possible to spin up docker container(s) which will run an instance of the pdp based off your image.
 
@@ -164,17 +159,17 @@ To avoid baking the configuration files (``pdp_config.yaml`` and ``supervisord.c
 
     docker run -e APP_ROOT=<url> -e DATA_ROOT=<url> ...
 
-If no environment variables are specified at runtime, the default values will be used. The `README`_ gives a more in-depth explanation of the individual config items. Any changes to the template files in docker/templates will require the pdp image to be re-built.
+If no environment variables are specified at runtime, the default values (stated in the templates) will be used. The `README`_ gives a more in-depth explanation of the individual config items. Any changes to the template files in docker/templates will require the pdp image to be re-built.
 
 
 Nginx
 ^^^^^
 
-`Nginx`_ is used as a reverse proxy in front of the pdp. To build the image from the nginx Dockerfile, edit ``proxy/nginx.conf`` then run:
+`Nginx`_ is used as a reverse proxy in front of the pdp. To build the image from the nginx Dockerfile, edit ``docker/proxy/nginx.conf`` then run:
 
 .. code:: bash
 
-    docker build --name nginx-proxy proxy/.
+    docker build -t nginx-proxy docker/proxy/.
 
 Configuration
 """""""""""""
@@ -198,6 +193,7 @@ The geoserver and ncWMS locations correspond to the ``geoserver_url`` and ``ncwm
 
 Docker Compose
 ^^^^^^^^^^^^^^
+*(requires docker-compose v1.6.0+)*
 
 `Docker Compose`_ can be used to simplify the deployment of multi-container applications. In order to use Docker Compose, runtime behaviour for the individual containers is defined in a ``docker-compose.yaml`` file (make sure the pdp image runs the ``supervisord`` CMD on startup). Once configured, run ``docker-compose up`` to start the reverse-proxy in conjunction with the pdp application.
 
