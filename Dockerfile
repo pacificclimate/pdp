@@ -54,5 +54,4 @@ EXPOSE 8000 8001
 # Build template files
 ENTRYPOINT ["/root/pdp/docker-entrypoint.sh"]
 
-# CMD ["supervisord", "-c", "/etc/supervisord.conf"]
-CMD ["/bin/bash"]
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]
