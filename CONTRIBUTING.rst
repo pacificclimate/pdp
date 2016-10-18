@@ -104,7 +104,17 @@ The dataportal will be accessible on port 8080 of the docker host.
 Details
 -------
 
+Environment configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. FIXME: Enumerate all of the environment variables which can be used and describe how to use them
+
+docker basics
+^^^^^^^^^^^^^
+
 Two docker images are used to run this application: the ``pdp`` image is responsible for running the PCIC data portal, and the ``nginx-proxy`` image creates a dockerized reverse-proxy (necessary for the pdp to operate successfully).
+
+Docker containers will remain up as long as there is an active process running within them. For debugging, one can use the ``-it`` options to begin an interactive container. For general deployment however, you should use ``-d`` to run the container as a daemon/background process. For the rest of this guide, we'll assume daemon-style usage.
 
 pdp
 ^^^
@@ -119,9 +129,7 @@ Once the image has been built, you should see it under ``docker images``. Now it
 
 .. code:: bash
 
-    docker run --name <container_name> <image_name>
-
-Docker containers will remain up as long as there is an active process running within them. Use the ``-it`` options to begin an interactive container, or ``-d`` to run the container as a background process.
+    docker run -d --name <container_name> <image_name>
 
 **Note**: If you wish to run the pdp container interactively, change the final ``CMD`` in the pdp Dockerfile to specify ``/bin/bash`` rather than ``supervisord`` and rebuild the image. To detach from a running docker container use the escape sequence ``ctrl+p`` + ``ctrl+q``. Re-attach with ``docker attach <container_name>``.
 
@@ -129,7 +137,7 @@ By default, the pdp Dockerfile exposes port 8000 (the port that gunicorn will ru
 
 .. code:: bash
 
-    docker run --name <container_name> -p 8000:8000 -it <image_name> 
+    docker run -d --name <container_name> -p 8000:8000 <image_name> 
 
 The container is now accessible on the docker host by visiting ``http://<host>:8000``.
 
@@ -137,6 +145,8 @@ Data Volume Container
 ^^^^^^^^^^^^^^^^^^^^^
 
 Not all data is accessible to the pdp remotely, some of it (the hydro station output, for example) is stored in the host environment. Docker provides a nice utility called ``volumes`` which makes host directories accessible to Docker containers, but to avoid constantly having to specify the paths when creating a new Docker container we can use what's called a "data volume container". The following command will create a data volume container and mount the target host directories (most likely in /storage/data/). ``:ro`` signifies that this is a "read-only" volume.
+
+.. FIXME The data volume containers stop/exit immediately. Describe how to prevent this.
 
 .. code:: bash
 
@@ -196,6 +206,22 @@ Nginx should be configured to listen on the same port as the container running t
 
 .. code:: bash
 
+    docker run --name nginx-proxy -e APP_HOST=<host> -e APP_PORT=<port> -p 8080:8080 -d nginx-proxy
+
+Putting it all together
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The final sequence of docker commands to run ``pdp`` should be something like this:
+
+.. code:: bash
+
+    docker run --name pdp_data -v /storage/data/climate/:/storage/data/climate/:ro \
+                               -v /storage/data/projects/hydrology/vic_gen1_followup/:/home/data/projects/hydrology/vic_gen1_followup/:ro \
+                               ubuntu:16.04 /bin/bash
+    docker run -d --name <container_name> --volumes-from pdp_data \
+               -p 8000:8000 pdp \
+	       -e DSN=<dsn> \
+	       -e PCDS_DSN=<pcds_dsn>
     docker run --name nginx-proxy -e APP_HOST=<host> -e APP_PORT=<port> -p 8080:8080 -d nginx-proxy
 
 Docker Compose
