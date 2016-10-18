@@ -1,11 +1,9 @@
-{% set PASS = PASS %} # Add password for production
-
 app_root: '{{ APP_ROOT | default('http://docker2.pcic.uvic.ca:8080') }}'
 data_root: '{{ DATA_ROOT | default('http://tools.pacificclimate.org/dataportal/data/') }}'
 title: ''
 ensemble_name: ''
-dsn: postgresql://{{ DSN_USER | default('httpd_meta') }}:{{ PASS }}@db3.pcic.uvic.ca:5432/pcic_meta
-pcds_dsn: postgresql://{{ PCDS_DSN_USER | default('httpd') }}:{{ PASS }}@db3.pcic.uvic.ca:5432/crmp
+dsn: {{ DSN | default('postgresql://httpd_meta@db3.pcic.uvic.ca/pcic_meta') }}
+pcds_dsn: {{ PCDS_DSN | default('postgresql://httpd@db3.pcic.uvic.ca/crmp') }}
 js_min: false
 geoserver_url: {{ GEOSERVER_URL | default('http://docker2.pcic.uvic.ca:8080/geoserver/') }}
 ncwms_url: 
