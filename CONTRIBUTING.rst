@@ -107,7 +107,82 @@ Details
 Environment configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. FIXME: Enumerate all of the environment variables which can be used and describe how to use them
+A full list of the available environment variables is found below. These can be specified at container runtime using the ``-e`` option:
+
+.. code:: bash
+
+    docker run -e APP_ROOT=<url> -e DATA_ROOT=<url> ...
+
+Default values are provided for the majority of these variables in the template files (``pdp_config.j2``, ``supervisord.j2``, and ``nginx.template``). Those that do not have default values and must be specified by the user are marked with an asterisk (*). Environment variables defined at runtime will overwrite any previously existing ones.
+
+pdp_config.j2
+"""""""""""""
+
+| ``APP_ROOT``
+| The root location URL where the data portal will be exposed in the form ``<docker_host>:<port>``. Default port is 8080.
+|
+| ``DATA_ROOT``
+| Root location URL of the back-end data server.
+|
+| **\*** ``DSN``
+| Raster metadata database URL of the form ``dialect[+driver]://username:password@host:port/database``. A default URL is provided in the template, however, a password will be required.
+|
+| **\*** ``PCDS_DSN``
+| PCDS database URL of the form ``dialect[+driver]://username:password@host:port/database``. A default URL is provided in the template, however, a password will be required.
+|
+| ``GEOSERVER_URL``
+| PCDS Geoserver URL of the form ``<docker_host>:<port>/geoserver/``. The host/port must match ``APP_ROOT``.
+|
+| ``NCWMS_URL``
+| Raster portal ncWMS URL of the form ``<docker_host>:<port>/ncWMS/``. The host/port must match ``APP_ROOT``.
+|
+| ``USE_AUTH``
+| Enable or disable authentication requirement (default is ``true``).
+|
+| ``SESSION_DIR``
+| File system location to store session information.
+|
+| ``CLEAN_SESSION_DIR``
+| Enable or disable session directory cleaning on server restart (default is ``true``).
+|
+| ``USE_ANALYTICS``
+| Enable or disable Google Analytics reporting (default is ``true``).
+|
+| ``ANALYTICS``
+| Google Analytics ID.
+
+supervisord.j2
+""""""""""""""
+
+| ``HOST``
+| The host address on which to run the gunicorn server inside the Docker container (default is ``0.0.0.0``).
+|
+| ``USER``
+| Instructs supervisord to switch to this user before doing any meaningful processing (default is ``root``).
+|
+| ``FE_PORT``
+| Port to serve the front-end data (default ``8000``). The container running the pdp must publish this port.
+|
+| ``BE_PORT``
+| Port to serve the back-end data (default ``8001``).
+|
+| ``LOGLEVEL``
+| The supervisord logging level. One of ``critical``, ``error``, ``warn``, ``info``, ``debug``, ``trace`` (default is ``info``).
+|
+| ``NODAEMON``
+| When set to true, supervisord will start as a foreground process rather than a daemon. When running the pdp container in detached mode, this must be set to true to stop the container from exiting (this is the default behaviour).
+|
+| ``VERSION``
+| The supervisord group version (default ``0.0.0``).
+
+nginx.template
+""""""""""""""
+
+| **\*** ``APP_HOST``
+| The docker host URL of the container running the pdp.
+|
+| **\*** ``APP_PORT``
+| The port exposed by container running the pdp. Must match ``FE_PORT``.
 
 docker basics
 ^^^^^^^^^^^^^
@@ -137,16 +212,16 @@ By default, the pdp Dockerfile exposes port 8000 (the port that gunicorn will ru
 
 .. code:: bash
 
-    docker run -d --name <container_name> -p 8000:8000 <image_name> 
+    docker run -d --name <container_name> -p 8000:8000 <image_name>
 
 The container is now accessible on the docker host by visiting ``http://<host>:8000``.
 
 Data Volume Container
 ^^^^^^^^^^^^^^^^^^^^^
 
-Not all data is accessible to the pdp remotely, some of it (the hydro station output, for example) is stored in the host environment. Docker provides a nice utility called ``volumes`` which makes host directories accessible to Docker containers, but to avoid constantly having to specify the paths when creating a new Docker container we can use what's called a "data volume container". The following command will create a data volume container and mount the target host directories (most likely in /storage/data/). ``:ro`` signifies that this is a "read-only" volume.
+Not all data is accessible to the pdp remotely, some of it (the hydro station output, for example) is stored in the host environment. Docker provides a nice utility called ``volumes`` which makes host directories accessible to Docker containers, but to avoid constantly having to specify the paths when creating a new Docker container we can use what's called a "data volume container". Target host directories are mounted inside the container using the ``-v`` option, which defaults to read-write mode. However, as we do not want our application to be able to modify the data files on the host all volumes in the data volume container should be made read-only by appending ``:ro``.
 
-.. FIXME The data volume containers stop/exit immediately. Describe how to prevent this.
+The following command will create a data volume container. This should only need to be run once, as data volumes in docker are persistent and will remain even after the container has exited.
 
 .. code:: bash
 
@@ -169,7 +244,7 @@ To avoid baking the configuration files (``pdp_config.yaml`` and ``supervisord.c
 
     docker run -e APP_ROOT=<url> -e DATA_ROOT=<url> ...
 
-If no environment variables are specified at runtime, the default values (stated in the templates) will be used. The `README`_ gives a more in-depth explanation of the individual config items. Any changes to the template files in docker/templates will require the pdp image to be re-built.
+A full list of the config items can be found in the "Environment configuration" section above. If no environment variables are specified at runtime, the default values (stated in the templates) will be used. Any changes to the template files in ``docker/templates`` will require the pdp image to be re-built.
 
 
 Nginx
