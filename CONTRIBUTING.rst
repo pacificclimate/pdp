@@ -219,7 +219,7 @@ The container is now accessible on the docker host by visiting ``http://<host>:8
 Data Volume Container
 ^^^^^^^^^^^^^^^^^^^^^
 
-Not all data is accessible to the pdp remotely, some of it (the hydro station output, for example) is stored in the host environment. Docker provides a nice utility called ``volumes`` which makes host directories accessible to Docker containers, but to avoid constantly having to specify the paths when creating a new Docker container we can use what's called a "data volume container". Target host directories are mounted using the ``-v`` option. Docker volumes default to mount in read-write mode, but this can be changed to read-only by appending ``:ro``.
+Not all data is accessible to the pdp remotely, some of it (the hydro station output, for example) is stored in the host environment. Docker provides a nice utility called ``volumes`` which makes host directories accessible to Docker containers, but to avoid constantly having to specify the paths when creating a new Docker container we can use what's called a "data volume container". Target host directories are mounted inside the container using the ``-v`` option, which defaults to read-write mode. However, as we do not want our application to be able to modify the data files on the host all volumes in the data volume container should be made read-only by appending ``:ro``.
 
 The following command will create a data volume container. This should only need to be run once, as data volumes in docker are persistent and will remain even after the container has exited.
 
