@@ -182,29 +182,25 @@ Colorbar.prototype = {
     round_to_nearest: function (value, mult) {
       if (mult > 0) {
         return Math.round(value / mult) * mult;
+      } else {
+        return Math.round(value * mult) / mult;
       }
-      return value;
     },
 
-    apply_precision: function (value, sig) {
-      return value.toFixed(sig);
-    },
-
-    // Returns an object which specifies the precision.
-    //    round: round to the nearest value (0 indicates no rounding)
-    //    sig: the number of digits to appear after the decimal point
+    // Returns the estimated rounding precicion, based on the range.
+    // Negative values indicate reverse rounding.
     estimate_precision: function (min, max) {
       var range = max - min;
       if (range > 10000) {
-        return { round: 100, sig: 0 };
+        return 100;
       } else if (range > 100) {
-        return { round: 10, sig: 0 };
+        return 10;
       } else if (range > 10) {
-        return { round: 1, sig: 0 };
+        return 1;
       } else if (range > 1) {
-        return { round: 0, sig: 1 };
+        return -10;
       } else {
-        return { round: 0, sig: 2 };
+        return -100;
       }
     },
 
@@ -236,9 +232,9 @@ Colorbar.prototype = {
         var prec = this.estimate_precision(this.minimum, this.maximum);
         var div = $("#" + this.div_id);
         div.css('background-image', "url(" + this.graphic_url() + ")");
-        div.find("#minimum").html(this.apply_precision(this.round_to_nearest(this.minimum, prec.round), prec.sig)  + " " + this.units);
-        div.find("#maximum").html(this.apply_precision(this.round_to_nearest(this.maximum, prec.round), prec.sig) + " " + this.units);
-        div.find("#midpoint").html(this.apply_precision(this.round_to_nearest(this.calculate_midpoint(), prec.round), prec.sig) + " " + this.units);
+        div.find("#minimum").html(this.round_to_nearest(this.minimum, prec)  + " " + this.units);
+        div.find("#maximum").html(this.round_to_nearest(this.maximum, prec) + " " + this.units);
+        div.find("#midpoint").html(this.round_to_nearest(this.calculate_midpoint(), prec) + " " + this.units);
     }
 };
 
