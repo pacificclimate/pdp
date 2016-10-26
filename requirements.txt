@@ -37,7 +37,11 @@ static==1.0.2
 wsgiref==0.1.2
 
 # Data Format Requirements
-GDAL # Allow pip or system install for travis
+
+# GDAL python packages is pushing passed version2, however most
+# systems don't have version v1.11 available for install
+GDAL<2.0
+
 XlsxWriter==0.7.2
 coards==1.0.5
 h5py==2.5.0
