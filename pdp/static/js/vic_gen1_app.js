@@ -72,6 +72,20 @@ $(document).ready(function () {
         }
     );
 
+    // Specify full timeseries download by disabling the datepickers
+    $("#download-full-timeseries").change(
+        function(evt) {
+            if (this.checked) {
+                $("#from-date").datepicker('disable').addClass("disabled").datepicker("setDate", "1950/01/01");
+                $("#to-date").datepicker('disable').addClass("disabled").datepicker("setDate", "2100/01/01");
+                dlLink.onTimeChange();
+            } else {
+                $("#from-date").datepicker('enable').removeClass("disabled");
+                $("#to-date").datepicker('enable').removeClass("disabled");
+            }
+        }
+    );
+
     capabilities_request.done(function (data) {
         ncwms_capabilities = data;
     });
