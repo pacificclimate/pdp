@@ -15,6 +15,7 @@ from shutil import rmtree
 import yaml
 import static
 from beaker.middleware import SessionMiddleware
+from git import Repo
 
 from pdp_util.auth import PcicOidMiddleware, check_authorized_return_email
 from ga_wsgi_client import AnalyticsMiddleware
@@ -22,6 +23,17 @@ from pdp.error import ErrorMiddleware
 from pdp.dispatch import PathDispatcher
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
+
+def get_commitish(type):
+    repo = Repo(os.getcwd(), search_parent_directories=True)
+    sha = repo.head.object.hexsha
+    if type == "branch":
+        return repo.active_branch.name
+    else:
+        return repo.git.rev_parse(sha, short=6)
+
+branch = get_commitish("branch")
+sha = get_commitish("sha")
 
 def get_config():
     config_filename = os.environ.get('PDP_CONFIG', '/var/www/dataportal/config.yaml')
@@ -56,7 +68,8 @@ def get_config():
             'js/pdp_vector_map.js'
             ], debug=(not config['js_min'])),
         'templates': resource_filename('pdp', 'templates'),
-        'version': get_distribution('pdp').version
+        'version': get_distribution('pdp').version,
+        'revision': "%s:%s" % (branch, sha)
         }
 
     config = updateConfig(global_config, config)
