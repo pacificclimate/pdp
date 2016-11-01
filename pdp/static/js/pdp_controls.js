@@ -269,8 +269,15 @@ RasterDownloadLink.prototype = {
     },
     setXYRange: function (raster_index_bounds) {
         if (raster_index_bounds.toGeometry().getArea() === 0) {
-            alert("Cannot resolve selection to data grid. Please zoom in and select only within the data region.");
-            return;
+            // Is the point tool being used?
+            var featureType = this.layer.map.getLayersByName("Box Selection")[0].features[0].geometry.id;
+            if (featureType.indexOf("OpenLayers_Geometry_Point") > -1) {
+                this.getSingleCellDownloadLink(raster_index_bounds)
+                return;
+            } else {
+                alert("Cannot resolve selection to data grid. Please zoom in and select only within the data region.");
+                return;
+            }
         }
         this.xrange = raster_index_bounds.left + ':' + raster_index_bounds.right;
         this.yrange = raster_index_bounds.bottom + ':' + raster_index_bounds.top;
@@ -289,6 +296,29 @@ RasterDownloadLink.prototype = {
             this
         );
         return url;
+    },
+    getSingleCellDownloadLink: function (bounds) {
+        var props = {
+            dl_url: this.dl_url,
+            ext: this.ext,
+            varname: this.varname,
+            trange: this.trange,
+            xrange: bounds.left + ':' + bounds.right,
+            yrange: bounds.bottom + ':' + bounds.top
+        };
+
+        var url = this.url_template;
+        var matches = url.match(/\{[a-z_]+\}/g);
+        matches.forEach(
+            function (pattern, index, array) {
+                var id = pattern.replace(/[{}]/g, '');
+                url = url.replace(pattern, props[id]);
+            },
+            this
+        );
+        if (url = window.prompt("Would you like to download the following single cell of data?", url)) {
+            location.href = url
+        };
     },
     onLayerChange: function (lyr_id) {
         var dst;

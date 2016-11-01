@@ -15,7 +15,7 @@ function init_prism_map() {
     mapControls = getBasicControls();
     selLayerName = "Box Selection";
     selectionLayer = getBoxLayer(selLayerName);
-    panelControls = getEditingToolbar([getHandNav(), getBoxEditor(selectionLayer)]);
+    panelControls = getEditingToolbar([getHandNav(), getBoxEditor(selectionLayer), getPointEditor(selectionLayer)]);
     mapControls.push(panelControls);
 
     options.controls = mapControls;
@@ -36,7 +36,6 @@ function init_prism_map() {
         version: '1.1.1',
         srs: 'EPSG:3005'
     };
-
 
     datalayerName = "Climate raster";
     ncwms =  new OpenLayers.Layer.WMS(
@@ -99,7 +98,7 @@ function init_prism_map() {
         [
             ncwms,
             selectionLayer,
-            getBC3005OsmBaseLayer(pdp.tilecache_url, 'BC OpenStreeMap', 'bc_osm')
+            getBC3005OsmBaseLayer(pdp.tilecache_url, 'BC OpenStreetMap', 'bc_osm')
         ]
     );
 
