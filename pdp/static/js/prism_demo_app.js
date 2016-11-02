@@ -4,8 +4,8 @@
 "use strict";
 
 $(document).ready(function () {
-    var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, catalog_request,
-        catalog, dlLink, mdLink, capabilities_request, ncwms_capabilities;
+    var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog,
+        dlLink, mdLink, capabilities_request, ncwms_capabilities;
 
     map = init_prism_map();
     loginButton = pdp.init_login('login-div');
