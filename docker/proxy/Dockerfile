@@ -12,4 +12,4 @@ COPY nginx.template /etc/nginx/nginx.template
 EXPOSE 8080
 
 # Build the config file and start proxy
-CMD ["/bin/bash", "-c", "envsubst '$$APP_HOST $$APP_PORT' < /etc/nginx/nginx.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]
+CMD ["/bin/bash", "-c", "envsubst '$$APP_HOST $$APP_FE_PORT $$APP_BE_PORT' < /etc/nginx/nginx.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]

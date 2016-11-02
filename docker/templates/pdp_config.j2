@@ -1,5 +1,5 @@
 app_root: '{{ APP_ROOT | default('http://docker2.pcic.uvic.ca:8080') }}'
-data_root: '{{ DATA_ROOT | default('http://tools.pacificclimate.org/dataportal/data/') }}'
+data_root: '{{ DATA_ROOT | default('http://docker2.pcic.uvic.ca:8080/data') }}'
 title: ''
 ensemble_name: ''
 dsn: {{ DSN | default('postgresql://httpd_meta@db3.pcic.uvic.ca/pcic_meta') }}
@@ -12,8 +12,8 @@ tilecache_url:
     - http://a.tiles.pacificclimate.org/tilecache/tilecache.py
     - http://b.tiles.pacificclimate.org/tilecache/tilecache.py
     - http://c.tiles.pacificclimate.org/tilecache/tilecache.py
-use_auth: {{ USE_AUTH | default('true') }}
+use_auth: {{ USE_AUTH | default('false') }}
 session_dir: {{ SESSION_DIR | default('default') }}
 clean_session_dir: {{ CLEAN_SESSION_DIR | default('true') }}
-use_analytics: {{ USE_ANALYTICS | default('true')}}
+use_analytics: {{ USE_ANALYTICS | default('false')}}
 analytics: {{ ANALYTICS | default('UA-20166041-3') }}

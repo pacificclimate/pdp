@@ -259,21 +259,25 @@ Nginx
 Configuration
 """""""""""""
 
-In order to see the application running at ``http://<host>:8080``, the root location ``proxy_pass`` directive needs to point to the container running the pdp. If the pdp container has been published on port 8000, this would look like:
+In order to see the application running at ``http://<host>:8080``, the root location ``proxy_pass`` directive needs to point to the container running the pdp frontend/backend servers. If the pdp container has been published on ports 8000 and 8001, this would look like:
 
 .. code:: bash
 
     location / {
-        proxy_pass    http://<host>:8000;
+        proxy_pass    http://<host>:8000;   #frontend
+    }
+
+    location /data/ {
+        proxy_pass    http://<host>:8001;   #backend
     }
 
 The geoserver and ncWMS locations correspond to the ``geoserver_url`` and ``ncwms_url`` values in ``pdp_config.yaml``, respectively. These should be proxied to the production servers at ``tools.pacificclimate.org/[geoserver|ncWMS-PCIC/wms]``.
 
-To allow for more flexible development, a template configuration file is used (``docker/proxy/nginx.template``) which defines the docker host URL/port running the pdp as variables which can be passed in at container runtime using the ``-e`` option:
+To allow for more flexible development, a template configuration file is used (``docker/proxy/nginx.template``) which defines the docker host URL/ports running the pdp as variables which can be passed in at container runtime using the ``-e`` option:
 
 .. code:: bash
 
-    docker run --name nginx-proxy -e APP_HOST=<host> -e APP_PORT=<port> nginx-proxy
+    docker run --name nginx-proxy -e APP_HOST=<host> -e APP_FE_PORT=<port> -e APP_BE_PORT=<port> nginx-proxy
 
 Alternatively, ``docker-compose`` can be used (see the section on Docker Compose below).
 
@@ -281,7 +285,7 @@ Nginx should be configured to listen on the same port as the container running t
 
 .. code:: bash
 
-    docker run --name nginx-proxy -e APP_HOST=<host> -e APP_PORT=<port> -p 8080:8080 -d nginx-proxy
+    docker run --name nginx-proxy -e APP_HOST=<host> -e APP_FE_PORT=<port> -e APP_BE_PORT=<port> -p 8080:8080 -d nginx-proxy
 
 Putting it all together
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -293,11 +297,14 @@ The final sequence of docker commands to run ``pdp`` should be something like th
     docker run --name pdp_data -v /storage/data/climate/:/storage/data/climate/:ro \
                                -v /storage/data/projects/hydrology/vic_gen1_followup/:/home/data/projects/hydrology/vic_gen1_followup/:ro \
                                ubuntu:16.04 /bin/bash
-    docker run -d --name <container_name> --volumes-from pdp_data \
-               -p 8000:8000 pdp \
-	       -e DSN=<dsn> \
-	       -e PCDS_DSN=<pcds_dsn>
-    docker run --name nginx-proxy -e APP_HOST=<host> -e APP_PORT=<port> -p 8080:8080 -d nginx-proxy
+    docker run --name <container_name> --volumes-from pdp_data \
+               -p 8000:8000 -p 8001:8001 \
+               -e DSN=<dsn> -e PCDS_DSN=<pcds_dsn> \
+               -d pdp
+    docker run --name nginx-proxy \
+               -p 8080:8080 \
+               -e APP_HOST=<host> -e APP_FE_PORT=<port> -e APP_BE_PORT=<port> \
+               -d nginx-proxy
 
 Docker Compose
 ^^^^^^^^^^^^^^
