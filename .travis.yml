@@ -8,6 +8,9 @@ addons:
       - libhdf5-serial-dev
       - libnetcdf-dev
       - cython
+env:
+  global:
+      - PDP_CONFIG=$TRAVIS_BUILD_DIR/pdp/config.yaml
 install:
     # upgrade pip to be able to resolve the h5py/Cython co-deps
     # https://github.com/h5py/h5py/issues/535#issuecomment-119546308
