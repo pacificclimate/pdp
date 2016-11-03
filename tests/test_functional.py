@@ -6,6 +6,8 @@ import csv
 import json
 import os
 from itertools import izip
+from pkg_resources import resource_filename
+import static
 
 import pytest
 from webob.request import Request
@@ -17,7 +19,15 @@ from numpy.testing import assert_almost_equal
 from bs4 import BeautifulSoup
 
 @pytest.mark.parametrize('url', ['/js/crmp_map.js', '/css/main.css', '/images/banner.png'])
-def test_static(pcic_data_portal, url):
+def test_static(url):
+    static_app = static.Cling(resource_filename('pdp', 'static'))
+    req = Request.blank(url)
+    resp = req.get_response(static_app)
+    assert resp.status == '200 OK'
+
+@pytest.mark.crmpdb
+@pytest.mark.parametrize('url', ['/js/crmp_map.js', '/css/main.css', '/images/banner.png'])
+def test_static_full(pcic_data_portal, url):
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'

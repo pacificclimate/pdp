@@ -1,9 +1,21 @@
 language: python
 python: 2.7_with_system_site_packages
-before_install:
-    - sudo apt-get update -qq
-    - sudo apt-get install -qq python-gdal python-numpy libhdf5-serial-dev libnetcdf-dev
+addons:
+  apt:
+    packages:
+      - python-gdal
+      - python-numpy
+      - libhdf5-serial-dev
+      - libnetcdf-dev
+      - cython
+env:
+  global:
+      - PDP_CONFIG=$TRAVIS_BUILD_DIR/pdp/config.yaml
 install:
+    # upgrade pip to be able to resolve the h5py/Cython co-deps
+    # https://github.com/h5py/h5py/issues/535#issuecomment-119546308
+    - pip install -U pip
+
     - pip install -i https://pypi.pacificclimate.org/simple/ -r requirements.txt -r test_requirements.txt
     - pip install -i https://pypi.pacificclimate.org/simple/ .
 script:
