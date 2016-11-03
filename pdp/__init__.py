@@ -8,6 +8,7 @@ __all__ = ['get_config', 'wrap_auth']
 import os
 from os.path import dirname
 import atexit
+import re
 
 from pkg_resources import resource_filename, resource_stream, get_distribution
 from tempfile import mkdtemp
@@ -15,7 +16,6 @@ from shutil import rmtree
 import yaml
 import static
 from beaker.middleware import SessionMiddleware
-from git import Repo
 
 from pdp_util.auth import PcicOidMiddleware, check_authorized_return_email
 from ga_wsgi_client import AnalyticsMiddleware
@@ -23,17 +23,6 @@ from pdp.error import ErrorMiddleware
 from pdp.dispatch import PathDispatcher
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
-
-def get_commitish(type):
-    repo = Repo(os.getcwd(), search_parent_directories=True)
-    sha = repo.head.object.hexsha
-    if type == "branch":
-        return repo.active_branch.name
-    else:
-        return repo.git.rev_parse(sha, short=6)
-
-branch = get_commitish("branch")
-sha = get_commitish("sha")
 
 def get_config():
     config_filename = os.environ.get('PDP_CONFIG', '/var/www/dataportal/config.yaml')
@@ -68,14 +57,26 @@ def get_config():
             'js/pdp_vector_map.js'
             ], debug=(not config['js_min'])),
         'templates': resource_filename('pdp', 'templates'),
-        'version': get_distribution('pdp').version,
-        'revision': "%s:%s" % (branch, sha)
+        'version': parse_version("version"),
+        'revision': parse_version("revision")
         }
 
     config = updateConfig(global_config, config)
     if config['session_dir'] == 'default':
         config['session_dir'] = resource_filename('pdp', 'pdp_session_dir')
     return config
+
+def parse_version(type):
+    full_version = get_distribution('pdp').version
+    regex = ur"^((?:\w+\.?)+)\+?(.*)\.(\w{6})$"
+    matches = re.match(regex, full_version)
+    if matches:
+        if type == "version":
+            return matches.group(1)
+        else:
+            return "%s:%s" % (matches.group(2), matches.group(3))
+    else:
+        return "unknown"
 
 def clean_session_dir(session_dir, should_I):
     if should_I and os.path.exists(session_dir):
