@@ -33,7 +33,10 @@ def recursive_list(pkg_dir, basedir):
 def get_commitish():
     repo = Repo(os.getcwd())
     sha = repo.head.object.hexsha
-    branch = repo.active_branch.name
+    try:
+        branch = repo.active_branch.name
+    except TypeError:
+        branch = "detached.HEAD"
     safe_branch = re.sub('[-/_]', '.', branch)
     return "{}.{}".format(safe_branch, repo.git.rev_parse(sha, short=6))
 
