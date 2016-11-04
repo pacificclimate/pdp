@@ -6,14 +6,14 @@
 FROM ubuntu:16.04
 MAINTAINER Carl Masri <cmasri@uvic.ca>
 
-RUN apt-get update
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
     python-dev \
     python-pip \
     build-essential \
     libhdf5-dev \
     libgdal-dev \
-    libnetcdf-dev
+    libnetcdf-dev \
+    git
 
 RUN pip install --upgrade pip
 

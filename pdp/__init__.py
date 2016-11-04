@@ -8,6 +8,7 @@ __all__ = ['get_config', 'wrap_auth']
 import sys, os
 from os.path import dirname
 import atexit
+import re
 
 from pkg_resources import resource_filename, resource_stream, get_distribution
 from tempfile import mkdtemp
@@ -61,13 +62,29 @@ def get_config():
             'js/pdp_vector_map.js'
             ], debug=(not config['js_min'])),
         'templates': resource_filename('pdp', 'templates'),
-        'version': get_distribution('pdp').version
+        'version': parse_version("version"),
+        'revision': parse_version("revision")
         }
 
     config = updateConfig(global_config, config)
     if config['session_dir'] == 'default':
         config['session_dir'] = resource_filename('pdp', 'pdp_session_dir')
     return config
+
+def parse_version(type_):
+    full_version = get_distribution('pdp').version
+    return _parse_version(full_version, type_)
+
+def _parse_version(full_version, type_):
+    regex = ur"^((?:\w+\.?)+)\+?(.*)\.(\w{6})$"
+    matches = re.match(regex, full_version)
+    if matches:
+        version, branch, sha = matches.groups()
+        if type_ == "version":
+            return version
+        elif type_ == "revision":
+            return "%s:%s" % (branch, sha)
+    return "unknown"
 
 def clean_session_dir(session_dir, should_I):
     if should_I and os.path.exists(session_dir):
