@@ -73,10 +73,9 @@ def parse_version(type):
     if matches:
         if type == "version":
             return matches.group(1)
-        else:
+        else if type == "revision":
             return "%s:%s" % (matches.group(2), matches.group(3))
-    else:
-        return "unknown"
+    return "unknown"
 
 def clean_session_dir(session_dir, should_I):
     if should_I and os.path.exists(session_dir):
