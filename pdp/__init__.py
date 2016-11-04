@@ -66,15 +66,19 @@ def get_config():
         config['session_dir'] = resource_filename('pdp', 'pdp_session_dir')
     return config
 
-def parse_version(type):
+def parse_version(type_):
     full_version = get_distribution('pdp').version
+    return _parse_version(full_version, type_)
+
+def _parse_version(full_version, type_):
     regex = ur"^((?:\w+\.?)+)\+?(.*)\.(\w{6})$"
     matches = re.match(regex, full_version)
     if matches:
-        if type == "version":
-            return matches.group(1)
-        else if type == "revision":
-            return "%s:%s" % (matches.group(2), matches.group(3))
+        version, branch, sha = matches.groups()
+        if type_ == "version":
+            return version
+        elif type_ == "revision":
+            return "%s:%s" % (branch, sha)
     return "unknown"
 
 def clean_session_dir(session_dir, should_I):

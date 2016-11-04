@@ -1,5 +1,5 @@
 import os, sys
-import string
+import re
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 from git import Repo
@@ -34,8 +34,8 @@ def get_commitish():
     repo = Repo(os.getcwd())
     sha = repo.head.object.hexsha
     branch = repo.active_branch.name
-    safe_branch = branch.replace('/', '.').replace('-', '.').replace('_', '.')
-    return "%s.%s" % (safe_branch, repo.git.rev_parse(sha, short=6))
+    safe_branch = re.sub('[-/_]', '.', branch)
+    return "{}.{}".format(safe_branch, repo.git.rev_parse(sha, short=6))
 
 __version__ = '2.3.6'
 __revision__ = get_commitish()
