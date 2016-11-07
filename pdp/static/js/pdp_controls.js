@@ -270,9 +270,9 @@ RasterDownloadLink.prototype = {
     setXYRange: function (raster_index_bounds) {
         if (raster_index_bounds.toGeometry().getArea() === 0) {
             // Is the point tool being used?
-            var featureType = this.layer.map.getLayersByName("Box Selection")[0].features[0].geometry.id;
-            if (featureType.indexOf("OpenLayers_Geometry_Point") > -1) {
-                this.getSingleCellDownloadLink(raster_index_bounds)
+            var feature = this.layer.map.getLayersByName("Box Selection")[0].features[0];
+            if (feature.geometry.id.indexOf("OpenLayers_Geometry_Point") > -1) {
+                this.getSingleCellDownloadLink(raster_index_bounds, feature)
                 return;
             } else {
                 alert("Cannot resolve selection to data grid. Please zoom in and select only within the data region.");
@@ -297,7 +297,7 @@ RasterDownloadLink.prototype = {
         );
         return url;
     },
-    getSingleCellDownloadLink: function (bounds) {
+    getSingleCellDownloadLink: function (bounds, feature) {
         var props = {
             dl_url: this.dl_url,
             ext: this.ext,
@@ -319,6 +319,9 @@ RasterDownloadLink.prototype = {
         if (url = window.prompt("Would you like to download the following single cell of data?", url)) {
             location.href = url
         };
+        // Clear point feature after use to avoid re-prompting user to download
+        // the same cell of data when they switch to a new dataset
+        this.layer.map.getLayersByName("Box Selection")[0].removeFeatures(feature)
     },
     onLayerChange: function (lyr_id) {
         var dst;
