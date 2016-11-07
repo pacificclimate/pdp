@@ -227,6 +227,7 @@ The following command will create a data volume container. This should only need
 
     docker run --name pdp_data -v /storage/data/climate/:/storage/data/climate/:ro \
                                -v /storage/data/projects/hydrology/vic_gen1_followup/:/home/data/projects/hydrology/vic_gen1_followup/:ro \
+                               -v /storage/data/projects/dataportal/data/:/storage/data/projects/dataportal/data/:ro \
                                ubuntu:16.04
 
 Once the data volume container has been created, these volumes can be brought into other containers at runtime:
@@ -296,15 +297,16 @@ The final sequence of docker commands to run ``pdp`` should be something like th
 
     docker run --name pdp_data -v /storage/data/climate/:/storage/data/climate/:ro \
                                -v /storage/data/projects/hydrology/vic_gen1_followup/:/home/data/projects/hydrology/vic_gen1_followup/:ro \
+                               -v /storage/data/projects/dataportal/data/:/storage/data/projects/dataportal/data/:ro \
                                ubuntu:16.04 /bin/bash
     docker run --name <container_name> --volumes-from pdp_data \
                -p 8000:8000 -p 8001:8001 \
                -e DSN=<dsn> -e PCDS_DSN=<pcds_dsn> \
-               -d pdp
+               -d <image>
     docker run --name nginx-proxy \
                -p 8080:8080 \
                -e APP_HOST=<host> -e APP_FE_PORT=<port> -e APP_BE_PORT=<port> \
-               -d nginx-proxy
+               -d <image>
 
 Docker Compose
 ^^^^^^^^^^^^^^
