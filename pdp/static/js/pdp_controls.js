@@ -298,27 +298,31 @@ RasterDownloadLink.prototype = {
         return url;
     },
     getSingleCellDownloadLink: function (bounds, feature) {
-        var props = {
-            dl_url: this.dl_url,
-            ext: this.ext,
-            varname: this.varname,
-            trange: this.trange,
-            xrange: bounds.left + ':' + bounds.right,
-            yrange: bounds.bottom + ':' + bounds.top
-        };
+        if (this.ext !== "aig") {
+            var props = {
+                dl_url: this.dl_url,
+                ext: this.ext,
+                varname: this.varname,
+                trange: this.trange,
+                xrange: bounds.left + ':' + bounds.right,
+                yrange: bounds.bottom + ':' + bounds.top
+            };
 
-        var url = this.url_template;
-        var matches = url.match(/\{[a-z_]+\}/g);
-        matches.forEach(
-            function (pattern, index, array) {
-                var id = pattern.replace(/[{}]/g, '');
-                url = url.replace(pattern, props[id]);
-            },
-            this
-        );
-        if (url = window.prompt("Would you like to download the following single cell of data?", url)) {
-            location.href = url
-        };
+            var url = this.url_template;
+            var matches = url.match(/\{[a-z_]+\}/g);
+            matches.forEach(
+                function (pattern, index, array) {
+                    var id = pattern.replace(/[{}]/g, '');
+                    url = url.replace(pattern, props[id]);
+                },
+                this
+            );
+            if (url = window.prompt("Would you like to download the following single cell of data?", url)) {
+                location.href = url
+            };
+        } else {
+            alert("Sorry, Arc/Info ASCII output is not currently supported for this feature.\nPlease select a different data format and try again.");
+        }
         // Clear point feature after use to avoid re-prompting user to download
         // the same cell of data when they switch to a new dataset
         this.layer.map.getLayersByName("Box Selection")[0].removeFeatures(feature)
