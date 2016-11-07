@@ -317,7 +317,7 @@ RasterDownloadLink.prototype = {
                 },
                 this
             );
-            if (url = window.prompt("Would you like to download the following single cell of data?", url)) {
+            if (url = window.prompt("Would you like to download the following subset of data?", url)) {
                 location.href = url
             };
         } else {
