@@ -30,6 +30,11 @@ function getDateRange() {
         defaultDate: 'cc'
     });
 
+    var checkboxDiv = pdp.createDiv("download-all-time");
+    checkboxDiv.appendChild(pdp.createInputElement("checkbox", undefined, "download-full-timeseries", "download-full-timeseries", undefined));
+    checkboxDiv.appendChild(pdp.createLabel(undefined, "Download Full Timeseries", "download-full-timeseries"));
+    rangeDiv.appendChild(checkboxDiv);
+
     return rangeDiv;
 }
 
