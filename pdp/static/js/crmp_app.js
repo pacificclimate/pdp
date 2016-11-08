@@ -33,18 +33,9 @@ $(document).ready(function () {
     map.composite_filter = '';
     map.getControlsByClass('OpenLayers.Control.DrawFeature')[0].events.register('featureadded', '', pdp.curry(polyChange, map));
 
-    // Specify full timeseries download by setting min/max dates
-    $("#download-full-timeseries").change(
-        function(evt) {
-            if (this.checked) {
-                $("#from-date").datepicker('disable').addClass("disabled").datepicker("setDate", "1870/01/01");
-                $("#to-date").datepicker('disable').addClass("disabled").datepicker("setDate", new Date());
-            } else {
-                $("#from-date").datepicker('enable').removeClass("disabled");
-                $("#to-date").datepicker('enable').removeClass("disabled");
-            }
-        }
-    );
+    // Don't include the full timeseries download option, some of the
+    // stations don't have start/end dates and will get excluded
+    $('#download-all-time').remove()
 
     // Wire up legend button to pop up network-name-help.
     $("#legend-button").on('click', function () { $('#network-name-help').dialog("open"); return false; });
