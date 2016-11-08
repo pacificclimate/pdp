@@ -396,16 +396,25 @@ def test_hydro_model_out_catalog(pcic_data_portal):
     assert len(data) > 0
 
 @pytest.mark.bulk_data
-def test_hydro_model_out_5var(pcic_data_portal):
-    url = '/data/hydro_model_out/5var_day_HadCM_A1B_run1_19500101-20991231.nc.nc?sm[0:1][0:1][0:1]&'
+@pytest.mark.parametrize('url', [
+    '/data/hydro_model_out/5var_day_HadCM_A1B_run1_19500101-20991231.nc.nc?sm[0:1][0:1][0:1]&',
+    '/data/hydro_model_out/5var_day_CSIRO35_A2_run1_19500101-20981231.nc.nc?bf[0:1][0:1][0:1]&',
+    '/data/hydro_model_out/5var_day_MIROC3.2_B1_run1_19500101-20991231.nc.nc?swe[0:1][0:1][0:1]&',
+    '/data/hydro_model_out/5var_day_BASE_historical_run1_19500101-20061231.nc.nc?aet[0:1][0:1][0:1]&'
+])
+def test_hydro_model_out_5var(pcic_data_portal, url):
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/x-netcdf'
 
 @pytest.mark.bulk_data
-def test_hydro_model_out_pr_tasmin_tasmax_wind(pcic_data_portal):
-    url = '/data/hydro_model_out/pr+tasmin+tasmax+wind_day_HadCM_A1B_run1_19500101-21001231.nc.nc'
+@pytest.mark.parametrize('url', [
+    '/data/hydro_model_out/pr+tasmin+tasmax+wind_day_HadCM_A1B_run1_19500101-21001231.nc.nc?pr[0:1][0:1][0:1]&',
+    '/data/hydro_model_out/pr+tasmin+tasmax+wind_day_CSIRO35_A2_run1_19500101-21001231.nc.nc?tasmax[0:1][0:1][0:1]&',
+    '/data/hydro_model_out/pr+tasmin+tasmax+wind_day_MIROC3.2_B1_run1_19500101-21001231.nc.nc?wind[0:1][0:1][0:1]&'
+])
+def test_hydro_model_out_pr_tasmin_tasmax_wind(pcic_data_portal, url):
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
