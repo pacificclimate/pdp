@@ -15,7 +15,7 @@ function init_vic_map() {
     mapControls = getBasicControls();
     selLayerName = "Box Selection";
     selectionLayer = getBoxLayer(selLayerName);
-    panelControls = getEditingToolbar([getHandNav(), getBoxEditor(selectionLayer)]);
+    panelControls = getEditingToolbar([getHandNav(), getBoxEditor(selectionLayer), getPointEditor(selectionLayer)]);
     mapControls.push(panelControls);
 
     options.controls = mapControls;
