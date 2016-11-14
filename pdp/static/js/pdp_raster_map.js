@@ -135,19 +135,29 @@ function processNcwmsLayerMetadata(ncwms_layer, catalog) {
     });
 }
 
-
 function setTimeAvailable(begin, end) {
     //TODO: only present times available in ncwms capabilities for this layer
     var yearRange = begin.getFullYear().toString(10) + ":" + end.getFullYear().toString(10);
+    var prevMinDate = $(".datepickerstart").datepicker("option", "minDate");
+    var prevMaxDate = $(".datepickerend").datepicker("option", "maxDate");
+    var fromDate = $(".datepickerstart").datepicker("getDate");
+    var toDate = $(".datepickerend").datepicker("getDate");
 
     $.each([".datepickerstart", ".datepickerend"], function (idx, val) {
         $(val).datepicker("option", "minDate", begin);
         $(val).datepicker("option", "maxDate", end);
         $(val).datepicker("option", "yearRange", yearRange);
     });
-    $(".datepicker").datepicker("setDate", begin);
-    $(".datepickerstart").datepicker("setDate", begin);
-    $(".datepickerend").datepicker("setDate", end);
+
+    // Only update the dates if they haven't been changed
+    // (null indicates initial page load)
+    if (prevMinDate === null || fromDate.getTime() === prevMinDate.getTime()) {
+        //$(".datepicker").datepicker("setDate", begin);
+        $(".datepickerstart").datepicker("setDate", begin);
+    }
+    if (prevMaxDate === null || toDate.getTime() === prevMaxDate.getTime()) {
+        $(".datepickerend").datepicker("setDate", end);
+    }
 }
 
 function intersection(b1, b2) {
