@@ -136,7 +136,7 @@ function getResetButton(map) {
 }
 
 function getCRMPDateRange(map) {
-    var dateRange = getDateRange();
+    var dateRange = getDateRange(true);
     $('#from-date, #to-date', dateRange).change(pdp.curry(dateChange, map)).change(pdp.curry(CRMPFilterChange, map));
     return dateRange;
 }

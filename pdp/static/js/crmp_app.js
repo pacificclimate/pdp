@@ -44,4 +44,3 @@ $(document).ready(function () {
     // Populate selection information textbox initially.
     filtChange();
 });
-
