@@ -5,7 +5,9 @@
 // globals
 var pdp, ncwms, map;
 
-function getDateRange() {
+function getDateRange(omitFullTimeCheckbox) {
+    var omitFullTimeCheckbox = (typeof omitFullTimeCheckbox !== 'undefined') ? omitFullTimeCheckbox : false;
+    
     var rangeDiv = pdp.createDiv("date-range");
     rangeDiv.appendChild(pdp.createLabel("date-range-label", "Date Range", "date-range"));
     rangeDiv.appendChild(pdp.createInputElement("text", "datepickerstart", "from-date", "from-date", "YYYY/MM/DD"));
@@ -30,10 +32,26 @@ function getDateRange() {
         defaultDate: 'cc'
     });
 
-    var checkboxDiv = pdp.createDiv("download-all-time");
-    checkboxDiv.appendChild(pdp.createInputElement("checkbox", undefined, "download-full-timeseries", "download-full-timeseries", undefined));
-    checkboxDiv.appendChild(pdp.createLabel(undefined, "Download Full Timeseries", "download-full-timeseries"));
-    rangeDiv.appendChild(checkboxDiv);
+    if (!omitFullTimeCheckbox) {
+        var checkboxDiv = pdp.createDiv("download-all-time");
+        checkboxDiv.appendChild(pdp.createInputElement("checkbox", undefined, "download-full-timeseries", "download-full-timeseries", undefined));
+        checkboxDiv.appendChild(pdp.createLabel(undefined, "Download Full Timeseries", "download-full-timeseries"));
+        rangeDiv.appendChild(checkboxDiv);
+
+        // Specify full timeseries download by setting to min/max dates
+        $("#pdp-controls").on("change", "#download-full-timeseries", function(evt) {
+                if (this.checked) {
+                    $("#from-date").datepicker('disable').addClass("disabled").datepicker("setDate", $("#from-date").datepicker("option", "minDate"));
+                    $("#to-date").datepicker('disable').addClass("disabled").datepicker("setDate", $("#to-date").datepicker("option", "maxDate"));
+                    // Trigger event to call dlLink.onTimeChange()
+                    $("[class^='datepicker']").trigger("change");
+                } else {
+                    $("#from-date").datepicker('enable').removeClass("disabled");
+                    $("#to-date").datepicker('enable').removeClass("disabled");
+                }
+            }
+        );
+    }
 
     return rangeDiv;
 }

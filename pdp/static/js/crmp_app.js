@@ -33,10 +33,6 @@ $(document).ready(function () {
     map.composite_filter = '';
     map.getControlsByClass('OpenLayers.Control.DrawFeature')[0].events.register('featureadded', '', pdp.curry(polyChange, map));
 
-    // Don't include the full timeseries download option, some of the
-    // stations don't have start/end dates and will get excluded
-    $('#download-all-time').remove()
-
     // Wire up legend button to pop up network-name-help.
     $("#legend-button").on('click', function () { $('#network-name-help').dialog("open"); return false; });
 

@@ -72,20 +72,6 @@ $(document).ready(function () {
         }
     );
 
-    // Specify full timeseries download by setting to min/max dates
-    $("#download-full-timeseries").change(
-        function(evt) {
-            if (this.checked) {
-                $("#from-date").datepicker('disable').addClass("disabled").datepicker("setDate", $("#from-date").datepicker("option", "minDate"));
-                $("#to-date").datepicker('disable').addClass("disabled").datepicker("setDate", $("#to-date").datepicker("option", "maxDate"));
-                dlLink.onTimeChange();
-            } else {
-                $("#from-date").datepicker('enable').removeClass("disabled");
-                $("#to-date").datepicker('enable').removeClass("disabled");
-            }
-        }
-    );
-
     capabilities_request.done(function (data) {
         ncwms_capabilities = data;
     });
