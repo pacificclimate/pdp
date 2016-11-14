@@ -25,12 +25,9 @@ ENV CPLUS_INCLUDE_PATH /usr/include/gdal
 ENV C_INCLUDE_PATH /usr/include/gdal
 ENV PDP_CONFIG /root/pdp_config.yaml
 
-# Remove netCDF4 version requirement
-RUN sed -i 's/netCDF4==1.1.1/netCDF4/' test_requirements.txt
-
 # Install dependencies (separate RUN
 # statement for GDAL is required)
-RUN pip install numpy Cython
+RUN pip install numpy Cython==0.22
 RUN pip install gdal==1.11.2
 RUN pip install -i https://pypi.pacificclimate.org/simple/ \
     -r requirements.txt \

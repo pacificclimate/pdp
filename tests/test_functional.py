@@ -39,7 +39,7 @@ def test_no_404s(pcic_data_portal, url):
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
 
-    
+
 def test_am_authorized(check_auth_app, authorized_session_id):
     req = Request.blank('')
     req.cookies['beaker.session.id'] = authorized_session_id
@@ -158,7 +158,7 @@ def test_clip_to_date_one(pcic_data_portal, authorized_session_id):
               }
     req = Request.blank(base_url + urlencode(params))
     req.cookies['beaker.session.id'] = authorized_session_id
-    
+
     resp = req.get_response(pcic_data_portal)
     print resp.status
     assert resp.status == '200 OK'
@@ -261,11 +261,11 @@ def test_legend(network, color, pcic_data_portal):
     )
     assert average == color
     os.remove(f.name)
-    
+
 @pytest.mark.crmpdb
 def test_legend_caching(pcic_data_portal):
     url = '/pcds/images/legend/flnro-wmb.png'
-    
+
     pre_load_time = datetime.now() - timedelta(1) # yesterday
     post_load_time = datetime.now() + timedelta(1) # tomorrow
 
@@ -304,7 +304,7 @@ def test_climatology_bounds(pcic_data_portal, authorized_session_id):
     nc = netCDF4.Dataset(f.name)
 
     assert 'climatology_bounds' in nc.variables
-    
+
     assert_almost_equal(nc.variables['climatology_bounds'][:],
                         np.array([[     0.,  10988.],
                                   [    31.,  11017.],
@@ -394,3 +394,28 @@ def test_hydro_model_out_catalog(pcic_data_portal):
     assert 'hydro_model_out/5var_day_HadCM_B1_run1_19500101-20981231.nc' in resp.body
     data = json.loads(resp.body)
     assert len(data) > 0
+
+@pytest.mark.bulk_data
+@pytest.mark.parametrize('url', [
+    '/data/hydro_model_out/5var_day_HadCM_A1B_run1_19500101-20991231.nc.nc?sm[0:1][0:1][0:1]&',
+    '/data/hydro_model_out/5var_day_CSIRO35_A2_run1_19500101-20981231.nc.nc?bf[0:1][0:1][0:1]&',
+    '/data/hydro_model_out/5var_day_MIROC3.2_B1_run1_19500101-20991231.nc.nc?swe[0:1][0:1][0:1]&',
+    '/data/hydro_model_out/5var_day_BASE_historical_run1_19500101-20061231.nc.nc?aet[0:1][0:1][0:1]&'
+])
+def test_hydro_model_out_5var(pcic_data_portal, url):
+    req = Request.blank(url)
+    resp = req.get_response(pcic_data_portal)
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'application/x-netcdf'
+
+@pytest.mark.bulk_data
+@pytest.mark.parametrize('url', [
+    '/data/hydro_model_out/pr+tasmin+tasmax+wind_day_HadCM_A1B_run1_19500101-21001231.nc.nc?pr[0:1][0:1][0:1]&',
+    '/data/hydro_model_out/pr+tasmin+tasmax+wind_day_CSIRO35_A2_run1_19500101-21001231.nc.nc?tasmax[0:1][0:1][0:1]&',
+    '/data/hydro_model_out/pr+tasmin+tasmax+wind_day_MIROC3.2_B1_run1_19500101-21001231.nc.nc?wind[0:1][0:1][0:1]&'
+])
+def test_hydro_model_out_pr_tasmin_tasmax_wind(pcic_data_portal, url):
+    req = Request.blank(url)
+    resp = req.get_response(pcic_data_portal)
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'application/x-netcdf'
