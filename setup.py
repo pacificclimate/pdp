@@ -40,7 +40,7 @@ def get_commitish():
     safe_branch = re.sub('[-/_]', '.', branch)
     return "{}.{}".format(safe_branch, repo.git.rev_parse(sha, short=6))
 
-__version__ = '2.3.6'
+__version__ = '2.4.0'
 __revision__ = get_commitish()
 
 setup(
@@ -79,7 +79,7 @@ setup(
     data_files = build_doc_list('build/sphinx/html', 'doc'),
     cmdclass = {'test': PyTest},
     zip_safe=False,
-        classifiers='''Development Status :: 2 - Pre-Alpha
+        classifiers='''Development Status :: 5 - Production/Stable
 Environment :: Console
 nvironment :: Web Environment
 Framework :: Flask

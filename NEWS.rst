@@ -1,6 +1,25 @@
 News / Release Notes
 ====================
 
+2.4.0
+-----
+
+*Release Date: 15-Nov-2016*
+
+* Colorbar improvements on the raster portals
+  * Sets the colorbar legend according to range
+  * Adds documentation for the colorbar to the user docs
+  * Fixes bug where colorbar was out of sync with dataset range
+* Download features
+  * Adds a map tool to download a single raster cell
+  * Adds a checkbox to applicable raster pages to disable the date range
+    selector and download the full timeseries
+* Deployment improvements
+  * Updates developer docs and deployment guide
+  * Adds support for deploying with Docker
+  * Improves test suite to run on TravisCI
+  * Includes VC commit has in all docs and web pages
+
 2.3.6
 -----
 
