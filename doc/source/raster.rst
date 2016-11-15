@@ -28,7 +28,19 @@ To select a spatial subset for data download, one must first switch to the polyg
 
 .. figure:: images/draw_polygon_on.png
 
-When in spatial subset selection mode, you can select a rectangular area by doing a left-click and drag. When selecting an area on high resolution datasets (e.g. BC PRISM), there is the possibility that the user interface will not resolve from screen resolution to dataset resolution. If this is the case, you will be prompted. The can usually be alleviated by zooming the map to a higher zoom level when performing your selection. To adjust the opacity of the climate overlay, there is an opacity slider in the lower left hand corner.
+When in spatial subset selection mode, you can select a rectangular area by doing a left-click and drag. When selecting an area on high resolution datasets (e.g. BC PRISM), there is the possibility that the user interface will not resolve from screen resolution to dataset resolution. If this is the case, you will be prompted. The can usually be alleviated by zooming the map to a higher zoom level when performing your selection.
+
+The raster portals also provide a point tool which can be used to download a single cell of data. To use, select the point tool icon located in the map control panel.
+
+.. figure:: images/point_on.png
+
+Once selected, zoom in and click the cell that you wish to download. A prompt will appear asking for confirmation of the download and display a link corresponding to the precise cell of data that was clicked.
+
+.. figure:: images/download-prompt.png
+
+This URL can be edited before the download is confirmed; any changes will be reflected in the downloaded dataset. *Note: The point tool does not currently support the ARC/Info ASCII Grid output format.*
+
+To adjust the opacity of the climate overlay, there is an opacity slider in the lower left hand corner.
 
 .. figure:: images/opacity_slider.png
 
@@ -37,6 +49,12 @@ The map is a standard `OpenLayers <http://openlayers.org/>`_ map, so for more de
 To switch back to navigating mode after selecting, you must re-select the hand icon
 
 .. figure:: images/pan_on.png
+
+Each of the raster portals will display a colorbar legend indicating the range of values for the selected dataset. The minimum and maximum values are determined from the entire dataset, regardless of whether a subset was selected or not.
+
+.. figure:: images/colorbar.png
+
+This scale is linear for temperature variables and logarithmic for precipitation.
 
 Dataset selection
 -----------------
@@ -61,7 +79,7 @@ The `Download` button starts the download of data with whichever format you have
 Output Data Formats
 ^^^^^^^^^^^^^^^^^^^
 
-The climate coverage portals support several output formats. 
+The climate coverage portals support several output formats.
 
 NetCDF
 """"""
@@ -87,7 +105,7 @@ Layout of the data is time-major, longitude-minor; that is, time is the slowest 
     Length: unspecified [text/plain]
     Saving to: ‘/tmp/sample.csv’
 
-	[ <=>    ] 1,816       --.-K/s   in 0.04s   
+	[ <=>    ] 1,816       --.-K/s   in 0.04s
 
     2014-04-23 15:01:53 (43.2 KB/s) - ‘/tmp/sample.csv’ saved [1816]
 
@@ -309,7 +327,7 @@ Such a request would useful for retrieving data units in advance of downloading 
 
 Downloading the actual data values themselves is also done with a DAP request. There are a couple differences, however. First, to download data, the client must be logged in via OpenID. Secondly, the URL template for the request is ``http://tools.pacificclimate.org/dataportal/[page_id]/data/[dataset_id].[format_extension]?[dap_selection]``
 
-*format_extension* can be one of: nc, csv, ascii. 
+*format_extension* can be one of: nc, csv, ascii.
 
 To construct a proper DAP selection, please refer to the `DAP specification <http://www.opendap.org/pdf/ESE-RFC-004v1.2.pdf>`_. For example, if you wanted to download the first two timesteps and an 11 by 11 spatial region of the BCSD downscaling data you could make a request as follows: ::
 

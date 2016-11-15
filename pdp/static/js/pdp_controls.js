@@ -131,7 +131,7 @@ function Colorbar(div_id, layer) {
 Colorbar.prototype = {
     constructor: Colorbar,
 
-    midpoint: function () {
+    calculate_midpoint: function () {
         if (this.layer.params.LOGSCALE) {
             var min = this.minimum <= 0 ? 1 : this.minimum;
             return Math.exp(((Math.log(this.maximum) - Math.log(min)) / 2 ) + Math.log(min));
@@ -179,6 +179,31 @@ Colorbar.prototype = {
         }
     },
 
+    round_to_nearest: function (value, mult) {
+      if (mult > 0) {
+        return Math.round(value / mult) * mult;
+      } else {
+        return Math.round(value * mult) / mult;
+      }
+    },
+
+    // Returns the estimated rounding precicion, based on the range.
+    // Negative values indicate reverse rounding.
+    estimate_precision: function (min, max) {
+      var range = max - min;
+      if (range > 10000) {
+        return 100;
+      } else if (range > 100) {
+        return 10;
+      } else if (range > 10) {
+        return 1;
+      } else if (range > 1) {
+        return -10;
+      } else {
+        return -100;
+      }
+    },
+
     refresh_values: function (lyr_id) {
         var url = this.metadata_url(lyr_id),
             request = $.ajax({
@@ -204,14 +229,14 @@ Colorbar.prototype = {
     },
 
     redraw: function () {
+        var prec = this.estimate_precision(this.minimum, this.maximum);
         var div = $("#" + this.div_id);
         div.css('background-image', "url(" + this.graphic_url() + ")");
-        div.find("#minimum").html(round(this.minimum) + " " + this.units);
-        div.find("#maximum").html(round(this.maximum) + " " + this.units);
-        div.find("#midpoint").html(round(this.midpoint()) + " " + this.units);
+        div.find("#minimum").html(this.round_to_nearest(this.minimum, prec)  + " " + this.units);
+        div.find("#maximum").html(this.round_to_nearest(this.maximum, prec) + " " + this.units);
+        div.find("#midpoint").html(this.round_to_nearest(this.calculate_midpoint(), prec) + " " + this.units);
     }
 };
-
 
 function RasterDownloadLink(element, layer, catalog, ext, varname, trange, yrange, xrange) {
     this.element = element;
@@ -244,8 +269,15 @@ RasterDownloadLink.prototype = {
     },
     setXYRange: function (raster_index_bounds) {
         if (raster_index_bounds.toGeometry().getArea() === 0) {
-            alert("Cannot resolve selection to data grid. Please zoom in and select only within the data region.");
-            return;
+            // Is the point tool being used?
+            var feature = this.layer.map.getLayersByName("Box Selection")[0].features[0];
+            if (feature.geometry.id.indexOf("OpenLayers_Geometry_Point") > -1) {
+                this.getSingleCellDownloadLink(raster_index_bounds, feature)
+                return;
+            } else {
+                alert("Cannot resolve selection to data grid. Please zoom in and select only within the data region.");
+                return;
+            }
         }
         this.xrange = raster_index_bounds.left + ':' + raster_index_bounds.right;
         this.yrange = raster_index_bounds.bottom + ':' + raster_index_bounds.top;
@@ -264,6 +296,36 @@ RasterDownloadLink.prototype = {
             this
         );
         return url;
+    },
+    getSingleCellDownloadLink: function (bounds, feature) {
+        if (this.ext !== "aig") {
+            var props = {
+                dl_url: this.dl_url,
+                ext: this.ext,
+                varname: this.varname,
+                trange: this.trange,
+                xrange: bounds.left + ':' + bounds.right,
+                yrange: bounds.bottom + ':' + bounds.top
+            };
+
+            var url = this.url_template;
+            var matches = url.match(/\{[a-z_]+\}/g);
+            matches.forEach(
+                function (pattern, index, array) {
+                    var id = pattern.replace(/[{}]/g, '');
+                    url = url.replace(pattern, props[id]);
+                },
+                this
+            );
+            if (url = window.prompt("Would you like to download the following subset of data?", url)) {
+                location.href = url
+            };
+        } else {
+            alert("Sorry, Arc/Info ASCII output is not currently supported for this feature.\nPlease select a different data format and try again.");
+        }
+        // Clear point feature after use to avoid re-prompting user to download
+        // the same cell of data when they switch to a new dataset
+        this.layer.map.getLayersByName("Box Selection")[0].removeFeatures(feature)
     },
     onLayerChange: function (lyr_id) {
         var dst;

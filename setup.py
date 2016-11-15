@@ -1,7 +1,8 @@
 import os, sys
-import string
+import re
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
+from git import Repo
 
 class PyTest(TestCommand):
     def finalize_options(self):
@@ -29,15 +30,25 @@ def recursive_list(pkg_dir, basedir):
                 yield os.path.join(dirname, filename).lstrip(pkg_dir)
     return [ x for x in find() ]
 
+def get_commitish():
+    repo = Repo(os.getcwd())
+    sha = repo.head.object.hexsha
+    try:
+        branch = repo.active_branch.name
+    except TypeError:
+        branch = "detached.HEAD"
+    safe_branch = re.sub('[-/_]', '.', branch)
+    return "{}.{}".format(safe_branch, repo.git.rev_parse(sha, short=6))
 
 __version__ = '2.3.6'
+__revision__ = get_commitish()
 
 setup(
     name="pdp",
     description="PCIC's Data Portal (pdp): the server software to run the entire web application",
     keywords="opendap dods dap open data science climate meteorology downscaling modelling",
     packages=['pdp', 'pdp.portals'],
-    version=__version__,
+    version="%s+%s" % (__version__, __revision__),
     url="http://www.pacificclimate.org/",
     author="James Hiebert",
     author_email="hiebert@uvic.ca",

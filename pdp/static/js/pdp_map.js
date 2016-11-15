@@ -233,6 +233,16 @@ function getBoxEditor(box) {
     );
 }
 
+function getPointEditor(layer) {
+    return new OpenLayers.Control.DrawFeature(
+        layer,
+        OpenLayers.Handler.Point,
+        {
+            displayClass: 'olControlDrawFeaturePoint'
+        }
+    );
+}
+
 var getOpacitySlider = function (layer) {
 
     var sliderContainer,

@@ -5,9 +5,10 @@
 
 __all__ = ['get_config', 'wrap_auth']
 
-import os
+import sys, os
 from os.path import dirname
 import atexit
+import re
 
 from pkg_resources import resource_filename, resource_stream, get_distribution
 from tempfile import mkdtemp
@@ -25,8 +26,13 @@ from pdp.portals import updateConfig
 
 def get_config():
     config_filename = os.environ.get('PDP_CONFIG', '/var/www/dataportal/config.yaml')
-    with open(config_filename) as f:
-        config = yaml.load(f)
+    try:
+        with open(config_filename) as f:
+            config = yaml.load(f)
+    except IOError:
+        print("pdp/__init__.py: An error occurred while trying to read the config file. Please make sure that the PDP_CONFIG env variable has been set and points to a valid file.")
+        sys.exit(1)
+
     global_config = {
         'css_files': [
             'css/jquery-ui-1.10.2.custom.css',
@@ -56,7 +62,8 @@ def get_config():
             'js/pdp_vector_map.js'
             ], debug=(not config['js_min'])),
         'templates': resource_filename('pdp', 'templates'),
-        'version': get_distribution('pdp').version
+        'version': parse_version("version"),
+        'revision': parse_version("revision")
         }
 
     config = updateConfig(global_config, config)
@@ -64,11 +71,25 @@ def get_config():
         config['session_dir'] = resource_filename('pdp', 'pdp_session_dir')
     return config
 
+def parse_version(type_):
+    full_version = get_distribution('pdp').version
+    return _parse_version(full_version, type_)
+
+def _parse_version(full_version, type_):
+    regex = ur"^((?:\w+\.?)+)\+?(.*)\.(\w{6})$"
+    matches = re.match(regex, full_version)
+    if matches:
+        version, branch, sha = matches.groups()
+        if type_ == "version":
+            return version
+        elif type_ == "revision":
+            return "%s:%s" % (branch, sha)
+    return "unknown"
+
 def clean_session_dir(session_dir, should_I):
     if should_I and os.path.exists(session_dir):
         print('Removing session directory {}'.format(session_dir))
         rmtree(session_dir)
-
 
 # auth wrappers
 def wrap_auth(app, required=False):

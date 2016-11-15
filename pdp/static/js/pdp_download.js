@@ -42,7 +42,9 @@ function createDownloadLink(id, divClass, links) {
     var downloadDiv = pdp.createDiv(id);
     downloadDiv.className = divClass;
     $.each(links, function(idx, val) {
-	downloadDiv.appendChild(pdp.createLink(idx, "", "", val, "name"));
+        var l = pdp.createLink(idx, "", "", val, "name");
+        l.setAttribute('download','');
+        downloadDiv.appendChild(l);
     });
     return downloadDiv;
 };
