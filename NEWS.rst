@@ -1,6 +1,14 @@
 News / Release Notes
 ====================
 
+2.4.1
+-----
+
+*Release Date: 17-Nov-2016*
+
+* Adds a checkbox to applicable raster pages to disable the date range
+  selector and download the full timeseries
+
 2.4.0
 -----
 
@@ -15,8 +23,6 @@ News / Release Notes
 * Download features
 
   * Adds a map tool to download a single raster cell
-  * Adds a checkbox to applicable raster pages to disable the date range
-    selector and download the full timeseries
 
 * Deployment improvements
 

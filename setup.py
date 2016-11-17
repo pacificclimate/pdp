@@ -40,7 +40,7 @@ def get_commitish():
     safe_branch = re.sub('[-/_]', '.', branch)
     return "{}.{}".format(safe_branch, repo.git.rev_parse(sha, short=6))
 
-__version__ = '2.4.0'
+__version__ = '2.4.1'
 __revision__ = get_commitish()
 
 setup(
