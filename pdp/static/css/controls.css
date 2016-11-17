@@ -72,6 +72,19 @@ select {
     width: 8em;
 }
 
+#date-range input.disabled {
+    color: #808080;
+    background-color: #F2F2F2;
+}
+
+#download-all-time input[type="checkbox"] {
+    width: 1.5em;
+}
+
+#download-all-time label, #download-all-time input {
+    display: inline;
+    vertical-align: middle;
+}
 
 /* hide dialog content divs */
 #variables-defs,
