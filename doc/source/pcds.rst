@@ -63,6 +63,7 @@ There are a few nuances to the aggregated data download that work the way the us
 
 1. Even if you zoom in the the map and limit your field of view, there may be selected stations that extend beyond the field of view. Stations are selected based on your entire set of filters, and are completely unaffected by your view on the map.
 2. When downloading data, all variables for a selected station are included in the download *regardless of whether you filter by variable*. This is slightly different behaviour than is exhibited by the time selection, so it's a point that warrants attention.
+3. When downloading timeseries data, if you have selected stations by drawing a polygon but have not filtered those stations by date range or meterological variable, your selection may include stations with no data available. Files for these stations will still appear in your downloaded archive, but they will not contain any observations, only metadata and headings.
 
 Station Listings
 ^^^^^^^^^^^^^^^^
