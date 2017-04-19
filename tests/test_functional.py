@@ -112,9 +112,9 @@ def test_xls_response(pcic_data_portal, authorized_session_id):
     for i, val in enumerate(['Precip_Climatology', 127.128, 91.2249, 77.3313, 46.2816, 39.6803, 33.1902, 22.3557, 22.448, 38.5025, 72.3281, 144.159, 121.008]):
         assert obs.cell_value(i, 0) == val
     # Check a few of the global attributes
-    assert attributes.cell_value(4, 2) == '-123.283333' #longitude
-    assert attributes.cell_value(1, 2) == '1010066' # station_id
-    assert attributes.cell_value(7, 2) == 'ACTIVE PASS' # station name
+    assert attributes.cell_value(5, 2) == '-123.283333' #longitude
+    assert attributes.cell_value(2, 2) == '1010066' # station_id
+    assert attributes.cell_value(8, 2) == 'ACTIVE PASS' # station name
 
 @pytest.mark.crmpdb
 def test_nc_response(pcic_data_portal, authorized_session_id):
@@ -285,6 +285,45 @@ def test_legend_caching(pcic_data_portal):
     req.if_modified_since = pre_load_time
     resp = req.get_response(pcic_data_portal)
     assert resp.status.startswith('200')
+    
+
+@pytest.mark.crmpdb
+@pytest.mark.parametrize('polygon', ['single station polygon', 
+                                     'multiple station polygon',
+                                     'multiple polygons',
+                                     'station EC 1025230',
+                                     'station without observations polygon',
+                                     'network without observations polygon'
+                                     ]) 
+def test_input_polygon_download_zipfile(pcic_data_portal, authorized_session_id, polygon):
+
+    polygons = {'single station polygon' : 'MULTIPOLYGON(((-128.59910830928055 53.852860003953495,-128.45182033352623 53.86465328654807,-128.4562364026459 53.79618867900996,-128.59910830928055 53.852860003953495)))',
+                'multiple station polygon' : 'MULTIPOLYGON(((-122.16988794027921 54.61618496834933,-122.12395804699314 54.61753974917094,-122.12601061930596 54.59023544661601,-122.16988794027921 54.61618496834933)))' ,
+                'multiple polygons': 'MULTIPOLYGON(((-121.89643424564886 54.20043741333826,-122.13176870283458 54.14845194258505,-122.1226369471675 54.01876407450885,-121.75836848952896 54.048830061202494,-121.89643424564886 54.20043741333826)),((-121.23964475389124 54.0095741960868,-121.45248834584457 53.967985385684926,-121.43980080067858 53.81312824978667,-121.108695973217 53.82251331340121,-121.23964475389124 54.0095741960868)))',
+                'station EC 1025230' : 'MULTIPOLYGON(((-125.29637443283997 49.75425334879682,-125.27276223016982 49.757216316386696,-125.27059060328506 49.742548670551834,-125.29276284376195 49.73895329426124,-125.29637443283997 49.75425334879682)))',
+                'station without observations polygon' : 'MULTIPOLYGON(((-123.28294974546985 48.53765964184428,-123.22831848366447 48.573754711908165,-123.20548795617668 48.51564288151938,-123.28294974546985 48.53765964184428)))',
+                'network without observations polygon' : 'MULTIPOLYGON(((-122.84250052310462 49.33095465473638,-122.90005834526038 49.297649140301004,-122.86157366135 49.24657317992617,-122.76249620948452 49.219908575081675,-122.66148902126935 49.24806074593272,-122.70891368322285 49.30448396541877,-122.84250052310462 49.33095465473638)))'
+                }
+    
+    base_url = '/data/pcds/agg/?'
+    params = {'from-date': 'YYYY/MM/DD',
+              'to-date': 'YYYY/MM/DD',
+              'input-polygon': polygons[polygon],
+              'data-format': 'ascii',
+              'download-timeseries': 'Timeseries'
+              }
+
+    req = Request.blank(base_url + urlencode(params))
+    req.cookies['beaker.session.id'] = authorized_session_id
+     
+    resp = req.get_response(pcic_data_portal)
+    assert resp.status == '200 OK'
+
+    t = TemporaryFile()
+    t.write(resp.body)
+    z = ZipFile(t, 'r')
+    assert z.testzip() == None  
+ 
 
 @pytest.mark.bulk_data
 def test_climatology_bounds(pcic_data_portal, authorized_session_id):
