@@ -313,13 +313,10 @@ def test_input_polygon_download_zipfile(pcic_data_portal, authorized_session_id,
               'download-timeseries': 'Timeseries'
               }
 
-    
     req = Request.blank(base_url + urlencode(params))
-    
     req.cookies['beaker.session.id'] = authorized_session_id
      
     resp = req.get_response(pcic_data_portal)
-    print resp.status
     assert resp.status == '200 OK'
 
     t = TemporaryFile()
@@ -327,7 +324,6 @@ def test_input_polygon_download_zipfile(pcic_data_portal, authorized_session_id,
     z = ZipFile(t, 'r')
     assert z.testzip() == None  
  
-
 
 @pytest.mark.bulk_data
 def test_climatology_bounds(pcic_data_portal, authorized_session_id):
