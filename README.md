@@ -53,7 +53,7 @@ virtualenv pyenv
 The pdp will run in any WSGI container. This guide uses gunicorn.
 
 ```bash
-pyenv/bin/pip install -i https://pypi.pacificclimate.org/simple/ -r requirements.txt -r data_format_requirements.txt -r test_requirements.txt sphinx gunicorn gevent supervisor
+pyenv/bin/pip install -i https://pypi.pacificclimate.org/simple/ -r requirements.txt -r data_format_requirements.txt -r test_requirements.txt -r deploy_requirements.txt
 ```
 
 Install and build the docs. Building the docs requires the package to be installed, then installed again after the docs are built.
