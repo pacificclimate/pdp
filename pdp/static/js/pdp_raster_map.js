@@ -4,37 +4,81 @@
 
 "use strict";
 
-var CfTime = function (units, sDate) {
+var CfTime = function (units, sDate, calendar) {
     this.units = units;
     this.sDate = sDate;
+    this.calendar = calendar;
 };
 CfTime.prototype.setMaxTimeByIndex = function (index) {
     this.maxIndex =  index;
     this.eDate = this.toDate(index);
     return this.eDate;
 };
-CfTime.prototype.toDate = function (index) {
-    if (index === undefined) {
-        return this.sDate;
-    }
-    if (this.units === "days") {
-        var d = new Date(this.sDate.getTime());
-        d.setDate(this.sDate.getDate() + index);
-        return d;
-    }
+//CfTime.prototype.toDate = function (index) {
+//    if (index === undefined) {
+//        return this.sDate;
+//   }
+//    if (this.units === "days") {
+//        var d = new Date(this.sDate.getTime());
+//        d.setDate(this.sDate.getDate() + index);
+//        d.setDate(d.getDate() + this.getCalendarDayDrift(d));
+//        return d;
+//    }
+//};
+CfTime.prototype.toDate = function(index) {
+	if (index === undefined) {
+		return this.sDate;
+	}
+	var d = new Date(this.sDate.getTime());
+	if(this.units == "days") {
+		if(this.calendar != "standard") {
+			var daysPerYear = this.calendar == "365_day" ? 365 : 360;
+			d.setFullYear(this.sDate.getFullYear() + Math.floor(index / daysPerYear));
+	        var msPerDay = 1000 * 60 * 60 * 24;
+			var daysAlready = (d.getTime() - new Date(d.getFullYear(), 0, 1).getTime() ) / msPerDay;
+			var dayRemainder = (index % daysPerYear) + daysAlready;
+			if(dayRemainder >= daysPerYear) {
+				d.setFullYear(d.getFullYear() + 1);
+				dayRemainder = dayRemainder - daysPerYear;
+			}
+			if(this.calendar == "360_day") {
+				dayRemainder += Math.floor((dayRemainder / daysPerYear) * 5);
+			}
+			d.setTime(d.getTime() + dayRemainder);
+			
+		}
+		else{
+			d.setDate(this.sDate.getDate() + index);
+		}
+		return d;
+	}
 };
 CfTime.prototype.toIndex = function (d) {
     if (d < this.sDate || (this.eDate && this.eDate < d)) {
         return;
     }
-
-    if (this.units === "days") {
-        var msPerDay = 1000 * 60 * 60 * 24,
-            msDiff = d.getTime() - this.sDate.getTime(),
-            days = msDiff / msPerDay;
-        return Math.floor(days);
+    var days;
+    var msPerDay = 1000 * 60 * 60 * 24;
+    if(this.units == "days") {
+    	if(this.calendar != "standard") {
+    		var daysPerYear = this.calendar=="365_day" ? 365 : 360;
+    		days = (d.getFullYear() - this.sDate.getFullYear()) * daysPerYear;
+    		var steppedDate = new Date(d);
+    		steppedDate.setFullYear(this.sDate.getFullYear());
+    		days += Math.floor((steppedDate.getTime() - this.sDate.getTime()) / msPerDay);
+    		if (this.calendar == "360_day") {
+    			days -= Math.floor(((steppedDate.getTime() - this.sDate.getTime() ) / (msPerDay * daysPerYear) ) * 5);
+    		}
+    		return Math.floor(days);
+    	}
+    	else {
+    		var msDiff = d.getTime() - this.sDate.getTime();
+    		days = msDiff / msPerDay;
+    		return Math.floor(days);
+    	}
     }
 };
+
 
 function getNcwmsLayerId(ncwms_layer) {
     return ncwms_layer.params.LAYERS.split("/")[0];
@@ -54,23 +98,29 @@ function dasToUnitsSince(data) {
         units = m[1],
         dateString = m[3],
         sDate;
-
+    
+    var calendar;
+    reg = /calendar \"(standard|365_day|360_day)\"/,
+    m = reg.exec(s),
+    calendar = m[1];
+        
     reg = /(\d{4})-(\d{1,2})-(\d{1,2})( |T)(\d{1,2}):(\d{1,2}):(\d{1,2})/g;
     m = reg.exec(dateString);
     if (m) {
         sDate = new Date(m[1], parseInt(m[2], 10) - 1, // Months in das result are 1-12, js needs 0-11
                          m[3], m[5], m[6], m[7], 0);
-        return [units, sDate];
+        return [units, sDate, calendar];
     }
     // Not ISO Format, maybe YYYY-MM-DD?
     reg = /(\d{4})-(\d{1,2})-(\d{1,2})/g;
     m = reg.exec(dateString);
     if (m) {
-        return [units, new Date(m[1], parseInt(m[2], 10) - 1, m[3])];
+        return [units, new Date(m[1], parseInt(m[2], 10) - 1, m[3]), calendar];
     }
     // Well, crap.
     return undefined;
 }
+
 
 function getNCWMSLayerCapabilities(ncwms_layer) {
 
@@ -102,7 +152,7 @@ function getNCWMSLayerCapabilities(ncwms_layer) {
 
 function processNcwmsLayerMetadata(ncwms_layer, catalog) {
 
-    var layerUrl, maxTimeReq, unitsSinceReq;
+    var layerUrl, maxTimeReq, unitsSinceReq, calendar;
 
     // transform the data_server url into the un-authed catalog based url for metadata
     layerUrl = catalog[getNcwmsLayerId(ncwms_layer)];
@@ -128,7 +178,8 @@ function processNcwmsLayerMetadata(ncwms_layer, catalog) {
         unitsSince = dasToUnitsSince(unitsSince[0]);
         units = unitsSince[0];
         startDate = unitsSince[1];
-        layerTime = new CfTime(units, startDate);
+        calendar = unitsSince[2];
+        layerTime = new CfTime(units, startDate, calendar);
         layerTime.setMaxTimeByIndex(maxTimeIndex);
         ncwms_layer.times = layerTime; // Future access through ncwmslayer?
         setTimeAvailable(layerTime.sDate, layerTime.eDate);
