@@ -14,17 +14,7 @@ CfTime.prototype.setMaxTimeByIndex = function (index) {
     this.eDate = this.toDate(index);
     return this.eDate;
 };
-//CfTime.prototype.toDate = function (index) {
-//    if (index === undefined) {
-//        return this.sDate;
-//   }
-//    if (this.units === "days") {
-//        var d = new Date(this.sDate.getTime());
-//        d.setDate(this.sDate.getDate() + index);
-//        d.setDate(d.getDate() + this.getCalendarDayDrift(d));
-//        return d;
-//    }
-//};
+
 CfTime.prototype.toDate = function(index) {
 	if (index === undefined) {
 		return this.sDate;
@@ -97,7 +87,7 @@ function dasToUnitsSince(data) {
         m = reg.exec(s),
         units = m[1],
         dateString = m[3],
-        sDate;
+        sDate;   
     
     var calendar;
     reg = /calendar \"(standard|365_day|360_day)\"/,
@@ -151,7 +141,6 @@ function getNCWMSLayerCapabilities(ncwms_layer) {
 }
 
 function processNcwmsLayerMetadata(ncwms_layer, catalog) {
-
     var layerUrl, maxTimeReq, unitsSinceReq, calendar;
 
     // transform the data_server url into the un-authed catalog based url for metadata
@@ -159,7 +148,7 @@ function processNcwmsLayerMetadata(ncwms_layer, catalog) {
     var reg = /.*\/data\/(.*?)\/.*/g;
     var m = reg.exec(layerUrl);
     layerUrl = layerUrl.replace("data/" + m[1], m[1] + "/catalog")
-
+    
     // Request time variables
     maxTimeReq = $.ajax({
         url: (layerUrl + ".dds?time")
@@ -171,7 +160,6 @@ function processNcwmsLayerMetadata(ncwms_layer, catalog) {
 
     // Process times when both returned
     $.when(maxTimeReq, unitsSinceReq).done(function (maxTime, unitsSince) {
-
         var maxTimeIndex, units, startDate, layerTime;
 
         maxTimeIndex = ddsToTimeIndex(maxTime[0]);
@@ -190,15 +178,42 @@ function processNcwmsLayerMetadata(ncwms_layer, catalog) {
 function setTimeAvailable(begin, end) {
     //TODO: only present times available in ncwms capabilities for this layer
     var yearRange = begin.getFullYear().toString(10) + ":" + end.getFullYear().toString(10);
-
+        
+    //preserve an active range previously set by a user to faciliate downloading matched data.
+    var previousMinimum = $(".datepickerstart").datepicker("option", "minDate");
+    var previousMaximum = $(".datepickerend").datepicker("option", "maxDate");
+    var previousRangeFrom = $(".datepickerstart").datepicker("getDate");
+    var previousRangeTo = $(".datepickerend").datepicker("getDate");
+    
+    //set new maximums and minimums
     $.each([".datepickerstart", ".datepickerend"], function (idx, val) {
         $(val).datepicker("option", "minDate", begin);
         $(val).datepicker("option", "maxDate", end);
         $(val).datepicker("option", "yearRange", yearRange);
     });
-    $(".datepicker").datepicker("setDate", begin);
-    $(".datepickerstart").datepicker("setDate", begin);
-    $(".datepickerend").datepicker("setDate", end);
+
+    //try to keep the active range, if it was specified and is possible.
+    //fall back to the beginning and end of the new dataset.
+    if(previousMinimum 
+    		&& (previousMinimum.getTime() != previousRangeFrom.getTime()) 
+    		&& (previousRangeFrom.getTime() >= begin.getTime() )) {
+    	$(".datepickerstart").datepicker("setDate", previousRangeFrom);
+    	$(".datepicker").datepicker("setDate", previousRangeFrom);     	
+    } else {
+    	$(".datepickerstart").datepicker("setDate", begin);
+        $(".datepicker").datepicker("setDate", begin);
+    }
+    
+    if(previousMaximum 
+    		&& (previousMaximum.getTime() != previousRangeTo.getTime()) 
+    		&& (previousRangeTo.getTime() <= end.getTime() )) {
+    	$(".datepickerend").datepicker("setDate", previousRangeTo);
+    } else {
+    	$(".datepickerend").datepicker("setDate", end);
+    }
+    
+    //fire a change event to trigger the download link to update
+   $("[class^='datepicker']").trigger("change");
 }
 
 function intersection(b1, b2) {
