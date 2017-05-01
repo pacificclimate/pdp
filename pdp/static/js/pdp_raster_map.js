@@ -7,8 +7,21 @@
 var CfTime = function (units, sDate, calendar) {
     this.units = units;
     this.sDate = sDate;
-    this.calendar = calendar;
+    this.calendar = calendar ? calendar : "standard";
+
+    switch(this.calendar) {
+    case "360_day":
+    	this.constantDaysPerYear = 360;
+    	break;
+    case "365_day":
+    case "noleap":
+    	this.constantDaysPerYear = 365;
+    	break;
+    default:
+    	this.constantDaysPerYear = undefined;
+    }
 };
+
 CfTime.prototype.setMaxTimeByIndex = function (index) {
     this.maxIndex =  index;
     this.eDate = this.toDate(index);
@@ -19,56 +32,51 @@ CfTime.prototype.toDate = function(index) {
 	if (index === undefined) {
 		return this.sDate;
 	}
-	var d = new Date(this.sDate.getTime());
+	var d = new Date(this.sDate.getTime());	
 	if(this.units == "days") {
-		if(this.calendar != "standard") {
-			var daysPerYear = this.calendar == "365_day" ? 365 : 360;
-			d.setFullYear(this.sDate.getFullYear() + Math.floor(index / daysPerYear));
-	        var msPerDay = 1000 * 60 * 60 * 24;
-			var daysAlready = (d.getTime() - new Date(d.getFullYear(), 0, 1).getTime() ) / msPerDay;
-			var dayRemainder = (index % daysPerYear) + daysAlready;
-			if(dayRemainder >= daysPerYear) {
-				d.setFullYear(d.getFullYear() + 1);
-				dayRemainder = dayRemainder - daysPerYear;
-			}
-			if(this.calendar == "360_day") {
-				dayRemainder += Math.floor((dayRemainder / daysPerYear) * 5);
-			}
-			d.setTime(d.getTime() + dayRemainder);
-			
-		}
-		else{
+		if((this.calendar == "standard") || (this.calendar == "gregorian")) {
 			d.setDate(this.sDate.getDate() + index);
+			return d;
 		}
-		return d;
+		else if(this.constantDaysPerYear) {
+			d.setFullYear(this.sDate.getFullYear() + Math.floor(index / this.constantDaysPerYear));
+			var msPerDay = 1000*60*60*24;
+			var daysAlready = (d.getTime() - new Date(d.getFullYear(), 0, 1).getTime() ) / msPerDay;
+			var dayRemainder = (index % this.constantDaysPerYear) + daysAlready;
+			if(dayRemainder >= this.constantDaysPerYear) {
+				d.setFullYear(d.getFullYear() + 1);
+				dayRemainder = dayRemainder - this.constantDaysPerYear;
+			}
+			dayRemainder += Math.floor((dayRemainder / this.constantDaysPerYear) * (365.242 - this.constantDaysPerYear));
+			d.setTime(d.getTime() + dayRemainder);
+			return d;
+		}
 	}
 };
+
 CfTime.prototype.toIndex = function (d) {
     if (d < this.sDate || (this.eDate && this.eDate < d)) {
         return;
     }
     var days;
     var msPerDay = 1000 * 60 * 60 * 24;
-    if(this.units == "days") {
-    	if(this.calendar != "standard") {
-    		var daysPerYear = this.calendar=="365_day" ? 365 : 360;
-    		days = (d.getFullYear() - this.sDate.getFullYear()) * daysPerYear;
-    		var steppedDate = new Date(d);
-    		steppedDate.setFullYear(this.sDate.getFullYear());
-    		days += Math.floor((steppedDate.getTime() - this.sDate.getTime()) / msPerDay);
-    		if (this.calendar == "360_day") {
-    			days -= Math.floor(((steppedDate.getTime() - this.sDate.getTime() ) / (msPerDay * daysPerYear) ) * 5);
-    		}
-    		return Math.floor(days);
-    	}
-    	else {
+    if(this.units=="days") {
+    	if((this.calendar == "standard") || (this.calendar =="gregorian")) {
     		var msDiff = d.getTime() - this.sDate.getTime();
-    		days = msDiff / msPerDay;
-    		return Math.floor(days);
+    		days = Math.floor(msDiff / msPerDay);
     	}
+    	else if(this.constantDaysPerYear) {
+    		days = (d.getFullYear() - this.sDate.getFullYear()) * this.constantDaysPerYear;
+    		var remainderDate  = new Date(d);
+    		remainderDate.setFullYear(this.sDate.getFullYear());
+    		var remainderDays = Math.floor((remainderDate.getTime() - this.sDate.getTime()) / msPerDay);
+    		days += remainderDays;
+    		days -= Math.floor((remainderDays / this.constantDaysPerYear) * (365.242 - this.constantDaysPerYear));
+    		days = Math.floor(days);
+    	}
+    	return days;
     }
 };
-
 
 function getNcwmsLayerId(ncwms_layer) {
     return ncwms_layer.params.LAYERS.split("/")[0];
@@ -90,7 +98,7 @@ function dasToUnitsSince(data) {
         sDate;   
     
     var calendar;
-    reg = /calendar \"(standard|365_day|360_day)\"/,
+    reg = /calendar \"(standard|gregorian|365_day|noleap|360_day)\"/,
     m = reg.exec(s),
     calendar = m[1];
         
@@ -110,7 +118,6 @@ function dasToUnitsSince(data) {
     // Well, crap.
     return undefined;
 }
-
 
 function getNCWMSLayerCapabilities(ncwms_layer) {
 
@@ -174,7 +181,6 @@ function processNcwmsLayerMetadata(ncwms_layer, catalog) {
     });
 }
 
-
 function setTimeAvailable(begin, end) {
     //TODO: only present times available in ncwms capabilities for this layer
     var yearRange = begin.getFullYear().toString(10) + ":" + end.getFullYear().toString(10);
@@ -191,7 +197,7 @@ function setTimeAvailable(begin, end) {
         $(val).datepicker("option", "maxDate", end);
         $(val).datepicker("option", "yearRange", yearRange);
     });
-
+    
     //try to keep the active range, if it was specified and is possible.
     //fall back to the beginning and end of the new dataset.
     if(previousMinimum 
