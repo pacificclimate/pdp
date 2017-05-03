@@ -11,14 +11,14 @@ var CfTime = function (units, sDate, calendar) {
 
     switch(this.calendar) {
     case "360_day":
-    	this.constantDaysPerYear = 360;
-    	break;
+        this.constantDaysPerYear = 360;
+        break;
     case "365_day":
     case "noleap":
-    	this.constantDaysPerYear = 365;
-    	break;
+        this.constantDaysPerYear = 365;
+        break;
     default:
-    	this.constantDaysPerYear = undefined;
+        this.constantDaysPerYear = undefined;
     }
 };
 
@@ -29,29 +29,29 @@ CfTime.prototype.setMaxTimeByIndex = function (index) {
 };
 
 CfTime.prototype.toDate = function(index) {
-	if (index === undefined) {
-		return this.sDate;
-	}
-	var d = new Date(this.sDate.getTime());	
-	if(this.units == "days") {
-		if((this.calendar == "standard") || (this.calendar == "gregorian")) {
-			d.setDate(this.sDate.getDate() + index);
-			return d;
-		}
-		else if(this.constantDaysPerYear) {
-			d.setFullYear(this.sDate.getFullYear() + Math.floor(index / this.constantDaysPerYear));
-			var msPerDay = 1000*60*60*24;
-			var daysAlready = (d.getTime() - new Date(d.getFullYear(), 0, 1).getTime() ) / msPerDay;
-			var dayRemainder = (index % this.constantDaysPerYear) + daysAlready;
-			if(dayRemainder >= this.constantDaysPerYear) {
-				d.setFullYear(d.getFullYear() + 1);
-				dayRemainder = dayRemainder - this.constantDaysPerYear;
-			}
-			dayRemainder += Math.floor((dayRemainder / this.constantDaysPerYear) * (365.242 - this.constantDaysPerYear));
-			d.setTime(d.getTime() + dayRemainder);
-			return d;
-		}
-	}
+    if (index === undefined) {
+        return this.sDate;
+    }
+    var d = new Date(this.sDate.getTime());
+    if(this.units == "days") {
+        if((this.calendar == "standard") || (this.calendar == "gregorian")) {
+            d.setDate(this.sDate.getDate() + index);
+            return d;
+        }
+        else if(this.constantDaysPerYear) {
+            d.setFullYear(this.sDate.getFullYear() + Math.floor(index / this.constantDaysPerYear));
+            var msPerDay = 1000*60*60*24;
+            var daysAlready = (d.getTime() - new Date(d.getFullYear(), 0, 1).getTime() ) / msPerDay;
+            var dayRemainder = (index % this.constantDaysPerYear) + daysAlready;
+            if(dayRemainder >= this.constantDaysPerYear) {
+                d.setFullYear(d.getFullYear() + 1);
+                dayRemainder = dayRemainder - this.constantDaysPerYear;
+            }
+            dayRemainder += Math.floor((dayRemainder / this.constantDaysPerYear) * (365.242 - this.constantDaysPerYear));
+            d.setTime(d.getTime() + dayRemainder);
+            return d;
+        }
+    }
 };
 
 CfTime.prototype.toIndex = function (d) {
@@ -61,20 +61,20 @@ CfTime.prototype.toIndex = function (d) {
     var days;
     var msPerDay = 1000 * 60 * 60 * 24;
     if(this.units=="days") {
-    	if((this.calendar == "standard") || (this.calendar =="gregorian")) {
-    		var msDiff = d.getTime() - this.sDate.getTime();
-    		days = Math.floor(msDiff / msPerDay);
-    	}
-    	else if(this.constantDaysPerYear) {
-    		days = (d.getFullYear() - this.sDate.getFullYear()) * this.constantDaysPerYear;
-    		var remainderDate  = new Date(d);
-    		remainderDate.setFullYear(this.sDate.getFullYear());
-    		var remainderDays = Math.floor((remainderDate.getTime() - this.sDate.getTime()) / msPerDay);
-    		days += remainderDays;
-    		days -= Math.floor((remainderDays / this.constantDaysPerYear) * (365.242 - this.constantDaysPerYear));
-    		days = Math.floor(days);
-    	}
-    	return days;
+        if((this.calendar == "standard") || (this.calendar =="gregorian")) {
+            var msDiff = d.getTime() - this.sDate.getTime();
+            days = Math.floor(msDiff / msPerDay);
+        }
+        else if(this.constantDaysPerYear) {
+            days = (d.getFullYear() - this.sDate.getFullYear()) * this.constantDaysPerYear;
+            var remainderDate  = new Date(d);
+            remainderDate.setFullYear(this.sDate.getFullYear());
+            var remainderDays = Math.floor((remainderDate.getTime() - this.sDate.getTime()) / msPerDay);
+            days += remainderDays;
+            days -= Math.floor((remainderDays / this.constantDaysPerYear) * (365.242 - this.constantDaysPerYear));
+            days = Math.floor(days);
+        }
+        return days;
     }
 };
 
@@ -95,13 +95,13 @@ function dasToUnitsSince(data) {
         m = reg.exec(s),
         units = m[1],
         dateString = m[3],
-        sDate;   
-    
+        sDate;
+
     var calendar;
     reg = /calendar \"(standard|gregorian|365_day|noleap|360_day)\"/,
     m = reg.exec(s),
     calendar = m[1];
-        
+
     reg = /(\d{4})-(\d{1,2})-(\d{1,2})( |T)(\d{1,2}):(\d{1,2}):(\d{1,2})/g;
     m = reg.exec(dateString);
     if (m) {
@@ -155,7 +155,7 @@ function processNcwmsLayerMetadata(ncwms_layer, catalog) {
     var reg = /.*\/data\/(.*?)\/.*/g;
     var m = reg.exec(layerUrl);
     layerUrl = layerUrl.replace("data/" + m[1], m[1] + "/catalog")
-    
+
     // Request time variables
     maxTimeReq = $.ajax({
         url: (layerUrl + ".dds?time")
@@ -184,40 +184,40 @@ function processNcwmsLayerMetadata(ncwms_layer, catalog) {
 function setTimeAvailable(begin, end) {
     //TODO: only present times available in ncwms capabilities for this layer
     var yearRange = begin.getFullYear().toString(10) + ":" + end.getFullYear().toString(10);
-        
+
     //preserve an active range previously set by a user to faciliate downloading matched data.
     var previousMinimum = $(".datepickerstart").datepicker("option", "minDate");
     var previousMaximum = $(".datepickerend").datepicker("option", "maxDate");
     var previousRangeFrom = $(".datepickerstart").datepicker("getDate");
     var previousRangeTo = $(".datepickerend").datepicker("getDate");
-    
+
     //set new maximums and minimums
     $.each([".datepickerstart", ".datepickerend"], function (idx, val) {
         $(val).datepicker("option", "minDate", begin);
         $(val).datepicker("option", "maxDate", end);
         $(val).datepicker("option", "yearRange", yearRange);
     });
-    
+
     //try to keep the active range, if it was specified and is possible.
     //fall back to the beginning and end of the new dataset.
-    if(previousMinimum 
-    		&& (previousMinimum.getTime() != previousRangeFrom.getTime()) 
-    		&& (previousRangeFrom.getTime() >= begin.getTime() )) {
-    	$(".datepickerstart").datepicker("setDate", previousRangeFrom);
-    	$(".datepicker").datepicker("setDate", previousRangeFrom);     	
+    if(previousMinimum
+            && (previousMinimum.getTime() != previousRangeFrom.getTime())
+            && (previousRangeFrom.getTime() >= begin.getTime() )) {
+        $(".datepickerstart").datepicker("setDate", previousRangeFrom);
+        $(".datepicker").datepicker("setDate", previousRangeFrom);
     } else {
-    	$(".datepickerstart").datepicker("setDate", begin);
+        $(".datepickerstart").datepicker("setDate", begin);
         $(".datepicker").datepicker("setDate", begin);
     }
-    
-    if(previousMaximum 
-    		&& (previousMaximum.getTime() != previousRangeTo.getTime()) 
-    		&& (previousRangeTo.getTime() <= end.getTime() )) {
-    	$(".datepickerend").datepicker("setDate", previousRangeTo);
+
+    if(previousMaximum
+            && (previousMaximum.getTime() != previousRangeTo.getTime())
+            && (previousRangeTo.getTime() <= end.getTime() )) {
+        $(".datepickerend").datepicker("setDate", previousRangeTo);
     } else {
-    	$(".datepickerend").datepicker("setDate", end);
+        $(".datepickerend").datepicker("setDate", end);
     }
-    
+
     //fire a change event to trigger the download link to update
    $("[class^='datepicker']").trigger("change");
 }
