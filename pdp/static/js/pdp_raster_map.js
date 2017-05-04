@@ -4,35 +4,77 @@
 
 "use strict";
 
-var CfTime = function (units, sDate) {
+var CfTime = function (units, sDate, calendar) {
     this.units = units;
     this.sDate = sDate;
+    this.calendar = calendar ? calendar : "standard";
+
+    switch(this.calendar) {
+    case "360_day":
+        this.constantDaysPerYear = 360;
+        break;
+    case "365_day":
+    case "noleap":
+        this.constantDaysPerYear = 365;
+        break;
+    default:
+        this.constantDaysPerYear = undefined;
+    }
 };
+
 CfTime.prototype.setMaxTimeByIndex = function (index) {
     this.maxIndex =  index;
     this.eDate = this.toDate(index);
     return this.eDate;
 };
-CfTime.prototype.toDate = function (index) {
+
+CfTime.prototype.toDate = function(index) {
     if (index === undefined) {
         return this.sDate;
     }
-    if (this.units === "days") {
-        var d = new Date(this.sDate.getTime());
-        d.setDate(this.sDate.getDate() + index);
-        return d;
+    var d = new Date(this.sDate.getTime());
+    if(this.units == "days") {
+        if((this.calendar == "standard") || (this.calendar == "gregorian")) {
+            d.setDate(this.sDate.getDate() + index);
+            return d;
+        }
+        else if(this.constantDaysPerYear) {
+            d.setFullYear(this.sDate.getFullYear() + Math.floor(index / this.constantDaysPerYear));
+            var msPerDay = 1000*60*60*24;
+            var daysAlready = (d.getTime() - new Date(d.getFullYear(), 0, 1).getTime() ) / msPerDay;
+            var dayRemainder = (index % this.constantDaysPerYear) + daysAlready;
+            if(dayRemainder >= this.constantDaysPerYear) {
+                d.setFullYear(d.getFullYear() + 1);
+                dayRemainder = dayRemainder - this.constantDaysPerYear;
+            }
+            dayRemainder += Math.floor((dayRemainder / this.constantDaysPerYear) * (365.242 - this.constantDaysPerYear));
+            d.setTime(d.getTime() + dayRemainder);
+            return d;
+        }
     }
 };
+
 CfTime.prototype.toIndex = function (d) {
     if (d < this.sDate || (this.eDate && this.eDate < d)) {
         return;
     }
-
-    if (this.units === "days") {
-        var msPerDay = 1000 * 60 * 60 * 24,
-            msDiff = d.getTime() - this.sDate.getTime(),
-            days = msDiff / msPerDay;
-        return Math.floor(days);
+    var days;
+    var msPerDay = 1000 * 60 * 60 * 24;
+    if(this.units=="days") {
+        if((this.calendar == "standard") || (this.calendar =="gregorian")) {
+            var msDiff = d.getTime() - this.sDate.getTime();
+            days = Math.floor(msDiff / msPerDay);
+        }
+        else if(this.constantDaysPerYear) {
+            days = (d.getFullYear() - this.sDate.getFullYear()) * this.constantDaysPerYear;
+            var remainderDate  = new Date(d);
+            remainderDate.setFullYear(this.sDate.getFullYear());
+            var remainderDays = Math.floor((remainderDate.getTime() - this.sDate.getTime()) / msPerDay);
+            days += remainderDays;
+            days -= Math.floor((remainderDays / this.constantDaysPerYear) * (365.242 - this.constantDaysPerYear));
+            days = Math.floor(days);
+        }
+        return days;
     }
 };
 
@@ -55,18 +97,23 @@ function dasToUnitsSince(data) {
         dateString = m[3],
         sDate;
 
+    var calendar;
+    reg = /calendar \"(standard|gregorian|365_day|noleap|360_day)\"/,
+    m = reg.exec(s),
+    calendar = m ? m[1] : "standard";
+
     reg = /(\d{4})-(\d{1,2})-(\d{1,2})( |T)(\d{1,2}):(\d{1,2}):(\d{1,2})/g;
     m = reg.exec(dateString);
     if (m) {
         sDate = new Date(m[1], parseInt(m[2], 10) - 1, // Months in das result are 1-12, js needs 0-11
                          m[3], m[5], m[6], m[7], 0);
-        return [units, sDate];
+        return [units, sDate, calendar];
     }
     // Not ISO Format, maybe YYYY-MM-DD?
     reg = /(\d{4})-(\d{1,2})-(\d{1,2})/g;
     m = reg.exec(dateString);
     if (m) {
-        return [units, new Date(m[1], parseInt(m[2], 10) - 1, m[3])];
+        return [units, new Date(m[1], parseInt(m[2], 10) - 1, m[3]), calendar];
     }
     // Well, crap.
     return undefined;
@@ -101,8 +148,7 @@ function getNCWMSLayerCapabilities(ncwms_layer) {
 }
 
 function processNcwmsLayerMetadata(ncwms_layer, catalog) {
-
-    var layerUrl, maxTimeReq, unitsSinceReq;
+    var layerUrl, maxTimeReq, unitsSinceReq, calendar;
 
     // transform the data_server url into the un-authed catalog based url for metadata
     layerUrl = catalog[getNcwmsLayerId(ncwms_layer)];
@@ -121,33 +167,59 @@ function processNcwmsLayerMetadata(ncwms_layer, catalog) {
 
     // Process times when both returned
     $.when(maxTimeReq, unitsSinceReq).done(function (maxTime, unitsSince) {
-
         var maxTimeIndex, units, startDate, layerTime;
 
         maxTimeIndex = ddsToTimeIndex(maxTime[0]);
         unitsSince = dasToUnitsSince(unitsSince[0]);
         units = unitsSince[0];
         startDate = unitsSince[1];
-        layerTime = new CfTime(units, startDate);
+        calendar = unitsSince[2];
+        layerTime = new CfTime(units, startDate, calendar);
         layerTime.setMaxTimeByIndex(maxTimeIndex);
         ncwms_layer.times = layerTime; // Future access through ncwmslayer?
         setTimeAvailable(layerTime.sDate, layerTime.eDate);
     });
 }
 
-
 function setTimeAvailable(begin, end) {
     //TODO: only present times available in ncwms capabilities for this layer
     var yearRange = begin.getFullYear().toString(10) + ":" + end.getFullYear().toString(10);
 
+    //preserve an active range previously set by a user to faciliate downloading matched data.
+    var previousMinimum = $(".datepickerstart").datepicker("option", "minDate");
+    var previousMaximum = $(".datepickerend").datepicker("option", "maxDate");
+    var previousRangeFrom = $(".datepickerstart").datepicker("getDate");
+    var previousRangeTo = $(".datepickerend").datepicker("getDate");
+
+    //set new maximums and minimums
     $.each([".datepickerstart", ".datepickerend"], function (idx, val) {
         $(val).datepicker("option", "minDate", begin);
         $(val).datepicker("option", "maxDate", end);
         $(val).datepicker("option", "yearRange", yearRange);
     });
-    $(".datepicker").datepicker("setDate", begin);
-    $(".datepickerstart").datepicker("setDate", begin);
-    $(".datepickerend").datepicker("setDate", end);
+
+    //try to keep the active range, if it was specified and is possible.
+    //fall back to the beginning and end of the new dataset.
+    if(previousMinimum
+            && (previousMinimum.getTime() != previousRangeFrom.getTime())
+            && (previousRangeFrom.getTime() >= begin.getTime() )) {
+        $(".datepickerstart").datepicker("setDate", previousRangeFrom);
+        $(".datepicker").datepicker("setDate", previousRangeFrom);
+    } else {
+        $(".datepickerstart").datepicker("setDate", begin);
+        $(".datepicker").datepicker("setDate", begin);
+    }
+
+    if(previousMaximum
+            && (previousMaximum.getTime() != previousRangeTo.getTime())
+            && (previousRangeTo.getTime() <= end.getTime() )) {
+        $(".datepickerend").datepicker("setDate", previousRangeTo);
+    } else {
+        $(".datepickerend").datepicker("setDate", end);
+    }
+
+    //fire a change event to trigger the download link to update
+   $("[class^='datepicker']").trigger("change");
 }
 
 function intersection(b1, b2) {
