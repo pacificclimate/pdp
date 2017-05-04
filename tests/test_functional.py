@@ -375,6 +375,22 @@ def test_aaigrid_response(pcic_data_portal, authorized_session_id, url):
     assert resp.content_type == 'application/zip'
 
 @pytest.mark.bulk_data
+@pytest.mark.parametrize('layers', [0, 1, 100, 38000])
+def test_aaigrid_response_layers(pcic_data_portal, authorized_session_id, layers):
+    url = '/data/hydro_model_out/pr+tasmin+tasmax+wind_day_HadCM_A1B_run1_19500101-21001231.nc.aig?pr[0:' + str(layers) + '][119:120][242:243]&'
+    req = Request.blank(url)
+    req.cookies['beaker.session.id'] = authorized_session_id
+    resp = req.get_response(pcic_data_portal)
+    
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'application/zip'
+    t = TemporaryFile()
+    t.write(resp.body)
+    z = ZipFile(t, 'r')
+    
+    assert len(z.namelist()) == (layers+1) * 2
+
+@pytest.mark.bulk_data
 def test_hydro_stn_data_catalog(pcic_data_portal, authorized_session_id):
     url = '/data/hydro_stn/catalog.json'
     req = Request.blank(url)
