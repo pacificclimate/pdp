@@ -100,7 +100,7 @@ function dasToUnitsSince(data) {
     var calendar;
     reg = /calendar \"(standard|gregorian|365_day|noleap|360_day)\"/,
     m = reg.exec(s),
-    calendar = m[1];
+    calendar = m ? m[1] : "standard";
 
     reg = /(\d{4})-(\d{1,2})-(\d{1,2})( |T)(\d{1,2}):(\d{1,2}):(\d{1,2})/g;
     m = reg.exec(dateString);
