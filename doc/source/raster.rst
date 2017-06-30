@@ -170,16 +170,16 @@ Dataset listings
 ^^^^^^^^^^^^^^^^
 The climate coverage data portal serves listings of the available datasets via a JSON-encoded response. This is how the web user interface retrieves the data lists, however power users have access to it as well from this URL: ``http://tools.pacificclimate.org/dataportal/[page_id]/catalog/catalog.json``. For example, if one wanted to retrieve a list of the datasets available for the BC PRISM page, one could do the following: ::
 
-  james@basalt ~ $ wget --output-document=- http://tools.pcic.uvic.ca/dataportal/bc_prism/catalog/catalog.json 2> /dev/null
+  james@basalt ~ $ wget --output-document=- http://tools.pacificclimate.org/dataportal/bc_prism/catalog/catalog.json 2> /dev/null
   {
-      "bcprism_ppt_7100": "http://tools.pcic.uvic.ca/dataportal/bc_prism/data/bc_ppt_7100.nc",
-      "bcprism_tmax_7100": "http://tools.pcic.uvic.ca/dataportal/bc_prism/data/bc_tmax_7100.nc",
-      "bcprism_tmin_7100": "http://tools.pcic.uvic.ca/dataportal/bc_prism/data/bc_tmin_7100.nc"
+      "bcprism_ppt_7100": "http://tools.pacificclimate.org/dataportal/bc_prism/data/bc_ppt_7100.nc",
+      "bcprism_tmax_7100": "http://tools.pacificclimate.org/dataportal/bc_prism/data/bc_tmax_7100.nc",
+      "bcprism_tmin_7100": "http://tools.pacificclimate.org/dataportal/bc_prism/data/bc_tmin_7100.nc"
   }
 
 The JSON output gives you a mapping between the dataset's unique ID and the base URL for a DAP request (described below).
 
-At present, there are four pages for which one can retrieve catalogs: ``bc_prism``, ``downscaled_gcms``, ``bccaq_extremes``, and ``vic_gen1``.
+At present, there are four pages for which one can retrieve catalogs: ``bc_prism``, ``downscaled_gcms``, ``downscaled_gcm_extremes``, and ``hydro_model_out``.
 
 .. _metadata-and-data:
 Metadata and Data
