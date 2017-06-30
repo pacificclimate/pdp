@@ -1,24 +1,28 @@
 language: python
 dist: trusty
 sudo: false
-python: 2.7_with_system_site_packages
+python: 2.7
 addons:
   apt:
     packages:
-      - python-gdal
-      - python-numpy
+      - libgdal-dev
       - libhdf5-serial-dev
       - libnetcdf-dev
-      - cython
 env:
   global:
+      - GDALVERSION="1.10.1"
       - PDP_CONFIG=$TRAVIS_BUILD_DIR/pdp/config.yaml
+      - CPLUS_INCLUDE_PATH=/usr/include/gdal
+      - C_INCLUDE_PATH=/usr/include/gdal
+      - PIP_INDEX_URL=https://pypi.pacificclimate.org/simple/
+before_install:
+  - export GDAL_MINOR_VERSION=$(echo $GDALVERSION | sed -e "s/\\.[0-9]\+$//")
+  - "pip install GDAL==$GDAL_MINOR_VERSION"
 install:
     # upgrade pip to be able to resolve the h5py/Cython co-deps
     # https://github.com/h5py/h5py/issues/535#issuecomment-119546308
     - pip install -U pip
-
-    - pip install -i https://pypi.pacificclimate.org/simple/ -r requirements.txt -r test_requirements.txt
-    - pip install -i https://pypi.pacificclimate.org/simple/ .
+    - pip install -r requirements.txt -r test_requirements.txt
+    - pip install .
 script:
     - py.test -vv --tb=short -m "not crmpdb and not bulk_data" tests
