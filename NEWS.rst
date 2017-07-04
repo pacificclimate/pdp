@@ -1,6 +1,18 @@
 News / Release Notes
 ====================
 
+2.4.2
+-----
+
+*Release Date: 4-Jul-2017*
+
+* Fixes PCDS issue where zipfiles could be corrupted when downloading
+  from stations without data
+* Enables Zip64 encoding to allow large (> 2 GB) Arc/ASCII Grid files
+* Improves date handling on raster data portal. Adds awareness of 360
+  and 365 day calendars in the web user interface.
+* Corrects URL in the power user documentation.
+
 2.4.1
 -----
 
