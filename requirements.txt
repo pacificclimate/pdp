@@ -7,7 +7,7 @@ Jinja2==2.7.3
 MarkupSafe==0.23
 Paste==1.7.5.1
 Pillow==2.8.1
-PyCDS<2.0.0
+PyCDS==2.2.1
 PyYAML==3.11
 SQLAlchemy==0.9.9
 WebOb==1.4.1
@@ -23,7 +23,7 @@ ply==3.4
 psycopg2==2.7
 pydap-pdp==3.2.5
 pydap.handlers.csv==0.3
-pydap.handlers.pcic==0.0.9
+pydap.handlers.pcic==0.0.10
 pydap.handlers.sql==0.10
 pydap.responses.html==0.3
 pystache==0.5.4
