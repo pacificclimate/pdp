@@ -20,7 +20,8 @@ class GriddedObservationsEnsembleLister(EnsembleMemberLister):
             "ANUSPLIN_CDA_v2012.1": "ANUSPLIN",
             "SYMAP_BC_v1": "VIC FORCINGS",
             "TPS_NWNA_v1": "TPS"}
-        for dfv in ensemble.data_file_variables:
+
+        for dfv in sorted(ensemble.data_file_variables, key=lambda dfv: dfv.netcdf_variable_name):
             yield dataset_names[dfv.file.run.model.short_name], dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
 def data_server(config, ensemble_name):
@@ -32,7 +33,7 @@ def data_server(config, ensemble_name):
 def portal(config):
     dsn = config['dsn']
     portal_config = {
-        'title': 'Gridded Climate Observations',
+        'title': 'Gridded Daily Meteorological Databases',
         'ensemble_name': ensemble_name,
         'js_files' : 
             wrap_mini([
