@@ -20,7 +20,7 @@ numpy  # Allow pip or system install for travis
 openid2rp==1.12
 pdp-util==0.2.4
 ply==3.4
-psycopg2==2.6
+psycopg2==2.7
 pydap-pdp==3.2.4
 pydap.handlers.csv==0.3
 pydap.handlers.pcic==0.0.8

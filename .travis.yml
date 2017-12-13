@@ -8,6 +8,8 @@ addons:
       - libgdal-dev
       - libhdf5-serial-dev
       - libnetcdf-dev
+  addons:
+    postgresql: "9.4"
 env:
   global:
       - GDALVERSION="1.10.1"
