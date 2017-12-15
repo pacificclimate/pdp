@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, pdp, init_vic_map, processNcwmsLayerMetadata, getVICControls, getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
+/*global $, jQuery, OpenLayers, pdp, init_obs_map, processNcwmsLayerMetadata, getObsControls, getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
 
 "use strict";
 
@@ -7,7 +7,7 @@ $(document).ready(function () {
     var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog,
         dlLink, mdLink, capabilities_request, ncwms_capabilities;
 
-    map = init_vic_map();
+    map = init_obs_map();
     loginButton = pdp.init_login('login-div');
     pdp.checkLogin(loginButton);
 
@@ -19,7 +19,7 @@ $(document).ready(function () {
 
     capabilities_request = getNCWMSLayerCapabilities(ncwmsLayer);
 
-    document.getElementById("pdp-controls").appendChild(getVICControls(pdp.ensemble_name));
+    document.getElementById("pdp-controls").appendChild(getObsControls(pdp.ensemble_name));
     document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(true));
 
     // Data Download Link

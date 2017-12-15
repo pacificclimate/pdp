@@ -40,6 +40,10 @@ import portals.vic_gen1 as vic_gen1
 from portals.vic_gen1 import portal as vic_gen1_portal
 from portals.vic_gen1 import data_server as vic_gen1_data_server
 
+import portals.gridded_observations as gridded_observations
+from portals.gridded_observations import portal as gridded_observations_portal
+from portals.gridded_observations import data_server as gridded_observations_data_server
+
 #global_config = get_config()
 #dsn = global_config['dsn']
 #pcds_dsn = global_config['pcds_dsn']
@@ -61,6 +65,7 @@ def initialize_frontend(global_config, use_auth=False, use_analytics=False):
         ('^/{}/.*$'.format(hydro_stn.url_base), hydro_stn_portal(global_config)),
         ('^/{}/.*$'.format(bc_prism.url_base), bc_prism_portal(global_config)),
         ('^/{}/.*$'.format(vic_gen1.url_base), vic_gen1_portal(global_config)),
+        ('^/{}/.*$'.format(gridded_observations.url_base), gridded_observations_portal(global_config)),
         ('^/{}/.*$'.format(bcsd_canada.url_base), bcsd_canada_portal(global_config)),
         ('^/{}/.*$'.format(bccaq_extremes.url_base), bccaq_extremes_portal(global_config)),
         ('^/docs/.*$', docs_app),
@@ -81,6 +86,7 @@ def initialize_backend(global_config, use_auth=False, use_analytics=False):
         ('^/{}/.*$'.format(bc_prism.url_base), bc_prism_data_server(global_config, bc_prism.ensemble_name)),
         ('^/{}/.*$'.format(bcsd_canada.url_base), bcsd_canada_data_server(global_config, bcsd_canada.ensemble_name)),
         ('^/{}/.*$'.format(vic_gen1.url_base), vic_gen1_data_server(global_config, vic_gen1.ensemble_name)),
+        ('^/{}/.*$'.format(gridded_observations.url_base), gridded_observations_data_server(global_config, gridded_observations.ensemble_name)),
         ('^/{}/.*$'.format(bccaq_extremes.url_base), bccaq_extremes_data_server(global_config, bccaq_extremes.ensemble_name)),
         ('^/{}/.*$'.format(hydro_stn.url_base), hydro_stn_data_server(global_config)),
         ('^/{}/.*$'.format(pcds.url_base), pcds_data_server(global_config))
