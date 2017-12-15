@@ -23,7 +23,7 @@ $(document).ready(function () {
     document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(true));
 
     // Data Download Link
-    dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', 'sm', '0:54787', '0:163', '0:215');
+    dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', 'sm', '', '', '');
     $('#data-format-selector').change(
         function (evt) {
             dlLink.onExtensionChange($(this).val());
