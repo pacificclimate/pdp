@@ -474,3 +474,34 @@ def test_hydro_model_out_pr_tasmin_tasmax_wind(pcic_data_portal, url):
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/x-netcdf'
+
+
+@pytest.mark.bulk_data
+@pytest.mark.parametrize(('projection', 'length'), [
+    ('[][][]', 13),
+    ('[1][][]', 1), # single index
+    ('[0:2:10][][]', 6), # start, step, last
+    ('[5:10][][]', 6), # start, last
+    ('[4:][][]', 9), # start to the end
+    ('[4:2:][][]', 5) # start, step
+])
+def test_empty_hyperslabs(pcic_data_portal, projection, length):
+    varname = 'pr'
+    url = '/data/bc_prism/pr_monClim_PRISM_historical_run1_197101-200012.nc.nc'\
+          '?{}{}'.format(varname, projection)
+    req = Request.blank(url)
+    resp = req.get_response(pcic_data_portal)
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'application/x-netcdf'
+
+    f = NamedTemporaryFile(suffix='.nc', delete=False)
+    for block in resp.app_iter:
+        f.write(block)
+    f.close()
+
+    nc = netCDF4.Dataset(f.name)
+    assert varname in nc.variables
+    assert nc.variables[varname].shape[0] == length
+
+    nc.close()
+    os.remove(f.name)
