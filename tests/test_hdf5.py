@@ -11,7 +11,7 @@ def test_can_instantiate_raster_pydap(raster_pydap):
 
 @pytest.mark.bulk_data
 def test_hdf5_to_netcdf(pcic_data_portal, authorized_session_id):
-    req = Request.blank('/data/downscaled_gcms/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CCSM4_historical+rcp26_r2i1p1_19500101-21001231.nc.nc?pr[0:1:1][116:167][84:144]&')
+    req = Request.blank('/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+CCSM4_historical+rcp26_r2i1p1_19500101-21001231.nc.nc?pr[0:1:1][116:167][84:144]&')
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
 
@@ -37,7 +37,7 @@ def test_prism_response(pcic_data_portal, authorized_session_id):
     
 @pytest.mark.bulk_data
 def test_dds_response(pcic_data_portal, authorized_session_id):
-    req = Request.blank('/data/downscaled_gcms/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CCSM4_historical+rcp26_r2i1p1_19500101-21001231.nc.dds')
+    req = Request.blank('/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+CCSM4_historical+rcp26_r2i1p1_19500101-21001231.nc.dds')
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
@@ -46,30 +46,30 @@ def test_dds_response(pcic_data_portal, authorized_session_id):
     assert body == '''Dataset {
     Float64 lon[lon = 1068];
     Float64 lat[lat = 510];
-    Float64 time[time = 55152];
+    Float64 time[time = 55115];
     Grid {
         Array:
-            Float32 pr[time = 55152][lat = 510][lon = 1068];
+            Float32 pr[time = 55115][lat = 510][lon = 1068];
         Maps:
-            Float64 time[time = 55152];
+            Float64 time[time = 55115];
             Float64 lat[lat = 510];
             Float64 lon[lon = 1068];
     } pr;
     Grid {
         Array:
-            Float32 tasmax[time = 55152][lat = 510][lon = 1068];
+            Float32 tasmax[time = 55115][lat = 510][lon = 1068];
         Maps:
-            Float64 time[time = 55152];
+            Float64 time[time = 55115];
             Float64 lat[lat = 510];
             Float64 lon[lon = 1068];
     } tasmax;
     Grid {
         Array:
-            Float32 tasmin[time = 55152][lat = 510][lon = 1068];
+            Float32 tasmin[time = 55115][lat = 510][lon = 1068];
         Maps:
-            Float64 time[time = 55152];
+            Float64 time[time = 55115];
             Float64 lat[lat = 510];
             Float64 lon[lon = 1068];
     } tasmin;
-} pr%2Btasmax%2Btasmin_day_BCSD%2BANUSPLIN300%2BCCSM4_historical%2Brcp26_r2i1p1_19500101-21001231%2Enc;
+} pr%2Btasmax%2Btasmin_day_BCCAQ%2BANUSPLIN300%2BCCSM4_historical%2Brcp26_r2i1p1_19500101-21001231%2Enc;
 '''
