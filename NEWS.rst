@@ -1,6 +1,20 @@
 News / Release Notes
 ====================
 
+2.4.3 
+-----
+
+*Release Date: 15-Dec-2017*
+
+* Adds new gridded observations portal hosting data used for
+  hydrologic modelling
+* Fixes bug in Pydap, enabling `empty hyperslab syntax`_
+* Fixes PCDS issue where climo listings show up along with raw data
+* Fixes PCDS issues where requests for stations with NULL elevations
+  or NULL locations fail
+
+.. _empty hyperslab syntax: http://docs.opendap.org/index.php/DAP4:_Specification_Volume_1#Array_Subsetting_in_Index_Space
+
 2.4.2
 -----
 
