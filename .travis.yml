@@ -1,5 +1,5 @@
 language: python
-dist: xenial
+dist: trusty
 sudo: false
 python: 2.7
 addons:
@@ -12,7 +12,7 @@ addons:
     postgresql: "9.4"
 env:
   global:
-      - GDALVERSION="1.11.3"
+      - GDALVERSION="1.10.1"
       - PDP_CONFIG=$TRAVIS_BUILD_DIR/pdp/config.yaml
       - CPLUS_INCLUDE_PATH=/usr/include/gdal
       - C_INCLUDE_PATH=/usr/include/gdal
