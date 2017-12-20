@@ -3,7 +3,6 @@ serve ClimDEX data computed on the Canada-wide BCCAQ downscaled
 dataset.
 '''
 
-from pdp import wrap_auth
 from pdp.dispatch import PathDispatcher
 from pdp_util.map import MapApp
 from pdp_util.raster import RasterServer, RasterCatalog, RasterMetadata
@@ -30,7 +29,7 @@ class ClimdexEnsembleLister(EnsembleMemberLister):
 def data_server(config, ensemble_name):
     dsn = config['dsn']
     conf = raster_conf(dsn, config, ensemble_name, url_base)
-    data_server = wrap_auth(RasterServer(dsn, conf))
+    data_server = RasterServer(dsn, conf)
     return data_server
 
 
@@ -52,10 +51,10 @@ def portal(config):
     }
 
     portal_config = updateConfig(config, portal_config)
-    map_app = wrap_auth(MapApp(**portal_config), required=False)
+    map_app = MapApp(**portal_config)
 
     conf = raster_conf(dsn, config, ensemble_name, url_base)
-    catalog_server = RasterCatalog(dsn, conf)  # No Auth
+    catalog_server = RasterCatalog(dsn, conf)
 
     menu = ClimdexEnsembleLister(dsn)
 

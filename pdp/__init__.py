@@ -6,7 +6,7 @@
 
 '''
 
-__all__ = ['get_config', 'wrap_auth']
+__all__ = ['get_config']
 
 import sys
 import os
@@ -16,7 +16,6 @@ from pkg_resources import resource_filename, get_distribution
 from shutil import rmtree
 import yaml
 
-from pdp_util.auth import PcicOidMiddleware
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
 
@@ -57,7 +56,6 @@ def get_config():
                    'js/pdp_download.js',
                    'js/pdp_filters.js',
                    'js/pdp_map.js',
-                   'js/pdp_auth.js',
                    'js/pdp_raster_map.js',
                    'js/pdp_vector_map.js'
                    ], debug=(not config['js_min'])),
@@ -93,17 +91,3 @@ def clean_session_dir(session_dir, should_I):
     if should_I and os.path.exists(session_dir):
         print('Removing session directory {}'.format(session_dir))
         rmtree(session_dir)
-
-# auth wrappers
-
-
-def wrap_auth(app, required=False):
-    '''This function wraps a WSGI application with the PcicOidMiddleware
-    for session management and optional authentication
-    '''
-    config = get_config()
-    app = PcicOidMiddleware(app,
-                            templates=resource_filename('pdp', 'templates'),
-                            root=config['app_root'],
-                            auth_required=required)
-    return app

@@ -47,12 +47,6 @@ def test_no_404s(pcic_data_portal, url):
     assert resp.status == '200 OK'
 
 
-def test_am_authorized(check_auth_app, authorized_session_id):
-    req = Request.blank('')
-    req.cookies['beaker.session.id'] = authorized_session_id
-    resp = req.get_response(check_auth_app)
-    assert resp.status == '200 OK'
-
 
 @pytest.mark.crmpdb
 @pytest.mark.parametrize(('url', 'title', 'body_strings'), [
@@ -64,9 +58,8 @@ def test_am_authorized(check_auth_app, authorized_session_id):
      "Stations for network AGRI", ["de107/", "Deep Creek"]),
 ])
 def test_climo_index(
-        pcic_data_portal, authorized_session_id, url, title, body_strings):
+        pcic_data_portal, url, title, body_strings):
     req = Request.blank(url)
-    req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'text/html'
@@ -80,9 +73,8 @@ def test_climo_index(
 
 
 @pytest.mark.crmpdb
-def test_unsupported_extension(pcic_data_portal, authorized_session_id):
+def test_unsupported_extension(pcic_data_portal):
     req = Request.blank('/data/pcds/agg/?data-format=foo')
-    req.cookies['beaker.session.id'] = authorized_session_id
     req.method = 'POST'
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '400 Bad Request'
@@ -90,12 +82,11 @@ def test_unsupported_extension(pcic_data_portal, authorized_session_id):
 
 @pytest.mark.crmpdb
 @pytest.mark.parametrize('ext', ['ascii', 'csv'])
-def test_ascii_response(pcic_data_portal, authorized_session_id, ext):
+def test_ascii_response(pcic_data_portal, ext):
     url = '/data/pcds/lister/climo/EC/1010066.csql.{0}?'\
           'station_observations.Precip_Climatology,station_observations.time'\
           .format(ext)
     req = Request.blank(url)
-    req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     x = '''station_observations
@@ -117,11 +108,10 @@ Precip_Climatology, time
 
 
 @pytest.mark.crmpdb
-def test_xls_response(pcic_data_portal, authorized_session_id):
+def test_xls_response(pcic_data_portal):
     url = '/data/pcds/lister/climo/EC/1010066.csql.xls?'
     'station_observations.Precip_Climatology,station_observations.time'
     req = Request.blank(url)
-    req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     wb = xlrd.open_workbook(file_contents=resp.body)
@@ -139,11 +129,10 @@ def test_xls_response(pcic_data_portal, authorized_session_id):
 
 
 @pytest.mark.crmpdb
-def test_nc_response(pcic_data_portal, authorized_session_id):
+def test_nc_response(pcic_data_portal):
     url = '/data/pcds/lister/climo/EC/1010066.csql.nc?'
     'station_observations.Precip_Climatology,station_observations.time'
     req = Request.blank(url)
-    req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/x-netcdf'
@@ -169,16 +158,15 @@ def test_nc_response(pcic_data_portal, authorized_session_id):
 
 
 @pytest.mark.crmpdb
-def test_nc_response_with_null_values(pcic_data_portal, authorized_session_id):
+def test_nc_response_with_null_values(pcic_data_portal):
     req = Request.blank('/data/pcds/lister/raw/BCH/AKI.rsql.nc')
-    req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/x-netcdf'
 
 
 @pytest.mark.crmpdb
-def test_clip_to_date_one(pcic_data_portal, authorized_session_id):
+def test_clip_to_date_one(pcic_data_portal):
     base_url = '/data/pcds/agg/?'
     sdate = datetime(2007, 01, 01)
     params = {'from-date': sdate.strftime('%Y/%m/%d'),
@@ -186,7 +174,6 @@ def test_clip_to_date_one(pcic_data_portal, authorized_session_id):
               'cliptodate': 'cliptodate',
               }
     req = Request.blank(base_url + urlencode(params))
-    req.cookies['beaker.session.id'] = authorized_session_id
 
     resp = req.get_response(pcic_data_portal)
     print resp.status
@@ -337,8 +324,7 @@ def test_legend_caching(pcic_data_portal):
                                      'station without observations polygon',
                                      'network without observations polygon'
                                      ])
-def test_input_polygon_download_zipfile(pcic_data_portal,
-                                        authorized_session_id, polygon):
+def test_input_polygon_download_zipfile(pcic_data_portal, polygon):
     polygons = {
         'single station polygon':
         'MULTIPOLYGON(('
@@ -397,7 +383,6 @@ def test_input_polygon_download_zipfile(pcic_data_portal,
               }
 
     req = Request.blank(base_url + urlencode(params))
-    req.cookies['beaker.session.id'] = authorized_session_id
 
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
@@ -409,11 +394,10 @@ def test_input_polygon_download_zipfile(pcic_data_portal,
 
 
 @pytest.mark.bulk_data
-def test_climatology_bounds(pcic_data_portal, authorized_session_id):
+def test_climatology_bounds(pcic_data_portal):
     url = '/data/bc_prism/tmin_monClim_PRISM_historical_run1_197101-200012'\
           '.nc.nc?climatology_bounds&'
     req = Request.blank(url)
-    req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
 
     assert resp.status == '200 OK'
@@ -454,10 +438,9 @@ def test_climatology_bounds(pcic_data_portal, authorized_session_id):
     '{}BCCAQ+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231'\
     '.nc.aig?tasmax[0:30][144:236][307:348]&',
 ])
-def test_aaigrid_response(pcic_data_portal, authorized_session_id, url):
+def test_aaigrid_response(pcic_data_portal, url):
     base = '/data/downscaled_gcms/pr+tasmax+tasmin_day_'
     req = Request.blank(url.format(base))
-    req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
 
     assert resp.status == '200 OK'
@@ -466,12 +449,10 @@ def test_aaigrid_response(pcic_data_portal, authorized_session_id, url):
 
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('layers', [0, 1, 100, 38000])
-def test_aaigrid_response_layers(pcic_data_portal, authorized_session_id,
-                                 layers):
+def test_aaigrid_response_layers(pcic_data_portal, layers):
     url = '/data/hydro_model_out/pr+tasmin+tasmax+wind_day_HadCM_A1B_run1_'\
           '19500101-21001231.nc.aig?pr[0:{}][119:120][242:243]&'.format(layers)
     req = Request.blank(url)
-    req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
 
     assert resp.status == '200 OK'
@@ -502,10 +483,9 @@ def test_menu_json(pcic_data_portal, portal, ensemble):
 
 
 @pytest.mark.bulk_data
-def test_hydro_stn_data_catalog(pcic_data_portal, authorized_session_id):
+def test_hydro_stn_data_catalog(pcic_data_portal):
     url = '/data/hydro_stn/catalog.json'
     req = Request.blank(url)
-    req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/json'
@@ -515,10 +495,9 @@ def test_hydro_stn_data_catalog(pcic_data_portal, authorized_session_id):
 
 
 @pytest.mark.bulk_data
-def test_hydro_stn_data_csv_csv(pcic_data_portal, authorized_session_id):
+def test_hydro_stn_data_csv_csv(pcic_data_portal):
     url = '/data/hydro_stn/BCHSCA_Campbell.csv.csv'
     req = Request.blank(url)
-    req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'text/plain'
@@ -537,12 +516,10 @@ def test_hydro_stn_data_csv_csv(pcic_data_portal, authorized_session_id):
 
 
 @pytest.mark.bulk_data
-def test_hydro_stn_data_csv_selection_projection(
-        pcic_data_portal, authorized_session_id):
+def test_hydro_stn_data_csv_selection_projection(pcic_data_portal):
     url = '/data/hydro_stn/BCHSCA_Campbell.csv.csv?'\
           'sequence.ccsm3_A2run1&sequence.ccsm3_A2run1>100'
     req = Request.blank(url)
-    req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'text/plain'
