@@ -1,16 +1,12 @@
 '''The pdp.portals.bc_prism module configures a raster portal to serve the 1971-2000, 800 meter resolution PRISM dataset for BC.
 '''
 
-from pdp.dispatch import PathDispatcher
-from pdp_util.map import MapApp
-from pdp_util.raster import RasterCatalog, RasterMetadata
+from pdp.portals import make_raster_frontend
 from pdp_util.ensemble_members import EnsembleMemberLister
-
-from pdp.minify import wrap_mini
-from pdp.portals import updateConfig, raster_conf
 
 ensemble_name = 'bc_prism'
 url_base = 'bc_prism'
+title = 'High-Resolution PRISM Climatology'
 
 class PrismEnsembleLister(EnsembleMemberLister):
     def parse_date_range(self, unique_id):
@@ -22,30 +18,8 @@ class PrismEnsembleLister(EnsembleMemberLister):
 
 
 def portal(config):
-    dsn = config['dsn']
-    portal_config = {
-        'title': 'High-Resolution PRISM Climatology',
-        'ensemble_name': ensemble_name,
-        'js_files' : wrap_mini([
-            'js/prism_demo_map.js',
-            'js/prism_demo_controls.js',
-            'js/prism_demo_app.js'],
-            basename=url_base, debug=(not config['js_min']))
-    }
-
-    portal_config = updateConfig(config, portal_config)
-    map_app = MapApp(**portal_config)
-
-    conf = raster_conf(dsn, config, ensemble_name)
-    catalog_server = RasterCatalog(dsn, conf)
-
-    menu = PrismEnsembleLister(dsn)
-
-    metadata = RasterMetadata(dsn)
-
-    return PathDispatcher([
-        ('^/map/?.*$', map_app),
-        ('^/catalog/.*$', catalog_server),
-        ('^/menu.json.*$', menu),
-        ('^/metadata.json.*$', metadata),
-    ])
+    return make_raster_frontend(config, ensemble_name, url_base,
+                                title, PrismEnsembleLister,
+                                ['js/prism_demo_map.js',
+                                 'js/prism_demo_controls.js',
+                                 'js/prism_demo_app.js'])

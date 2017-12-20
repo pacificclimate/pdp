@@ -1,16 +1,12 @@
 '''The pdp.portals.bccaq_extremes module configures a raster portal to serve ClimDEX data computed on the Canada-wide BCCAQ downscaled dataset.
 '''
 
-from pdp.dispatch import PathDispatcher
-from pdp_util.map import MapApp
-from pdp_util.raster import RasterCatalog, RasterMetadata
+from pdp.portals import make_raster_frontend
 from pdp_util.ensemble_members import EnsembleMemberLister
-
-from pdp.minify import wrap_mini
-from pdp.portals import updateConfig, raster_conf
 
 ensemble_name = 'bccaq_extremes'
 url_base = 'downscaled_gcm_extremes'
+title = 'Statistically Downscaled GCM Scenarios: Extremes'
 
 class ClimdexEnsembleLister(EnsembleMemberLister):
     def list_stuff(self, ensemble):
@@ -20,35 +16,11 @@ class ClimdexEnsembleLister(EnsembleMemberLister):
 
 
 def portal(config):
-    dsn = config['dsn']
-    portal_config = {
-        'title': 'Statistically Downscaled GCM Scenarios: Extremes',
-        'ensemble_name': ensemble_name,
-        'css_files' : [
-            'css/plot.css' ],
-        'js_files' :
-            ['js/d3.v3.min.js'] +
-            wrap_mini([
-                'js/bccaq_extremes_map.js',
-                'js/bccaq_extremes_controls.js',
-                'js/bccaq_extremes_app.js'],
-                basename=url_base, debug=(not config['js_min'])
-            )
-    }
-
-    portal_config = updateConfig(config, portal_config)
-    map_app = MapApp(**portal_config)
-
-    conf = raster_conf(dsn, config, ensemble_name, url_base)
-    catalog_server = RasterCatalog(dsn, conf)
-
-    menu = ClimdexEnsembleLister(dsn)
-
-    metadata = RasterMetadata(dsn)
-
-    return PathDispatcher([
-        ('^/map/?.*$', map_app),
-        ('^/catalog/.*$', catalog_server),
-        ('^/menu.json.*$', menu),
-        ('^/metadata.json.*$', metadata),
-    ])
+    return make_raster_frontend(
+        config, ensemble_name, url_base,
+        title, ClimdexEnsembleLister,
+        ['js/d3.v3.min.js',
+         'js/bccaq_extremes_map.js',
+         'js/bccaq_extremes_controls.js',
+         'js/bccaq_extremes_app.js'],
+        ['css/plot.css'])

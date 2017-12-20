@@ -1,16 +1,14 @@
 '''The pdp.portals.vic_gen1 module configures a raster portal which serves the first generation of output from the VIC Hydrologic Model. The spatial domain is specific watersheds within BC and the model was run using CMIP3 forcings.
 '''
 
-from pdp.dispatch import PathDispatcher
-from pdp_util.map import MapApp
-from pdp_util.raster import RasterCatalog, RasterMetadata
+from pdp.portals import make_raster_frontend
 from pdp_util.ensemble_members import EnsembleMemberLister
 
-from pdp.minify import wrap_mini
-from pdp.portals import updateConfig, raster_conf
 
 ensemble_name = 'vic_gen1'
 url_base = 'hydro_model_out'
+title = 'Gridded Hydrologic Model Output'
+
 
 class VicGen1EnsembleLister(EnsembleMemberLister):
     def list_stuff(self, ensemble):
@@ -19,31 +17,8 @@ class VicGen1EnsembleLister(EnsembleMemberLister):
 
 
 def portal(config):
-    dsn = config['dsn']
-    portal_config = {
-        'title': 'Gridded Hydrologic Model Output',
-        'ensemble_name': ensemble_name,
-        'js_files' : 
-            wrap_mini([
-                'js/vic_gen1_map.js',
-                'js/vic_gen1_controls.js',
-                'js/vic_gen1_app.js'],
-                basename=url_base, debug=(not config['js_min']))
-    }
-
-    portal_config = updateConfig(config, portal_config)
-    map_app = MapApp(**portal_config)
-
-    conf = raster_conf(dsn, config, ensemble_name, url_base)
-    catalog_server = RasterCatalog(dsn, conf)
-
-    menu = VicGen1EnsembleLister(dsn)
-
-    metadata = RasterMetadata(dsn)
-
-    return PathDispatcher([
-        ('^/map/?.*$', map_app),
-        ('^/catalog/.*$', catalog_server),
-        ('^/menu.json.*$', menu),
-        ('^/metadata.json.*$', metadata),
-    ])
+    return make_raster_frontend(config, ensemble_name, url_base,
+                                title, VicGen1EnsembleLister,
+                                ['js/vic_gen1_map.js',
+                                 'js/vic_gen1_controls.js',
+                                 'js/vic_gen1_app.js'])
