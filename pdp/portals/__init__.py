@@ -1,5 +1,5 @@
 from pdp_util import session_scope
-from pdp_util.raster import db_raster_configurator
+from pdp_util.raster import db_raster_configurator, RasterServer
 
 def updateConfig(d1, d2):
     '''standard dict update with the exception of joining lists'''
@@ -19,3 +19,12 @@ def raster_conf(dsn, global_config, ensemble_name, data_base=None):
         conf = db_raster_configurator(sesh, "Download Data", 0.1, 0, ensemble_name,
             root_url=global_config['data_root'].rstrip('/') + '/' + data_base + '/')
     return conf
+
+
+def data_server(config, ensemble_name):
+    dsn = config['dsn']
+    conf = raster_conf(dsn, config, ensemble_name)
+    data_server = RasterServer(dsn, conf)
+    return data_server
+
+
