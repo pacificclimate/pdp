@@ -1,5 +1,5 @@
 from pdp_util import session_scope
-from pdp_util.raster import db_raster_configurator
+from pdp_util.raster import db_raster_configurator, RasterServer
 
 
 def updateConfig(d1, d2):
@@ -24,3 +24,12 @@ def raster_conf(dsn, global_config, ensemble_name, data_base=None):
             root_url=root_url
         )
     return conf
+
+
+def data_server(config, ensemble_name):
+    dsn = config['dsn']
+    conf = raster_conf(dsn, config, ensemble_name)
+    data_server = RasterServer(dsn, conf)
+    return data_server
+
+

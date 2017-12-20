@@ -5,7 +5,7 @@ the 1971-2000 and 1981-2010 climatologies and monthly climate data for
 
 from pdp.dispatch import PathDispatcher
 from pdp_util.map import MapApp
-from pdp_util.raster import RasterServer, RasterCatalog, RasterMetadata
+from pdp_util.raster import RasterCatalog, RasterMetadata
 from pdp_util.ensemble_members import EnsembleMemberLister
 import re
 
@@ -34,11 +34,6 @@ class PrismEnsembleLister(EnsembleMemberLister):
                 dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
 
-def data_server(config, ensemble_name):
-    dsn = config['dsn']
-    conf = raster_conf(dsn, config, ensemble_name, url_base)
-    data_server = RasterServer(dsn, conf)
-    return data_server
 
 
 def portal(config):

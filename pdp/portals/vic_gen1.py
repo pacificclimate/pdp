@@ -6,7 +6,7 @@ model was run using CMIP3 forcings.
 
 from pdp.dispatch import PathDispatcher
 from pdp_util.map import MapApp
-from pdp_util.raster import RasterServer, RasterCatalog, RasterMetadata
+from pdp_util.raster import RasterCatalog, RasterMetadata
 from pdp_util.ensemble_members import EnsembleMemberLister
 
 from pdp.minify import wrap_mini
@@ -24,11 +24,6 @@ class VicGen1EnsembleLister(EnsembleMemberLister):
                 dfv.file.unique_id.replace('+', '-')
 
 
-def data_server(config, ensemble_name):
-    dsn = config['dsn']
-    conf = raster_conf(dsn, config, ensemble_name, url_base)
-    data_server = RasterServer(dsn, conf)
-    return data_server
 
 
 def portal(config):
