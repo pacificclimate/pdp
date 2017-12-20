@@ -3,7 +3,6 @@
 
 from pkg_resources import resource_filename
 
-from pdp import wrap_auth
 from pdp_util.map import MapApp
 from pdp.dispatch import PathDispatcher
 from pdp.minify import wrap_mini
@@ -25,9 +24,8 @@ def data_server(config):
         app_root=config['app_root'],
         conn_params=dsn
         )
-    dispatch_app = wrap_auth(dispatch_app)
 
-    zip_app = wrap_auth(PcdsZipApp(dsn))
+    zip_app = PcdsZipApp(dsn)
 
     app = PathDispatcher([
             ('^/lister/.*$', dispatch_app),
@@ -54,7 +52,7 @@ def portal(config):
     legend_app = LegendApp(dsn)
 
     pcds_map_config = updateConfig(config, pcds_config)
-    map_app = wrap_auth(MapApp(**pcds_map_config), required=False)
+    map_app = MapApp(**pcds_map_config)
 
     return PathDispatcher([
             ('^/map/.*$', map_app),

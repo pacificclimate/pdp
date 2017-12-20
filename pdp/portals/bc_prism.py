@@ -1,7 +1,6 @@
 '''The pdp.portals.bc_prism module configures a raster portal to serve the 1971-2000, 800 meter resolution PRISM dataset for BC.
 '''
 
-from pdp import wrap_auth
 from pdp.dispatch import PathDispatcher
 from pdp_util.map import MapApp
 from pdp_util.raster import RasterServer, RasterCatalog, RasterMetadata
@@ -24,7 +23,7 @@ class PrismEnsembleLister(EnsembleMemberLister):
 def data_server(config, ensemble_name):
     dsn = config['dsn']
     conf = raster_conf(dsn, config, ensemble_name)
-    data_server = wrap_auth(RasterServer(dsn, conf))
+    data_server = RasterServer(dsn, conf)
     return data_server
 
 def portal(config):
@@ -40,10 +39,10 @@ def portal(config):
     }
 
     portal_config = updateConfig(config, portal_config)
-    map_app = wrap_auth(MapApp(**portal_config), required=False)
+    map_app = MapApp(**portal_config)
 
     conf = raster_conf(dsn, config, ensemble_name)
-    catalog_server = RasterCatalog(dsn, conf) #No Auth
+    catalog_server = RasterCatalog(dsn, conf)
 
     menu = PrismEnsembleLister(dsn)
 

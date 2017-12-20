@@ -1,6 +1,5 @@
 from pkg_resources import resource_filename
 
-from pdp import wrap_auth
 from pdp.dispatch import PathDispatcher
 from pdp_util.map import MapApp
 from pydap.wsgi.app import DapServer
@@ -23,7 +22,7 @@ class HydroStationDataServer(DapServer):
         return self._config
 
 def data_server(global_config):
-    data_server = wrap_auth(HydroStationDataServer(resource_filename('pdp', 'portals/hydro_stn.yaml'), global_config['data_root'].rstrip('/') + '/'))
+    data_server = HydroStationDataServer(resource_filename('pdp', 'portals/hydro_stn.yaml'), global_config['data_root'].rstrip('/') + '/')
     return data_server
 
 def portal(config):
@@ -41,7 +40,7 @@ def portal(config):
         }
 
     config = updateConfig(config, hydro_stn_config)
-    map_app = wrap_auth(MapApp(**config), required=False)
+    map_app = MapApp(**config)
 
     return PathDispatcher([
         ('^/map/?.*$', map_app),

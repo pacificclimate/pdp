@@ -3,7 +3,7 @@
    instantiates all of the responder applications and binds them to various PathDispatchers.
 '''
 
-__all__ = ['get_config', 'wrap_auth']
+__all__ = ['get_config']
 
 import sys, os
 from os.path import dirname
@@ -17,7 +17,6 @@ import yaml
 import static
 from beaker.middleware import SessionMiddleware
 
-from pdp_util.auth import PcicOidMiddleware, check_authorized_return_email
 from ga_wsgi_client import AnalyticsMiddleware
 from pdp.error import ErrorMiddleware
 from pdp.dispatch import PathDispatcher
@@ -57,7 +56,6 @@ def get_config():
             'js/pdp_download.js',
             'js/pdp_filters.js',
             'js/pdp_map.js',
-            'js/pdp_auth.js',
             'js/pdp_raster_map.js',
             'js/pdp_vector_map.js'
             ], debug=(not config['js_min'])),
@@ -90,14 +88,3 @@ def clean_session_dir(session_dir, should_I):
     if should_I and os.path.exists(session_dir):
         print('Removing session directory {}'.format(session_dir))
         rmtree(session_dir)
-
-# auth wrappers
-def wrap_auth(app, required=False):
-    '''This function wraps a WSGI application with the PcicOidMiddleware for session management and optional authentication
-    '''
-    config = get_config()
-    app = PcicOidMiddleware(app,
-                            templates=resource_filename('pdp', 'templates'),
-                            root=config['app_root'],
-                            auth_required=required)
-    return app
