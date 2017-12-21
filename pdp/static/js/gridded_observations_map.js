@@ -32,7 +32,7 @@ function init_obs_map() {
         numcolorbands: 254,
         version: '1.1.1',
         srs: "EPSG:4326",
-        TIME: '2000-01-01T00:00:00Z'
+        TIME: '1967-12-21T00:00:00Z'
     };
 
     datalayerName = "Climate raster";
@@ -72,7 +72,14 @@ function init_obs_map() {
     cb.refresh_values();
 
     function set_map_title(layer_name) {
-        $('#map-title').html(layer_name);
+        // 'this' must be bound to the ncwms layer object
+        var d = new Date(this.params.TIME), date;
+        if (layer_name.match(/_yr_/)) { // is yearly
+            date = d.getFullYear();
+        } else {
+            date = d.getFullYear() + '/' + (d.getMonth() + 1);
+        }
+        $('#map-title').html(layer_name + '<br />' + date);
         return true;
     }
     ncwms.events.register('change', ncwms, set_map_title);
