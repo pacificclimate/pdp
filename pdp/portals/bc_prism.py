@@ -5,7 +5,7 @@ from pdp.portals import make_raster_frontend
 from pdp_util.ensemble_members import EnsembleMemberLister
 
 ensemble_name = 'bc_prism'
-url_base = 'bc_prism'
+url_base = '/bc_prism'
 title = 'High-Resolution PRISM Climatology'
 
 class PrismEnsembleLister(EnsembleMemberLister):

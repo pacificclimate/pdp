@@ -14,7 +14,7 @@ from pdp_util.agg import PcdsZipApp
 from pdp_util.pcds_dispatch import PcdsDispatcher
 
 
-url_base = 'pcds'
+url_base = '/pcds'
 
 def data_server(config):
     dsn = config['pcds_dsn']

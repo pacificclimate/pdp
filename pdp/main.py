@@ -8,8 +8,6 @@ import static
 from beaker.middleware import SessionMiddleware
 from werkzeug.wsgi import DispatcherMiddleware
 
-from pdp import clean_session_dir
-
 from pdp.error import ErrorMiddleware
 from pdp.dispatch import PathDispatcher
 from ga_wsgi_client import AnalyticsMiddleware
@@ -39,10 +37,6 @@ from portals.gridded_observations import portal as gridded_observations_portal
 
 from portals import data_server
 
-#global_config = get_config()
-#dsn = global_config['dsn']
-#pcds_dsn = global_config['pcds_dsn']
-#atexit.register(clean_session_dir, global_config['session_dir'], global_config['clean_session_dir'])
 
 def initialize_frontend(global_config, use_analytics=False):
     '''Frontend server with all portal pages and required resources
@@ -53,14 +47,14 @@ def initialize_frontend(global_config, use_analytics=False):
 
     wsgi_app = PathDispatcher([
         ('^/css/(default|pcic).css$', static.Cling(resource_filename('pdp_util', 'data'))), # a bit of a hack for now
-        ('^/{}/.*$'.format(pcds.url_base), pcds_portal(global_config)),
+        ('^{}/.*$'.format(pcds.url_base), pcds_portal(global_config)),
         ('^/pcds_map/.*$', pcds_portal(global_config)), ## legacy url support
-        ('^/{}/.*$'.format(hydro_stn.url_base), hydro_stn_portal(global_config)),
-        ('^/{}/.*$'.format(bc_prism.url_base), bc_prism_portal(global_config)),
-        ('^/{}/.*$'.format(vic_gen1.url_base), vic_gen1_portal(global_config)),
-        ('^/{}/.*$'.format(gridded_observations.url_base), gridded_observations_portal(global_config)),
-        ('^/{}/.*$'.format(bcsd_canada.url_base), bcsd_canada_portal(global_config)),
-        ('^/{}/.*$'.format(bccaq_extremes.url_base), bccaq_extremes_portal(global_config)),
+        ('^{}/.*$'.format(hydro_stn.url_base), hydro_stn_portal(global_config)),
+        ('^{}/.*$'.format(bc_prism.url_base), bc_prism_portal(global_config)),
+        ('^{}/.*$'.format(vic_gen1.url_base), vic_gen1_portal(global_config)),
+        ('^{}/.*$'.format(gridded_observations.url_base), gridded_observations_portal(global_config)),
+        ('^{}/.*$'.format(bcsd_canada.url_base), bcsd_canada_portal(global_config)),
+        ('^{}/.*$'.format(bccaq_extremes.url_base), bccaq_extremes_portal(global_config)),
         ('^/docs/.*$', docs_app),
         ], default=static_app)
 
@@ -72,15 +66,20 @@ def initialize_frontend(global_config, use_analytics=False):
 def initialize_backend(global_config, use_analytics=False):
     '''Backend pathdispatcher with all data servers
     '''
-    wsgi_app = PathDispatcher([
-        ('^/{}/.*$'.format(bc_prism.url_base), data_server(global_config, bc_prism.ensemble_name)),
-        ('^/{}/.*$'.format(bcsd_canada.url_base), data_server(global_config, bcsd_canada.ensemble_name)),
-        ('^/{}/.*$'.format(vic_gen1.url_base), data_server(global_config, vic_gen1.ensemble_name)),
-        ('^/{}/.*$'.format(gridded_observations.url_base), data_server(global_config, gridded_observations.ensemble_name)),
-        ('^/{}/.*$'.format(bccaq_extremes.url_base), data_server(global_config, bccaq_extremes.ensemble_name)),
-        ('^/{}/.*$'.format(hydro_stn.url_base), hydro_stn_data_server(global_config)),
-        ('^/{}/.*$'.format(pcds.url_base), pcds_data_server(global_config))
-    ])
+    apps = (bc_prism, bcsd_canada, vic_gen1, gridded_observations,
+            bccaq_extremes)
+    mounts = {
+        app.url_base: data_server(global_config, app.ensemble_name)
+        for app in apps
+    }
+    mounts.update({
+        hydro_stn.url_base: hydro_stn_data_server(global_config),
+        pcds.url_base: pcds_data_server(global_config)
+    })
+
+    static_app = static.Cling(resource_filename('pdp', 'static'))
+    wsgi_app = DispatcherMiddleware(static_app, mounts)
+
     if use_analytics:
         wsgi_app = AnalyticsMiddleware(wsgi_app, global_config['analytics'])
     return ErrorMiddleware(wsgi_app)

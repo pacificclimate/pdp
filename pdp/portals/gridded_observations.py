@@ -5,7 +5,7 @@ from pdp.portals import make_raster_frontend
 from pdp_util.ensemble_members import EnsembleMemberLister
 
 ensemble_name = 'gridded-obs-met-data'
-url_base = 'gridded_observations'
+url_base = '/gridded_observations'
 title = 'Gridded Daily Meteorological Databases'
 
 class GriddedObservationsEnsembleLister(EnsembleMemberLister):
