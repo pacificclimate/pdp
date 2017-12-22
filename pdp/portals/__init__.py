@@ -1,9 +1,10 @@
+from werkzeug import DispatcherMiddleware
+
 from pdp_util import session_scope
 from pdp_util.raster import db_raster_configurator, RasterServer, RasterCatalog
 from pdp_util.raster import RasterMetadata
 from pdp_util.map import MapApp
 
-from pdp.dispatch import PathDispatcher
 from pdp.minify import wrap_mini
 
 
@@ -60,9 +61,9 @@ def make_raster_frontend(config, ensemble_name, url_base, title,
 
     metadata = RasterMetadata(dsn)
 
-    return PathDispatcher([
-        ('^/map/?.*$', map_app),
-        ('^/catalog/.*$', catalog_server),
-        ('^/menu.json.*$', menu),
-        ('^/metadata.json.*$', metadata),
-    ])
+    return DispatcherMiddleware(map_app, {
+        '/map': map_app,
+        '/catalog': catalog_server,
+        '/menu.json': menu,
+        '/metadata.json': metadata
+    })

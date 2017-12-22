@@ -4,8 +4,9 @@ Set portal.
 
 from pkg_resources import resource_filename
 
+from werkzeug import DispatcherMiddleware
+
 from pdp_util.map import MapApp
-from pdp.dispatch import PathDispatcher
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
 
@@ -28,10 +29,10 @@ def mk_backend(config):
 
     zip_app = PcdsZipApp(dsn)
 
-    app = PathDispatcher([
-        ('^/lister/.*$', dispatch_app),
-        ('^/agg/?$', zip_app)
-    ])
+    app = DispatcherMiddleware(zip_app, {
+        '/lister': dispatch_app,
+        '/agg': zip_app
+    })
     return app
 
 def mk_frontend(config):
@@ -55,12 +56,12 @@ def mk_frontend(config):
     pcds_map_config = updateConfig(config, pcds_config)
     map_app = MapApp(**pcds_map_config)
 
-    return PathDispatcher([
-        ('^/map/.*$', map_app),
-        ('^/record_length/?$', record_length_app),
-        ('^/count_stations/?$', count_stations_app),
-        ('^/images/legend/.*\.png$', legend_app)
-    ])
+    return DispatcherMiddleware(map_app, {
+        '/map': map_app,
+        '/record_length': record_length_app,
+        '/count_stations': count_stations_app,
+        '/images/legend': legend_app
+    })
 
 
 __all__ = ('url_base', mk_frontend, mk_backend)
