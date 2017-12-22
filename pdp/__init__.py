@@ -1,6 +1,8 @@
-'''The pdp package ties together all of the aspects of the PCIC Data Portal (pdp).
-   The base pdp module configures the application, sets up a URL hierarchy (a PathDispatcher instance),
-   instantiates all of the responder applications and binds them to various PathDispatchers.
+'''The pdp package ties together all of the aspects of the PCIC Data
+   Portal (pdp).  The base pdp module configures the application, sets
+   up a URL hierarchy (a DispatcherMiddleware instance), instantiates
+   all of the responder applications and binds them to various
+   DispatcherMiddlewares.
 '''
 
 __all__ = ['get_config']

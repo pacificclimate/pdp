@@ -50,7 +50,7 @@ def initialize_frontend(global_config, use_analytics=False):
 
 
 def initialize_backend(global_config, use_analytics=False):
-    '''Backend pathdispatcher with all data servers
+    '''Backend DispatcherMiddleware with all data servers
     '''
     mounts = {
         app.url_base: app.mk_backend(global_config)
