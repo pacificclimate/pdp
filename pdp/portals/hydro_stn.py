@@ -7,7 +7,7 @@ from pydap.wsgi.app import DapServer
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
 
-url_base = 'hydro_stn'
+url_base = '/hydro_stn'
 
 
 class HydroStationDataServer(DapServer):

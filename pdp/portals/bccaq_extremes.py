@@ -3,11 +3,13 @@ serve ClimDEX data computed on the Canada-wide BCCAQ downscaled
 dataset.
 '''
 
-from pdp.portals import make_raster_frontend
+from pdp import get_config
+from pdp.portals import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
+from werkzeug.wsgi import DispatcherMiddleware
 
 ensemble_name = 'bccaq_extremes'
-url_base = 'downscaled_gcm_extremes'
+url_base = '/downscaled_gcm_extremes'
 title = 'Statistically Downscaled GCM Scenarios: Extremes'
 
 

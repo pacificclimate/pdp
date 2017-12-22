@@ -8,7 +8,7 @@ from pdp_util.ensemble_members import EnsembleMemberLister
 import re
 
 ensemble_name = 'bc_prism_with_monthlies'
-url_base = 'bc_prism'
+url_base = '/bc_prism'
 title = 'High-Resolution PRISM Data'
 
 

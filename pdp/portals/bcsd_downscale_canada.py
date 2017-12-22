@@ -7,7 +7,7 @@ from pdp.portals import make_raster_frontend
 from pdp_util.ensemble_members import EnsembleMemberLister
 
 ensemble_name = 'bcsd_downscale_canada'
-url_base = 'downscaled_gcms'
+url_base = '/downscaled_gcms'
 title = 'Statistically Downscaled GCM Scenarios'
 
 

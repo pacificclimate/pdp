@@ -8,7 +8,7 @@ from pdp.portals import make_raster_frontend
 from pdp_util.ensemble_members import EnsembleMemberLister
 
 
-ensemble_name = 'vic_gen1'
+ensemble_name = '/vic_gen1'
 url_base = 'hydro_model_out'
 title = 'Gridded Hydrologic Model Output'
 
