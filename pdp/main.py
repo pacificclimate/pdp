@@ -6,7 +6,6 @@ import static
 from werkzeug.wsgi import DispatcherMiddleware
 
 from pdp.error import ErrorMiddleware
-from pdp.dispatch import PathDispatcher
 from ga_wsgi_client import AnalyticsMiddleware
 
 # Station portals
@@ -21,6 +20,10 @@ import portals.gridded_observations as gridded_observations
 import portals.vic_gen1 as vic_gen1
 
 
+apps = (bc_prism, bcsd_canada, vic_gen1, gridded_observations,
+        bccaq_extremes, pcds, hydro_stn)
+
+
 def initialize_frontend(global_config, use_analytics=False):
     '''Frontend server with all portal pages and required resources
     '''
@@ -28,20 +31,17 @@ def initialize_frontend(global_config, use_analytics=False):
     docs_app = static.Cling(resource_filename('pdp', 'docs/html'))
     static_app = static.Cling(resource_filename('pdp', 'static'))
 
-    apps = (bc_prism, bcsd_canada, vic_gen1, gridded_observations,
-            bccaq_extremes, pcds, hydro_stn)
-
-    paths = [
-        ('^{}/.*$'.format(app.url_base), app.mk_frontend(global_config))
+    mounts = {
+        app.url_base: app.mk_frontend(global_config)
         for app in apps
-    ]
-    paths += [
-        ('^/css/(default|pcic).css$', static.Cling(resource_filename('pdp_util', 'data'))), # a bit of a hack for now
-        ('^/pcds_map/.*$', pcds.mk_frontend(global_config)), # legacy url support
-        ('^/docs/.*$', docs_app),
-    ]
+    }
+    mounts.update({
+        '/pcds_map': pcds.mk_frontend(global_config), # legacy url support
+        '/css/': static.Cling(resource_filename('pdp_util', 'data')),
+        '/docs/': docs_app
+        })
 
-    wsgi_app = PathDispatcher(paths, default=static_app)
+    wsgi_app = DispatcherMiddleware(static_app, mounts)
 
     if use_analytics:
         wsgi_app = AnalyticsMiddleware(wsgi_app, global_config['analytics'])
@@ -51,8 +51,6 @@ def initialize_frontend(global_config, use_analytics=False):
 def initialize_backend(global_config, use_analytics=False):
     '''Backend pathdispatcher with all data servers
     '''
-    apps = (bc_prism, bcsd_canada, vic_gen1, gridded_observations,
-            bccaq_extremes, pcds, hydro_stn)
     mounts = {
         app.url_base: app.mk_backend(global_config)
         for app in apps
