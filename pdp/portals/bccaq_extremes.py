@@ -1,10 +1,9 @@
 '''The pdp.portals.bccaq_extremes module configures a raster portal to serve ClimDEX data computed on the Canada-wide BCCAQ downscaled dataset.
 '''
 
-from pdp import get_config
 from pdp.portals import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
-from werkzeug.wsgi import DispatcherMiddleware
+
 
 ensemble_name = 'bccaq_extremes'
 url_base = '/downscaled_gcm_extremes'
@@ -18,7 +17,7 @@ class ClimdexEnsembleLister(EnsembleMemberLister):
             yield dfv.file.run.emission.short_name, dfv.file.run.model.short_name, "annual" if "_yr_" in dfv.file.unique_id else "monthly", dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
 
-def portal(config):
+def mk_frontend(config):
     return make_raster_frontend(
         config, ensemble_name, url_base,
         title, ClimdexEnsembleLister,
@@ -27,3 +26,10 @@ def portal(config):
          'js/bccaq_extremes_controls.js',
          'js/bccaq_extremes_app.js'],
         ['css/plot.css'])
+
+
+def mk_backend(config):
+    return data_server(config, ensemble_name)
+
+
+__all__ = ('url_base', 'mk_frontend', 'mk_backend')

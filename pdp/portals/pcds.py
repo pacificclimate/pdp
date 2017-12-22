@@ -16,7 +16,7 @@ from pdp_util.pcds_dispatch import PcdsDispatcher
 
 url_base = '/pcds'
 
-def data_server(config):
+def mk_backend(config):
     dsn = config['pcds_dsn']
     dispatch_app = PcdsDispatcher(
         templates=resource_filename('pdp_util', 'templates'),
@@ -33,7 +33,7 @@ def data_server(config):
             ])
     return app
 
-def portal(config):
+def mk_frontend(config):
     dsn = config['pcds_dsn']
     pcds_config = {
         'title': 'BC Station Data - PCDS',
@@ -60,3 +60,6 @@ def portal(config):
             ('^/count_stations/?$', count_stations_app),
             ('^/images/legend/.*\.png$', legend_app)
             ])
+
+
+__all__ = ('url_base', mk_frontend, mk_backend)
