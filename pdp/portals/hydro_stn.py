@@ -25,8 +25,7 @@ class HydroStationDataServer(DapServer):
         self._config['root_url'] = self.root_url
         return self._config
 
-
-def data_server(global_config):
+def mk_backend(config):
     data_server = HydroStationDataServer(
             resource_filename('pdp', 'portals/hydro_stn.yaml'),
             global_config['data_root'].rstrip('/') + '/'
@@ -34,7 +33,7 @@ def data_server(global_config):
     return data_server
 
 
-def portal(config):
+def mk_frontend(config):
     hydro_stn_config = {
         'title': 'Modelled Streamflow Data',
         'js_files':
@@ -54,3 +53,6 @@ def portal(config):
     return PathDispatcher([
         ('^/map/?.*$', map_app),
     ])
+
+
+__all__ = ('url_base', mk_frontend, mk_backend)

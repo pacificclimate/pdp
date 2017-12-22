@@ -1,7 +1,7 @@
 '''The pdp.portals.gridded_observations module configures a raster portal
  which serves gridded climate data used by the VIC model.'''
 
-from pdp.portals import make_raster_frontend
+from pdp.portals import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
 
 ensemble_name = 'gridded-obs-met-data'
@@ -25,9 +25,16 @@ class GriddedObservationsEnsembleLister(EnsembleMemberLister):
 
 
 
-def portal(config):
+def mk_frontend(config):
     return make_raster_frontend(config, ensemble_name, url_base,
                                 title, GriddedObservationsEnsembleLister,
                                 ['js/gridded_observations_map.js',
                                  'js/gridded_observations_controls.js',
                                  'js/gridded_observations_app.js'] )
+
+
+def mk_backend(config):
+    return data_server(config, ensemble_name)
+
+
+__all__ = ('url_base', mk_frontend, mk_backend)

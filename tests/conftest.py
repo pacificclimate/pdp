@@ -25,25 +25,25 @@ def session_dir(request):
 
 @pytest.fixture(scope="function")
 def raster_pydap():
-    from pdp.portals.bcsd_downscale_canada import portal
-    return portal
+    from pdp.portals.bcsd_downscale_canada import mk_backend
+    return mk_backend
 
 
 @pytest.fixture(scope="function")
 def prism_portal():
-    from pdp.portals.bc_prism import portal
-    return portal
+    from pdp.portals.bc_prism import mk_backend
+    return mk_backend
 
 
 @pytest.fixture(scope="module")
 def pcic_data_portal(session_dir):
     from pdp.main import initialize_dev_server
     from pdp import get_config
-    dev_server = initialize_dev_server(get_config(), False)
-    return SessionMiddleware(dev_server, auto=1, data_dir=session_dir)
+    return initialize_dev_server(get_config(), False)
+
 
 
 @pytest.fixture(scope="module")
 def pcds_map_app():
-    from pdp.portals.pcds import portal
-    return portal
+    from pdp.portals.pcds import mk_backend
+    return mk_backend

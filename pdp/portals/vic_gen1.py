@@ -4,7 +4,7 @@ Model. The spatial domain is specific watersheds within BC and the
 model was run using CMIP3 forcings.
 '''
 
-from pdp.portals import make_raster_frontend
+from pdp.portals import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
 
 
@@ -24,9 +24,16 @@ class VicGen1EnsembleLister(EnsembleMemberLister):
 
 
 
-def portal(config):
+def mk_frontend(config):
     return make_raster_frontend(config, ensemble_name, url_base,
                                 title, VicGen1EnsembleLister,
                                 ['js/vic_gen1_map.js',
                                  'js/vic_gen1_controls.js',
                                  'js/vic_gen1_app.js'])
+
+
+def mk_backend(config):
+    return data_server(config, ensemble_name)
+
+
+__all__ = ('url_base', mk_frontend, mk_backend)

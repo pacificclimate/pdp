@@ -3,7 +3,7 @@ the 1971-2000 and 1981-2010 climatologies and monthly climate data for
 800 meter resolution PRISM dataset for BC
 '''
 
-from pdp.portals import make_raster_frontend
+from pdp.portals import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
 import re
 
@@ -32,9 +32,16 @@ class PrismEnsembleLister(EnsembleMemberLister):
 
 
 
-def portal(config):
+def mk_frontend(config):
     return make_raster_frontend(config, ensemble_name, url_base,
                                 title, PrismEnsembleLister,
                                 ['js/prism_demo_map.js',
                                  'js/prism_demo_controls.js',
                                  'js/prism_demo_app.js'])
+
+
+def mk_backend(config):
+    return data_server(config, ensemble_name)
+
+
+__all__ = ('url_base', mk_frontend, mk_backend)
