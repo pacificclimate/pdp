@@ -7,6 +7,10 @@ from pdp.portals import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
 import re
 
+
+__all__ = ('url_base', 'mk_frontend', 'mk_backend')
+
+
 ensemble_name = 'bc_prism_with_monthlies'
 url_base = '/bc_prism'
 title = 'High-Resolution PRISM Data'
@@ -42,6 +46,3 @@ def mk_frontend(config):
 
 def mk_backend(config):
     return data_server(config, ensemble_name)
-
-
-__all__ = ('url_base', mk_frontend, mk_backend)

@@ -4,6 +4,10 @@
 from pdp.portals import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
 
+
+__all__ = ('url_base', 'mk_frontend', 'mk_backend')
+
+
 ensemble_name = 'gridded-obs-met-data'
 url_base = '/gridded_observations'
 title = 'Daily Gridded Meteorological Datasets'
@@ -35,6 +39,3 @@ def mk_frontend(config):
 
 def mk_backend(config):
     return data_server(config, ensemble_name)
-
-
-__all__ = ('url_base', mk_frontend, mk_backend)
