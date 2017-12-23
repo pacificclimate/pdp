@@ -15,6 +15,9 @@ from pdp_util.agg import PcdsZipApp
 from pdp_util.pcds_dispatch import PcdsDispatcher
 
 
+__all__ = ('url_base', 'mk_frontend', 'mk_backend')
+
+
 url_base = '/pcds'
 
 def mk_backend(config):
@@ -61,6 +64,3 @@ def mk_frontend(config):
         '/count_stations': count_stations_app,
         '/images/legend': legend_app
     })
-
-
-__all__ = ('url_base', mk_frontend, mk_backend)

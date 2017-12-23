@@ -8,6 +8,8 @@ from pydap.wsgi.app import DapServer
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
 
+__all__ = ('url_base', 'mk_frontend', 'mk_backend')
+
 url_base = '/hydro_stn'
 
 class HydroStationDataServer(DapServer):
@@ -47,5 +49,3 @@ def mk_frontend(config):
 
     return DispatcherMiddleware(map_app, {'/map': map_app})
 
-
-__all__ = ('url_base', mk_frontend, mk_backend)
