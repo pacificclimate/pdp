@@ -32,7 +32,7 @@ function init_obs_map() {
         numcolorbands: 254,
         version: '1.1.1',
         srs: "EPSG:4326",
-        TIME: '1967-12-21T00:00:00Z'
+        TIME: "1997-3-17T00:00:00Z",
     };
 
     datalayerName = "Climate raster";
@@ -77,7 +77,7 @@ function init_obs_map() {
         if (layer_name.match(/_yr_/)) { // is yearly
             date = d.getFullYear();
         } else {
-            date = d.getFullYear() + '/' + (d.getMonth() + 1);
+            date = d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + (d.getDate() + 1);
         }
         $('#map-title').html(layer_name + '<br />' + date);
         return true;
@@ -95,8 +95,26 @@ function init_obs_map() {
             data: lyr_params
         });
         metadata_req.done(function (data) {
+            var newParams = {};
+            var min, max;
+            if(lyr_params["var"] == "pr"){
+              newParams["LOGSCALE"] = true;
+              min = 1;
+              max = data.max;
+              newParams["STYLES"] = "boxfill/blueheat";
+            }
+            else {
+              newParams["LOGSCALE"] == "false";
+              newParams["STYLES"] = "boxfill/default";
+              min = data.min;
+              max = data.max;
+            }
+            newParams["COLORSCALERANGE"] = `${min},${max}`;
+            delete ncwms.params.LOGSCALE;
+            delete ncwms.params.STYLES;
+            ncwms.mergeNewParams(newParams); //update logscale
             ncwms.redraw(); // this does a layer redraw
-            cb.force_update(data.min, data.max, data.units); // must be called AFTER ncwms params updated
+            cb.force_update(min, max, data.units); // must be called AFTER ncwms params updated
         });
     });
 
