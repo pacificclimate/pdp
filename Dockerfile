@@ -29,15 +29,15 @@ ENV PDP_CONFIG /root/pdp_config.yaml
 # statement for GDAL is required)
 RUN pip install numpy Cython==0.22
 RUN pip install gdal==1.11.2
-RUN pip install -i https://pypi.pacificclimate.org/simple/ \
+RUN pip install -i https://pypi.pacificclimate.org/simple \
     -r requirements.txt \
     -r test_requirements.txt \
     -r deploy_requirements.txt
 
 # Install and build the docs
-RUN python setup.py install
+RUN pip install -i https://pypi.pacificclimate.org/simple .
 RUN python setup.py build_sphinx
-RUN python setup.py install
+RUN pip install -i https://pypi.pacificclimate.org/simple .
 
 # Create directory for supervisord logs
 RUN mkdir etc/
