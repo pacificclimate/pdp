@@ -44,7 +44,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'PCIC Data Portal'
-copyright = u'2015, James Hiebert'
+copyright = u'2018, James Hiebert'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
