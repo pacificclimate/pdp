@@ -53,7 +53,7 @@ def initialize_frontend(global_config, use_auth=False, use_analytics=False):
     '''Frontend server with all portal pages and required resources
     '''
 
-    docs_app = static.Cling(dirname(__file__) + '/../doc')
+    docs_app = static.Cling(resource_filename('pdp', 'docs/html'))
     static_app = static.Cling(resource_filename('pdp', 'static'))
     check_auth = wrap_auth(check_authorized_return_email, required=False)
 

@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import sys
 from logging import basicConfig, DEBUG
 from os import environ

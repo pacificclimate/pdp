@@ -1,8 +1,15 @@
-import os, sys
+import os
+import sys
+from warnings import warn
 import re
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 from git import Repo
+
+try:
+    from sphinx.setup_command import BuildDoc
+except ImportErrror:
+    warn("Could not import sphinx. You won't be able to build the docs")
 
 class PyTest(TestCommand):
     def finalize_options(self):
@@ -27,7 +34,7 @@ def recursive_list(pkg_dir, basedir):
     def find():
         for dirname, dirnames, filenames in os.walk(basedir):
             for filename in filenames:
-                yield os.path.join(dirname, filename).lstrip(pkg_dir)
+                yield os.path.join(dirname, filename).replace(pkg_dir, '', 1)
     return [ x for x in find() ]
 
 def get_commitish():
@@ -75,11 +82,18 @@ setup(
                      ],
     scripts = ['scripts/rast_serve.py'],
     package_dir = {'pdp': 'pdp'},
-    package_data = {'pdp': ['templates/*.html', 'portals/hydro_stn.yaml'] + recursive_list('pdp/', 'pdp/static')},
-    data_files = build_doc_list('build/sphinx/html', 'doc'),
-    cmdclass = {'test': PyTest},
+    package_data = {'pdp': ['templates/*.html', 'portals/hydro_stn.yaml'] + recursive_list('pdp/', 'pdp/static') + recursive_list('pdp/', 'pdp/docs/html')},
+    cmdclass={
+        'test': PyTest,
+        'build_sphinx': BuildDoc
+    },
+    command_options={
+        'build_sphinx': {
+            'build_dir': ('setup.py', 'pdp/docs')
+        }
+    },
     zip_safe=False,
-        classifiers='''Development Status :: 5 - Production/Stable
+    classifiers='''Development Status :: 5 - Production/Stable
 Environment :: Console
 nvironment :: Web Environment
 Framework :: Flask
