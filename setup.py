@@ -8,7 +8,7 @@ from git import Repo
 
 try:
     from sphinx.setup_command import BuildDoc
-except ImportErrror:
+except ImportError:
     warn("Could not import sphinx. You won't be able to build the docs")
 
 class PyTest(TestCommand):
