@@ -27,8 +27,9 @@ ENV PDP_CONFIG /root/pdp_config.yaml
 
 # Install dependencies (separate RUN
 # statement for GDAL is required)
-RUN pip install numpy Cython==0.22 gdal==2.2
+RUN pip install --no-binary :all: numpy Cython==0.22 gdal==2.2
 RUN pip install -i https://pypi.pacificclimate.org/simple \
+    --no-binary h5py \
     -r requirements.txt \
     -r test_requirements.txt \
     -r deploy_requirements.txt
