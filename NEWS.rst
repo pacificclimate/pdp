@@ -7,6 +7,7 @@ News / Release Notes
 *Release Date: 03-Jan-2018*
 
 * Makes UI tweaks for gridded observations portal
+
   * Display name changes
   * Uses log scale for precipitation
 
