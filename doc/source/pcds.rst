@@ -77,7 +77,14 @@ The page for a single station includes a simple HTML page that lists all global 
 Advanced/Programmatic Usage
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In theory, the whole data portal is written using open protocols and an advanced user with some scripting abilities should be able to reasonably script up a bulk download (assuming that the filters on the user interface do not cover your use case).
+The whole data portal is written using open protocols and an advanced user with some scripting abilities should be able to reasonably script up a bulk download (assuming that the filters on the user interface do not cover your use case).
+
+- The data portal speaks OPeNDAP. It should be able to generally do anything that's listed in the `OPeNDAP documentation <https://www.opendap.org/pdf/ESE-RFC-004v1.2.pdf>`_, including subselections with URL query string parameters.
+- You can select any number of a station's variables. If you don't specifically request one (or more) you get them all.
+- You can select (or deselect) observations based on simple conditional comparisons (less than, greater than, equal to, not equal to).
+
+Example 1
+~~~~~~~~~
 
 For your purposes of demonstration, let's assume that a user is interested in downloading data from a whole bunch of Wildfire Management Branch stations, network code "FLNRO-WMB". From our instance of Pydap, you can get a station listing from the `data listing pages <http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/FLNRO-WMB/>`_.
 
@@ -85,11 +92,36 @@ If you have a list of network_name/station_ids (where station_id is the id by wh
 
 The file format extension on the end can be [csv|xls|ascii|nc].
 
-Further subselections are possible with URL query string parameters, but for that, one should refer to the `OPeNDAP documentation <http://www.opendap.org/pdf/ESE-RFC-004v1.2.pdf>`_.
+Example 2
+~~~~~~~~~
 
-This is all relatively simple, however, if one is going to script it, you must also handle the OpenID login which can be a little tricky. We advise that you first login with your standard web browser and establish a session. Find the beaker.session.id cookie for the domain tools.pacificclimate.org and then look at the wget line in the user docs :ref:`metadata-and-data`.
+Let's say that you wanted all of the available data in ASCII format
+for Nelson, BC where the temperature was below freezing.
 
-Essentially, you do something like: ::
+Station 1145M29, Nelson, BC, is available from the "EC_raw" network.
 
-  wget --output-document=[your_data_file] --header "Cookie: beaker.session.id=[your_session_id]" [your_url] 2> /dev/null
+You could request:
 
+`http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature\<0 <http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature\<0>`_
+
+If you only wanted the temperature and time variables (as opposed to *all* of the variables) where temperature is below freezing, you could say:
+
+`http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.air_temperature\<0 <http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.air_temperature\<0>`_
+
+If you only wanted the freezing observations for *this year* you could use a temporal conditional and say:
+
+`http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.time\>"2018-01-01 00:00:00"&station_observations.air_temperature\<0 <http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.time\>"2018-01-01 00:00:00"&station_observations.air_temperature\<0>`_
+
+The time format is a little tricky, because:
+a) You need to specify it in YYYY-MM-DD HH:MM:SS format and
+b) You need to put the quotes around the whole time.
+
+Depending on what browser/client you are using, you *may* need to URL encode all of that syntax, but so far all of the browsers that I have used will do the translation for you.
+
+For example:
+
+`http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.time\>"2018-01-01 00:00:00"&station_observations.air_temperature\<0 <http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.time\>"2018-01-01 00:00:00"&station_observations.air_temperature\<0>`_
+
+becomes:
+
+`http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/145M29.rsql.ascii%3Fstation_observations.air_temperature%2Cstation_observations.time%26station_observations.time%3E%222018-01-01%2000%3A00%3A00%22%26station_o%5C%0D%0Abservations.air_temperature%3C0 <http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/145M29.rsql.ascii%3Fstation_observations.air_temperature%2Cstation_observations.time%26station_observations.time%3E%222018-01-01%2000%3A00%3A00%22%26station_o%5C%0D%0Abservations.air_temperature%3C0>`_
