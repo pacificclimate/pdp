@@ -1,34 +1,37 @@
-import os, sys
+import os
+import sys
+from warnings import warn
 import re
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 from git import Repo
+
+try:
+    from sphinx.setup_command import BuildDoc
+except ImportError:
+    warn("Could not import sphinx. You won't be able to build the docs")
+
 
 class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
         self.test_args = ['-v', '--tb=no', 'tests']
         self.test_suite = True
+
     def run_tests(self):
-        #import here, cause outside the eggs aren't loaded
+        # import here, cause outside the eggs aren't loaded
         import pytest
         errno = pytest.main(self.test_args)
         sys.exit(errno)
 
 
-def build_doc_list(basedir, prefix):
-    def find():
-        for dirname, dirnames, filenames in os.walk(basedir):
-            newdir = dirname.replace(basedir, prefix)
-            yield ( newdir, [ os.path.join(dirname, filename) for filename in filenames ] )
-    return [ x for x in find() ]
-
 def recursive_list(pkg_dir, basedir):
     def find():
         for dirname, dirnames, filenames in os.walk(basedir):
             for filename in filenames:
-                yield os.path.join(dirname, filename).lstrip(pkg_dir)
-    return [ x for x in find() ]
+                yield os.path.join(dirname, filename).replace(pkg_dir, '', 1)
+    return [x for x in find()]
+
 
 def get_commitish():
     repo = Repo(os.getcwd())
@@ -40,46 +43,56 @@ def get_commitish():
     safe_branch = re.sub('[-/_]', '.', branch)
     return "{}.{}".format(safe_branch, repo.git.rev_parse(sha, short=6))
 
+
 __version__ = '2.4.4'
 __revision__ = get_commitish()
 
 setup(
     name="pdp",
-    description="PCIC's Data Portal (pdp): the server software to run the entire web application",
-    keywords="opendap dods dap open data science climate meteorology downscaling modelling",
+    description="PCIC's Data Portal (pdp): the server software to run the "
+                "entire web application",
+    keywords="opendap dods dap open data science climate meteorology "
+             "downscaling modelling",
     packages=['pdp', 'pdp.portals'],
     version="%s+%s" % (__version__, __revision__),
     url="http://www.pacificclimate.org/",
     author="James Hiebert",
     author_email="hiebert@uvic.ca",
-    install_requires = ['flask',
-                        'beaker',
-                        'genshi',
-                        'static',
-                        'pdp-util >=0.2.2',
-                        'pydap.handlers.hdf5 >=0.5',
-                        'pydap.responses.netcdf >=0.5',
-                        'pydap.responses.xls',
-                        'pydap.responses.aaigrid >=0.5',
-                        'pydap.handlers.sql',
-                        'ga-wsgi-client',
-                        'slimit'
-                        ],
-    tests_require = ['webob',
-                     'pytest',
-                     'xlrd',
-                     'pillow',
-                     'netCDF4',
-                     'numpy',
-                     'BeautifulSoup4'
-                     ],
-    scripts = ['scripts/rast_serve.py'],
-    package_dir = {'pdp': 'pdp'},
-    package_data = {'pdp': ['templates/*.html', 'portals/hydro_stn.yaml'] + recursive_list('pdp/', 'pdp/static')},
-    data_files = build_doc_list('build/sphinx/html', 'doc'),
-    cmdclass = {'test': PyTest},
+    install_requires=['flask',
+                      'beaker',
+                      'genshi',
+                      'static',
+                      'pdp-util >=0.2.2',
+                      'pydap.handlers.hdf5 >=0.5',
+                      'pydap.responses.netcdf >=0.5',
+                      'pydap.responses.xls',
+                      'pydap.responses.aaigrid >=0.5',
+                      'pydap.handlers.sql',
+                      'ga-wsgi-client',
+                      'slimit'],
+    tests_require=['webob',
+                   'pytest',
+                   'xlrd',
+                   'pillow',
+                   'netCDF4',
+                   'numpy',
+                   'BeautifulSoup4'],
+    scripts=['scripts/rast_serve.py'],
+    package_dir={'pdp': 'pdp'},
+    package_data={'pdp': ['templates/*.html', 'portals/hydro_stn.yaml'] +
+                  recursive_list('pdp/', 'pdp/static') +
+                  recursive_list('pdp/', 'pdp/docs/html')},
+    cmdclass={
+        'test': PyTest,
+        'build_sphinx': BuildDoc
+    },
+    command_options={
+        'build_sphinx': {
+            'build_dir': ('setup.py', 'pdp/docs')
+        }
+    },
     zip_safe=False,
-        classifiers='''Development Status :: 5 - Production/Stable
+    classifiers='''Development Status :: 5 - Production/Stable
 Environment :: Console
 nvironment :: Web Environment
 Framework :: Flask

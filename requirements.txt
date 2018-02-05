@@ -41,11 +41,11 @@ gitpython==2.1.7
 
 # GDAL python packages is pushing passed version2, however most
 # systems don't have version v1.11 available for install
-GDAL<2.0
+GDAL==2.2
 
 XlsxWriter==1.0.2
 coards==1.0.5
-h5py==2.5.0
+h5py==2.7.1
 pupynere-pdp==1.1.3
 pydap.handlers.hdf5==0.5.1
 pydap.responses.aaigrid==0.7

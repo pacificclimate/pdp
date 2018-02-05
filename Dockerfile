@@ -1,10 +1,9 @@
 ############################################
 # Dockerfile to run the PCIC data portal   #
-# Based on Ubuntu 16.04                    #
 ############################################
 
-FROM ubuntu:16.04
-MAINTAINER Carl Masri <cmasri@uvic.ca>
+FROM ubuntu:17.10
+MAINTAINER James Hiebert <hiebert@uvic.ca>
 
 RUN apt-get update && apt-get install -y \
     python-dev \
@@ -13,12 +12,13 @@ RUN apt-get update && apt-get install -y \
     libhdf5-dev \
     libgdal-dev \
     libnetcdf-dev \
-    git
+    git && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip
 
-COPY . /root/pdp
 WORKDIR /root/pdp
+ADD *requirements.txt /root/pdp/
 
 # Set up environment variables
 ENV CPLUS_INCLUDE_PATH /usr/include/gdal
@@ -27,17 +27,19 @@ ENV PDP_CONFIG /root/pdp_config.yaml
 
 # Install dependencies (separate RUN
 # statement for GDAL is required)
-RUN pip install numpy Cython==0.22
-RUN pip install gdal==1.11.2
-RUN pip install -i https://pypi.pacificclimate.org/simple/ \
+RUN pip install --no-binary :all: numpy Cython==0.22 gdal==2.2
+RUN pip install -i https://pypi.pacificclimate.org/simple \
+    --no-binary h5py \
     -r requirements.txt \
     -r test_requirements.txt \
     -r deploy_requirements.txt
 
+COPY ./ /root/pdp/
+
 # Install and build the docs
-RUN python setup.py install
+RUN pip install -i https://pypi.pacificclimate.org/simple .
 RUN python setup.py build_sphinx
-RUN python setup.py install
+RUN pip install -i https://pypi.pacificclimate.org/simple .
 
 # Create directory for supervisord logs
 RUN mkdir etc/
