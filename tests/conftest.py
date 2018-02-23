@@ -64,7 +64,7 @@ def authorized_session_id(check_auth_app):
     oid_app = check_auth_app.wrap_app
     try:
         oid_app({}, None)
-    except:
+    except Exception:
         pass
 
     assoc_handle = 'handle'
