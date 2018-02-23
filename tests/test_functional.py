@@ -137,6 +137,7 @@ def test_nc_response(pcic_data_portal, authorized_session_id):
     assert var.cell_method == 't: sum within months t: mean over years'
     for actual, expected in zip(var, [127.128, 91.2249, 77.3313, 46.2816, 39.6803, 33.1902, 22.3557, 22.448, 38.5025, 72.3281, 144.159, 121.008]):
         assert actual == expected
+    assert nc.variables['time'].type == 'Float64'
     nc.close()
     os.remove(f.name)
 
