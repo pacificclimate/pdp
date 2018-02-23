@@ -168,7 +168,7 @@ def test_nc_response_with_null_values(pcic_data_portal, authorized_session_id):
 @pytest.mark.crmpdb
 def test_clip_to_date_one(pcic_data_portal, authorized_session_id):
     base_url = '/data/pcds/agg/?'
-    sdate, edate = datetime(2007, 01, 01), None
+    sdate = datetime(2007, 01, 01)
     params = {'from-date': sdate.strftime('%Y/%m/%d'),
               'network-name': 'RTA', 'data-format': 'csv',
               'cliptodate': 'cliptodate',
@@ -425,7 +425,7 @@ def test_hydro_stn_data_catalog(pcic_data_portal, authorized_session_id):
     assert resp.content_type == 'application/json'
     assert '/data/hydro_stn/08KE009_Fraser.csv' in resp.body
     data = json.loads(resp.body)
-    # assert len(data) == 114
+    assert len(data) > 0
 
 
 @pytest.mark.bulk_data

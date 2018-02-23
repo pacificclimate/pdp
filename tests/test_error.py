@@ -11,7 +11,7 @@ def myapp(environ, start_response):
     Session = sessionmaker(bind=create_engine(
         'postgresql://pcic_meta@monsoon.pcic/pcic_meta2'))
     sesh = Session()
-    rv = sesh.execute("SELECT doesnt_exist FROM also_doesnt_exist")
+    sesh.execute("SELECT doesnt_exist FROM also_doesnt_exist")
     start_response('200 OK', [])
     return ['We', 'will', 'never', 'make', 'it', 'here']
 
