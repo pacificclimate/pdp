@@ -4,6 +4,7 @@ from pkg_resources import resource_filename, get_distribution
 
 from slimit import minify
 
+
 def wrap_mini(paths, basename='pdp', debug=True):
     '''
     :param paths: list of paths to JavaScript files that are to be minified

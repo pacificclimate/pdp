@@ -49,6 +49,7 @@ from portals.gridded_observations import data_server as gridded_observations_dat
 #pcds_dsn = global_config['pcds_dsn']
 #atexit.register(clean_session_dir, global_config['session_dir'], global_config['clean_session_dir'])
 
+
 def initialize_frontend(global_config, use_auth=False, use_analytics=False):
     '''Frontend server with all portal pages and required resources
     '''
@@ -58,24 +59,31 @@ def initialize_frontend(global_config, use_auth=False, use_analytics=False):
     check_auth = wrap_auth(check_authorized_return_email, required=False)
 
     wsgi_app = PathDispatcher([
-        ('^/css/(default|pcic).css$', static.Cling(resource_filename('pdp_util', 'data'))), # a bit of a hack for now
+        # a bit of a hack for now
+        ('^/css/(default|pcic).css$',
+         static.Cling(resource_filename('pdp_util', 'data'))),
         ('^/check_auth_app/?$', check_auth),
         ('^/{}/.*$'.format(pcds.url_base), pcds_portal(global_config)),
-        ('^/pcds_map/.*$', pcds_portal(global_config)), ## legacy url support
+        ('^/pcds_map/.*$', pcds_portal(global_config)),  # legacy url support
         ('^/{}/.*$'.format(hydro_stn.url_base), hydro_stn_portal(global_config)),
         ('^/{}/.*$'.format(bc_prism.url_base), bc_prism_portal(global_config)),
         ('^/{}/.*$'.format(vic_gen1.url_base), vic_gen1_portal(global_config)),
-        ('^/{}/.*$'.format(gridded_observations.url_base), gridded_observations_portal(global_config)),
-        ('^/{}/.*$'.format(bcsd_canada.url_base), bcsd_canada_portal(global_config)),
-        ('^/{}/.*$'.format(bccaq_extremes.url_base), bccaq_extremes_portal(global_config)),
+        ('^/{}/.*$'.format(gridded_observations.url_base),
+         gridded_observations_portal(global_config)),
+        ('^/{}/.*$'.format(bcsd_canada.url_base),
+         bcsd_canada_portal(global_config)),
+        ('^/{}/.*$'.format(bccaq_extremes.url_base),
+         bccaq_extremes_portal(global_config)),
         ('^/docs/.*$', docs_app),
-        ], default=static_app)
+    ], default=static_app)
 
     if use_analytics:
         wsgi_app = AnalyticsMiddleware(wsgi_app, global_config['analytics'])
     if use_auth:
-        wsgi_app = SessionMiddleware(wsgi_app, auto=1, data_dir=global_config['session_dir'])
-        atexit.register(clean_session_dir, global_config['session_dir'], global_config['clean_session_dir'])
+        wsgi_app = SessionMiddleware(
+            wsgi_app, auto=1, data_dir=global_config['session_dir'])
+        atexit.register(
+            clean_session_dir, global_config['session_dir'], global_config['clean_session_dir'])
     return ErrorMiddleware(wsgi_app)
 
 
@@ -83,24 +91,33 @@ def initialize_backend(global_config, use_auth=False, use_analytics=False):
     '''Backend pathdispatcher with all data servers
     '''
     wsgi_app = PathDispatcher([
-        ('^/{}/.*$'.format(bc_prism.url_base), bc_prism_data_server(global_config, bc_prism.ensemble_name)),
-        ('^/{}/.*$'.format(bcsd_canada.url_base), bcsd_canada_data_server(global_config, bcsd_canada.ensemble_name)),
-        ('^/{}/.*$'.format(vic_gen1.url_base), vic_gen1_data_server(global_config, vic_gen1.ensemble_name)),
-        ('^/{}/.*$'.format(gridded_observations.url_base), gridded_observations_data_server(global_config, gridded_observations.ensemble_name)),
-        ('^/{}/.*$'.format(bccaq_extremes.url_base), bccaq_extremes_data_server(global_config, bccaq_extremes.ensemble_name)),
-        ('^/{}/.*$'.format(hydro_stn.url_base), hydro_stn_data_server(global_config)),
+        ('^/{}/.*$'.format(bc_prism.url_base),
+         bc_prism_data_server(global_config, bc_prism.ensemble_name)),
+        ('^/{}/.*$'.format(bcsd_canada.url_base),
+         bcsd_canada_data_server(global_config, bcsd_canada.ensemble_name)),
+        ('^/{}/.*$'.format(vic_gen1.url_base),
+         vic_gen1_data_server(global_config, vic_gen1.ensemble_name)),
+        ('^/{}/.*$'.format(gridded_observations.url_base),
+         gridded_observations_data_server(global_config, gridded_observations.ensemble_name)),
+        ('^/{}/.*$'.format(bccaq_extremes.url_base),
+         bccaq_extremes_data_server(global_config, bccaq_extremes.ensemble_name)),
+        ('^/{}/.*$'.format(hydro_stn.url_base),
+         hydro_stn_data_server(global_config)),
         ('^/{}/.*$'.format(pcds.url_base), pcds_data_server(global_config))
     ])
     if use_analytics:
         wsgi_app = AnalyticsMiddleware(wsgi_app, global_config['analytics'])
     if use_auth:
-        wsgi_app = SessionMiddleware(wsgi_app, auto=1, data_dir=global_config['session_dir'])
-        atexit.register(clean_session_dir, global_config['session_dir'], global_config['clean_session_dir'])
+        wsgi_app = SessionMiddleware(
+            wsgi_app, auto=1, data_dir=global_config['session_dir'])
+        atexit.register(
+            clean_session_dir, global_config['session_dir'], global_config['clean_session_dir'])
     return ErrorMiddleware(wsgi_app)
 
+
 def initialize_dev_server(global_config, use_auth=False, use_analytics=False):
-  '''Development server
-  '''
-  return DispatcherMiddleware(initialize_frontend(global_config, use_auth, use_analytics), {
-    '/data': initialize_backend(global_config, use_auth, use_analytics)
-  })
+    '''Development server
+    '''
+    return DispatcherMiddleware(initialize_frontend(global_config, use_auth, use_analytics), {
+        '/data': initialize_backend(global_config, use_auth, use_analytics)
+    })

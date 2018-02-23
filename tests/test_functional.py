@@ -18,6 +18,7 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 from bs4 import BeautifulSoup
 
+
 @pytest.mark.parametrize('url', ['/js/crmp_map.js', '/css/main.css', '/images/banner.png'])
 def test_static(url):
     static_app = static.Cling(resource_filename('pdp', 'static'))
@@ -25,12 +26,14 @@ def test_static(url):
     resp = req.get_response(static_app)
     assert resp.status == '200 OK'
 
+
 @pytest.mark.crmpdb
 @pytest.mark.parametrize('url', ['/js/crmp_map.js', '/css/main.css', '/images/banner.png'])
 def test_static_full(pcic_data_portal, url):
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
+
 
 @pytest.mark.crmpdb
 @pytest.mark.parametrize('url', ['/', '/pcds/map/', '/pcds/count_stations/'])
@@ -46,13 +49,17 @@ def test_am_authorized(check_auth_app, authorized_session_id):
     resp = req.get_response(check_auth_app)
     assert resp.status == '200 OK'
 
+
 @pytest.mark.crmpdb
 @pytest.mark.parametrize(('url', 'title', 'body_strings'), [
-                         ('/data/pcds/lister/', 'PCDS Data', ["Climatological calculations", "raw/"]),
-                         ('/data/pcds/lister/raw/', "Participating CRMP Networks", ["FLNRO-WMB/", "Environment Canada (Canadian Daily Climate Data 2007)"]),
-                         ('/data/pcds/lister/raw/AGRI/', "Stations for network AGRI", ["de107/", "Deep Creek"]),
+                         ('/data/pcds/lister/', 'PCDS Data',
+                          ["Climatological calculations", "raw/"]),
+                         ('/data/pcds/lister/raw/', "Participating CRMP Networks",
+                          ["FLNRO-WMB/", "Environment Canada (Canadian Daily Climate Data 2007)"]),
+                         ('/data/pcds/lister/raw/AGRI/',
+                          "Stations for network AGRI", ["de107/", "Deep Creek"]),
                          ]
-)
+                         )
 def test_climo_index(pcic_data_portal, authorized_session_id, url, title, body_strings):
     req = Request.blank(url)
     req.cookies['beaker.session.id'] = authorized_session_id
@@ -67,6 +74,7 @@ def test_climo_index(pcic_data_portal, authorized_session_id, url, title, body_s
     for string in body_strings:
         assert string in resp.body
 
+
 @pytest.mark.crmpdb
 def test_unsupported_extension(pcic_data_portal, authorized_session_id):
     req = Request.blank('/data/pcds/agg/?data-format=foo')
@@ -75,10 +83,12 @@ def test_unsupported_extension(pcic_data_portal, authorized_session_id):
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '400 Bad Request'
 
+
 @pytest.mark.crmpdb
 @pytest.mark.parametrize('ext', ['ascii', 'csv'])
 def test_ascii_response(pcic_data_portal, authorized_session_id, ext):
-    req = Request.blank('/data/pcds/lister/climo/EC/1010066.csql.{0}?station_observations.Precip_Climatology,station_observations.time'.format(ext))
+    req = Request.blank(
+        '/data/pcds/lister/climo/EC/1010066.csql.{0}?station_observations.Precip_Climatology,station_observations.time'.format(ext))
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
@@ -99,9 +109,11 @@ Precip_Climatology, time
 '''
     assert resp.body == x
 
+
 @pytest.mark.crmpdb
 def test_xls_response(pcic_data_portal, authorized_session_id):
-    req = Request.blank('/data/pcds/lister/climo/EC/1010066.csql.xls?station_observations.Precip_Climatology,station_observations.time')
+    req = Request.blank(
+        '/data/pcds/lister/climo/EC/1010066.csql.xls?station_observations.Precip_Climatology,station_observations.time')
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
@@ -112,13 +124,15 @@ def test_xls_response(pcic_data_portal, authorized_session_id):
     for i, val in enumerate(['Precip_Climatology', 127.128, 91.2249, 77.3313, 46.2816, 39.6803, 33.1902, 22.3557, 22.448, 38.5025, 72.3281, 144.159, 121.008]):
         assert obs.cell_value(i, 0) == val
     # Check a few of the global attributes
-    assert attributes.cell_value(5, 2) == '-123.283333' #longitude
-    assert attributes.cell_value(2, 2) == '1010066' # station_id
-    assert attributes.cell_value(8, 2) == 'ACTIVE PASS' # station name
+    assert attributes.cell_value(5, 2) == '-123.283333'  # longitude
+    assert attributes.cell_value(2, 2) == '1010066'  # station_id
+    assert attributes.cell_value(8, 2) == 'ACTIVE PASS'  # station name
+
 
 @pytest.mark.crmpdb
 def test_nc_response(pcic_data_portal, authorized_session_id):
-    req = Request.blank('/data/pcds/lister/climo/EC/1010066.csql.nc?station_observations.Precip_Climatology,station_observations.time')
+    req = Request.blank(
+        '/data/pcds/lister/climo/EC/1010066.csql.nc?station_observations.Precip_Climatology,station_observations.time')
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
@@ -132,7 +146,7 @@ def test_nc_response(pcic_data_portal, authorized_session_id):
     nc = netCDF4.Dataset(f.name)
     assert_almost_equal(nc.longitude, np.array(-123.28333), 4)
     assert nc.station_id == '1010066'
-    assert nc.station_name == 'ACTIVE PASS' # station name
+    assert nc.station_name == 'ACTIVE PASS'  # station name
     var = nc.variables['Precip_Climatology']
     assert var.cell_method == 't: sum within months t: mean over years'
     for actual, expected in zip(var, [127.128, 91.2249, 77.3313, 46.2816, 39.6803, 33.1902, 22.3557, 22.448, 38.5025, 72.3281, 144.159, 121.008]):
@@ -141,6 +155,7 @@ def test_nc_response(pcic_data_portal, authorized_session_id):
     nc.close()
     os.remove(f.name)
 
+
 @pytest.mark.crmpdb
 def test_nc_response_with_null_values(pcic_data_portal, authorized_session_id):
     req = Request.blank('/data/pcds/lister/raw/BCH/AKI.rsql.nc')
@@ -148,6 +163,7 @@ def test_nc_response_with_null_values(pcic_data_portal, authorized_session_id):
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/x-netcdf'
+
 
 @pytest.mark.crmpdb
 def test_clip_to_date_one(pcic_data_portal, authorized_session_id):
@@ -168,7 +184,7 @@ def test_clip_to_date_one(pcic_data_portal, authorized_session_id):
     z = ZipFile(t, 'r')
     assert 'RTA/pondosy.csv' in z.namelist()
     f = z.open("RTA/pondosy.csv")
-    [ f.readline() for _ in range(10) ]
+    [f.readline() for _ in range(10)]
     # Read through the file and ensure the no data outside of the date range was returned
     reader = csv.reader(f)
     for row in reader:
@@ -198,6 +214,7 @@ def test_clip_to_date_one(pcic_data_portal, authorized_session_id):
 #     resp = req.get_response(pcic_data_portal)
 #     assert resp.status == '200 OK'
 
+
 @pytest.mark.crmpdb
 @pytest.mark.parametrize(('filters', 'expected'), [
     ({'network-name': 'EC_raw'}, 4),
@@ -207,9 +224,9 @@ def test_clip_to_date_one(pcic_data_portal, authorized_session_id):
     ({'only-with-climatology': 'only-with-climatology'}, 14),
     # We _should_ ignore a bad value for a filter (or return a HTTP BadRequest?)
     ({'only-with-climatology': 'bad-value'}, 50)
-# Omit this case until we get the geoalchemy stuff figured out
-#({'input-polygon': 'POLYGON((-123.240336 50.074796,-122.443323 49.762922,-121.992837 49.416394,-122.235407 48.654034,-123.725474 48.792645,-123.864085 49.728269,-123.240336 50.074796))'}, 7),
-    ])
+    # Omit this case until we get the geoalchemy stuff figured out
+    #({'input-polygon': 'POLYGON((-123.240336 50.074796,-122.443323 49.762922,-121.992837 49.416394,-122.235407 48.654034,-123.725474 48.792645,-123.864085 49.728269,-123.240336 50.074796))'}, 7),
+])
 def test_station_counts(filters, expected, pcic_data_portal):
     req = Request.blank('/pcds/count_stations?' + urlencode(filters))
     resp = req.get_response(pcic_data_portal)
@@ -219,6 +236,7 @@ def test_station_counts(filters, expected, pcic_data_portal):
     # FIXME: I want to check the counts... but not on a live database that could change out from under us. What to do?
     # data = json.loads(resp.body)
     # assert data['stations_selected'] == expected
+
 
 @pytest.mark.crmpdb
 @pytest.mark.parametrize('filters', [
@@ -239,10 +257,10 @@ def test_record_length(filters, pcic_data_portal):
 
 @pytest.mark.crmpdb
 @pytest.mark.parametrize(('network', 'color'), [
-    ('flnro-wmb.png', (12, 102, 0)), # Forest Green
-    ('bch.png', (0, 16, 165)), # Blue
-    ('no_network.png', (255, 255, 255)) # White
-    ])
+    ('flnro-wmb.png', (12, 102, 0)),  # Forest Green
+    ('bch.png', (0, 16, 165)),  # Blue
+    ('no_network.png', (255, 255, 255))  # White
+])
 def test_legend(network, color, pcic_data_portal):
     req = Request.blank('/pcds/images/legend/' + network)
     resp = req.get_response(pcic_data_portal)
@@ -256,19 +274,20 @@ def test_legend(network, color, pcic_data_portal):
     im = Image.open(f.name)
     r, g, b, a = [x.histogram() for x in im.split()]
     average = (
-        sum( i*w for i, w in enumerate(r) ) / sum(r),
-        sum( i*w for i, w in enumerate(g) ) / sum(g),
-        sum( i*w for i, w in enumerate(b) ) / sum(b)
+        sum(i * w for i, w in enumerate(r)) / sum(r),
+        sum(i * w for i, w in enumerate(g)) / sum(g),
+        sum(i * w for i, w in enumerate(b)) / sum(b)
     )
     assert average == color
     os.remove(f.name)
+
 
 @pytest.mark.crmpdb
 def test_legend_caching(pcic_data_portal):
     url = '/pcds/images/legend/flnro-wmb.png'
 
-    pre_load_time = datetime.now() - timedelta(1) # yesterday
-    post_load_time = datetime.now() + timedelta(1) # tomorrow
+    pre_load_time = datetime.now() - timedelta(1)  # yesterday
+    post_load_time = datetime.now() + timedelta(1)  # tomorrow
 
     # Load once to make sure that the image gets cached
     req = Request.blank(url)
@@ -286,26 +305,26 @@ def test_legend_caching(pcic_data_portal):
     req.if_modified_since = pre_load_time
     resp = req.get_response(pcic_data_portal)
     assert resp.status.startswith('200')
-    
+
 
 @pytest.mark.crmpdb
-@pytest.mark.parametrize('polygon', ['single station polygon', 
+@pytest.mark.parametrize('polygon', ['single station polygon',
                                      'multiple station polygon',
                                      'multiple polygons',
                                      'station EC 1025230',
                                      'station without observations polygon',
                                      'network without observations polygon'
-                                     ]) 
+                                     ])
 def test_input_polygon_download_zipfile(pcic_data_portal, authorized_session_id, polygon):
 
-    polygons = {'single station polygon' : 'MULTIPOLYGON(((-128.59910830928055 53.852860003953495,-128.45182033352623 53.86465328654807,-128.4562364026459 53.79618867900996,-128.59910830928055 53.852860003953495)))',
-                'multiple station polygon' : 'MULTIPOLYGON(((-122.16988794027921 54.61618496834933,-122.12395804699314 54.61753974917094,-122.12601061930596 54.59023544661601,-122.16988794027921 54.61618496834933)))' ,
+    polygons = {'single station polygon': 'MULTIPOLYGON(((-128.59910830928055 53.852860003953495,-128.45182033352623 53.86465328654807,-128.4562364026459 53.79618867900996,-128.59910830928055 53.852860003953495)))',
+                'multiple station polygon': 'MULTIPOLYGON(((-122.16988794027921 54.61618496834933,-122.12395804699314 54.61753974917094,-122.12601061930596 54.59023544661601,-122.16988794027921 54.61618496834933)))',
                 'multiple polygons': 'MULTIPOLYGON(((-121.89643424564886 54.20043741333826,-122.13176870283458 54.14845194258505,-122.1226369471675 54.01876407450885,-121.75836848952896 54.048830061202494,-121.89643424564886 54.20043741333826)),((-121.23964475389124 54.0095741960868,-121.45248834584457 53.967985385684926,-121.43980080067858 53.81312824978667,-121.108695973217 53.82251331340121,-121.23964475389124 54.0095741960868)))',
-                'station EC 1025230' : 'MULTIPOLYGON(((-125.29637443283997 49.75425334879682,-125.27276223016982 49.757216316386696,-125.27059060328506 49.742548670551834,-125.29276284376195 49.73895329426124,-125.29637443283997 49.75425334879682)))',
-                'station without observations polygon' : 'MULTIPOLYGON(((-123.28294974546985 48.53765964184428,-123.22831848366447 48.573754711908165,-123.20548795617668 48.51564288151938,-123.28294974546985 48.53765964184428)))',
-                'network without observations polygon' : 'MULTIPOLYGON(((-122.84250052310462 49.33095465473638,-122.90005834526038 49.297649140301004,-122.86157366135 49.24657317992617,-122.76249620948452 49.219908575081675,-122.66148902126935 49.24806074593272,-122.70891368322285 49.30448396541877,-122.84250052310462 49.33095465473638)))'
+                'station EC 1025230': 'MULTIPOLYGON(((-125.29637443283997 49.75425334879682,-125.27276223016982 49.757216316386696,-125.27059060328506 49.742548670551834,-125.29276284376195 49.73895329426124,-125.29637443283997 49.75425334879682)))',
+                'station without observations polygon': 'MULTIPOLYGON(((-123.28294974546985 48.53765964184428,-123.22831848366447 48.573754711908165,-123.20548795617668 48.51564288151938,-123.28294974546985 48.53765964184428)))',
+                'network without observations polygon': 'MULTIPOLYGON(((-122.84250052310462 49.33095465473638,-122.90005834526038 49.297649140301004,-122.86157366135 49.24657317992617,-122.76249620948452 49.219908575081675,-122.66148902126935 49.24806074593272,-122.70891368322285 49.30448396541877,-122.84250052310462 49.33095465473638)))'
                 }
-    
+
     base_url = '/data/pcds/agg/?'
     params = {'from-date': 'YYYY/MM/DD',
               'to-date': 'YYYY/MM/DD',
@@ -316,15 +335,15 @@ def test_input_polygon_download_zipfile(pcic_data_portal, authorized_session_id,
 
     req = Request.blank(base_url + urlencode(params))
     req.cookies['beaker.session.id'] = authorized_session_id
-     
+
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
 
     t = TemporaryFile()
     t.write(resp.body)
     z = ZipFile(t, 'r')
-    assert z.testzip() == None  
- 
+    assert z.testzip() == None
+
 
 @pytest.mark.bulk_data
 def test_climatology_bounds(pcic_data_portal, authorized_session_id):
@@ -346,25 +365,27 @@ def test_climatology_bounds(pcic_data_portal, authorized_session_id):
     assert 'climatology_bounds' in nc.variables
 
     assert_almost_equal(nc.variables['climatology_bounds'][:],
-                        np.array([[     0.,  10988.],
-                                  [    31.,  11017.],
-                                  [    59.,  11048.],
-                                  [    90.,  11078.],
-                                  [   120.,  11109.],
-                                  [   151.,  11139.],
-                                  [   181.,  11170.],
-                                  [   212.,  11201.],
-                                  [   243.,  11231.],
-                                  [   273.,  11262.],
-                                  [   304.,  11292.],
-                                  [   334.,  11323.],
-                                  [     0.,  11323.]], dtype=np.float32))
+                        np.array([[0.,  10988.],
+                                  [31.,  11017.],
+                                  [59.,  11048.],
+                                  [90.,  11078.],
+                                  [120.,  11109.],
+                                  [151.,  11139.],
+                                  [181.,  11170.],
+                                  [212.,  11201.],
+                                  [243.,  11231.],
+                                  [273.,  11262.],
+                                  [304.,  11292.],
+                                  [334.,  11323.],
+                                  [0.,  11323.]], dtype=np.float32))
     nc.close()
     os.remove(f.name)
 
+
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('url', [
-    '/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.aig?tasmax[0:30][77:138][129:238]&', # has NODATA values
+    # has NODATA values
+    '/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.aig?tasmax[0:30][77:138][129:238]&',
     '/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.aig?tasmax[0:30][144:236][307:348]&',
 ])
 def test_aaigrid_response(pcic_data_portal, authorized_session_id, url):
@@ -375,21 +396,24 @@ def test_aaigrid_response(pcic_data_portal, authorized_session_id, url):
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/zip'
 
+
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('layers', [0, 1, 100, 38000])
 def test_aaigrid_response_layers(pcic_data_portal, authorized_session_id, layers):
-    url = '/data/hydro_model_out/pr+tasmin+tasmax+wind_day_HadCM_A1B_run1_19500101-21001231.nc.aig?pr[0:' + str(layers) + '][119:120][242:243]&'
+    url = '/data/hydro_model_out/pr+tasmin+tasmax+wind_day_HadCM_A1B_run1_19500101-21001231.nc.aig?pr[0:' + str(
+        layers) + '][119:120][242:243]&'
     req = Request.blank(url)
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
-    
+
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/zip'
     t = TemporaryFile()
     t.write(resp.body)
     z = ZipFile(t, 'r')
-    
-    assert len(z.namelist()) == (layers+1) * 2
+
+    assert len(z.namelist()) == (layers + 1) * 2
+
 
 @pytest.mark.bulk_data
 def test_hydro_stn_data_catalog(pcic_data_portal, authorized_session_id):
@@ -402,6 +426,7 @@ def test_hydro_stn_data_catalog(pcic_data_portal, authorized_session_id):
     assert '/data/hydro_stn/08KE009_Fraser.csv' in resp.body
     data = json.loads(resp.body)
     # assert len(data) == 114
+
 
 @pytest.mark.bulk_data
 def test_hydro_stn_data_csv_csv(pcic_data_portal, authorized_session_id):
@@ -417,6 +442,7 @@ def test_hydro_stn_data_csv_csv(pcic_data_portal, authorized_session_id):
             return
 
     assert False, "Data line for 1950/1/1 does not exist"
+
 
 @pytest.mark.bulk_data
 def test_hydro_stn_data_csv_selection_projection(pcic_data_portal, authorized_session_id):
@@ -440,6 +466,7 @@ ccsm3_A2run1
 146.530792
 137.407532''')
 
+
 @pytest.mark.bulk_data
 def test_hydro_model_out_catalog(pcic_data_portal):
     url = '/hydro_model_out/catalog/'
@@ -450,6 +477,7 @@ def test_hydro_model_out_catalog(pcic_data_portal):
     assert 'hydro_model_out/5var_day_HadCM_B1_run1_19500101-20981231.nc' in resp.body
     data = json.loads(resp.body)
     assert len(data) > 0
+
 
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('url', [
@@ -463,6 +491,7 @@ def test_hydro_model_out_5var(pcic_data_portal, url):
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/x-netcdf'
+
 
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('url', [
@@ -480,11 +509,11 @@ def test_hydro_model_out_pr_tasmin_tasmax_wind(pcic_data_portal, url):
 @pytest.mark.bulk_data
 @pytest.mark.parametrize(('projection', 'length'), [
     ('[][][]', 13),
-    ('[1][][]', 1), # single index
-    ('[0:2:10][][]', 6), # start, step, last
-    ('[5:10][][]', 6), # start, last
-    ('[4:][][]', 9), # start to the end
-    ('[4:2:][][]', 5) # start, step
+    ('[1][][]', 1),  # single index
+    ('[0:2:10][][]', 6),  # start, step, last
+    ('[5:10][][]', 6),  # start, last
+    ('[4:][][]', 9),  # start to the end
+    ('[4:2:][][]', 5)  # start, step
 ])
 def test_empty_hyperslabs(pcic_data_portal, projection, length):
     varname = 'pr'

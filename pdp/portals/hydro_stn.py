@@ -10,8 +10,10 @@ from pdp.portals import updateConfig
 
 url_base = 'hydro_stn'
 
+
 class HydroStationDataServer(DapServer):
     '''WSGI app which is a subclass of PyDap's DapServer that directly configures the app's root_url'''
+
     def __init__(self, filepath, root_url):
         self.root_url = root_url
         return super(HydroStationDataServer, self).__init__(filepath)
@@ -22,23 +24,26 @@ class HydroStationDataServer(DapServer):
         self._config['root_url'] = self.root_url
         return self._config
 
+
 def data_server(global_config):
-    data_server = wrap_auth(HydroStationDataServer(resource_filename('pdp', 'portals/hydro_stn.yaml'), global_config['data_root'].rstrip('/') + '/'))
+    data_server = wrap_auth(HydroStationDataServer(resource_filename(
+        'pdp', 'portals/hydro_stn.yaml'), global_config['data_root'].rstrip('/') + '/'))
     return data_server
+
 
 def portal(config):
     hydro_stn_config = {
         'title': 'Modelled Streamflow Data',
-        'js_files' :
+        'js_files':
         wrap_mini([
-                'js/jquery.csv-0.71.js',
-                'js/hydro_stn_download.js',
-                'js/hydro_stn_map.js',
-                'js/hydro_stn_controls.js',
-                'js/hydro_stn_app.js'],
-                  basename=url_base, debug=(not config['js_min'])
-                  )
-        }
+            'js/jquery.csv-0.71.js',
+            'js/hydro_stn_download.js',
+            'js/hydro_stn_map.js',
+            'js/hydro_stn_controls.js',
+            'js/hydro_stn_app.js'],
+            basename=url_base, debug=(not config['js_min'])
+        )
+    }
 
     config = updateConfig(config, hydro_stn_config)
     map_app = wrap_auth(MapApp(**config), required=False)
@@ -46,4 +51,3 @@ def portal(config):
     return PathDispatcher([
         ('^/map/?.*$', map_app),
     ])
-

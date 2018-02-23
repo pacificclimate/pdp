@@ -13,6 +13,7 @@ from pdp.portals import updateConfig, raster_conf
 ensemble_name = 'gridded-obs-met-data'
 url_base = 'gridded_observations'
 
+
 class GriddedObservationsEnsembleLister(EnsembleMemberLister):
 
     def list_stuff(self, ensemble):
@@ -24,18 +25,20 @@ class GriddedObservationsEnsembleLister(EnsembleMemberLister):
         for dfv in sorted(ensemble.data_file_variables, key=lambda dfv: dfv.netcdf_variable_name):
             yield dataset_names[dfv.file.run.model.short_name], dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
+
 def data_server(config, ensemble_name):
     dsn = config['dsn']
     conf = raster_conf(dsn, config, ensemble_name, url_base)
     data_server = wrap_auth(RasterServer(dsn, conf))
     return data_server
 
+
 def portal(config):
     dsn = config['dsn']
     portal_config = {
         'title': 'Gridded Daily Meteorological Databases',
         'ensemble_name': ensemble_name,
-        'js_files' : 
+        'js_files':
             wrap_mini([
                 'js/gridded_observations_map.js',
                 'js/gridded_observations_controls.js',
@@ -47,7 +50,7 @@ def portal(config):
     map_app = wrap_auth(MapApp(**portal_config), required=False)
 
     conf = raster_conf(dsn, config, ensemble_name, url_base)
-    catalog_server = RasterCatalog(dsn, conf) #No Auth
+    catalog_server = RasterCatalog(dsn, conf)  # No Auth
 
     menu = GriddedObservationsEnsembleLister(dsn)
 

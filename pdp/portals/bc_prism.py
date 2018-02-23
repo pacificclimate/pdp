@@ -13,6 +13,7 @@ from pdp.portals import updateConfig, raster_conf
 ensemble_name = 'bc_prism'
 url_base = 'bc_prism'
 
+
 class PrismEnsembleLister(EnsembleMemberLister):
     def parse_date_range(self, unique_id):
         return '-'.join([x[:4] for x in unique_id.split('_')[-1].split('-')])
@@ -21,18 +22,20 @@ class PrismEnsembleLister(EnsembleMemberLister):
         for dfv in ensemble.data_file_variables:
             yield self.parse_date_range(dfv.file.unique_id), dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
+
 def data_server(config, ensemble_name):
     dsn = config['dsn']
     conf = raster_conf(dsn, config, ensemble_name)
     data_server = wrap_auth(RasterServer(dsn, conf))
     return data_server
 
+
 def portal(config):
     dsn = config['dsn']
     portal_config = {
         'title': 'High-Resolution PRISM Climatology',
         'ensemble_name': ensemble_name,
-        'js_files' : wrap_mini([
+        'js_files': wrap_mini([
             'js/prism_demo_map.js',
             'js/prism_demo_controls.js',
             'js/prism_demo_app.js'],
@@ -43,7 +46,7 @@ def portal(config):
     map_app = wrap_auth(MapApp(**portal_config), required=False)
 
     conf = raster_conf(dsn, config, ensemble_name)
-    catalog_server = RasterCatalog(dsn, conf) #No Auth
+    catalog_server = RasterCatalog(dsn, conf)  # No Auth
 
     menu = PrismEnsembleLister(dsn)
 

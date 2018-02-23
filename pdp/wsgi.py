@@ -7,8 +7,10 @@ from pdp.main import initialize_frontend, initialize_backend
 
 global_config = get_config()
 
-frontend = initialize_frontend(global_config, use_auth=global_config['use_auth'], use_analytics=global_config['use_analytics'])
-backend = initialize_backend(global_config, use_auth=global_config['use_auth'], use_analytics=global_config['use_analytics'])
+frontend = initialize_frontend(
+    global_config, use_auth=global_config['use_auth'], use_analytics=global_config['use_analytics'])
+backend = initialize_backend(
+    global_config, use_auth=global_config['use_auth'], use_analytics=global_config['use_analytics'])
 dev_server = DispatcherMiddleware(frontend, {
     '/data': backend
 })

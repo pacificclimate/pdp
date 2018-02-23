@@ -5,7 +5,8 @@ from logging import basicConfig, DEBUG
 from gevent import server
 from gevent.baseserver import _tcp_listener
 from gevent import pywsgi
-from gevent.monkey import patch_all; patch_all()
+from gevent.monkey import patch_all
+patch_all()
 
 from pdp.wsgi import dev_server
 
@@ -133,23 +134,25 @@ if __name__ == '__main__':
     <WSGIServer fileno=3 address=0.0.0.0:8004>: Failed to handle request:
     request = GET /ensemble_datasets.json?ensemble_name=bc_prism HTTP/1.1 from ('127.0.0.1', 42402)
     application = <pdp.PathDispatcher object at 0x3da2f50>
-    
+
     '''
-    
-    parser = ArgumentParser(description='Start a development pdp.wsgi:dev_server Flask instance')
+
+    parser = ArgumentParser(
+        description='Start a development pdp.wsgi:dev_server Flask instance')
     parser.add_argument('-p', '--port', type=int, required=True,
                         help='Indicate the port on which to bind the application')
     parser.add_argument('--processors', type=int, required=True,
                         help='Number of listener processes to spawn.  Use 0 for (cpu_count()*2)+1')
     args = parser.parse_args()
 
-    basicConfig(format='%(levelname)s:%(name)s:%(asctime)s %(message)s', stream=sys.stdout, level=DEBUG)
+    basicConfig(format='%(levelname)s:%(name)s:%(asctime)s %(message)s',
+                stream=sys.stdout, level=DEBUG)
 
     listener = _tcp_listener(('0.0.0.0', args.port))
-    
+
     def serve_forever(listener):
         pywsgi.WSGIServer(listener, dev_server).serve_forever()
-    
+
     if args.processors == 0:
         num_proc = cpu_count() * 2 + 1
     else:
