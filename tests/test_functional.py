@@ -342,7 +342,7 @@ def test_input_polygon_download_zipfile(pcic_data_portal, authorized_session_id,
     t = TemporaryFile()
     t.write(resp.body)
     z = ZipFile(t, 'r')
-    assert z.testzip() == None
+    assert z.testzip() is None
 
 
 @pytest.mark.bulk_data
