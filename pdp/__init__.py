@@ -7,21 +7,13 @@ __all__ = ['get_config', 'wrap_auth']
 
 import sys
 import os
-from os.path import dirname
-import atexit
 import re
 
-from pkg_resources import resource_filename, resource_stream, get_distribution
-from tempfile import mkdtemp
+from pkg_resources import resource_filename, get_distribution
 from shutil import rmtree
 import yaml
-import static
-from beaker.middleware import SessionMiddleware
 
-from pdp_util.auth import PcicOidMiddleware, check_authorized_return_email
-from ga_wsgi_client import AnalyticsMiddleware
-from pdp.error import ErrorMiddleware
-from pdp.dispatch import PathDispatcher
+from pdp_util.auth import PcicOidMiddleware
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
 

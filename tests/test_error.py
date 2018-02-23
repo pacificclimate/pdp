@@ -1,6 +1,5 @@
 from pdp.error import ErrorMiddleware
 
-import pytest
 from webob.request import Request
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine

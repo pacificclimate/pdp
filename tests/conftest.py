@@ -1,15 +1,11 @@
 # Integration tests for the the full data portal web application
 
-import sys
-from os.path import dirname
 from tempfile import mkdtemp
-from shutil import rmtree
 import random
 import cPickle
 import re
 
 import py
-import webob
 import pytest
 from webob.request import Request
 from beaker.middleware import SessionMiddleware

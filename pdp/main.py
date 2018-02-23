@@ -1,14 +1,13 @@
 '''Exposes globally defined WSGI apps as module variables
 '''
 import atexit
-from os.path import dirname
 from pkg_resources import resource_filename
 
 import static
 from beaker.middleware import SessionMiddleware
 from werkzeug.wsgi import DispatcherMiddleware
 
-#from pdp import get_config, wrap_auth, clean_session_dir
+# from pdp import get_config, wrap_auth, clean_session_dir
 from pdp import wrap_auth, clean_session_dir
 
 from pdp.error import ErrorMiddleware

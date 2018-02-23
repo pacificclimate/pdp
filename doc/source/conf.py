@@ -14,6 +14,8 @@
 import sys
 import os
 
+from pdp import parse_version
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -51,8 +53,6 @@ copyright = u'2018, James Hiebert'
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
-from pkg_resources import resource_filename, get_distribution
-from pdp import parse_version
 
 # The full version, including alpha/beta/rc tags.
 version = parse_version("version")

@@ -1,8 +1,7 @@
 from argparse import ArgumentParser
-from multiprocessing import Process, current_process, cpu_count
+from multiprocessing import Process, cpu_count
 from logging import basicConfig, DEBUG
 
-from gevent import server
 from gevent.baseserver import _tcp_listener
 from gevent import pywsgi
 from gevent.monkey import patch_all
