@@ -4,9 +4,11 @@ from logging import basicConfig, DEBUG
 
 from gevent import pywsgi
 from gevent.monkey import patch_all
-patch_all()
 
 from pdp.wsgi import dev_server
+
+patch_all()
+
 
 if __name__ == '__main__':
 
