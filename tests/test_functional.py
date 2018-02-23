@@ -225,7 +225,7 @@ def test_clip_to_date_one(pcic_data_portal, authorized_session_id):
     # We _should_ ignore a bad value for a filter (or return a HTTP BadRequest?)
     ({'only-with-climatology': 'bad-value'}, 50)
     # Omit this case until we get the geoalchemy stuff figured out
-    #({'input-polygon': 'POLYGON((-123.240336 50.074796,-122.443323 49.762922,-121.992837 49.416394,-122.235407 48.654034,-123.725474 48.792645,-123.864085 49.728269,-123.240336 50.074796))'}, 7),
+    # ({'input-polygon': 'POLYGON((-123.240336 50.074796,-122.443323 49.762922,-121.992837 49.416394,-122.235407 48.654034,-123.725474 48.792645,-123.864085 49.728269,-123.240336 50.074796))'}, 7),
 ])
 def test_station_counts(filters, expected, pcic_data_portal):
     req = Request.blank('/pcds/count_stations?' + urlencode(filters))
