@@ -1,4 +1,7 @@
-'''The pdp.portals.vic_gen1 module configures a raster portal which serves the first generation of output from the VIC Hydrologic Model. The spatial domain is specific watersheds within BC and the model was run using CMIP3 forcings.
+'''The pdp.portals.vic_gen1 module configures a raster portal which
+serves the first generation of output from the VIC Hydrologic
+Model. The spatial domain is specific watersheds within BC and the
+model was run using CMIP3 forcings.
 '''
 
 from pdp import wrap_auth
@@ -17,7 +20,9 @@ url_base = 'hydro_model_out'
 class VicGen1EnsembleLister(EnsembleMemberLister):
     def list_stuff(self, ensemble):
         for dfv in ensemble.data_file_variables:
-            yield dfv.file.run.emission.short_name, dfv.file.run.model.short_name, dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
+            yield dfv.file.run.emission.short_name,
+            dfv.file.run.model.short_name, dfv.netcdf_variable_name,
+            dfv.file.unique_id.replace('+', '-')
 
 
 def data_server(config, ensemble_name):

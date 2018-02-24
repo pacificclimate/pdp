@@ -59,7 +59,8 @@ def check_auth_app(session_dir):
 
 @pytest.fixture(scope="module")
 def authorized_session_id(check_auth_app):
-    # FIXME: I shouldn't have to do this, but the store doesn't get initialized until the first request
+    # FIXME: I shouldn't have to do this, but the store doesn't get initialized
+    # until the first request
 
     oid_app = check_auth_app.wrap_app
     try:

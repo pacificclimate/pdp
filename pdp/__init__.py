@@ -1,6 +1,9 @@
-'''The pdp package ties together all of the aspects of the PCIC Data Portal (pdp).
-   The base pdp module configures the application, sets up a URL hierarchy (a PathDispatcher instance),
-   instantiates all of the responder applications and binds them to various PathDispatchers.
+'''The pdp package ties together all of the aspects of the PCIC Data
+   Portal (pdp).  The base pdp module configures the application, sets
+   up a URL hierarchy (a PathDispatcher instance), instantiates all of
+   the responder applications and binds them to various
+   PathDispatchers.
+
 '''
 
 __all__ = ['get_config', 'wrap_auth']
@@ -25,7 +28,9 @@ def get_config():
         with open(config_filename) as f:
             config = yaml.load(f)
     except IOError:
-        print("pdp/__init__.py: An error occurred while trying to read the config file. Please make sure that the PDP_CONFIG env variable has been set and points to a valid file.")
+        print("pdp/__init__.py: An error occurred while trying to read the "
+              "config file. Please make sure that the PDP_CONFIG env variable "
+              "has been set and points to a valid file.")
         sys.exit(1)
 
     global_config = {
@@ -93,7 +98,8 @@ def clean_session_dir(session_dir, should_I):
 
 
 def wrap_auth(app, required=False):
-    '''This function wraps a WSGI application with the PcicOidMiddleware for session management and optional authentication
+    '''This function wraps a WSGI application with the PcicOidMiddleware
+    for session management and optional authentication
     '''
     config = get_config()
     app = PcicOidMiddleware(app,

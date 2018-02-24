@@ -1,4 +1,6 @@
-'''The pdp.portals.bcsd_downscale_canada module configures a raster portal to serve BCSD and BCCAQ downscaled (10km) data over all of Canada.
+'''The pdp.portals.bcsd_downscale_canada module configures a raster
+portal to serve BCSD and BCCAQ downscaled (10km) data over all of
+Canada.
 '''
 
 from pdp import wrap_auth
@@ -17,7 +19,9 @@ url_base = 'downscaled_gcms'
 class DownscaledEnsembleLister(EnsembleMemberLister):
     def list_stuff(self, ensemble):
         for dfv in ensemble.data_file_variables:
-            yield dfv.file.run.emission.short_name, dfv.file.run.model.short_name, dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
+            yield dfv.file.run.emission.short_name,
+            dfv.file.run.model.short_name, dfv.netcdf_variable_name,
+            dfv.file.unique_id.replace('+', '-')
 
 
 def data_server(config, ensemble_name):

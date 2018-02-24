@@ -1,4 +1,5 @@
-'''The pdp.portals.pcds module configures the Provincial Climate Data Set portal.
+'''The pdp.portals.pcds module configures the Provincial Climate Data
+Set portal.
 '''
 
 from pkg_resources import resource_filename

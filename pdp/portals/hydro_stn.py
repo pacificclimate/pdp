@@ -12,7 +12,9 @@ url_base = 'hydro_stn'
 
 
 class HydroStationDataServer(DapServer):
-    '''WSGI app which is a subclass of PyDap's DapServer that directly configures the app's root_url'''
+    '''WSGI app which is a subclass of PyDap's DapServer that directly
+    configures the app's root_url
+    '''
 
     def __init__(self, filepath, root_url):
         self.root_url = root_url
@@ -25,8 +27,11 @@ class HydroStationDataServer(DapServer):
 
 
 def data_server(global_config):
-    data_server = wrap_auth(HydroStationDataServer(resource_filename(
-        'pdp', 'portals/hydro_stn.yaml'), global_config['data_root'].rstrip('/') + '/'))
+    data_server = wrap_auth(
+        HydroStationDataServer(
+            resource_filename('pdp', 'portals/hydro_stn.yaml'),
+            global_config['data_root'].rstrip('/') + '/')
+    )
     return data_server
 
 

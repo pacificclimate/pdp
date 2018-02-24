@@ -1,4 +1,6 @@
-'''The pdp.portals.bccaq_extremes module configures a raster portal to serve ClimDEX data computed on the Canada-wide BCCAQ downscaled dataset.
+'''The pdp.portals.bccaq_extremes module configures a raster portal to
+serve ClimDEX data computed on the Canada-wide BCCAQ downscaled
+dataset.
 '''
 
 from pdp import wrap_auth
@@ -18,7 +20,11 @@ class ClimdexEnsembleLister(EnsembleMemberLister):
     def list_stuff(self, ensemble):
         for dfv in ensemble.data_file_variables:
             # FIXME
-            yield dfv.file.run.emission.short_name, dfv.file.run.model.short_name, "annual" if "_yr_" in dfv.file.unique_id else "monthly", dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
+            yield dfv.file.run.emission.short_name,
+            dfv.file.run.model.short_name, "annual" if \
+                "_yr_" in dfv.file.unique_id else "monthly",
+            dfv.netcdf_variable_name,
+            dfv.file.unique_id.replace('+', '-')
 
 
 def data_server(config, ensemble_name):

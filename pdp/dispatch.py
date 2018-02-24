@@ -3,10 +3,11 @@ from wsgiref.util import shift_path_info
 
 
 class PathDispatcher(object):
-    '''
-    Simple wsgi app to route URL based on regex patterns at the beginning of the path.
+    '''Simple wsgi app to route URL based on regex patterns at the
+    beginning of the path.
 
     urls: a dict or list of (path_regex, app) pairs
+
     '''
 
     def __init__(self, urls, default=None):

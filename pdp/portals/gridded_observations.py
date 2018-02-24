@@ -22,8 +22,10 @@ class GriddedObservationsEnsembleLister(EnsembleMemberLister):
             "SYMAP_BC_v1": "VIC Forcings 2010",
             "TPS_NWNA_v1": "PNWNAmet 2015"}
 
-        for dfv in sorted(ensemble.data_file_variables, key=lambda dfv: dfv.netcdf_variable_name):
-            yield dataset_names[dfv.file.run.model.short_name], dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
+        for dfv in sorted(ensemble.data_file_variables,
+                          key=lambda dfv: dfv.netcdf_variable_name):
+            yield dataset_names[dfv.file.run.model.short_name],
+            dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
 
 def data_server(config, ensemble_name):

@@ -73,7 +73,8 @@ def test_500():
     resp = req.get_response(app, catch_exc_info=True)
 
     assert resp.status_code == 500
-    assert "There was an unhandleable problem with the application" in resp.body
+    assert "There was an unhandleable problem with the application" \
+        in resp.body
 
 
 if __name__ == '__main__':
