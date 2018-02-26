@@ -91,7 +91,7 @@ def test_unsupported_extension(pcic_data_portal, authorized_session_id):
 @pytest.mark.crmpdb
 @pytest.mark.parametrize('ext', ['ascii', 'csv'])
 def test_ascii_response(pcic_data_portal, authorized_session_id, ext):
-    url = '/data/pcds/lister/climo/EC/1010066.csql.{0}?'
+    url = '/data/pcds/lister/climo/EC/1010066.csql.{0}?'\
     'station_observations.Precip_Climatology,station_observations.time'\
         .format(ext)
     req = Request.blank(url)
@@ -410,7 +410,7 @@ def test_input_polygon_download_zipfile(pcic_data_portal,
 
 @pytest.mark.bulk_data
 def test_climatology_bounds(pcic_data_portal, authorized_session_id):
-    url = '/data/bc_prism/tmin_monClim_PRISM_historical_run1_197101-200012'
+    url = '/data/bc_prism/tmin_monClim_PRISM_historical_run1_197101-200012'\
     '.nc.nc?climatology_bounds&'
     req = Request.blank(url)
     req.cookies['beaker.session.id'] = authorized_session_id
@@ -449,15 +449,14 @@ def test_climatology_bounds(pcic_data_portal, authorized_session_id):
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('url', [
     # has NODATA values
-    '/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+CanESM2_'
-    'historical+rcp26_r1i1p1_19500101-21001231.nc.aig?'
-    'tasmax[0:30][77:138][129:238]&',
-    '/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+CanESM2_'
-    'historical+rcp26_r1i1p1_19500101-21001231.nc.aig?'
-    'tasmax[0:30][144:236][307:348]&',
+    '{}BCCAQ+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231'\
+    '.nc.aig?tasmax[0:30][77:138][129:238]&',
+    '{}BCCAQ+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231'\
+    '.nc.aig?tasmax[0:30][144:236][307:348]&',
 ])
 def test_aaigrid_response(pcic_data_portal, authorized_session_id, url):
-    req = Request.blank(url)
+    base = '/data/downscaled_gcms/pr+tasmax+tasmin_day_'
+    req = Request.blank(url.format(base))
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
 
