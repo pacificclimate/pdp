@@ -4,15 +4,20 @@ from pkg_resources import resource_filename, get_distribution
 
 from slimit import minify
 
+
 def wrap_mini(paths, basename='pdp', debug=True):
     '''
     :param paths: list of paths to JavaScript files that are to be minified
     :type paths: list of strings
-    :param basename: a prefix to prepend to the minified filename. The minified filename will be {basename}-min-{pdp_version}.js
+    :param basename: a prefix to prepend to the minified filename. The
+                     minified filename will be {basename}-min-{pdp_version}.js
     :type basename: string
-    :param debug: If set to True, no minification takes place and the input `paths` are returned as is.
+    :param debug: If set to True, no minification takes place and the input
+                  `paths` are returned as is.
     :type debug: bool
-    :returns: list of strings -- the strings is a filesystem path to the minified version of the file. If debug is set to True, the return value will be equal to the input `paths`.
+    :returns: list of strings -- the strings is a filesystem path to the
+              minified version of the file. If debug is set to True, the return
+              value will be equal to the input `paths`.
     '''
     if debug:
         return paths
