@@ -92,8 +92,8 @@ def test_unsupported_extension(pcic_data_portal, authorized_session_id):
 @pytest.mark.parametrize('ext', ['ascii', 'csv'])
 def test_ascii_response(pcic_data_portal, authorized_session_id, ext):
     url = '/data/pcds/lister/climo/EC/1010066.csql.{0}?'\
-    'station_observations.Precip_Climatology,station_observations.time'\
-        .format(ext)
+          'station_observations.Precip_Climatology,station_observations.time'\
+          .format(ext)
     req = Request.blank(url)
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
@@ -411,7 +411,7 @@ def test_input_polygon_download_zipfile(pcic_data_portal,
 @pytest.mark.bulk_data
 def test_climatology_bounds(pcic_data_portal, authorized_session_id):
     url = '/data/bc_prism/tmin_monClim_PRISM_historical_run1_197101-200012'\
-    '.nc.nc?climatology_bounds&'
+          '.nc.nc?climatology_bounds&'
     req = Request.blank(url)
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
