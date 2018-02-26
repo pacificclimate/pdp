@@ -8,7 +8,7 @@ from pydap.wsgi.app import DapServer
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
 
-__all__ = ('url_base', 'mk_frontend', 'mk_backend')
+__all__ = ['url_base', 'mk_frontend', 'mk_backend']
 
 url_base = '/hydro_stn'
 

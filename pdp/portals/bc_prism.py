@@ -8,7 +8,7 @@ from pdp_util.ensemble_members import EnsembleMemberLister
 import re
 
 
-__all__ = ('url_base', 'mk_frontend', 'mk_backend')
+__all__ = ['url_base', 'mk_frontend', 'mk_backend']
 
 
 ensemble_name = 'bc_prism_with_monthlies'
