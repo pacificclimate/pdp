@@ -30,3 +30,4 @@ install:
     - pip install .
 script:
     - py.test -vv --tb=short -m "not crmpdb and not bulk_data" tests
+    - flake8

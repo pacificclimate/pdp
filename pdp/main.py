@@ -1,6 +1,5 @@
 '''Exposes globally defined WSGI apps as module variables
 '''
-from os.path import dirname
 from pkg_resources import resource_filename
 
 import static
@@ -19,7 +18,6 @@ import portals.bcsd_downscale_canada as bcsd_canada
 import portals.bccaq_extremes as bccaq_extremes
 import portals.gridded_observations as gridded_observations
 import portals.vic_gen1 as vic_gen1
-
 
 apps = (bc_prism, bcsd_canada, vic_gen1, gridded_observations,
         bccaq_extremes, pcds, hydro_stn)
@@ -66,8 +64,8 @@ def initialize_backend(global_config, use_analytics=False):
 
 
 def initialize_dev_server(global_config, use_analytics=False):
-  '''Development server
-  '''
-  return DispatcherMiddleware(initialize_frontend(global_config, use_analytics), {
+    '''Development server
+    '''
+    return DispatcherMiddleware(initialize_frontend(global_config, use_analytics), {
     '/data': initialize_backend(global_config, use_analytics)
   })

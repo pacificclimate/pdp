@@ -1,4 +1,5 @@
-'''The pdp.portals.pcds module configures the Provincial Climate Data Set portal.
+'''The pdp.portals.pcds module configures the Provincial Climate Data
+Set portal.
 '''
 
 from pkg_resources import resource_filename
@@ -24,10 +25,10 @@ def mk_backend(config):
     dsn = config['pcds_dsn']
     dispatch_app = PcdsDispatcher(
         templates=resource_filename('pdp_util', 'templates'),
-        ol_path=None, #global_config['ol_path'],
+        ol_path=None,  # global_config['ol_path'],
         app_root=config['app_root'],
         conn_params=dsn
-        )
+    )
 
     zip_app = PcdsZipApp(dsn)
 
@@ -41,12 +42,12 @@ def mk_frontend(config):
     dsn = config['pcds_dsn']
     pcds_config = {
         'title': 'BC Station Data - PCDS',
-        'js_files' : wrap_mini([
+        'js_files': wrap_mini([
             'js/crmp_map.js',
             'js/crmp_controls.js',
             'js/crmp_download.js',
             'js/crmp_filters.js',
-            'js/crmp_app.js'], 
+            'js/crmp_app.js'],
             basename=url_base, debug=(not config['js_min'])
         )
     }

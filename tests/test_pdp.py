@@ -2,8 +2,10 @@ from pdp import _parse_version
 
 import pytest
 
+
 @pytest.mark.parametrize(('type_', 'version_string', 'expected_result'), (
-    ('revision', '2.3.6+feature.show.dev.branch.7082a0', 'feature.show.dev.branch:7082a0'),
+    ('revision', '2.3.6+feature.show.dev.branch.7082a0',
+     'feature.show.dev.branch:7082a0'),
     ('revision', '2.3.6+my.branch.123456', 'my.branch:123456'),
     ('revision', '2.3.6+branch.123456', 'branch:123456'),
     ('revision', '1.0+master.123456', 'master:123456'),

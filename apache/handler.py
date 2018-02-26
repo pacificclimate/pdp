@@ -8,6 +8,7 @@
 import os
 from mod_python import apache
 
+
 def handler(req):
     req.content_type = "text/html"
 
@@ -19,7 +20,7 @@ def handler(req):
     if env_vars['REDIRECT_STATUS'] == '503':
         if 'HTTP_X_FORWARDED_SERVER' in env_vars:
             error_page = 'unavailable.html'
-        else: 
+        else:
             error_page = 'maintenance.html'
         with open(os.path.join(here, error_page)) as f:
             req.write(f.read())
