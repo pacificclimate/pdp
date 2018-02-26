@@ -5,7 +5,7 @@ from pdp.portals import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
 
 
-__all__ = ('url_base', 'mk_frontend', 'mk_backend')
+__all__ = ['url_base', 'mk_frontend', 'mk_backend']
 
 
 ensemble_name = 'bc_prism'

@@ -15,7 +15,7 @@ from pdp_util.agg import PcdsZipApp
 from pdp_util.pcds_dispatch import PcdsDispatcher
 
 
-__all__ = ('url_base', 'mk_frontend', 'mk_backend')
+__all__ = ['url_base', 'mk_frontend', 'mk_backend']
 
 
 url_base = '/pcds'
