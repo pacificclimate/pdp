@@ -24,12 +24,12 @@ ADD *requirements.txt /root/pdp/
 ENV CPLUS_INCLUDE_PATH /usr/include/gdal
 ENV C_INCLUDE_PATH /usr/include/gdal
 ENV PDP_CONFIG /root/pdp_config.yaml
+ENV PIP_INDEX_URL https://pypi.pacificclimate.org/simple
 
 # Install dependencies (separate RUN
 # statement for GDAL is required)
 RUN pip install --no-binary :all: numpy Cython==0.22 gdal==2.2
-RUN pip install -i https://pypi.pacificclimate.org/simple \
-    --no-binary h5py \
+RUN pip install --no-binary h5py \
     -r requirements.txt \
     -r test_requirements.txt \
     -r deploy_requirements.txt
@@ -37,9 +37,9 @@ RUN pip install -i https://pypi.pacificclimate.org/simple \
 COPY ./ /root/pdp/
 
 # Install and build the docs
-RUN pip install -i https://pypi.pacificclimate.org/simple .
+RUN pip install .
 RUN python setup.py build_sphinx
-RUN pip install -i https://pypi.pacificclimate.org/simple .
+RUN pip install .
 
 # Create directory for supervisord logs
 RUN mkdir etc/
