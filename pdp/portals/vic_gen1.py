@@ -11,8 +11,8 @@ from pdp_util.ensemble_members import EnsembleMemberLister
 __all__ = ['url_base', 'mk_frontend', 'mk_backend']
 
 
-ensemble_name = '/vic_gen1'
-url_base = 'hydro_model_out'
+ensemble_name = 'vic_gen1'
+url_base = '/hydro_model_out'
 title = 'Gridded Hydrologic Model Output'
 
 
