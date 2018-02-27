@@ -2,8 +2,8 @@ app_root: 'http://tools.pacificclimate.org/dataportal'
 data_root: 'http://tools.pacificclimate.org/dataportal/data'
 title: ''
 ensemble_name: ''
-dsn: postgresql://hiebert@monsoon.pcic/pcic_meta # add password for production
-pcds_dsn: postgresql://hiebert@monsoon.pcic/crmp # add password for production
+dsn: postgresql://httpd@some.database.host/pcic_meta # add password for production
+pcds_dsn: postgresql://httpd@some.database.host/crmp # add password for production
 js_min: false
 geoserver_url: http://tools.pacificclimate.org/geoserver/ # change for development
 ncwms_url: 
