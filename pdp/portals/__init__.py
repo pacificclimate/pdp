@@ -8,7 +8,6 @@ from pdp_util.map import MapApp
 from pdp.minify import wrap_mini
 
 
-
 def updateConfig(d1, d2):
     '''standard dict update with the exception of joining lists'''
     res = d1.copy()
@@ -47,8 +46,9 @@ def make_raster_frontend(config, ensemble_name, url_base, title,
         'title': title,
         'ensemble_name': ensemble_name,
         'css_files': css_files,
-        'js_files' :
-            wrap_mini(js_files, basename=url_base, debug=(not config['js_min']))
+        'js_files':
+            wrap_mini(js_files,
+                      basename=url_base, debug=(not config['js_min']))
     }
 
     portal_config = updateConfig(config, portal_config)

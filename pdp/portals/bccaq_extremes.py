@@ -15,7 +15,6 @@ url_base = '/downscaled_gcm_extremes'
 title = 'Statistically Downscaled GCM Scenarios: Extremes'
 
 
-
 class ClimdexEnsembleLister(EnsembleMemberLister):
     def list_stuff(self, ensemble):
         for dfv in ensemble.data_file_variables:
@@ -25,7 +24,6 @@ class ClimdexEnsembleLister(EnsembleMemberLister):
                 "_yr_" in dfv.file.unique_id else "monthly",
             dfv.netcdf_variable_name,
             dfv.file.unique_id.replace('+', '-')
-
 
 
 def mk_frontend(config):

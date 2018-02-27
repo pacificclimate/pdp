@@ -47,7 +47,6 @@ def test_no_404s(pcic_data_portal, url):
     assert resp.status == '200 OK'
 
 
-
 @pytest.mark.crmpdb
 @pytest.mark.parametrize(('url', 'title', 'body_strings'), [
     ('/data/pcds/lister/', 'PCDS Data',
@@ -451,7 +450,7 @@ def test_aaigrid_response(pcic_data_portal, url):
 @pytest.mark.parametrize('layers', [0, 1, 100, 38000])
 def test_aaigrid_response_layers(pcic_data_portal, layers):
     url = '/data/hydro_model_out/pr+tasmin+tasmax+wind_day_HadCM_A1B_run1_'\
-    '19500101-21001231.nc.aig?pr[0:' + str(layers) + '][119:120][242:243]&'
+          '19500101-21001231.nc.aig?pr[0:{}][119:120][242:243]&'.format(layers)
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
 
@@ -499,7 +498,7 @@ def test_hydro_stn_data_csv_csv(pcic_data_portal):
 @pytest.mark.bulk_data
 def test_hydro_stn_data_csv_selection_projection(pcic_data_portal):
     url = '/data/hydro_stn/BCHSCA_Campbell.csv.csv?'\
-    'sequence.ccsm3_A2run1&sequence.ccsm3_A2run1>100'
+          'sequence.ccsm3_A2run1&sequence.ccsm3_A2run1>100'
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'

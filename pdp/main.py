@@ -35,7 +35,7 @@ def initialize_frontend(global_config, use_analytics=False):
         for app in apps
     }
     mounts.update({
-        '/pcds_map': pcds.mk_frontend(global_config), ## legacy url support
+        '/pcds_map': pcds.mk_frontend(global_config),  # legacy url support
         '/css/': static.Cling(resource_filename('pdp_util', 'data')),
         '/docs/': docs_app
         })
@@ -66,6 +66,7 @@ def initialize_backend(global_config, use_analytics=False):
 def initialize_dev_server(global_config, use_analytics=False):
     '''Development server
     '''
-    return DispatcherMiddleware(initialize_frontend(global_config, use_analytics), {
-    '/data': initialize_backend(global_config, use_analytics)
-  })
+    return DispatcherMiddleware(
+        initialize_frontend(global_config, use_analytics),
+        {'/data': initialize_backend(global_config, use_analytics)}
+    )

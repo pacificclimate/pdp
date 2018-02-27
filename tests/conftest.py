@@ -1,14 +1,9 @@
 # Integration tests for the the full data portal web application
 
 from tempfile import mkdtemp
-import random
-import cPickle
-import re
 
 import py
 import pytest
-from webob.request import Request
-from beaker.middleware import SessionMiddleware
 
 
 @pytest.fixture(scope="module")
@@ -40,9 +35,6 @@ def pcic_data_portal(session_dir):
     from pdp.main import initialize_dev_server
     from pdp import get_config
     return initialize_dev_server(get_config(), False)
-
-
-
 
 
 @pytest.fixture(scope="module")
