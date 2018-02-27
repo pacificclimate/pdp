@@ -65,8 +65,9 @@ def initialize_backend(global_config, use_analytics=False):
 
 
 def initialize_dev_server(global_config, use_analytics=False):
-  '''Development server
-  '''
-  return DispatcherMiddleware(initialize_frontend(global_config, use_analytics), {
-    '/data': initialize_backend(global_config, use_analytics)
-  })
+    '''Development server
+    '''
+    return DispatcherMiddleware(
+        initialize_frontend(global_config, use_analytics),
+        {'/data': initialize_backend(global_config, use_analytics)}
+    )

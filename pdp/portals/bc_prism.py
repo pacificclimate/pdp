@@ -35,7 +35,6 @@ class PrismEnsembleLister(EnsembleMemberLister):
 
 
 
-
 def mk_frontend(config):
     return make_raster_frontend(config, ensemble_name, url_base,
                                 title, PrismEnsembleLister,

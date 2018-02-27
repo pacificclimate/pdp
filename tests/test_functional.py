@@ -47,7 +47,6 @@ def test_no_404s(pcic_data_portal, url):
     assert resp.status == '200 OK'
 
 
-
 @pytest.mark.crmpdb
 @pytest.mark.parametrize(('url', 'title', 'body_strings'), [
     ('/data/pcds/lister/', 'PCDS Data',

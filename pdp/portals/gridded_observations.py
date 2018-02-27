@@ -28,13 +28,12 @@ class GriddedObservationsEnsembleLister(EnsembleMemberLister):
 
 
 
-
 def mk_frontend(config):
     return make_raster_frontend(config, ensemble_name, url_base,
                                 title, GriddedObservationsEnsembleLister,
                                 ['js/gridded_observations_map.js',
                                  'js/gridded_observations_controls.js',
-                                 'js/gridded_observations_app.js'] )
+                                 'js/gridded_observations_app.js'])
 
 
 def mk_backend(config):

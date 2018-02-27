@@ -23,7 +23,6 @@ class DownscaledEnsembleLister(EnsembleMemberLister):
 
 
 
-
 def mk_frontend(config):
     return make_raster_frontend(config, ensemble_name, url_base,
                                 title, DownscaledEnsembleLister,
@@ -33,4 +32,3 @@ def mk_frontend(config):
 
 def mk_backend(config):
     return data_server(config, ensemble_name)
-
