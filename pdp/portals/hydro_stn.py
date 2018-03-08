@@ -22,6 +22,7 @@ class HydroStationDataServer(DapServer):
 
     @property
     def config(self):
+        super(HydroStationDataServer, self).config
         self._config['root_url'] = self.root_url
         return self._config
 
