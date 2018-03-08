@@ -468,8 +468,8 @@ def test_aaigrid_response(pcic_data_portal, authorized_session_id, url):
 @pytest.mark.parametrize('layers', [0, 1, 100, 38000])
 def test_aaigrid_response_layers(pcic_data_portal, authorized_session_id,
                                  layers):
-    url = '/data/hydro_model_out/pr+tasmin+tasmax+wind_day_HadCM_A1B_run1_'
-    '19500101-21001231.nc.aig?pr[0:' + str(layers) + '][119:120][242:243]&'
+    url = '/data/hydro_model_out/pr+tasmin+tasmax+wind_day_HadCM_A1B_run1_'\
+          '19500101-21001231.nc.aig?pr[0:{}][119:120][242:243]&'.format(layers)
     req = Request.blank(url)
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
