@@ -483,6 +483,24 @@ def test_aaigrid_response_layers(pcic_data_portal, authorized_session_id,
     assert len(z.namelist()) == (layers + 1) * 2
 
 
+@pytest.mark.crmpdb
+@pytest.mark.parametrize(('portal', 'ensemble'), [
+        ('bc_prism', 'bc_prism'),
+        ('downscaled_gcms', 'bcsd_downscale_canada'),
+        ('downscaled_gcm_extremes', 'bccaq_extremes'),
+        ('hydro_model_out', 'vic_gen1'),
+        ('gridded_observations', 'gridded-obs-met-data')
+    ])
+def test_menu_json(pcic_data_portal, portal, ensemble):
+    url = '/{}/menu.json?ensemble_name={}'.format(portal, ensemble)
+    req = Request.blank(url)
+    resp = req.get_response(pcic_data_portal)
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'application/json'
+    data = json.loads(resp.body)
+    assert len(data) > 0
+
+
 @pytest.mark.bulk_data
 def test_hydro_stn_data_catalog(pcic_data_portal, authorized_session_id):
     url = '/data/hydro_stn/catalog.json'
@@ -505,11 +523,12 @@ def test_hydro_stn_data_csv_csv(pcic_data_portal, authorized_session_id):
     assert resp.status == '200 OK'
     assert resp.content_type == 'text/plain'
     for line in resp.app_iter:
-        expected = '1955/01/01, 32.631008, 32.631008, 32.631008, '
-        '33.079967, 33.079967, 33.079967, 59.947227, 59.947227, 59.947227, '
-        '43.419338, 43.419338, 43.419338, 63.866467, 63.866467, 63.866467, '
-        '43.944351, 43.944351, 43.944351, 57.583118, 57.583118, 102.247162, '
-        '102.247162, 102.247162, 63.068111'
+        expected = '1955/01/01, 32.631008, 32.631008, 32.631008, '\
+                   '33.079967, 33.079967, 33.079967, 59.947227, 59.947227, '\
+                   '59.947227, 43.419338, 43.419338, 43.419338, 63.866467, '\
+                   '63.866467, 63.866467, 43.944351, 43.944351, 43.944351, '\
+                   '57.583118, 57.583118, 102.247162, 102.247162, '\
+                   '102.247162, 63.068111'
         if line.strip() == expected:
             assert True
             return
@@ -520,8 +539,8 @@ def test_hydro_stn_data_csv_csv(pcic_data_portal, authorized_session_id):
 @pytest.mark.bulk_data
 def test_hydro_stn_data_csv_selection_projection(
         pcic_data_portal, authorized_session_id):
-    url = '/data/hydro_stn/BCHSCA_Campbell.csv.csv?'
-    'sequence.ccsm3_A2run1&sequence.ccsm3_A2run1>100'
+    url = '/data/hydro_stn/BCHSCA_Campbell.csv.csv?'\
+          'sequence.ccsm3_A2run1&sequence.ccsm3_A2run1>100'
     req = Request.blank(url)
     req.cookies['beaker.session.id'] = authorized_session_id
     resp = req.get_response(pcic_data_portal)
