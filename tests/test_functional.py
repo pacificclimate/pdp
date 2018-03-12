@@ -483,6 +483,24 @@ def test_aaigrid_response_layers(pcic_data_portal, authorized_session_id,
     assert len(z.namelist()) == (layers + 1) * 2
 
 
+@pytest.mark.crmpdb
+@pytest.mark.parametrize(('portal', 'ensemble'), [
+        ('bc_prism', 'bc_prism'),
+        ('downscaled_gcms', 'bcsd_downscale_canada'),
+        ('downscaled_gcm_extremes', 'bccaq_extremes'),
+        ('hydro_model_out', 'vic_gen1'),
+        ('gridded_observations', 'gridded-obs-met-data')
+    ])
+def test_menu_json(pcic_data_portal, portal, ensemble):
+    url = '/{}/menu.json?ensemble_name={}'.format(portal, ensemble)
+    req = Request.blank(url)
+    resp = req.get_response(pcic_data_portal)
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'application/json'
+    data = json.loads(resp.body)
+    assert len(data) > 0
+
+
 @pytest.mark.bulk_data
 def test_hydro_stn_data_catalog(pcic_data_portal, authorized_session_id):
     url = '/data/hydro_stn/catalog.json'
