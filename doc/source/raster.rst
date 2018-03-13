@@ -356,3 +356,62 @@ To construct a proper DAP selection, please refer to the `DAP specification <htt
   1.0
 
 Note that for this example the temperature values are all packed integer values and to obtain the proper value you may need to apply a floating point offset and/or scale factor which are available in the DAS response and the netcdf data response.
+
+Download multiple variables
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For users that are interested in downloading multiple variables for a single dataset, this *is* possible for certain datasets. The web user interface does not expose this functionality, but if you are willing to do some scripting or URL hacking, you'll be rewarded with a faster download.
+
+To determine whether your dataset of interest contains multiple variables, check by reading the `Dataset Descriptor Structure (DDS) <http://docs.opendap.org/index.php/UserGuideOPeNDAPMessages>`_. You can get this by making a request to the dataset of interest with the ".dds" suffix appended to the end. E.g. the following DDS request shows that the dataset in question contains 3 independent variables (pr, tasmax, tasmin) and 3 axis variables (lon ,lat, time). All of those are requestable in a single request. ::
+
+  james@basalt:~$ curl 'http://tools.pacificclimate.org/dataportal/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.nc.dds'
+  Dataset {
+  Float64 lon[lon = 1068];
+    Float64 lat[lat = 510];
+    Float64 time[time = 55152];
+    Grid {
+        Array:
+            Float32 pr[time = 55152][lat = 510][lon = 1068];
+        Maps:
+            Float64 time[time = 55152];
+            Float64 lat[lat = 510];
+            Float64 lon[lon = 1068];
+    } pr;
+    Grid {
+        Array:
+            Float32 tasmax[time = 55152][lat = 510][lon = 1068];
+        Maps:
+            Float64 time[time = 55152];
+            Float64 lat[lat = 510];
+            Float64 lon[lon = 1068];
+    } tasmax;
+    Grid {
+        Array:
+            Float32 tasmin[time = 55152][lat = 510][lon = 1068];
+        Maps:
+            Float64 time[time = 55152];
+            Float64 lat[lat = 510];
+            Float64 lon[lon = 1068];
+    } tasmin;
+    } pr%2Btasmax%2Btasmin_day_BCCAQ%2BANUSPLIN300%2BMPI-ESM-LR_historical%2Brcp26_r3i1p1_19500101-21001231%2Enc;
+
+To request multiple variables in a single request, you need to use multiple comma separated variable requests in
+the query params. That format looks like this: ::
+
+  [dataset_url].[response_extension]?[variable_name_0][subset_spec],[variable_name_1][subset_spec],...
+
+So if the base dataset that you want to download is
+http://tools.pacificclimate.org/dataportal/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.nc,
+and you want to download the NetCDF response, so your extension will
+be '.nc'.
+
+Assume you just want the first 100 timesteps ([0:99]) and a 50x50
+square somewhere in the middle ([250:299][500:549]).
+
+Putting that all together, it will look something like this: ::
+
+  http://tools.pacificclimate.org/dataportal/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.nc.nc?tasmax[0:99][250:299][500:549],tasmin[0:99][250:299][500:549],pr[0:99][250:299][500:549]
+
+It's not quite as easy as clicking a few buttons on the web page, but
+depending on your use case, you can evaluate whether it's worth your
+effort to script together these multi-variable requests.
