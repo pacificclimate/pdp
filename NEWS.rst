@@ -1,6 +1,15 @@
 News / Release Notes
 ====================
 
+2.4.5
+-----
+
+*Release Date: 13-Mar-2018*
+
+* Improves Docker-based deployment process
+* Adds more documentation for advanced/programatic usage
+* Enforces PEP8 style guidlines across the entire code base
+
 2.4.4
 -----
 
