@@ -33,7 +33,7 @@ $(document).ready(function () {
     }
 
     // Data Download Link
-    dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', 'pr', '0:13', '0:1680', '0:3241');
+    dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', 'pr', '', '0:1680', '0:3241');
     $('#data-format-selector').change(
         function (evt) {
             dlLink.onExtensionChange($(this).val());

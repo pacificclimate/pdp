@@ -7,21 +7,28 @@ from pdp.dispatch import PathDispatcher
 from pdp_util.map import MapApp
 from pdp_util.raster import RasterServer, RasterCatalog, RasterMetadata
 from pdp_util.ensemble_members import EnsembleMemberLister
+import re
 
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig, raster_conf
 
-ensemble_name = 'bc_prism'
+ensemble_name = 'bc_prism_devel'
 url_base = 'bc_prism'
 
 
 class PrismEnsembleLister(EnsembleMemberLister):
-    def parse_date_range(self, unique_id):
-        return '-'.join([x[:4] for x in unique_id.split('_')[-1].split('-')])
+    def describe_time_set(self, unique_id):
+        monthly = unique_id.find("mon") != -1
+        climatology = unique_id.find("Clim") != -1
+        date_finder = re.match(r'.*_(\d+)-(\d+).*', unique_id)
+
+        return "{} {} {}-{}".format("Monthly " if monthly else "",\
+                                    "Climatological Averages " if climatology else "Timeseries ",\
+                                    date_finder.group(1)[0:4], date_finder.group(2)[0:4])
 
     def list_stuff(self, ensemble):
         for dfv in ensemble.data_file_variables:
-            yield self.parse_date_range(dfv.file.unique_id),\
+            yield self.describe_time_set(dfv.file.unique_id),\
                 dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
 
@@ -35,7 +42,7 @@ def data_server(config, ensemble_name):
 def portal(config):
     dsn = config['dsn']
     portal_config = {
-        'title': 'High-Resolution PRISM Climatology',
+        'title': 'High-Resolution PRISM Data',
         'ensemble_name': ensemble_name,
         'js_files': wrap_mini([
             'js/prism_demo_map.js',
