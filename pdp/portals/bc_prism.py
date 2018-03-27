@@ -22,9 +22,11 @@ class PrismEnsembleLister(EnsembleMemberLister):
         climatology = unique_id.find("Clim") != -1
         date_finder = re.match(r'.*_(\d+)-(\d+).*', unique_id)
 
-        return "{} {} {}-{}".format("Monthly " if monthly else "",\
-                                    "Climatological Averages " if climatology else "Timeseries ",\
-                                    date_finder.group(1)[0:4], date_finder.group(2)[0:4])
+        return "{} {} {}-{}".format("Monthly " if monthly else "",
+                                    "Climatological Averages " if climatology
+                                    else "Timeseries ",
+                                    date_finder.group(1)[0:4],
+                                    date_finder.group(2)[0:4])
 
     def list_stuff(self, ensemble):
         for dfv in ensemble.data_file_variables:
