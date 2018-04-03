@@ -13,7 +13,7 @@ from pdp.minify import wrap_mini
 from pdp.portals import updateConfig, raster_conf
 
 ensemble_name = 'bc_prism_devel'
-url_base = 'bc_prism'
+url_base = 'bc_prism_devel'
 
 
 class PrismEnsembleLister(EnsembleMemberLister):
