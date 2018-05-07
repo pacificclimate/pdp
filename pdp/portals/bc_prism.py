@@ -1,5 +1,6 @@
 '''The pdp.portals.bc_prism module configures a raster portal to serve
-the 1971-2000, 800 meter resolution PRISM dataset for BC.
+the 1971-2000 and 1981-2010 climatologies and monthly climate data for
+800 meter resolution PRISM dataset for BC
 '''
 
 from pdp import wrap_auth
@@ -12,7 +13,7 @@ import re
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig, raster_conf
 
-ensemble_name = 'bc_prism'
+ensemble_name = 'bc_prism_with_monthlies'
 url_base = 'bc_prism'
 
 
