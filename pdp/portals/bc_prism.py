@@ -37,7 +37,7 @@ class PrismEnsembleLister(EnsembleMemberLister):
 
 def data_server(config, ensemble_name):
     dsn = config['dsn']
-    conf = raster_conf(dsn, config, ensemble_name)
+    conf = raster_conf(dsn, config, ensemble_name, url_base)
     data_server = wrap_auth(RasterServer(dsn, conf))
     return data_server
 
@@ -57,7 +57,7 @@ def portal(config):
     portal_config = updateConfig(config, portal_config)
     map_app = wrap_auth(MapApp(**portal_config), required=False)
 
-    conf = raster_conf(dsn, config, ensemble_name)
+    conf = raster_conf(dsn, config, ensemble_name, url_base)
     catalog_server = RasterCatalog(dsn, conf)  # No Auth
 
     menu = PrismEnsembleLister(dsn)
