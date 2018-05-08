@@ -25,15 +25,15 @@ $(document).ready(function () {
     // Ensure that climatology_bounds are included in non-aig data downloads
     function setBoundsInUrlTemplate() {
         if (dlLink.ext === 'aig') {
-            dlLink.url_template = '{dl_url}.{ext}?{varname}[{trange}][{yrange}][{xrange}]&';
+            dlLink.url_template = '{dl_url}.{ext}?{varname}[][{yrange}][{xrange}]&';
         } else {
-            dlLink.url_template = '{dl_url}.{ext}?climatology_bounds,{varname}[{trange}][{yrange}][{xrange}]&';
+            dlLink.url_template = '{dl_url}.{ext}?climatology_bounds,{varname}[][{yrange}][{xrange}]&';
         }
         dlLink.trigger();
     }
 
     // Data Download Link
-    dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', 'pr', '0:13', '0:1680', '0:3241');
+    dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', 'pr', '', '0:1680', '0:3241');
     $('#data-format-selector').change(
         function (evt) {
             dlLink.onExtensionChange($(this).val());

@@ -53,20 +53,32 @@ function init_prism_map() {
     );
 
     function set_map_title(layer_name) {
+        var months = ["January","February","March","April",
+          "May","June","July","August",
+          "September","October","November","December"];
         // 'this' must be bound to the ncwms layer object
         var d = new Date(this.params.TIME), date;
         if (layer_name.match(/_yr_/)) { // is yearly
             date = d.getFullYear();
         } else {
-            date = d.getFullYear() + '/' + (d.getMonth() + 1);
+            date = months[d.getMonth()] + ' ' + d.getFullYear();
         }
         $('#map-title').html(layer_name + '<br />' + date);
 
         return true;
     }
 
+    function month_name(mon) {
+      months = ["January","February","March","April",
+               "May","June","July","August",
+               "September","October","November","December"];
+      return names[mon - 1];
+    }
+
     function ncwms_params(layer_name) {
         var varname = layer_name.split('/')[1];
+        var isClimatology = layer_name.split('/')[0].indexOf("Clim") !== -1;
+
         if (varname === 'pr') {
             this.params.LOGSCALE = true;
             this.params.STYLES = 'boxfill/occam_inv';
@@ -75,8 +87,10 @@ function init_prism_map() {
             this.params.STYLES = 'boxfill/ferret';
         }
 
-        if (varname === 'pr') {
+        if (varname === 'pr' && isClimatology) {
             this.params.COLORSCALERANGE = '200,12500';
+        } else if (varname === 'pr') {
+            this.params.COLORSCALERANGE = '1,2000';
         } else if (varname == 'tmax') {
             this.params.COLORSCALERANGE = '-10,20';
         } else if (varname == 'tmin' ) {
@@ -84,13 +98,14 @@ function init_prism_map() {
         }
 
         var uniqueID = layer_name.split('/')[0].split('_');
-        var timeRange = uniqueID[uniqueID.length -1];
+        var timeRange = uniqueID.find(function(e) {return e.indexOf('-')!=-1;});
         if (timeRange === '197101-200012') {
             this.params.TIME = '1985-06-30';
         } else if (timeRange === '198101-201012') {
             this.params.TIME = '1996-06-30';
+        } else if (timeRange === '19500131-20071231') {
+            this.params.TIME = '1980-04-30';
         }
-
         return this.params
     }
 
