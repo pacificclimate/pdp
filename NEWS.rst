@@ -1,6 +1,13 @@
 News / Release Notes
 ====================
 
+2.5.0
+-----
+
+*Release Date: 08-May-2018*
+
+* Adds a monthly timeseries to the BC Prism portal
+
 2.4.5
 -----
 
