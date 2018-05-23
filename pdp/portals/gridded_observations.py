@@ -18,8 +18,8 @@ class GriddedObservationsEnsembleLister(EnsembleMemberLister):
 
     def list_stuff(self, ensemble):
         dataset_names = {
-            "ANUSPLIN_CDA_v2012.1": "ANUSPLIN 2012",
-            "SYMAP_BC_v1": "VIC Forcings 2010",
+            "ANUSPLIN_CDA_v2012.1": "NRCANmet 2012",
+            "SYMAP_BC_v1": "PBCmet 2010",
             "TPS_NWNA_v1": "PNWNAmet 2015"}
 
         for dfv in sorted(ensemble.data_file_variables,
@@ -38,7 +38,7 @@ def data_server(config, ensemble_name):
 def portal(config):
     dsn = config['dsn']
     portal_config = {
-        'title': 'Gridded Daily Meteorological Databases',
+        'title': 'Daily Gridded Meteorological Datasets',
         'ensemble_name': ensemble_name,
         'js_files':
             wrap_mini([
