@@ -25,7 +25,7 @@ function getBC3005Bounds_obs() {
 }
 
 function getNA4326Bounds() {
-    return new OpenLayers.Bounds(-150, 40, -50, 90);
+    return new OpenLayers.Bounds(-170, 40, -50, 90);
 }
 
 function getWorld4326Bounds() {
