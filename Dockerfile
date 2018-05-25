@@ -46,11 +46,17 @@ RUN mkdir etc/
 
 # Add the template config files
 COPY docker/templates/ /templates/
-COPY docker/docker-entrypoint.sh /root/pdp/
+COPY docker/template_config.sh /root/pdp/
 
-EXPOSE 8000 8001
+EXPOSE 8000
 
-# Build template files
-ENTRYPOINT ["/root/pdp/docker-entrypoint.sh"]
+# gunicorn.conf is set up so that one can tune gunicorn settings when
+# running the container by setting environment an variable
+# GUNICORN_[setting], where setting is any of the parameters in this
+# list: http://docs.gunicorn.org/en/latest/settings.html
+#
+# E.g. docker run -e GUNICORN_WORKERS=10 -e GUNICORN_PORT=8000 -e GUNICORN_BIND=0.0.0.0:8000 ...
 
-CMD ["supervisord", "-c", "/etc/supervisord.conf"]
+# APP_MODULE should be set to either pdp.wsgi:frontend or pdp.wsgi:backend
+# E.g. docker run -e APP_MODULE=pdp.wsgi:frontend
+CMD /root/pdp/template_config.sh && gunicorn --config docker/gunicorn.conf --log-config docker/logging.conf $APP_MODULE

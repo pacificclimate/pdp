@@ -1,5 +1,4 @@
 sphinx
 gunicorn==19.4.0
 gevent
-supervisor
 j2cli[yaml]
