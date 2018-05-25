@@ -65,7 +65,7 @@ Even if you don't program for a living there are plenty of ways to help. Not onl
 Deployment Guide
 ================
 
-The following guide will get you set up running the PCIC Data Portal with an Nginx reverse proxy in Docker. More information about the data portal can be found `here`_.
+The following guide will get you set up running the PCIC Data Portal in Docker. More information about the data portal can be found `here`_.
 
 Installation
 ------------
@@ -84,21 +84,20 @@ Create a data volume container to access the locally stored data required to run
 
     docker run --name pdp_data -v /path/to/data/:/storage/data/:ro ubuntu:16.04
 
-Build the pdp and nginx docker images:
+Build the pdp docker image:
 
 .. code:: bash
 
     docker build -t pdp .
-    docker build -t nginx-proxy docker/proxy/.
 
-Start the containers using ``docker-compose`` (use ``-d`` if you want to run them in the background):
+Review (and edit if necessary) the container options in the two docker environment files: ``docker/fe_deployment.env`` and ``docker/fe_deployment.env``. Then start the containers using ``docker-compose`` (use ``-d`` if you want to run them in the background):
 
 .. code:: bash
 
     cd docker
     docker-compose up
 
-The dataportal will be accessible on port 8080 of the docker host.
+The dataportal frontend will be accessible on port 8000 of the docker host while the data backend will be accessible on port 8001.
 
 
 Details
@@ -107,13 +106,13 @@ Details
 Environment configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A full list of the available environment variables is found below. These can be specified at container runtime using the ``-e`` option:
+A full list of the available environment variables is found below. These can be specified in a docker environment file or at container runtime using the ``-e`` option:
 
 .. code:: bash
 
     docker run -e APP_ROOT=<url> -e DATA_ROOT=<url> ...
 
-Default values are provided for the majority of these variables in the template files (``pdp_config.j2``, ``supervisord.j2``, and ``nginx.template``). Those that do not have default values and must be specified by the user are marked with an asterisk (*). Environment variables defined at runtime will overwrite any previously existing ones.
+Default values are provided for the majority of these variables in the template file ``pdp_config.j2``. Those that do not have default values and must be specified by the user are marked with an asterisk (*). Environment variables defined at runtime will overwrite any previously existing ones.
 
 pdp_config.j2
 """""""""""""
@@ -122,7 +121,7 @@ pdp_config.j2
 | The root location URL where the data portal will be exposed in the form ``<docker_host>:<port>``. Default port is 8080.
 |
 | ``DATA_ROOT``
-| Root location URL of the back-end data server.
+| Root location URL of the back-end data server. By default, this should be ``<docker_host>:8001``.
 |
 | **\*** ``DSN``
 | Raster metadata database URL of the form ``dialect[+driver]://username:password@host:port/database``. A default URL is provided in the template, however, a password will be required.
@@ -151,50 +150,18 @@ pdp_config.j2
 | ``ANALYTICS``
 | Google Analytics ID.
 
-supervisord.j2
-""""""""""""""
-
-| ``HOST``
-| The host address on which to run the gunicorn server inside the Docker container (default is ``0.0.0.0``).
-|
-| ``USER``
-| Instructs supervisord to switch to this user before doing any meaningful processing (default is ``root``).
-|
-| ``FE_PORT``
-| Port to serve the front-end data (default ``8000``). The container running the pdp must publish this port.
-|
-| ``BE_PORT``
-| Port to serve the back-end data (default ``8001``).
-|
-| ``LOGLEVEL``
-| The supervisord logging level. One of ``critical``, ``error``, ``warn``, ``info``, ``debug``, ``trace`` (default is ``info``).
-|
-| ``NODAEMON``
-| When set to true, supervisord will start as a foreground process rather than a daemon. When running the pdp container in detached mode, this must be set to true to stop the container from exiting (this is the default behaviour).
-|
-| ``VERSION``
-| The supervisord group version (default ``0.0.0``).
-
-nginx.template
-""""""""""""""
-
-| **\*** ``APP_HOST``
-| The docker host URL of the container running the pdp.
-|
-| **\*** ``APP_PORT``
-| The port exposed by container running the pdp. Must match ``FE_PORT``.
 
 docker basics
 ^^^^^^^^^^^^^
 
-Two docker images are used to run this application: the ``pdp`` image is responsible for running the PCIC data portal, and the ``nginx-proxy`` image creates a dockerized reverse-proxy (necessary for the pdp to operate successfully).
+The docker image used to run this application is named ``pdp``. This image is responsible for running *either* the PCIC data portal's frontend *or* backend. Which part of the port is run, is determined by the ``APP_MODULE`` environment variable, set at container run time. TI should be set to either ``pdp.wsgi:frontend`` or ``pdp.wsgi:backend``.
 
 Docker containers will remain up as long as there is an active process running within them. For debugging, one can use the ``-it`` options to begin an interactive container. For general deployment however, you should use ``-d`` to run the container as a daemon/background process. For the rest of this guide, we'll assume daemon-style usage.
 
 pdp
 ^^^
 
-This image automates the build process for the PDP Data Portal. Using Ubuntu 16.04 as a base, all the required steps are performed to create a working environment (dependencies installed, environment variables set, etc). The Dockerfile outlines each of these steps in greater detail.
+This image automates the build process for the PDP Data Portal. Using Ubuntu 17.10 as a base, all the required steps are performed to create a working environment (dependencies installed, environment variables set, etc). The Dockerfile outlines each of these steps in greater detail.
 
 To build the image, run ``docker build -t pdp .`` from the root pdp directory. The ``-t`` option will name the image; if no name is specified, docker will randomly generate one for you.
 
@@ -205,8 +172,6 @@ Once the image has been built, you should see it under ``docker images``. Now it
 .. code:: bash
 
     docker run -d --name <container_name> <image_name>
-
-**Note**: If you wish to run the pdp container interactively, change the final ``CMD`` in the pdp Dockerfile to specify ``/bin/bash`` rather than ``supervisord`` and rebuild the image. To detach from a running docker container use the escape sequence ``ctrl+p`` + ``ctrl+q``. Re-attach with ``docker attach <container_name>``.
 
 By default, the pdp Dockerfile exposes port 8000 (the port that gunicorn will run on inside the container) but in order to access the container it needs to be published to the outside world using ``-p <host_port>:<container_port>``
 
@@ -228,7 +193,7 @@ The following command will create a data volume container. This should only need
     docker run --name pdp_data -v /storage/data/climate/:/storage/data/climate/:ro \
                                -v /storage/data/projects/hydrology/vic_gen1_followup/:/home/data/projects/hydrology/vic_gen1_followup/:ro \
                                -v /storage/data/projects/dataportal/data/:/storage/data/projects/dataportal/data/:ro \
-                               ubuntu:16.04
+                               ubuntu:17.10
 
 Once the data volume container has been created, these volumes can be brought into other containers at runtime:
 
@@ -239,54 +204,20 @@ Once the data volume container has been created, these volumes can be brought in
 Configuration
 """""""""""""
 
-To avoid baking the configuration files (``pdp_config.yaml`` and ``supervisord.conf``) into the image we use `j2cli`_ which leverages the `jinja2`_ template engine to generate config files at container runtime. Values in the template files can be set using docker environment variables:
+To avoid baking the configuration file ``pdp_config.yaml`` into the image we use `j2cli`_ which leverages the `jinja2`_ template engine to generate a config file at container runtime. Values in the template files can be set using environment variables passed to docker:
 
 .. code:: bash
 
     docker run -e APP_ROOT=<url> -e DATA_ROOT=<url> ...
 
+Or by using a environment file with a list of neceesary environment variables:
+
+.. code:: bash
+
+   docker run --env-file my_vars.env ...
+
 A full list of the config items can be found in the "Environment configuration" section above. If no environment variables are specified at runtime, the default values (stated in the templates) will be used. Any changes to the template files in ``docker/templates`` will require the pdp image to be re-built.
 
-
-Nginx
-^^^^^
-
-`Nginx`_ is used as a reverse proxy in front of the pdp. To build the image from the nginx Dockerfile, edit ``docker/proxy/nginx.template`` then run:
-
-.. code:: bash
-
-    docker build -t nginx-proxy docker/proxy/.
-
-Configuration
-"""""""""""""
-
-In order to see the application running at ``http://<host>:8080``, the root location ``proxy_pass`` directive needs to point to the container running the pdp frontend/backend servers. If the pdp container has been published on ports 8000 and 8001, this would look like:
-
-.. code:: bash
-
-    location / {
-        proxy_pass    http://<host>:8000;   #frontend
-    }
-
-    location /data/ {
-        proxy_pass    http://<host>:8001;   #backend
-    }
-
-The geoserver and ncWMS locations correspond to the ``geoserver_url`` and ``ncwms_url`` values in ``pdp_config.yaml``, respectively. These should be proxied to the production servers at ``tools.pacificclimate.org/[geoserver|ncWMS-PCIC/wms]``.
-
-To allow for more flexible development, a template configuration file is used (``docker/proxy/nginx.template``) which defines the docker host URL/ports running the pdp as variables which can be passed in at container runtime using the ``-e`` option:
-
-.. code:: bash
-
-    docker run --name nginx-proxy -e APP_HOST=<host> -e APP_FE_PORT=<port> -e APP_BE_PORT=<port> nginx-proxy
-
-Alternatively, ``docker-compose`` can be used (see the section on Docker Compose below).
-
-Nginx should be configured to listen on the same port as the container running the proxy server. For example, if the server is listening at port 8080 then the container running the proxy should be published to the same port on the host:
-
-.. code:: bash
-
-    docker run --name nginx-proxy -e APP_HOST=<host> -e APP_FE_PORT=<port> -e APP_BE_PORT=<port> -p 8080:8080 -d nginx-proxy
 
 Putting it all together
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -298,29 +229,23 @@ The final sequence of docker commands to run ``pdp`` should be something like th
     docker run --name pdp_data -v /storage/data/climate/:/storage/data/climate/:ro \
                                -v /storage/data/projects/hydrology/vic_gen1_followup/:/home/data/projects/hydrology/vic_gen1_followup/:ro \
                                -v /storage/data/projects/dataportal/data/:/storage/data/projects/dataportal/data/:ro \
-                               ubuntu:16.04 /bin/bash
+                               ubuntu:17.10 /bin/bash
     docker run --name <container_name> --volumes-from pdp_data \
                -p 8000:8000 -p 8001:8001 \
                -e DSN=<dsn> -e PCDS_DSN=<pcds_dsn> \
-               -d <image>
-    docker run --name nginx-proxy \
-               -p 8080:8080 \
-               -e APP_HOST=<host> -e APP_FE_PORT=<port> -e APP_BE_PORT=<port> \
-               -d <image>
+               -e APP_MODULE=pdp.wsgi:frontend \
+               -d pcic/pdp
+    docker run --name <container_name> --volumes-from pdp_data \
+               -p 8001:8001 \
+               -e DSN=<dsn> -e PCDS_DSN=<pcds_dsn> \
+               -e APP_MODULE=pdp.wsgi:backend \
+               -d pcic/pdp
 
 Docker Compose
 ^^^^^^^^^^^^^^
 *(requires docker-compose v1.6.0+)*
 
-`Docker Compose`_ can be used to simplify the deployment of multi-container applications. In order to use Docker Compose, runtime behaviour for the individual containers is defined in a ``docker-compose.yaml`` file (make sure the pdp image runs the ``supervisord`` CMD on startup). Once configured, run ``docker/docker-compose up`` to start the reverse-proxy in conjunction with the pdp application.
-
-Compose can also be used to simplify the ``run`` command for a single container application. For example, the nginx container requires several environment variables to be specified in order to run properly. This can be done easily by navigating to ``docker/proxy/`` and running:
-
-.. code:: bash
-
-    docker-compose up
-
-which will name and start the container, add the environment variables, and publish it to port 8080 (as specified in the ``docker-compose.yaml`` file).
+`Docker Compose`_ can be used to simplify the deployment of multi-container applications. In order to use Docker Compose, runtime behaviour for the individual containers is defined in a ``docker-compose.yaml`` file. Once configured, run ``docker-compose up`` from the ``docker`` directory to start both the front-end and back-end applications.
 
 .. _here: https://github.com/pacificclimate/pdp/blob/master/README.md
 .. _jinja2: http://jinja.pocoo.org/
