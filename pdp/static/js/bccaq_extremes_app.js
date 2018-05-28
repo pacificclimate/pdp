@@ -72,12 +72,12 @@ $(document).ready(function () {
 
     function getTimeIndex(layer_name) {
         var layerUrl = catalog[layer_name.split('/')[0]];
-        var reg = /.*\/data\/(.*?)\/.*/g;
-        var m = reg.exec(layerUrl);
-        layerUrl = layerUrl.replace("data/" + m[1], m[1] + "/catalog")
+        const reg = new RegExp(pdp.data_root + '/(.*)/(.*)');
+        const matches = reg.exec(layerUrl);
+        layerUrl = pdp.app_root + "/" + matches[1] + "/catalog/" + matches[2];
 
         var maxTimeReq = $.ajax({
-                url: (layerUrl + ".dds?time").replace("/data/", "/catalog/")
+                url: layerUrl + ".dds?time"
             });
         $.when(maxTimeReq).done(function (maxTime, unitsSince) {
             var maxTimeIndex = ddsToTimeIndex(maxTime);

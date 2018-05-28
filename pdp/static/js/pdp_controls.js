@@ -427,10 +427,10 @@ MetadataDownloadLink.prototype = {
         dst = lyr_id.split('/')[0];
         this.varname = lyr_id.split('/')[1];
         url = this.catalog[dst];
-        reg = /.*\/data\/(.*?)\/.*/g;
+        reg = new RegExp(pdp.data_root + '/(.*)/(.*)');
         matches = reg.exec(url);
-        url = url.replace("data/" + matches[1], matches[1] + "/catalog");
-
+        //matches[1] is portal url base, matches[2] is dataset, make catalog URL.
+        url = pdp.app_root + "/" + matches[1] + "/catalog/" + matches[2];
         this.dl_url = url;
         this.trigger();
     }
