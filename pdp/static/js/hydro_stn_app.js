@@ -53,7 +53,7 @@ $(document).ready(function () {
 
             row.idx = idx;
             parser = document.createElement('a');
-            parser.href = "../../data/hydro_stn/" + row.FileName;
+            parser.href = pdp.data_root + "/hydro_stn/" + row.FileName;
             row.url = parser.href;
             pt = new OpenLayers.Geometry.Point(
                 parseFloat(row.Longitude),

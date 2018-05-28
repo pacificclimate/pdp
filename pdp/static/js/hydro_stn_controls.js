@@ -87,7 +87,7 @@ function addToSidebar(idx, dataArray, loginButton) {
     });
 
     link = document.createElement('a');
-    link.href = "../../data/hydro_stn/" + dataArray[idx].FileName + '.ascii';
+    link.href = pdp.data_root + "/hydro_stn/" + dataArray[idx].FileName + '.ascii';
     link.appendChild(document.createTextNode(dataArray[idx].StationName));
     $(link).click(loginButton, pdp.checkAuthBeforeDownload);
     item.appendChild(link);

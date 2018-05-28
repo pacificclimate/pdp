@@ -111,7 +111,7 @@ function init_raster_map() {
     na_osm = getNaBaseLayer(pdp.tilecache_url, 'North America OpenStreetMap', 'world_4326_osm', mapControls.projection);
 
     defaults = {
-        dataset: "rx1dayETCCDI_yr_BCCAQ-ANUSPLIN300-CanESM2_historical-rcp26_r1i1p1_1950-2100",
+        dataset: "rx1dayETCCDI_yr_BCCAQ-ANUSPLIN300-MRI-CGCM3_historical-rcp85_r1i1p1_1950-2100",
         variable: "rx1dayETCCDI"
     };
 
