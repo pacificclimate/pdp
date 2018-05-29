@@ -154,7 +154,7 @@ pdp_config.j2
 docker basics
 ^^^^^^^^^^^^^
 
-The docker image used to run this application is named ``pdp``. This image is responsible for running *either* the PCIC data portal's frontend *or* backend. Which part of the port is run, is determined by the ``APP_MODULE`` environment variable, set at container run time. TI should be set to either ``pdp.wsgi:frontend`` or ``pdp.wsgi:backend``.
+The docker image used to run this application is named ``pdp``. This image is responsible for running *either* the PCIC data portal's frontend *or* backend. Which part of the port is run, is determined by the ``APP_MODULE`` environment variable, set at container run time. ``APP_MODULE`` should be set to either ``pdp.wsgi:frontend`` or ``pdp.wsgi:backend``.
 
 Docker containers will remain up as long as there is an active process running within them. For debugging, one can use the ``-it`` options to begin an interactive container. For general deployment however, you should use ``-d`` to run the container as a daemon/background process. For the rest of this guide, we'll assume daemon-style usage.
 
