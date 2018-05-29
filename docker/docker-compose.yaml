@@ -1,16 +1,20 @@
 version: '2'
 services:
-  pdp:
-    image: pdp
-    container_name: pdp
+  frontend:
+    image: pcic/pdp:latest
+    container_name: pdp_frontend
     ports:
       - "8000:8000"  # frontend
-      - "8001:8001"  # backend
+    env_file:
+      - fe_deployment.env
+
+  backend:
+    image: pcic/pdp:latest
+    container_name: pdp_backend
+    env_file:
+      - be_deployment.env
+    ports:
+      - "8001:8000"  # backend
+
     volumes_from:
       - container:pdp_data:ro
-
-  nginx:
-    image: nginx-proxy
-    container_name: nginx-proxy
-    ports:
-      - "8080:8080"
