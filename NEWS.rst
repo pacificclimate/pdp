@@ -1,6 +1,14 @@
 News / Release Notes
 ====================
 
+2.5.1
+-----
+
+*Release Date: 04-Jun-2018*
+
+* Updates UI and map extent for the Gridded Observation portal
+* Simplifies deployment configuration to allow front and back ends to be deployed seperately
+
 2.5.0
 -----
 
