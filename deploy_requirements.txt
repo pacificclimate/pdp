@@ -1,4 +1,3 @@
 sphinx
-gunicorn==19.4.0
-gevent
+gunicorn[gevent]==19.8.1
 j2cli[yaml]
