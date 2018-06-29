@@ -1,6 +1,15 @@
 News / Release Notes
 ====================
 
+2.5.2
+-----
+
+*Release Date: 29-Jun-2018*
+
+* Fixes bug in Pydap/gunicorn incompatibilities
+* Upgrades gunicorn to allow for async workers
+* Make tilecache URL configurable at Docker deploy runtime
+
 2.5.1
 -----
 
