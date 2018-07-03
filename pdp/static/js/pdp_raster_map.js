@@ -298,7 +298,6 @@ function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension, callback
             SRS: map.getProjectionObject().projCode,
             INFO_FORMAT: "text/xml"
         };
-        // FIXME: URL below assumes that geoserver is running on the same machine as the webapp (or a proxy is in place)
         $.ajax({url: pdp.ncwms_url[0],
                 data: params})
             .fail(handle_ie8_xml)
