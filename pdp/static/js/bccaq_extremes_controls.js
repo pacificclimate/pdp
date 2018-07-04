@@ -126,7 +126,6 @@ function getOLClickHandler(map) {
         $('#plot-window').empty();
         $('#plot-window').html("<h2>Please wait... data loading.</h2>");
 
-        // FIXME: URL below assumes that geoserver is running on the same machine as the webapp (or a proxy is in place)
         $.ajax({url: pdp.ncwms_url[0],
                 data: params})
             .fail(handle_ie8_xml)

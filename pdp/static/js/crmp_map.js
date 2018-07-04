@@ -155,16 +155,11 @@ function init_crmp_map() {
                 map.removePopup(tempPopup);
             }
         }
-        // FIXME: URL below assumes that geoserver is running on the same machine as the webapp (or a proxy is in place)
-
         OpenLayers.Request.GET({
             url: wmsurl,
             params: generateGetFeatureInfoParams(map, myX, myY, stns_lyr, fCount, buff),
             success: fillPopup
         });
-        // OpenLayers.loadURL(wmsurl, params, this, function (response){
-        // funcToCall(response, lonLat);
-        // });
     }
 
     function callPopup(e) {
@@ -196,7 +191,7 @@ function init_crmp_map() {
         formatter = new OpenLayers.Format.Filter.v1_1_0({defaultVersion: "1.1.0", outputFormat: "GML3", xy: 'WFS' === 'WMS'});
         xml = new OpenLayers.Format.XML();
 
-        url = '/geoserver/CRMP/ows?service=WFS';
+        url  = pdp.gs_url + "CRMP/ows?service=WFS";
         params = {
             'version': '1.1.0',
             'request': 'GetFeature',

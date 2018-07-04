@@ -168,7 +168,7 @@ function downloadMetadata(e, map) {
     xml = new OpenLayers.Format.XML();
 
     if (req_type === 'WMS') {
-        url = '/geoserver/CRMP/wms?service=WMS';
+        url  = pdp.gs_url + "CRMP/wms?service=WMS";
         params = {
             'version': '1.1.0',
             'request': 'GetMap',
@@ -180,7 +180,7 @@ function downloadMetadata(e, map) {
             'format': select_elem[sel_idx].value
         };
     } else if (req_type === 'WFS') {
-        url = '/geoserver/CRMP/ows?service=WFS';
+        url = pdp.gs_url + "CRMP/ows?service=WFS";
         params = {
             'version': '1.1.0',
             'request': 'GetFeature',
