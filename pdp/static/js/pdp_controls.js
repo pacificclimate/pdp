@@ -397,6 +397,10 @@ RasterDownloadLink.prototype = {
         end = $(".datepickerend").datepicker("getDate");
         end = this.layer.times.toIndex(end);
 
+        //if either start or end is undefined, fall back to the full time range
+        start = start === undefined ? 0 : start;
+        end = end === undefined ? "" : end;
+
         this.trange = start + ':' + end;
         this.trigger();
     }
