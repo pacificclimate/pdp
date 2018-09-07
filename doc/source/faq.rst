@@ -67,7 +67,7 @@ If you're loading data files from the PCDS Portal into a spreadsheet program, ty
 
 For loading the NetCDF data files from the PCDS Portal, a recipe for getting the dates in Python looks something like this the following. First download a NetCDF file of the time variable: ::
 
-    $ curl http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC/1054920.rsql.nc?station_observations.time > 1054920.nc
+    $ curl https://data.pacificclimate.org/data/pcds/lister/raw/EC/1054920.rsql.nc?station_observations.time > 1054920.nc
 
 Then extract the time values into native datetime types: ::
 

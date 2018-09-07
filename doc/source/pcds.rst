@@ -68,9 +68,9 @@ There are a few nuances to the aggregated data download that work the way the us
 Station Listings
 ^^^^^^^^^^^^^^^^
 
-If one is interested in exploring the station offerings in a hiearchical listing format (as opposed to a map), we offer a station listings interface available at the URL http://tools.pacificclimate.org/dataportal/data/pcds/lister
+If one is interested in exploring the station offerings in a hiearchical listing format (as opposed to a map), we offer a station listings interface available at the URL https://data.pacificclimate.org/data/pcds/lister
 
-These listing pages lay out the stations in a hierarchy splitting on raw data vs. climatology ("raw|climo"), CRMP network, and finally station. For example, to list all of the climatologies available for the BC Hydro network, one would navigate to http://tools.pacificclimate.org/dataportal/data/pcds/lister/climo/BCH/
+These listing pages lay out the stations in a hierarchy splitting on raw data vs. climatology ("raw|climo"), CRMP network, and finally station. For example, to list all of the climatologies available for the BC Hydro network, one would navigate to https://data.pacificclimate.org/data/pcds/lister/climo/BCH/
 
 The page for a single station includes a simple HTML page that lists all global metadata, all variables for the station, and it provides some form controls to download individual variables. Please note that you must select the checkbox for *each and every* variable that you want to download. None are selected by default, so clicking "Download" without any prior action will result in a bad request.
 
@@ -86,9 +86,9 @@ The whole data portal is written using open protocols and an advanced user with 
 Example 1
 ~~~~~~~~~
 
-For your purposes of demonstration, let's assume that a user is interested in downloading data from a whole bunch of Wildfire Management Branch stations, network code "FLNRO-WMB". From our instance of Pydap, you can get a station listing from the `data listing pages <http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/FLNRO-WMB/>`_.
+For your purposes of demonstration, let's assume that a user is interested in downloading data from a whole bunch of Wildfire Management Branch stations, network code "FLNRO-WMB". From our instance of Pydap, you can get a station listing from the `data listing pages <https://data.pacificclimate.org/data/pcds/lister/raw/FLNRO-WMB/>`_.
 
-If you have a list of network_name/station_ids (where station_id is the id by which it is called *by the network*, then you can patch together a URL for the full data download. For example, if you wanted to download FLNRO-WMB data for station "1002", the URL would be http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/FLNRO-WMB/1002.rsql.csv
+If you have a list of network_name/station_ids (where station_id is the id by which it is called *by the network*, then you can patch together a URL for the full data download. For example, if you wanted to download FLNRO-WMB data for station "1002", the URL would be https://data.pacificclimate.org/data/pcds/lister/raw/FLNRO-WMB/1002.rsql.csv
 
 The file format extension on the end can be [csv|xls|ascii|nc].
 
@@ -102,15 +102,15 @@ Station 1145M29, Nelson, BC, is available from the "EC_raw" network.
 
 You could request:
 
-`http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature\<0 <http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature\<0>`_
+`https://data.pacificclimate.org/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature\<0 <https://data.pacificclimate.org/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature\<0>`_
 
 If you only wanted the temperature and time variables (as opposed to *all* of the variables) where temperature is below freezing, you could say:
 
-`http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.air_temperature\<0 <http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.air_temperature\<0>`_
+`https://data.pacificclimate.org/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.air_temperature\<0 <https://data.pacificclimate.org/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.air_temperature\<0>`_
 
 If you only wanted the freezing observations for *this year* you could use a temporal conditional and say:
 
-`http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.time\>"2018-01-01 00:00:00"&station_observations.air_temperature\<0 <http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.time\>"2018-01-01 00:00:00"&station_observations.air_temperature\<0>`_
+`https://data.pacificclimate.org/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.time\>"2018-01-01 00:00:00"&station_observations.air_temperature\<0 <https://data.pacificclimate.org/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.time\>"2018-01-01 00:00:00"&station_observations.air_temperature\<0>`_
 
 The time format is a little tricky, because:
 a) You need to specify it in YYYY-MM-DD HH:MM:SS format and
@@ -120,8 +120,8 @@ Depending on what browser/client you are using, you *may* need to URL encode all
 
 For example:
 
-`http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.time\>"2018-01-01 00:00:00"&station_observations.air_temperature\<0 <http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.time\>"2018-01-01 00:00:00"&station_observations.air_temperature\<0>`_
+`https://data.pacificclimate.org/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.time\>"2018-01-01 00:00:00"&station_observations.air_temperature\<0 <https://data.pacificclimate.org/data/pcds/lister/raw/EC_raw/1145M29.rsql.ascii?station_observations.air_temperature,station_observations.time&station_observations.time\>"2018-01-01 00:00:00"&station_observations.air_temperature\<0>`_
 
 becomes:
 
-`http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/145M29.rsql.ascii%3Fstation_observations.air_temperature%2Cstation_observations.time%26station_observations.time%3E%222018-01-01%2000%3A00%3A00%22%26station_o%5C%0D%0Abservations.air_temperature%3C0 <http://tools.pacificclimate.org/dataportal/data/pcds/lister/raw/EC_raw/145M29.rsql.ascii%3Fstation_observations.air_temperature%2Cstation_observations.time%26station_observations.time%3E%222018-01-01%2000%3A00%3A00%22%26station_o%5C%0D%0Abservations.air_temperature%3C0>`_
+`https://data.pacificclimate.org/data/pcds/lister/raw/EC_raw/145M29.rsql.ascii%3Fstation_observations.air_temperature%2Cstation_observations.time%26station_observations.time%3E%222018-01-01%2000%3A00%3A00%22%26station_o%5C%0D%0Abservations.air_temperature%3C0 <https://data.pacificclimate.org/data/pcds/lister/raw/EC_raw/145M29.rsql.ascii%3Fstation_observations.air_temperature%2Cstation_observations.time%26station_observations.time%3E%222018-01-01%2000%3A00%3A00%22%26station_o%5C%0D%0Abservations.air_temperature%3C0>`_
