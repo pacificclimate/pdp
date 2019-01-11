@@ -135,15 +135,6 @@ pdp_config.j2
 | ``NCWMS_URL``
 | Raster portal ncWMS URL of the form ``<docker_host>:<port>/ncWMS/``. The host/port must match ``APP_ROOT``.
 |
-| ``USE_AUTH``
-| Enable or disable authentication requirement (default is ``true``).
-|
-| ``SESSION_DIR``
-| File system location to store session information.
-|
-| ``CLEAN_SESSION_DIR``
-| Enable or disable session directory cleaning on server restart (default is ``true``).
-|
 | ``USE_ANALYTICS``
 | Enable or disable Google Analytics reporting (default is ``true``).
 |

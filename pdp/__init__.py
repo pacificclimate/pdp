@@ -64,8 +64,6 @@ def get_config():
     }
 
     config = updateConfig(global_config, config)
-    if config['session_dir'] == 'default':
-        config['session_dir'] = resource_filename('pdp', 'pdp_session_dir')
     return config
 
 
@@ -84,9 +82,3 @@ def _parse_version(full_version, type_):
         elif type_ == "revision":
             return "%s:%s" % (branch, sha)
     return "unknown"
-
-
-def clean_session_dir(session_dir, should_I):
-    if should_I and os.path.exists(session_dir):
-        print('Removing session directory {}'.format(session_dir))
-        rmtree(session_dir)
