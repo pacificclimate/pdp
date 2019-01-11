@@ -7,13 +7,10 @@
 
 __all__ = ['get_config']
 
-import sys
 import os
 import re
 
 from pkg_resources import resource_filename, get_distribution
-from shutil import rmtree
-import yaml
 
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig

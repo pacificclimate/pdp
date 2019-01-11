@@ -1,8 +1,5 @@
 # Integration tests for the the full data portal web application
 
-from tempfile import mkdtemp
-
-import py
 import pytest
 
 
