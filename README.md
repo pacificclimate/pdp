@@ -66,11 +66,11 @@ pyenv/bin/python setup.py install
 
 ## Configuration
 
-A sample config file is stored in `pdp/config.yaml`. Copy this file to a new location and set an environment variable `PDP_CONFIG` to point to it.
+Configuration of the PDP is accomplished through a set of environment variables. A sample environment file is stored in `pdp/config.env`. This environment file can be sourced in before you run the pdp, included in a Docker deployment or used in any other flexible way.
 
 ```bash
-cp pdp/config.yaml ~/pdp_config.yaml
-export PDP_CONFIG=~/pdp_config.yaml
+source pdp/config.env
+export $(grep -v '^#' pdp/config.env | cut -d= -f1)
 ```
 
 ### Config Items
@@ -105,19 +105,7 @@ Raster portal ncWMS URL
 
 ###### `tilecache_url`
 
-Tileserver URL for base maps
-
-###### `use_auth`
-
-Enable or disable authentication requirement.
-
-###### `session_dir`
-
-File system location to store session information
-
-###### `clean_session_dir`
-
-Enable or disable session directory cleaning on server restart
+Tileserver URLs (space separated list) for base maps
 
 ###### `use_analytics`
 

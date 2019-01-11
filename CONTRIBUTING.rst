@@ -112,10 +112,10 @@ A full list of the available environment variables is found below. These can be 
 
     docker run -e APP_ROOT=<url> -e DATA_ROOT=<url> ...
 
-Default values are provided for the majority of these variables in the template file ``pdp_config.j2``. Those that do not have default values and must be specified by the user are marked with an asterisk (*). Environment variables defined at runtime will overwrite any previously existing ones.
+Default values are provided for the majority of these variables in the environment file ``pdp/config.env``. Those that do not have default values and must be specified by the user are marked with an asterisk (*). Environment variables defined at runtime will overwrite any previously existing ones.
 
-pdp_config.j2
-"""""""""""""
+pdp/config.env
+""""""""""""""
 
 | ``APP_ROOT``
 | The root location URL where the data portal will be exposed in the form ``<docker_host>:<port>``. Default port is 8080.
@@ -195,7 +195,7 @@ Once the data volume container has been created, these volumes can be brought in
 Configuration
 """""""""""""
 
-To avoid baking the configuration file ``pdp_config.yaml`` into the image we use `j2cli`_ which leverages the `jinja2`_ template engine to generate a config file at container runtime. Values in the template files can be set using environment variables passed to docker:
+Any values in the ``pdp/config.env`` file can be set at run time. These environment variables can be passed to docker on the command line:
 
 .. code:: bash
 

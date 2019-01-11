@@ -23,7 +23,6 @@ ADD *requirements.txt /root/pdp/
 # Set up environment variables
 ENV CPLUS_INCLUDE_PATH /usr/include/gdal
 ENV C_INCLUDE_PATH /usr/include/gdal
-ENV PDP_CONFIG /root/pdp_config.yaml
 ENV PIP_INDEX_URL https://pypi.pacificclimate.org/simple
 
 # Install dependencies (separate RUN
@@ -44,10 +43,6 @@ RUN pip install .
 # Create directory for supervisord logs
 RUN mkdir etc/
 
-# Add the template config files
-COPY docker/templates/ /templates/
-COPY docker/template_config.sh /root/pdp/
-
 EXPOSE 8000
 
 # gunicorn.conf is set up so that one can tune gunicorn settings when
@@ -59,4 +54,4 @@ EXPOSE 8000
 
 # APP_MODULE should be set to either pdp.wsgi:frontend or pdp.wsgi:backend
 # E.g. docker run -e APP_MODULE=pdp.wsgi:frontend
-CMD /root/pdp/template_config.sh && gunicorn --config docker/gunicorn.conf --log-config docker/logging.conf $APP_MODULE
+CMD gunicorn --config docker/gunicorn.conf --log-config docker/logging.conf $APP_MODULE
