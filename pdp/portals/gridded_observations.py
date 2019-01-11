@@ -27,7 +27,6 @@ class GriddedObservationsEnsembleLister(EnsembleMemberLister):
                 dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
 
-
 def mk_frontend(config):
     return make_raster_frontend(config, ensemble_name, url_base,
                                 title, GriddedObservationsEnsembleLister,

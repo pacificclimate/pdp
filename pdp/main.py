@@ -36,7 +36,7 @@ def initialize_frontend(global_config, use_analytics=False):
         for app in apps
     }
     mounts.update({
-        '/pcds_map': pcds.mk_frontend(global_config), # legacy url support
+        '/pcds_map': pcds.mk_frontend(global_config),  # legacy url support
         '/css/': static.Cling(resource_filename('pdp_util', 'data')),
         '/docs/': docs_app
         })

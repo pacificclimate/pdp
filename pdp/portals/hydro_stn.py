@@ -32,7 +32,7 @@ class HydroStationDataServer(DapServer):
 def mk_backend(config):
     data_server = HydroStationDataServer(
             resource_filename('pdp', 'portals/hydro_stn.yaml'),
-            global_config['data_root'].rstrip('/') + '/'
+            config['data_root'].rstrip('/') + '/'
     )
     return data_server
 
@@ -55,4 +55,3 @@ def mk_frontend(config):
     map_app = MapApp(**config)
 
     return DispatcherMiddleware(map_app, {'/map': map_app})
-

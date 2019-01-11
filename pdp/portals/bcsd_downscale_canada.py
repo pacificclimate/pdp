@@ -22,7 +22,6 @@ class DownscaledEnsembleLister(EnsembleMemberLister):
                 dfv.file.unique_id.replace('+', '-')
 
 
-
 def mk_frontend(config):
     return make_raster_frontend(config, ensemble_name, url_base,
                                 title, DownscaledEnsembleLister,
