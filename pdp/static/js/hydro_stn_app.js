@@ -6,7 +6,7 @@
 // globals
 
 $(document).ready(function () {
-    var map, loginButton, mapProj, controls, dataArray,
+    var map, mapProj, controls, dataArray,
         stnLayer, searchData;
 
     if (window.shittyIE) {
@@ -14,8 +14,6 @@ $(document).ready(function () {
         return;
     }
     map = init_hydro_stn_map();
-    loginButton = pdp.init_login("login-div");
-    pdp.checkLogin(loginButton);
     mapProj = map.getProjectionObject();
 
     controls = getHydroStnControls();
@@ -36,7 +34,7 @@ $(document).ready(function () {
     stnLayer = map.getStnLayer();
     stnLayer.events.on({
         'featureselected': function (feature) {
-            addToSidebar(feature.feature.fid, dataArray, loginButton);
+            addToSidebar(feature.feature.fid, dataArray);
         },
         'featureunselected': function (feature) {
             removeFromSidebar(feature.feature.fid);

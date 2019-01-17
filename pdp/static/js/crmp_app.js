@@ -5,12 +5,9 @@
 var map;
 
 $(document).ready(function () {
-    var loginButton, filtChange, downloadForm;
+    var filtChange, downloadForm;
 
     map = init_crmp_map();
-
-    loginButton = pdp.init_login("login-div");
-    pdp.checkLogin(loginButton);
 
     filtChange = pdp.curry(CRMPFilterChange, map);
 
@@ -20,14 +17,6 @@ $(document).ready(function () {
 
     downloadForm.appendChild(getCRMPControls(map));
     downloadForm.appendChild(getCRMPDownloadOptions());
-
-    // $(downloadForm).submit(function (event) {
-    //     //This doesn't really check if we're logged in... but it's a quick fix
-    //     if (!$(loginButton).prop("loggedIn")) {
-    //         alert("Please log in before downloading data");
-    //         event.preventDefault();
-    //     }
-    // });
 
     map.filters = {};
     map.filters.values = getActiveFilters;

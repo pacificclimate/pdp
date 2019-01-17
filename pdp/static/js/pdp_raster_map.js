@@ -152,10 +152,7 @@ function processNcwmsLayerMetadata(ncwms_layer, catalog) {
 
     // transform the data_server url into the un-authed catalog based url for metadata
     layerUrl = catalog[getNcwmsLayerId(ncwms_layer)];
-    const reg = new RegExp(pdp.data_root + '/(.*)/(.*)');
-    const matches = reg.exec(layerUrl);
     //matches[1] is portal base url, matches[2] is dataset, make catalog url
-    layerUrl = pdp.app_root + "/" + matches[1] + "/catalog/" + matches[2];
 
     // Request time variables
     maxTimeReq = $.ajax({
