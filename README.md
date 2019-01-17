@@ -150,6 +150,8 @@ pyenv/bin/gunicorn -b 0.0.0.0:<port2> pdp.wsgi:backend
 
 #### Supervisord
 
+*Note: this is only an **example** process monitoring setup. Details can and will be different depending on your particular deployment stragety*
+
 Set up the Supervisord config file using
 ```bash
 pyenv/bin/echo_supervisord_conf > /install/location/supervisord.conf
@@ -184,7 +186,7 @@ Front end config
 command=/install/location/pyenv/bin/gunicorn -b 0.0.0.0:<port> --access-logfile=<access_logfile> --error-logfile=<error_logfile> pdp.wsgi:frontend
 directory=/install/location/
 user=www-data
-environment=PDP_CONFIG="/install/location/pdp_config.yaml"
+environment=OPTION0="",OPTION2=""...
 autostart=true
 autorestart=true
 redirect_stderr=True
@@ -198,7 +200,7 @@ Back end config
 command=/install/location/pyenv/bin/gunicorn -b 0.0.0.0:<port> --workers 10 --worker-class gevent -t 3600 --access-logfile=<access_logfile> --error-logfile=<error_logfile> pdp.wsgi:backend
 directory=/install/location/
 user=www-data
-environment=PDP_CONFIG="/install/location/pdp_config.yaml"
+environment=OPTION0="",OPTION2=""...
 autostart=true
 autorestart=true
 redirect_stderr=True
