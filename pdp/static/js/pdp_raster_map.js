@@ -175,7 +175,10 @@ function processNcwmsLayerMetadata(ncwms_layer, catalog) {
         layerTime = new CfTime(units, startDate, calendar);
         layerTime.setMaxTimeByIndex(maxTimeIndex);
         ncwms_layer.times = layerTime; // Future access through ncwmslayer?
-        setTimeAvailable(layerTime.sDate, layerTime.eDate);
+	// Some pages don't have date pickers
+	if ($(".datepickerstart").length > 0) {
+            setTimeAvailable(layerTime.sDate, layerTime.eDate);
+	}
     });
 }
 
@@ -295,7 +298,7 @@ function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension, callback
             SRS: map.getProjectionObject().projCode,
             INFO_FORMAT: "text/xml"
         };
-        $.ajax({url: pdp.ncwms_url[0],
+        $.ajax({url: pdp.ncwms_url,
                 data: params})
             .fail(handle_ie8_xml)
             .always(responder);
