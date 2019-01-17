@@ -12,16 +12,12 @@
     <py:for each="url in tilecache_url">
       tcUrls.push('${url}');
     </py:for>    
-    var ncwmsUrls = new Array();
-    <py:for each="url in ncwms_url">
-      ncwmsUrls.push('${url}');
-    </py:for>
       var pdp = {
         VERSION: '0.1',
         app_root: '${app_root}',
         data_root: '${data_root}',
         gs_url: '${geoserver_url}',
-        ncwms_url: ncwmsUrls,
+        ncwms_url: '${ncwms_url}',
         tilecache_url: tcUrls,
         ensemble_name: '${ensemble_name}'     
       };
