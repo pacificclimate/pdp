@@ -4,12 +4,10 @@
 "use strict";
 
 $(document).ready(function () {
-    var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog,
+    var map, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog,
         dlLink, mdLink, capabilities_request, ncwms_capabilities;
 
     map = init_vic_map();
-    loginButton = pdp.init_login('login-div');
-    pdp.checkLogin(loginButton);
 
     ncwmsLayer = map.getClimateLayer();
     selectionLayer = map.getSelectionLayer();
@@ -54,7 +52,6 @@ $(document).ready(function () {
     }
                    );
     dlLink.trigger();
-    $('#download-timeseries').click(loginButton, pdp.checkAuthBeforeDownload);
 
     // Metadata/Attributes Download Link
     mdLink = new MetadataDownloadLink($('#download-metadata'), ncwmsLayer, undefined);

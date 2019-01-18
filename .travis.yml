@@ -12,7 +12,6 @@ addons:
     postgresql: "9.4"
 env:
   global:
-      - PDP_CONFIG=$TRAVIS_BUILD_DIR/pdp/config.yaml
       - CPLUS_INCLUDE_PATH=/usr/include/gdal
       - C_INCLUDE_PATH=/usr/include/gdal
       - PIP_INDEX_URL=https://pypi.pacificclimate.org/simple

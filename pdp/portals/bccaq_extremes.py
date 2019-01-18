@@ -3,17 +3,16 @@ serve ClimDEX data computed on the Canada-wide BCCAQ downscaled
 dataset.
 '''
 
-from pdp import wrap_auth
-from pdp.dispatch import PathDispatcher
-from pdp_util.map import MapApp
-from pdp_util.raster import RasterServer, RasterCatalog, RasterMetadata
+from pdp.portals import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
 
-from pdp.minify import wrap_mini
-from pdp.portals import updateConfig, raster_conf
+
+__all__ = ['url_base', 'mk_frontend', 'mk_backend']
+
 
 ensemble_name = 'bccaq_extremes'
-url_base = 'downscaled_gcm_extremes'
+url_base = '/downscaled_gcm_extremes'
+title = 'Statistically Downscaled GCM Scenarios: Extremes'
 
 
 class ClimdexEnsembleLister(EnsembleMemberLister):
@@ -27,43 +26,16 @@ class ClimdexEnsembleLister(EnsembleMemberLister):
                 dfv.file.unique_id.replace('+', '-')
 
 
-def data_server(config, ensemble_name):
-    dsn = config['dsn']
-    conf = raster_conf(dsn, config, ensemble_name, url_base)
-    data_server = wrap_auth(RasterServer(dsn, conf))
-    return data_server
+def mk_frontend(config):
+    return make_raster_frontend(
+        config, ensemble_name, url_base,
+        title, ClimdexEnsembleLister,
+        ['js/d3.v3.min.js',
+         'js/bccaq_extremes_map.js',
+         'js/bccaq_extremes_controls.js',
+         'js/bccaq_extremes_app.js'],
+        ['css/plot.css'])
 
 
-def portal(config):
-    dsn = config['dsn']
-    portal_config = {
-        'title': 'Statistically Downscaled GCM Scenarios: Extremes',
-        'ensemble_name': ensemble_name,
-        'css_files': [
-            'css/plot.css'],
-        'js_files':
-            ['js/d3.v3.min.js'] +
-            wrap_mini([
-                'js/bccaq_extremes_map.js',
-                'js/bccaq_extremes_controls.js',
-                'js/bccaq_extremes_app.js'],
-                basename=url_base, debug=(not config['js_min'])
-        )
-    }
-
-    portal_config = updateConfig(config, portal_config)
-    map_app = wrap_auth(MapApp(**portal_config), required=False)
-
-    conf = raster_conf(dsn, config, ensemble_name, url_base)
-    catalog_server = RasterCatalog(dsn, conf)  # No Auth
-
-    menu = ClimdexEnsembleLister(dsn)
-
-    metadata = RasterMetadata(dsn)
-
-    return PathDispatcher([
-        ('^/map/?.*$', map_app),
-        ('^/catalog/.*$', catalog_server),
-        ('^/menu.json.*$', menu),
-        ('^/metadata.json.*$', metadata),
-    ])
+def mk_backend(config):
+    return data_server(config, ensemble_name)

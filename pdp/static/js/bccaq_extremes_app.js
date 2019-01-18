@@ -4,7 +4,7 @@
 "use strict";
 
 $(document).ready(function () {
-    var map, clickHandler, loginButton, ncwmsLayer, selectionLayer,
+    var map, clickHandler, ncwmsLayer, selectionLayer,
         dlLink, mdLink, catalogUrl, catalog_request, catalog,
         capabilities_request, ncwms_capabilities;
 
@@ -12,8 +12,6 @@ $(document).ready(function () {
     clickHandler = getOLClickHandler(map);
     map.events.register('click', map, clickHandler);
 
-    loginButton = pdp.init_login("login-div");
-    pdp.checkLogin(loginButton);
 
     ncwmsLayer = map.getClimateLayer();
     selectionLayer = map.getSelectionLayer();
@@ -59,7 +57,6 @@ $(document).ready(function () {
     }
                    );
     dlLink.trigger();
-    $('#download-timeseries').click(loginButton, pdp.checkAuthBeforeDownload);
 
     // Metadata/Attributes Download Link
     mdLink = new MetadataDownloadLink($('#download-metadata'), ncwmsLayer, undefined);

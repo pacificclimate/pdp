@@ -66,11 +66,11 @@ pyenv/bin/python setup.py install
 
 ## Configuration
 
-A sample config file is stored in `pdp/config.yaml`. Copy this file to a new location and set an environment variable `PDP_CONFIG` to point to it.
+Configuration of the PDP is accomplished through a set of environment variables. A sample environment file is stored in `pdp/config.env`. This environment file can be sourced in before you run the pdp, included in a Docker deployment or used in any other flexible way.
 
 ```bash
-cp pdp/config.yaml ~/pdp_config.yaml
-export PDP_CONFIG=~/pdp_config.yaml
+source pdp/config.env
+export $(grep -v '^#' pdp/config.env | cut -d= -f1)
 ```
 
 ### Config Items
@@ -105,19 +105,7 @@ Raster portal ncWMS URL
 
 ###### `tilecache_url`
 
-Tileserver URL for base maps
-
-###### `use_auth`
-
-Enable or disable authentication requirement.
-
-###### `session_dir`
-
-File system location to store session information
-
-###### `clean_session_dir`
-
-Enable or disable session directory cleaning on server restart
+Tileserver URLs (space separated list) for base maps
 
 ###### `use_analytics`
 
@@ -162,6 +150,8 @@ pyenv/bin/gunicorn -b 0.0.0.0:<port2> pdp.wsgi:backend
 
 #### Supervisord
 
+*Note: this is only an **example** process monitoring setup. Details can and will be different depending on your particular deployment stragety*
+
 Set up the Supervisord config file using
 ```bash
 pyenv/bin/echo_supervisord_conf > /install/location/supervisord.conf
@@ -196,7 +186,7 @@ Front end config
 command=/install/location/pyenv/bin/gunicorn -b 0.0.0.0:<port> --access-logfile=<access_logfile> --error-logfile=<error_logfile> pdp.wsgi:frontend
 directory=/install/location/
 user=www-data
-environment=PDP_CONFIG="/install/location/pdp_config.yaml"
+environment=OPTION0="",OPTION2=""...
 autostart=true
 autorestart=true
 redirect_stderr=True
@@ -210,7 +200,7 @@ Back end config
 command=/install/location/pyenv/bin/gunicorn -b 0.0.0.0:<port> --workers 10 --worker-class gevent -t 3600 --access-logfile=<access_logfile> --error-logfile=<error_logfile> pdp.wsgi:backend
 directory=/install/location/
 user=www-data
-environment=PDP_CONFIG="/install/location/pdp_config.yaml"
+environment=OPTION0="",OPTION2=""...
 autostart=true
 autorestart=true
 redirect_stderr=True

@@ -152,10 +152,7 @@ function processNcwmsLayerMetadata(ncwms_layer, catalog) {
 
     // transform the data_server url into the un-authed catalog based url for metadata
     layerUrl = catalog[getNcwmsLayerId(ncwms_layer)];
-    const reg = new RegExp(pdp.data_root + '/(.*)/(.*)');
-    const matches = reg.exec(layerUrl);
     //matches[1] is portal base url, matches[2] is dataset, make catalog url
-    layerUrl = pdp.app_root + "/" + matches[1] + "/catalog/" + matches[2];
 
     // Request time variables
     maxTimeReq = $.ajax({
@@ -178,7 +175,10 @@ function processNcwmsLayerMetadata(ncwms_layer, catalog) {
         layerTime = new CfTime(units, startDate, calendar);
         layerTime.setMaxTimeByIndex(maxTimeIndex);
         ncwms_layer.times = layerTime; // Future access through ncwmslayer?
-        setTimeAvailable(layerTime.sDate, layerTime.eDate);
+	// Some pages don't have date pickers
+	if ($(".datepickerstart").length > 0) {
+            setTimeAvailable(layerTime.sDate, layerTime.eDate);
+	}
     });
 }
 
@@ -298,7 +298,7 @@ function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension, callback
             SRS: map.getProjectionObject().projCode,
             INFO_FORMAT: "text/xml"
         };
-        $.ajax({url: pdp.ncwms_url[0],
+        $.ajax({url: pdp.ncwms_url,
                 data: params})
             .fail(handle_ie8_xml)
             .always(responder);

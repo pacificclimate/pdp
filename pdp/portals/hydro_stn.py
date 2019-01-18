@@ -1,14 +1,16 @@
 from pkg_resources import resource_filename
 
-from pdp import wrap_auth
-from pdp.dispatch import PathDispatcher
+from werkzeug import DispatcherMiddleware
+
 from pdp_util.map import MapApp
 from pydap.wsgi.app import DapServer
 
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
 
-url_base = 'hydro_stn'
+__all__ = ['url_base', 'mk_frontend', 'mk_backend']
+
+url_base = '/hydro_stn'
 
 
 class HydroStationDataServer(DapServer):
@@ -27,16 +29,15 @@ class HydroStationDataServer(DapServer):
         return self._config
 
 
-def data_server(global_config):
-    data_server = wrap_auth(
-        HydroStationDataServer(
+def mk_backend(config):
+    data_server = HydroStationDataServer(
             resource_filename('pdp', 'portals/hydro_stn.yaml'),
-            global_config['data_root'].rstrip('/') + '/')
+            config['data_root'].rstrip('/') + '/'
     )
     return data_server
 
 
-def portal(config):
+def mk_frontend(config):
     hydro_stn_config = {
         'title': 'Modelled Streamflow Data',
         'js_files':
@@ -51,8 +52,6 @@ def portal(config):
     }
 
     config = updateConfig(config, hydro_stn_config)
-    map_app = wrap_auth(MapApp(**config), required=False)
+    map_app = MapApp(**config)
 
-    return PathDispatcher([
-        ('^/map/?.*$', map_app),
-    ])
+    return DispatcherMiddleware(map_app, {'/map': map_app})

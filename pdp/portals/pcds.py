@@ -4,9 +4,9 @@ Set portal.
 
 from pkg_resources import resource_filename
 
-from pdp import wrap_auth
+from werkzeug import DispatcherMiddleware
+
 from pdp_util.map import MapApp
-from pdp.dispatch import PathDispatcher
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
 
@@ -16,10 +16,13 @@ from pdp_util.agg import PcdsZipApp
 from pdp_util.pcds_dispatch import PcdsDispatcher
 
 
-url_base = 'pcds'
+__all__ = ['url_base', 'mk_frontend', 'mk_backend']
 
 
-def data_server(config):
+url_base = '/pcds'
+
+
+def mk_backend(config):
     dsn = config['pcds_dsn']
     dispatch_app = PcdsDispatcher(
         templates=resource_filename('pdp_util', 'templates'),
@@ -27,18 +30,17 @@ def data_server(config):
         app_root=config['app_root'],
         conn_params=dsn
     )
-    dispatch_app = wrap_auth(dispatch_app)
 
-    zip_app = wrap_auth(PcdsZipApp(dsn))
+    zip_app = PcdsZipApp(dsn)
 
-    app = PathDispatcher([
-        ('^/lister/.*$', dispatch_app),
-        ('^/agg/?$', zip_app)
-    ])
+    app = DispatcherMiddleware(zip_app, {
+        '/lister': dispatch_app,
+        '/agg': zip_app
+    })
     return app
 
 
-def portal(config):
+def mk_frontend(config):
     dsn = config['pcds_dsn']
     pcds_config = {
         'title': 'BC Station Data - PCDS',
@@ -57,11 +59,11 @@ def portal(config):
     legend_app = LegendApp(dsn)
 
     pcds_map_config = updateConfig(config, pcds_config)
-    map_app = wrap_auth(MapApp(**pcds_map_config), required=False)
+    map_app = MapApp(**pcds_map_config)
 
-    return PathDispatcher([
-        ('^/map/.*$', map_app),
-        ('^/record_length/?$', record_length_app),
-        ('^/count_stations/?$', count_stations_app),
-        ('^/images/legend/.*\.png$', legend_app)
-    ])
+    return DispatcherMiddleware(map_app, {
+        '/map': map_app,
+        '/record_length': record_length_app,
+        '/count_stations': count_stations_app,
+        '/images/legend': legend_app
+    })

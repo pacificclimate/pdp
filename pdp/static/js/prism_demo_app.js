@@ -4,12 +4,10 @@
 "use strict";
 
 $(document).ready(function () {
-    var map, loginButton, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog,
+    var map, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog,
         dlLink, mdLink, capabilities_request, ncwms_capabilities;
 
     map = init_prism_map();
-    loginButton = pdp.init_login('login-div');
-    pdp.checkLogin(loginButton);
 
     document.getElementById("pdp-controls").appendChild(getPRISMControls(pdp.ensemble_name));
     document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(false));
@@ -64,7 +62,6 @@ $(document).ready(function () {
     });
     setBoundsInUrlTemplate();
     dlLink.trigger();
-    $('#download-timeseries').click(loginButton, pdp.checkAuthBeforeDownload);
 
     // Metadata/Attributes Download Link
     mdLink = new MetadataDownloadLink($('#download-metadata'), ncwmsLayer, undefined);

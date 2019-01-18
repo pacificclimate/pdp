@@ -3,18 +3,17 @@ the 1971-2000 and 1981-2010 climatologies and monthly climate data for
 800 meter resolution PRISM dataset for BC
 '''
 
-from pdp import wrap_auth
-from pdp.dispatch import PathDispatcher
-from pdp_util.map import MapApp
-from pdp_util.raster import RasterServer, RasterCatalog, RasterMetadata
+from pdp.portals import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
 import re
 
-from pdp.minify import wrap_mini
-from pdp.portals import updateConfig, raster_conf
+
+__all__ = ['url_base', 'mk_frontend', 'mk_backend']
+
 
 ensemble_name = 'bc_prism_with_monthlies'
-url_base = 'bc_prism'
+url_base = '/bc_prism'
+title = 'High-Resolution PRISM Data'
 
 
 class PrismEnsembleLister(EnsembleMemberLister):
@@ -35,38 +34,13 @@ class PrismEnsembleLister(EnsembleMemberLister):
                 dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
 
-def data_server(config, ensemble_name):
-    dsn = config['dsn']
-    conf = raster_conf(dsn, config, ensemble_name, url_base)
-    data_server = wrap_auth(RasterServer(dsn, conf))
-    return data_server
+def mk_frontend(config):
+    return make_raster_frontend(config, ensemble_name, url_base,
+                                title, PrismEnsembleLister,
+                                ['js/prism_demo_map.js',
+                                 'js/prism_demo_controls.js',
+                                 'js/prism_demo_app.js'])
 
 
-def portal(config):
-    dsn = config['dsn']
-    portal_config = {
-        'title': 'High-Resolution PRISM Data',
-        'ensemble_name': ensemble_name,
-        'js_files': wrap_mini([
-            'js/prism_demo_map.js',
-            'js/prism_demo_controls.js',
-            'js/prism_demo_app.js'],
-            basename=url_base, debug=(not config['js_min']))
-    }
-
-    portal_config = updateConfig(config, portal_config)
-    map_app = wrap_auth(MapApp(**portal_config), required=False)
-
-    conf = raster_conf(dsn, config, ensemble_name, url_base)
-    catalog_server = RasterCatalog(dsn, conf)  # No Auth
-
-    menu = PrismEnsembleLister(dsn)
-
-    metadata = RasterMetadata(dsn)
-
-    return PathDispatcher([
-        ('^/map/?.*$', map_app),
-        ('^/catalog/.*$', catalog_server),
-        ('^/menu.json.*$', menu),
-        ('^/metadata.json.*$', metadata),
-    ])
+def mk_backend(config):
+    return data_server(config, ensemble_name)

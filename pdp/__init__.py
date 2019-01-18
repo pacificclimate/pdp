@@ -1,38 +1,53 @@
 '''The pdp package ties together all of the aspects of the PCIC Data
    Portal (pdp).  The base pdp module configures the application, sets
-   up a URL hierarchy (a PathDispatcher instance), instantiates all of
-   the responder applications and binds them to various
-   PathDispatchers.
-
+   up a URL hierarchy (a DispatcherMiddleware instance), instantiates
+   all of the responder applications and binds them to various
+   DispatcherMiddlewares.
 '''
 
-__all__ = ['get_config', 'wrap_auth']
+__all__ = ['get_config']
 
-import sys
 import os
 import re
 
 from pkg_resources import resource_filename, get_distribution
-from shutil import rmtree
-import yaml
 
-from pdp_util.auth import PcicOidMiddleware
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
 
 
-def get_config():
-    config_filename = os.environ.get(
-        'PDP_CONFIG', '/var/www/dataportal/config.yaml')
-    try:
-        with open(config_filename) as f:
-            config = yaml.load(f)
-    except IOError:
-        print("pdp/__init__.py: An error occurred while trying to read the "
-              "config file. Please make sure that the PDP_CONFIG env variable "
-              "has been set and points to a valid file.")
-        sys.exit(1)
+def get_config_from_environment():
+    defaults = {
+        'app_root': 'http://tools.pacificclimate.org/dataportal',
+        'data_root': 'http://tools.pacificclimate.org/dataportal/data',
+        'title': '',
+        'ensemble_name': '',
+        'dsn': 'postgresql://user:pass@host/database',
+        'pcds_dsn': 'postgresql://user:pass@host/database',
+        'js_min': 'False',
+        'geoserver_url': 'http://tools.pacificclimate.org/geoserver/',
+        'ncwms_url': 'http://tools.pacificclimate.org/ncWMS-PCIC/wms',
+        'tilecache_url':
+            'http://a.tiles.pacificclimate.org/tilecache/tilecache.py'
+            ' http://b.tiles.pacificclimate.org/tilecache/tilecache.py'
+            ' http://c.tiles.pacificclimate.org/tilecache/tilecache.py',
+        'use_analytics': 'True',
+        'analytics': 'UA-20166041-3'  # change for production
+    }
+    config = {
+        key: os.environ.get(key.upper(), default)
+        for key, default in defaults.items()
+    }
+    # evaluate a few config items that need to be objects (not strings)
+    config['js_min'] = (config['js_min'] == 'True')
+    config['use_analytics'] = (config['use_analytics'] == 'True')
+    if config['tilecache_url']:
+        config['tilecache_url'] = config['tilecache_url'].split()
+    return config
 
+
+def get_config():
+    env_config = get_config_from_environment()
     global_config = {
         'css_files': [
             'css/jquery-ui-1.10.2.custom.css',
@@ -57,19 +72,15 @@ def get_config():
                    'js/pdp_download.js',
                    'js/pdp_filters.js',
                    'js/pdp_map.js',
-                   'js/pdp_auth.js',
                    'js/pdp_raster_map.js',
                    'js/pdp_vector_map.js'
-                   ], debug=(not config['js_min'])),
+                   ], debug=(not env_config['js_min'])),
         'templates': resource_filename('pdp', 'templates'),
         'version': parse_version("version"),
         'revision': parse_version("revision")
     }
 
-    config = updateConfig(global_config, config)
-    if config['session_dir'] == 'default':
-        config['session_dir'] = resource_filename('pdp', 'pdp_session_dir')
-    return config
+    return updateConfig(global_config, env_config)
 
 
 def parse_version(type_):
@@ -87,23 +98,3 @@ def _parse_version(full_version, type_):
         elif type_ == "revision":
             return "%s:%s" % (branch, sha)
     return "unknown"
-
-
-def clean_session_dir(session_dir, should_I):
-    if should_I and os.path.exists(session_dir):
-        print('Removing session directory {}'.format(session_dir))
-        rmtree(session_dir)
-
-# auth wrappers
-
-
-def wrap_auth(app, required=False):
-    '''This function wraps a WSGI application with the PcicOidMiddleware
-    for session management and optional authentication
-    '''
-    config = get_config()
-    app = PcicOidMiddleware(app,
-                            templates=resource_filename('pdp', 'templates'),
-                            root=config['app_root'],
-                            auth_required=required)
-    return app
