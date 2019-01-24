@@ -1,13 +1,32 @@
 /*jslint browser: true, devel: true */
 /*global $, jQuery, OpenLayers, pdp, map, init_raster_map, processNcwmsLayerMetadata, getRasterControls, getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
 
+/*
+ * This front end displays both the BCSD/BCCAQ version 1 data and the
+ * BCCAQ version 2 data.
+ *
+ * BCCAQ version 1:
+ *    backend: bcsd_downscale_archive.py
+ *    url_base: downscaled_gcms_archive
+ *    ensemble: downscaled_gcms_archive
+ *
+ * BCCAQ version 2:
+ *    backend: bccaq2_downscale.py
+ *    url_base: downscaled_gcms
+ *    ensemble: bccaq_version_2
+ *
+ * Each version contains a link to the other at the top; the archived 
+ * version also has a disclaimer about the data being for comparison only.
+ */
+
 "use strict";
 
 $(document).ready(function () {
     var map, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog,
         dlLink, mdLink, capabilities_request, ncwms_capabilities;
 
-    map = init_raster_map();
+    const archivePortal = $(location).attr('href').indexOf("archive") != -1;
+    map = init_raster_map(archivePortal);
 
     ncwmsLayer = map.getClimateLayer();
     selectionLayer = map.getSelectionLayer();
@@ -19,6 +38,24 @@ $(document).ready(function () {
 
     document.getElementById("pdp-controls").appendChild(getRasterControls(pdp.ensemble_name));
     document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(true));
+
+    //UI elements vary slightly based on whether this is the archive or new portal.
+    if(archivePortal) {
+      //archive portal. link to new portal, add archive disclaimer.
+      const portalLink = pdp.createLink("portal-link",
+          undefined,
+          pdp.app_root + "/downscaled_gcms/map/",
+          "Main Downscaled GCMS Portal");
+      document.getElementById("topnav").appendChild(portalLink);
+      document.getElementById("pdp-controls").appendChild(getArchiveDisclaimer());
+    } else {
+      //new portal. link to old one
+      const portalLink = pdp.createLink("portal-link",
+          undefined,
+          pdp.app_root + "/downscaled_gcms_archive/map/",
+          "Archive Downscaled GCMS Portal");
+      document.getElementById("topnav").appendChild(portalLink);
+    }
 
     // Data Download Link
     dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', 'tasmax', '0:55152', '0:510', '0:1068');

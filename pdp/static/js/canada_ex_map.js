@@ -1,9 +1,17 @@
 /*jslint browser: true, devel: true */
 /*global $, jQuery, OpenLayers, pdp, map, na4326_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getNaBaseLayer, getOpacitySlider, Colorbar*/
 
+/*
+ * This map displays both version 1 and version 2 of the BCCAQ / BCSD
+ * data. The only difference is default dataset and timestamps: version 1
+ * has timestamps at midnight each day; version 2 at noon.
+ *
+ * It accepts a boolean indicating whether it is displaying the archive datatset.
+ */
+
 "use strict";
 
-function init_raster_map() {
+function init_raster_map(archivePortal) {
     var options, mapControls, selLayerName, selectionLayer, panelControls,
         map, na_osm, defaults, params, ncwms, datalayerName, cb;
 
@@ -23,16 +31,24 @@ function init_raster_map() {
 
     na_osm = getNaBaseLayer(pdp.tilecache_url, 'North America OpenStreetMap', 'world_4326_osm', mapControls.projection);
 
-    defaults = {
-        dataset: "pr-tasmax-tasmin_day_BCSD-ANUSPLIN300-CanESM2_historical-rcp26_r1i1p1_19500101-21001231",
-        variable: "tasmax"
-    };
+    defaults = {};
+    if (archivePortal) {
+      //the old dataset
+      defaults.variable = "tasmax";
+      defaults.dataset = "pr-tasmax-tasmin_day_BCSD-ANUSPLIN300-CanESM2_historical-rcp26_r1i1p1_19500101-21001231";
+      defaults.timestamp = "2000-01-01";
+    } else {
+      //the new dataset
+      defaults.variable = "pr";
+      defaults.dataset = "pr_day_BCCAQv2_ACCESS1-0_historical-rcp45_r1i1p1_19500101-21001231_Canada";
+      defaults.timestamp = "2000-01-01T12:00:00.00Z";
+    }
 
     params = {
         layers: defaults.dataset + "/" + defaults.variable,
         transparent: "true",
         styles: "boxfill/ferret",
-        time: "2000-01-01",
+        time: defaults.timestamp,
         numcolorbands: 254,
         version: "1.1.1",
         srs: "EPSG:4326",

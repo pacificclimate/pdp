@@ -14,7 +14,7 @@ def test_can_instantiate_raster_pydap(raster_pydap):
 @pytest.mark.bulk_data
 def test_hdf5_to_netcdf(pcic_data_portal):
     req = Request.blank(
-        '/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+CCSM4_'
+        '/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+CCSM4_'
         'historical+rcp26_r2i1p1_19500101-21001231.nc.nc?pr'
         '[0:1:1][116:167][84:144]&')
     resp = req.get_response(pcic_data_portal)
@@ -45,7 +45,7 @@ def test_prism_response(pcic_data_portal):
 @pytest.mark.bulk_data
 def test_dds_response(pcic_data_portal):
     req = Request.blank(
-        '/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+CCSM4_'
+        '/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+CCSM4_'
         'historical+rcp26_r2i1p1_19500101-21001231.nc.dds')
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'

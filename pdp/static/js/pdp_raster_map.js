@@ -34,7 +34,7 @@ CfTime.prototype.toDate = function(index) {
     }
     var d = new Date(this.sDate.getTime());
     if(this.units == "days") {
-        if((this.calendar == "standard") || (this.calendar == "gregorian")) {
+        if(["standard", "gregorian", "proleptic_gregorian"].includes(this.calendar)) {
             d.setDate(this.sDate.getDate() + index);
             return d;
         }
@@ -61,7 +61,7 @@ CfTime.prototype.toIndex = function (d) {
     var days;
     var msPerDay = 1000 * 60 * 60 * 24;
     if(this.units=="days") {
-        if((this.calendar == "standard") || (this.calendar =="gregorian")) {
+        if(["standard", "gregorian", "proleptic_gregorian"].includes(this.calendar)) {
             var msDiff = d.getTime() - this.sDate.getTime();
             days = Math.floor(msDiff / msPerDay);
         }
@@ -98,7 +98,7 @@ function dasToUnitsSince(data) {
         sDate;
 
     var calendar;
-    reg = /calendar \"(standard|gregorian|365_day|noleap|360_day)\"/,
+    reg = /calendar \"(standard|gregorian|proleptic_gregorian|365_day|noleap|360_day)\"/,
     m = reg.exec(s),
     calendar = m ? m[1] : "standard";
 

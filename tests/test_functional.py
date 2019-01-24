@@ -438,7 +438,7 @@ def test_climatology_bounds(pcic_data_portal):
     '.nc.aig?tasmax[0:30][144:236][307:348]&',
 ])
 def test_aaigrid_response(pcic_data_portal, url):
-    base = '/data/downscaled_gcms/pr+tasmax+tasmin_day_'
+    base = '/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_'
     req = Request.blank(url.format(base))
     resp = req.get_response(pcic_data_portal)
 
@@ -466,7 +466,8 @@ def test_aaigrid_response_layers(pcic_data_portal, layers):
 @pytest.mark.crmpdb
 @pytest.mark.parametrize(('portal', 'ensemble'), [
         ('bc_prism', 'bc_prism'),
-        ('downscaled_gcms', 'bcsd_downscale_canada'),
+        ('downscaled_gcms_archive', 'downscaled_gcms_archive'),
+        ('downscaled_gcms', 'bccaq_version_2'),
         ('downscaled_gcm_extremes', 'bccaq_extremes'),
         ('hydro_model_out', 'vic_gen1'),
         ('gridded_observations', 'gridded-obs-met-data')
