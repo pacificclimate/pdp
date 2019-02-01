@@ -16,7 +16,8 @@
  *    ensemble: bccaq_version_2
  *
  * Each version contains a link to the other at the top; the archived 
- * version also has a disclaimer about the data being for comparison only.
+ * version has a disclaimer about the data being for comparison only.
+ * They have different starting datasets. Everything else is the same.
  */
 
 "use strict";
@@ -25,8 +26,24 @@ $(document).ready(function () {
     var map, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog,
         dlLink, mdLink, capabilities_request, ncwms_capabilities;
 
+    //check whether we're on the archive portal: is "archive" in the url?
     const archivePortal = $(location).attr('href').indexOf("archive") != -1;
-    map = init_raster_map(archivePortal);
+
+    //the two portals have different initial maps
+    if (archivePortal) {
+      //the old dataset
+      map = init_raster_map({
+        variable: "tasmax",
+        dataset: "pr-tasmax-tasmin_day_BCSD-ANUSPLIN300-CanESM2_historical-rcp26_r1i1p1_19500101-21001231",
+        timestamp: "2000-01-01"
+      });
+    } else {
+      map = init_raster_map({
+        variable: "tasmax",
+        dataset: "tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada",
+        timestamp: "2000-01-01T12:00:00.00Z"
+      });
+    }
 
     ncwmsLayer = map.getClimateLayer();
     selectionLayer = map.getSelectionLayer();

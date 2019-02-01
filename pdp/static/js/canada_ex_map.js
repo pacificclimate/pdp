@@ -3,17 +3,15 @@
 
 /*
  * This map displays both version 1 and version 2 of the BCCAQ / BCSD
- * data. The only difference is default dataset and timestamps: version 1
- * has timestamps at midnight each day; version 2 at noon.
- *
- * It accepts a boolean indicating whether it is displaying the archive datatset.
+ * data. The only difference is default dataset and timestamps, which
+ * are passed in from the top level app.
  */
 
 "use strict";
 
-function init_raster_map(archivePortal) {
+function init_raster_map(initialMap) {
     var options, mapControls, selLayerName, selectionLayer, panelControls,
-        map, na_osm, defaults, params, ncwms, datalayerName, cb;
+        map, na_osm, params, ncwms, datalayerName, cb;
 
     // Map Config
     options = na4326_map_options();
@@ -31,24 +29,11 @@ function init_raster_map(archivePortal) {
 
     na_osm = getNaBaseLayer(pdp.tilecache_url, 'North America OpenStreetMap', 'world_4326_osm', mapControls.projection);
 
-    defaults = {};
-    if (archivePortal) {
-      //the old dataset
-      defaults.variable = "tasmax";
-      defaults.dataset = "pr-tasmax-tasmin_day_BCSD-ANUSPLIN300-CanESM2_historical-rcp26_r1i1p1_19500101-21001231";
-      defaults.timestamp = "2000-01-01";
-    } else {
-      //the new dataset
-      defaults.variable = "pr";
-      defaults.dataset = "pr_day_BCCAQv2_ACCESS1-0_historical-rcp45_r1i1p1_19500101-21001231_Canada";
-      defaults.timestamp = "2000-01-01T12:00:00.00Z";
-    }
-
     params = {
-        layers: defaults.dataset + "/" + defaults.variable,
+        layers: initialMap.dataset + "/" + initialMap.variable,
         transparent: "true",
         styles: "boxfill/ferret",
-        time: defaults.timestamp,
+        time: initialMap.timestamp,
         numcolorbands: 254,
         version: "1.1.1",
         srs: "EPSG:4326",
@@ -74,14 +59,14 @@ function init_raster_map(archivePortal) {
     function customize_wms_params(layer_name) {
         var varname = layer_name.split('/')[1];
         if (varname === 'pr') {
-            this.params.LOGSCALE = false;
-            this.params.STYLES = 'boxfill/occam_inv';
+            this.params.LOGSCALE = true;
+            this.params.STYLES = 'boxfill/blueheat';
             this.params.BELOWMINCOLOR = 'transparent';
-            this.params.COLORSCALERANGE = '0.0,30.0';
+            this.params.COLORSCALERANGE = '1.0,30.0';
         } else {
             this.params.LOGSCALE = false;
             this.params.STYLES = 'boxfill/ferret';
-            this.params.COLORSCALERANGE = '-50,11';
+            this.params.COLORSCALERANGE = '-50,15';
         }
     }
     ncwms.events.register('change', ncwms, customize_wms_params);
@@ -141,7 +126,7 @@ function init_raster_map(archivePortal) {
         });
     });
 
-    ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
+    ncwms.events.triggerEvent('change', initialMap.dataset + "/" + initialMap.variable);
 
     (function (globals) {
         globals.ncwms = ncwms;
