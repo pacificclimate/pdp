@@ -1,6 +1,6 @@
 '''This portal serves the version 2 BCCAQ downscaled (4km) data
 for all Canada. This data is structured similarly to the version 1
-BCCAQ data served by bcsd_downscale_archive.py; the two portals use
+BCCAQ data served by downscale_archive.py; the two portals use
 the same front end code.
 '''
 from pdp.portals import make_raster_frontend, data_server

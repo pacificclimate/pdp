@@ -6,7 +6,7 @@
  * BCCAQ version 2 data.
  *
  * BCCAQ version 1:
- *    backend: bcsd_downscale_archive.py
+ *    backend: downscale_archive.py
  *    url_base: downscaled_gcms_archive
  *    ensemble: downscaled_gcms_archive
  *

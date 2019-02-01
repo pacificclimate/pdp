@@ -14,14 +14,14 @@ import portals.hydro_stn as hydro_stn
 
 # Raster portals
 import portals.bc_prism as bc_prism
-import portals.bcsd_downscale_archive as bcsd_archive
+import portals.downscale_archive as downscale_archive
 import portals.bccaq2_downscale as bccaq2
 import portals.bccaq_extremes as bccaq_extremes
 import portals.gridded_observations as gridded_observations
 import portals.vic_gen1 as vic_gen1
 
 
-apps = (bc_prism, bcsd_archive, bccaq2, vic_gen1, gridded_observations,
+apps = (bc_prism, downscale_archive, bccaq2, vic_gen1, gridded_observations,
         bccaq_extremes, pcds, hydro_stn)
 
 
