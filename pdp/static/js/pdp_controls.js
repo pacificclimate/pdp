@@ -100,6 +100,11 @@ function getRasterAccordionMenu(ensembleName, leafNameMapping) {
     return div;
 }
 
+function getArchiveDisclaimer() {
+  const disText = "These methods are provided for research / comparison to older analysis purposes only, and caution with their use is advised.";
+  return pdp.createLabel("disclaimer", disText);
+}
+
 var getRasterControls = function (ensemble_name) {
     var div = pdp.createDiv('', 'control'),
         form = pdp.createForm(undefined, undefined, undefined),

@@ -23,7 +23,10 @@ The pdp module
 .. automodule:: pdp.portals.bc_prism
    :members:
 
-.. automodule:: pdp.portals.bcsd_downscale_canada
+.. automodule:: pdp.portals.downscale_archive
+   :members:
+   
+.. automodule:: pdp.portals.bccaq2_downscale
    :members:
 
 .. automodule:: pdp.portals.pcds
