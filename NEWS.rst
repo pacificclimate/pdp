@@ -1,6 +1,16 @@
 News / Release Notes
 ====================
 
+2.6.0
+-----
+
+*Release Date: 07-Feb-2019*
+
+* Fixes bug that generated undefined time intervals
+* Streamlines code and improves ease of new portal generation
+* Upgrades to a new version of pdp_util to improve connection management
+* Adds version 2 of the BCCAQ data
+
 2.5.2
 -----
 
