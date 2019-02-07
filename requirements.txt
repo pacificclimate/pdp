@@ -1,6 +1,6 @@
 Beaker==1.9.0
 Cython==0.27.3
-Flask==0.12.2
+Flask==1.0.2
 Genshi==0.7
 GeoAlchemy==0.7.3
 Jinja2==2.10
@@ -8,17 +8,16 @@ MarkupSafe==1.0
 Paste==2.0.3
 Pillow==4.3.0
 PyCDS==2.2.1
-PyYAML==3.12
+PyYAML==4.2b4
 SQLAlchemy==1.1.15
 WebOb==1.7.3
-Werkzeug==0.12.2
+Werkzeug==0.14.1
 argparse==1.4.0
 ga-wsgi-client==0.1
 itsdangerous==0.24
 modelmeta==0.0.5
 numpy  # Allow pip or system install for travis
-openid2rp==1.12
-pdp-util==0.2.8
+pdp-util==1.0.0
 pydap-pdp==3.2.6
 ply==3.10
 psycopg2==2.7.3.2
@@ -29,7 +28,7 @@ pydap.responses.html==0.3
 pystache==0.5.4
 python-dateutil==2.6.1
 pytz==2017.3
-requests==2.18.4
+requests==2.21.0
 simplejson==3.12.0
 six==1.11.0
 slimit==0.8.1
