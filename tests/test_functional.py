@@ -64,7 +64,7 @@ def test_climo_index(
     assert resp.content_type == 'text/html'
     assert resp.content_length < 0
 
-    soup = BeautifulSoup(resp.body, "html.parser")
+    soup = BeautifulSoup(resp.body)
 
     assert title in soup.title.string
     for string in body_strings:

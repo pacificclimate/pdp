@@ -10,7 +10,6 @@ from pdp_util.map import MapApp
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
 
-from pdp_util import session_scope
 from pdp_util.counts import CountStationsApp, CountRecordLengthApp
 from pdp_util.legend import LegendApp
 from pdp_util.agg import PcdsZipApp
@@ -55,12 +54,8 @@ def mk_frontend(config):
         )
     }
 
-    def session_scope_factory():
-        return session_scope(dsn)
-
-    count_stations_app = CountStationsApp(session_scope_factory)
-    record_length_app = CountRecordLengthApp(session_scope_factory,
-                                             max_stns=100)
+    count_stations_app = CountStationsApp(dsn)
+    record_length_app = CountRecordLengthApp(dsn, max_stns=100)
     legend_app = LegendApp(dsn)
 
     pcds_map_config = updateConfig(config, pcds_config)
