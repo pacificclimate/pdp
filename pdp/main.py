@@ -39,7 +39,7 @@ def initialize_frontend(global_config, use_analytics=False):
     mounts.update({
         '/pcds_map': pcds.mk_frontend(global_config),  # legacy url support
         '/css/': static.Cling(resource_filename('pdp_util', 'data')),
-        '/docs/': docs_app
+        '/docs': docs_app
         })
 
     wsgi_app = DispatcherMiddleware(static_app, mounts)
