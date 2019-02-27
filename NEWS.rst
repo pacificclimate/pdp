@@ -1,5 +1,11 @@
 News / Release Notes
 ====================
+2.6.1
+-----
+
+*Release Date: 27-Feb-2019*
+
+* Fixes docs/ URL
 
 2.6.0
 -----
