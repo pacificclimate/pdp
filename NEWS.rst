@@ -1,5 +1,12 @@
 News / Release Notes
 ====================
+2.6.2
+-----
+
+*Release Date: 28-Feb-2019*
+
+* Corrects a bad release number in previous release
+
 2.6.1
 -----
 
