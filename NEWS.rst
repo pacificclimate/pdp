@@ -1,5 +1,16 @@
 News / Release Notes
 ====================
+2.6.3
+-----
+
+*Release Date: 11-Mar-2019*
+
+* `Fixes`_  `a bug`_ where portal enters an infinite loop if serving
+  datasets with no record variables
+
+.. _Fixes: https://github.com/pacificclimate/pydap.responses.netcdf/pull/5
+.. _a bug: https://github.com/pacificclimate/pydap.responses.netcdf/issues/4
+
 2.6.2
 -----
 
