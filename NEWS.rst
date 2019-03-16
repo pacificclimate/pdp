@@ -1,5 +1,18 @@
 News / Release Notes
 ====================
+2.6.4
+-----
+
+*Release Date: 15-Mar-2019*
+
+* `Fixes`_ `several small bugs`_ in the NetCDF response with respect
+  to bad content-length header when short or char (i.e. packed; < 4
+  byte data types) variables are present. Fixes calculations of
+  content-length as well as padding emission.
+
+.. _Fixes: https://github.com/pacificclimate/pupynere-pdp/commit/207cde6f0e763da8292432adbc0e6fb2d53830a0
+.. _several small bugs: https://github.com/pacificclimate/pydap.responses.netcdf/issues/6
+
 2.6.3
 -----
 
