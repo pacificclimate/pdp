@@ -93,7 +93,11 @@ def pytest_generate_tests(metafunc):
                 '21001231.nc.nc?tasmax[0:20][154:170][903:919]&',
                 '/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_BCSD'
                 '+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-'
-                '21001231.nc.nc?tasmax[0:10][0:100][0:100]'
+                '21001231.nc.nc?tasmax[0:10][0:100][0:100]',
+                '/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_BCSD'
+                '+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-'
+                '21001231.nc.nc?tasmax[50:50][113:113][150:150]',
+
             ]
 
         metafunc.parametrize("hammer_url", urls, indirect=True)
