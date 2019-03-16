@@ -66,5 +66,7 @@ def test_with_a_heavy_hammer(hammer_url, pcic_data_portal):
 
         src_fname, = q.first()
         src_nc = Dataset(src_fname)
-        assert np.all(src_nc[varname][t0:tn+1, x0:xn+1, y0:yn+1] ==
-                      nc[varname][:, :, :])
+        expected = src_nc[varname][t0:tn+1, x0:xn+1, y0:yn+1]
+        actual = nc[varname][:, :, :]
+        assert (np.all(expected == actual)) or \
+               (expected.all() is np.ma.masked and actual.all() is np.ma.masked)
