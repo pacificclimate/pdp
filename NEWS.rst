@@ -1,5 +1,17 @@
 News / Release Notes
 ====================
+2.6.5
+-----
+
+*Release Date: 20-Mar-2019*
+
+* `Fixes`_ `a problem`_ `where requesting`_ a beginning start time index
+  late in a timeseries would take a long time to begin the response.
+
+.. _Fixes: https://github.com/pacificclimate/pydap.handlers.hdf5/commit/68d834c681664d6d1a12ce6f2f5bdb49430b3ba8
+.. _a problem: https://github.com/pacificclimate/pydap.handlers.hdf5/issues/3
+.. _where requesting: https://github.com/pacificclimate/pdp/issues/106
+
 2.6.4
 -----
 
