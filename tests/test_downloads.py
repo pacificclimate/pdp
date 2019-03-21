@@ -70,3 +70,21 @@ def test_with_a_heavy_hammer(hammer_url, pcic_data_portal):
         actual = nc[varname][:, :, :]
         assert (np.all(expected == actual)) or \
                (expected.all() is np.ma.masked and actual.all() is np.ma.masked)
+
+
+@pytest.mark.bulk_data
+@pytest.mark.timeout(5, method='signal')
+def test_late_time_download(pcic_data_portal):
+    '''Per issue #3 in pydap.handlers.hdf5, ensure that requesting a
+    timestep at the end of a timeseries does *not* iterate through the
+    entire timeseries first.
+    Just test this by failing the test if it timesout
+    '''
+    url = '/data/downscaled_gcms/pr_day_BCCAQv2+ANUSPLIN300_MPI-ESM-LR_'\
+          'historical+rcp45_r1i1p1_19500101-21001231.nc.nc'\
+          '?pr[55000:55000][256:256][256:256]'
+    t0 = time()
+    req = Request.blank(url)
+    resp = req.get_response(pcic_data_portal)
+    assert resp.status == '200 OK'
+    assert len(resp.body) == resp.content_length
