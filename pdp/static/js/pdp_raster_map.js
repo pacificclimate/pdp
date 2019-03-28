@@ -86,7 +86,9 @@ function ddsToTimeIndex(data) {
     var reg, match;
     reg = /\[time = (\d+)\]/g;
     match = reg.exec(data)[1];
-    return parseInt(match, 10);
+    // Translate index to OPeNDAP style "end range inclusive" index
+    // E.g. The range [0:10] contains 11 elements from 0 to 10
+    return parseInt(match, 10) - 1;
 }
 
 function dasToUnitsSince(data) {
