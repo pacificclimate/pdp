@@ -18,13 +18,75 @@ Where can I report a bug or request a feature?
 
 Good question. Please see the :ref:`how-to-report-bugs` section in our :ref:`contributors-guide`.
 
+Why is it so slow to download my file?
+--------------------------------------
 
-Why do I have to login and what is OpenID?
-------------------------------------------
+Are you downloading a spatial subset for an area that is small
+relative to the size of the entire dataset (e.g. one grid cell)? If
+so, we'll hopefully answer your question here.
 
-A user login is required to download data so that we can track usage and gauge the degree to which we are providing effective services for our users. We collect the e-mail addresses of users for the sole purpose of contacting you in the unlikely event that major errors are found in the data or when major changes to the data in the portal are made. E-mail addresses are the only personal information that PCIC will gather and will be kept secure.
+The first thing to keep in mind is that you are not simply downloading
+a file and the performance bottleneck is often not the network. The
+PCIC Data Portal is a web application that dynamically constructs and
+streams a dataset to you, based on source data that is generally
+stored in NetCDF files.
 
-`OpenID <http://openid.net/get-an-openid/what-is-openid/>`_ allows you to use an existing account to sign in to multiple websites, without needing to create new passwords. For the user, OpenID provides the advantage that you can use a single account to log in to multiple websites.  For PCIC, OpenID provides the advantage that we do not have to maintain identity information and can minimize the personal information that we collect and store.
+People think that they are downloading a file and that the performance
+bottleneck should be the network (which would allow them to download
+at megabytes per second). But in reality, they are accessing a
+dynamically generated dataset, where the performance bottleneck is the
+data layout of the base dataset which can only (in certain
+circumstances) read at kilobytes per second (i.e. thousands of times
+slower).
+
+For a technical background on this, consider that climate data is
+stored in multi-dimensional arrays, typically in time-minor order (as
+opposed to time-major). You can read about how array ordering in
+computing varies `here
+<https://en.wikipedia.org/wiki/Row-_and_column-major_order>`_. The
+result of this is that when you request a small spatial area, you are
+requesting data that is not continuous on disk. The smaller the
+spatial area, the more fragmented the data on disk, and thus the
+slower your download will be. The technical reader can explore some of
+the performance implications of array fragmentation `here
+<https://github.com/pacificclimate/netcdf-tutorial/blob/master/notebooks/02-netcdf-io-the-library.ipynb>`_.
+
+If you request many elements at a single timestep (i.e. to produce a
+map), the data are contiguous in storage and can be accessed quickly
+together in mere milliseconds.  However, if you want to read a
+timeseries for all timesteps at a single grid cell (or a small subset
+of grid cells) the access pattern is non-optimal and very slow. I
+could take seconds to minutes.
+
+What kind of performance can you expect? As of this writing, when
+downloading a timeseries at single grid cell, the maximal performance
+for a large domain dataset like BCCAQv2 is in the range of 1-10
+KBps. Unfortunately, if there happen to be many users, and lots of
+contention for the same dataset, it's not uncommon to see download
+speeds far below that (bytes per second). We're aware of at least one
+problem with the `h5py <https://www.h5py.org/>`_ is substantially
+(10-20x) slower than the `netCDF4-python
+<http://unidata.github.io/netcdf4-python/netCDF4/index.html>`_
+library. We intend to migrate in the near future, which will bring
+about a big speed increase.
+
+In the mean time, what can you do? The biggest thing that you can do
+to mitigate this problem is that if you have multiple areas for which
+you are interested in the data, you are best off making *one single
+download* that encompasses the entire area. Then you can further
+subset the data on your local machines to get at the specific grid
+cells in which you are interested. For example, if you're doing
+multiple site assessments at various sites across BC, draw a square
+that encompasses all of the sites and just do a single
+download. Essentially, you'll get the download for the full area as
+quickly as you'll get the download for a single grid cell.
+
+Aside from that, the best thing that you can do is be patient. We
+understand that it's frustrating to take a few hours to download the
+data that you need. But keep in mind that our downscaled GCM datasets
+took *years* to produce, and at present, PCIC's data portal is the
+only OPeNDAP server that can reliably handle datasets of this size.
+
 
 What is a NetCDF file and how do I use it?
 ------------------------------------------
