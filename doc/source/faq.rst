@@ -45,7 +45,7 @@ opposed to time-major). You can read about how array ordering in
 computing varies `here
 <https://en.wikipedia.org/wiki/Row-_and_column-major_order>`_. The
 result of this is that when you request a small spatial area, you are
-requesting data that is not continuous on disk. The smaller the
+requesting data that is not contiguous on disk. The smaller the
 spatial area, the more fragmented the data on disk, and thus the
 slower your download will be. The technical reader can explore some of
 the performance implications of array fragmentation `here
@@ -55,7 +55,7 @@ If you request many elements at a single timestep (i.e. to produce a
 map), the data are contiguous in storage and can be accessed quickly
 together in mere milliseconds.  However, if you want to read a
 timeseries for all timesteps at a single grid cell (or a small subset
-of grid cells) the access pattern is non-optimal and very slow. I
+of grid cells) the access pattern is non-optimal and very slow. It
 could take seconds to minutes.
 
 What kind of performance can you expect? As of this writing, when
@@ -64,7 +64,7 @@ for a large domain dataset like BCCAQv2 is in the range of 1-10
 KBps. Unfortunately, if there happen to be many users, and lots of
 contention for the same dataset, it's not uncommon to see download
 speeds far below that (bytes per second). We're aware of at least one
-problem with the `h5py <https://www.h5py.org/>`_ is substantially
+problem in which the `h5py <https://www.h5py.org/>`_ is substantially
 (10-20x) slower than the `netCDF4-python
 <http://unidata.github.io/netcdf4-python/netCDF4/index.html>`_
 library. We intend to migrate in the near future, which will bring
