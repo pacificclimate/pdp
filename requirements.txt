@@ -45,7 +45,7 @@ GDAL==2.2
 XlsxWriter==1.0.2
 coards==1.0.5
 h5py==2.7.1
-pupynere-pdp==1.1.4
+pupynere-pdp==1.1.5
 pydap.handlers.hdf5==0.5.2
 pydap.responses.aaigrid==0.7
 pydap.responses.netcdf==0.6.0
