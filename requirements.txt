@@ -3,7 +3,7 @@ Cython==0.27.3
 Flask==1.0.2
 Genshi==0.7
 GeoAlchemy==0.7.3
-Jinja2==2.10
+Jinja2==2.10.1
 MarkupSafe==1.0
 Paste==2.0.3
 Pillow==4.3.0
