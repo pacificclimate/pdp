@@ -661,199 +661,171 @@ describe('CfTimeSystem', function () {
 
 
 describe('CfTime', function () {
-    describe('toCalendarDatetime', function () {
-        function testToCalendarDatetime(index, interval, startDate, expected) {
-            var cfTimeSystem = new CfTimeSystem(interval, startDate);
-            var cfTime = new CfTime(cfTimeSystem, index);
-            expect(cfTime.toCalendarDatetime()).toEqual(expected);
-        }
+    function testToCalendarDatetime(
+        index, units, startDate,
+        year, month, day, hour, minute, second) {
+        var cfTimeSystem = new CfTimeSystem(units, startDate);
+        var cfTime = new CfTime(cfTimeSystem, index);
+        var expected = new CalendarDatetime(
+            startDate.calendar, year, month, day, hour, minute, second
+        );
+        expect(cfTime.toCalendarDatetime()).toEqual(expected);
+    }
 
-        describe('for CalendarGregorian', function () {
-            var startDate = new CalendarDatetime(calendarGregorian, 1950, 1, 1);
+    function testFromDatetime(
+        index, units, startDate,
+        year, month, day, hour, minute, second) {
+        var cfTimeSystem = new CfTimeSystem(units, startDate);
+        var cfTime = CfTime.fromDatetime(
+            cfTimeSystem, year, month, day, hour, minute, second
+        );
+        expect(cfTime.index).toEqual(index);
+    }
 
-            each([
-                [0, 'seconds', startDate, startDate],
-                [1, 'seconds', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 1, 1, 0, 0, 1)],
-                [10, 'seconds', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 1, 1, 0, 0, 10)],
-                [100, 'seconds', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 1, 1, 0, 1, 40)],
-                [1000, 'seconds', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 1, 1, 0, 16, 40)],
-                [10000, 'seconds', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 1, 1, 2, 46, 40)],
-                [100000, 'seconds', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 1, 2, 3, 46, 40)],
+    describe('for CalendarGregorian', function () {
+        var startDate = new CalendarDatetime(calendarGregorian, 1950, 1, 1);
 
-                [0, 'minutes', startDate, startDate],
-                [1, 'minutes', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 1, 1, 0, 1)],
-                [10, 'minutes', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 1, 1, 0, 10)],
-                [100, 'minutes', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 1, 1, 1, 40)],
-                [1000, 'minutes', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 1, 1, 16, 40)],
-                [10000, 'minutes', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 1, 7, 22, 40)],
+        var testCases = [
+            [0, 'seconds', startDate, 1950, 1, 1, 0, 0, 0],
+            [1, 'seconds', startDate, 1950, 1, 1, 0, 0, 1],
+            [10, 'seconds', startDate, 1950, 1, 1, 0, 0, 10],
+            [100, 'seconds', startDate, 1950, 1, 1, 0, 1, 40],
+            [1000, 'seconds', startDate, 1950, 1, 1, 0, 16, 40],
+            [10000, 'seconds', startDate, 1950, 1, 1, 2, 46, 40],
+            [100000, 'seconds', startDate, 1950, 1, 2, 3, 46, 40],
 
-                [0, 'hours', startDate, startDate],
-                [1, 'hours', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 1, 1, 1)],
-                [10, 'hours', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 1, 1, 10)],
-                [100, 'hours', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 1, 5, 4)],
-                [1000, 'hours', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 2, 11, 16)],
-                [10000, 'hours', startDate,
-                    new CalendarDatetime(calendarGregorian, 1951, 2, 21, 16)],
+            [0, 'minutes', startDate, 1950, 1, 1, 0, 0, 0],
+            [1, 'minutes', startDate, 1950, 1, 1, 0, 1, 0],
+            [10, 'minutes', startDate, 1950, 1, 1, 0, 10, 0],
+            [100, 'minutes', startDate, 1950, 1, 1, 1, 40, 0],
+            [1000, 'minutes', startDate, 1950, 1, 1, 16, 40, 0],
+            [10000, 'minutes', startDate, 1950, 1, 7, 22, 40, 0],
 
-                [0, 'days', startDate, startDate],
-                [1, 'days', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 1, 2)],
-                [10, 'days', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 1, 11)],
-                [100, 'days', startDate,
-                    new CalendarDatetime(calendarGregorian, 1950, 4, 11)],
-                [365, 'days', startDate,
-                    new CalendarDatetime(calendarGregorian, 1951, 1, 1)],
-                [2 * 365, 'days', startDate,
-                    new CalendarDatetime(calendarGregorian, 1952, 1, 1)],
-                [3 * 365, 'days', startDate,
-                    new CalendarDatetime(calendarGregorian, 1952, 12, 31)],
+            [0, 'hours', startDate, 1950, 1, 1, 0, 0, 0],
+            [1, 'hours', startDate, 1950, 1, 1, 1, 0, 0],
+            [10, 'hours', startDate, 1950, 1, 1, 10, 0, 0],
+            [100, 'hours', startDate, 1950, 1, 5, 4, 0, 0],
+            [1000, 'hours', startDate, 1950, 2, 11, 16, 0, 0],
+            [10000, 'hours', startDate, 1951, 2, 21, 16, 0, 0],
 
-                // CF Conventions says to use units months' and 'years'
-                // with caution. Not testing this yet because we haven't
-                // implemented Calendar.msPerUnit to match CF Conventions/
-                // UDUNITS yet.
-            ]).it('%d %s since %o', testToCalendarDatetime);
+            [0, 'days', startDate, 1950, 1, 1, 0, 0, 0],
+            [1, 'days', startDate, 1950, 1, 2, 0, 0, 0],
+            [10, 'days', startDate, 1950, 1, 11, 0, 0, 0],
+            [100, 'days', startDate, 1950, 4, 11, 0, 0, 0],
+            [365, 'days', startDate, 1951, 1, 1, 0, 0, 0],
+            [2 * 365, 'days', startDate, 1952, 1, 1, 0, 0, 0],
+            [3 * 365, 'days', startDate, 1952, 12, 31, 0, 0, 0],
+
+            // CF Conventions says to use units months' and 'years'
+            // with caution. Not testing this yet because we haven't
+            // implemented Calendar.msPerUnit to match CF Conventions/
+            // UDUNITS yet.
+        ];
+
+        describe('toCalendarDatetime', function () {
+            each(testCases).it('%d %s since %o', testToCalendarDatetime);
         });
 
-
-        describe('for Calendar365Day', function () {
-            var startDate = new CalendarDatetime(calendar365Day, 1950, 1, 1);
-
-            each([
-                [0, 'seconds', startDate, startDate],
-                [1, 'seconds', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 1, 1, 0, 0, 1)],
-                [10, 'seconds', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 1, 1, 0, 0, 10)],
-                [100, 'seconds', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 1, 1, 0, 1, 40)],
-                [1000, 'seconds', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 1, 1, 0, 16, 40)],
-                [10000, 'seconds', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 1, 1, 2, 46, 40)],
-                [100000, 'seconds', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 1, 2, 3, 46, 40)],
-
-                [0, 'minutes', startDate, startDate],
-                [1, 'minutes', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 1, 1, 0, 1)],
-                [10, 'minutes', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 1, 1, 0, 10)],
-                [100, 'minutes', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 1, 1, 1, 40)],
-                [1000, 'minutes', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 1, 1, 16, 40)],
-                [10000, 'minutes', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 1, 7, 22, 40)],
-
-                [0, 'hours', startDate, startDate],
-                [1, 'hours', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 1, 1, 1)],
-                [10, 'hours', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 1, 1, 10)],
-                [100, 'hours', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 1, 5, 4)],
-                [1000, 'hours', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 2, 11, 16)],
-                [10000, 'hours', startDate,
-                    new CalendarDatetime(calendar365Day, 1951, 2, 21, 16)],
-
-                [0, 'days', startDate, startDate],
-                [1, 'days', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 1, 2)],
-                [10, 'days', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 1, 11)],
-                [100, 'days', startDate,
-                    new CalendarDatetime(calendar365Day, 1950, 4, 11)],
-                [365, 'days', startDate,
-                    new CalendarDatetime(calendar365Day, 1951, 1, 1)],
-                [2 * 365, 'days', startDate,
-                    new CalendarDatetime(calendar365Day, 1952, 1, 1)],
-                [3 * 365, 'days', startDate,
-                    new CalendarDatetime(calendar365Day, 1953, 1, 1)],
-
-                // CF Conventions says to use units months' and 'years'
-                // with caution. Not testing this yet because we haven't
-                // implemented Calendar.msPerUnit to match CF Conventions/
-                // UDUNITS yet.
-            ]).it('%d %s since %o', testToCalendarDatetime);
+        describe('fromDatetime', function () {
+            each(testCases).it('works', testFromDatetime);
         });
-        
-        describe('for Calendar360Day', function () {
-            var startDate = new CalendarDatetime(calendar360Day, 1950, 1, 1);
+    });
 
-            each([
-                [0, 'seconds', startDate, startDate],
-                [1, 'seconds', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 1, 1, 0, 0, 1)],
-                [10, 'seconds', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 1, 1, 0, 0, 10)],
-                [100, 'seconds', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 1, 1, 0, 1, 40)],
-                [1000, 'seconds', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 1, 1, 0, 16, 40)],
-                [10000, 'seconds', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 1, 1, 2, 46, 40)],
-                [100000, 'seconds', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 1, 2, 3, 46, 40)],
 
-                [0, 'minutes', startDate, startDate],
-                [1, 'minutes', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 1, 1, 0, 1)],
-                [10, 'minutes', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 1, 1, 0, 10)],
-                [100, 'minutes', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 1, 1, 1, 40)],
-                [1000, 'minutes', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 1, 1, 16, 40)],
-                [10000, 'minutes', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 1, 7, 22, 40)],
+    describe('for Calendar365Day', function () {
+        var startDate = new CalendarDatetime(calendar365Day, 1950, 1, 1);
 
-                [0, 'hours', startDate, startDate],
-                [1, 'hours', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 1, 1, 1)],
-                [10, 'hours', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 1, 1, 10)],
-                [100, 'hours', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 1, 5, 4)],
-                [1000, 'hours', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 2, 12, 16)],
+        var testCases = [
+            [0, 'seconds', startDate, 1950, 1, 1, 0, 0, 0],
+            [1, 'seconds', startDate, 1950, 1, 1, 0, 0, 1],
+            [10, 'seconds', startDate, 1950, 1, 1, 0, 0, 10],
+            [100, 'seconds', startDate, 1950, 1, 1, 0, 1, 40],
+            [1000, 'seconds', startDate, 1950, 1, 1, 0, 16, 40],
+            [10000, 'seconds', startDate, 1950, 1, 1, 2, 46, 40],
+            [100000, 'seconds', startDate, 1950, 1, 2, 3, 46, 40],
 
-                [0, 'days', startDate, startDate],
-                [1, 'days', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 1, 2)],
-                [10, 'days', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 1, 11)],
-                [100, 'days', startDate,
-                    new CalendarDatetime(calendar360Day, 1950, 4, 11)],
-                [360, 'days', startDate,
-                    new CalendarDatetime(calendar360Day, 1951, 1, 1)],
-                [2 * 360, 'days', startDate,
-                    new CalendarDatetime(calendar360Day, 1952, 1, 1)],
-                [3 * 360, 'days', startDate,
-                    new CalendarDatetime(calendar360Day, 1953, 1, 1)],
+            [0, 'minutes', startDate, 1950, 1, 1, 0, 0, 0],
+            [1, 'minutes', startDate, 1950, 1, 1, 0, 1, 0],
+            [10, 'minutes', startDate, 1950, 1, 1, 0, 10, 0],
+            [100, 'minutes', startDate, 1950, 1, 1, 1, 40, 0],
+            [1000, 'minutes', startDate, 1950, 1, 1, 16, 40, 0],
+            [10000, 'minutes', startDate, 1950, 1, 7, 22, 40, 0],
 
-                // CF Conventions says to use units months' and 'years'
-                // with caution. Not testing this yet because we haven't
-                // implemented Calendar.msPerUnit to match CF Conventions/
-                // UDUNITS yet.
-            ]).it('%d %s since %o', testToCalendarDatetime);
+            [0, 'hours', startDate, 1950, 1, 1, 0, 0, 0],
+            [1, 'hours', startDate, 1950, 1, 1, 1, 0, 0],
+            [10, 'hours', startDate, 1950, 1, 1, 10, 0, 0],
+            [100, 'hours', startDate, 1950, 1, 5, 4, 0, 0],
+            [1000, 'hours', startDate, 1950, 2, 11, 16, 0, 0],
+            [10000, 'hours', startDate, 1951, 2, 21, 16, 0, 0],
+
+            [0, 'days', startDate, 1950, 1, 1, 0, 0, 0],
+            [1, 'days', startDate, 1950, 1, 2, 0, 0, 0],
+            [10, 'days', startDate, 1950, 1, 11, 0, 0, 0],
+            [100, 'days', startDate, 1950, 4, 11, 0, 0, 0],
+            [365, 'days', startDate, 1951, 1, 1, 0, 0, 0],
+            [2 * 365, 'days', startDate, 1952, 1, 1, 0, 0, 0],
+            [3 * 365, 'days', startDate, 1953, 1, 1, 0, 0, 0],
+
+            // CF Conventions says to use units months' and 'years'
+            // with caution. Not testing this yet because we haven't
+            // implemented Calendar.msPerUnit to match CF Conventions/
+            // UDUNITS yet.
+        ];
+
+        describe('toCalendarDatetime', function () {
+            each(testCases).it('%d %s since %o', testToCalendarDatetime);
+        });
+
+        describe('fromDatetime', function () {
+            each(testCases).it('works', testFromDatetime);
+        });
+    });
+
+    describe('for Calendar360Day', function () {
+        var startDate = new CalendarDatetime(calendar360Day, 1950, 1, 1);
+
+        var testCases = [
+            [0, 'seconds', startDate, 1950, 1, 1, 0, 0, 0],
+            [1, 'seconds', startDate, 1950, 1, 1, 0, 0, 1],
+            [10, 'seconds', startDate, 1950, 1, 1, 0, 0, 10],
+            [100, 'seconds', startDate, 1950, 1, 1, 0, 1, 40],
+            [1000, 'seconds', startDate, 1950, 1, 1, 0, 16, 40],
+            [10000, 'seconds', startDate, 1950, 1, 1, 2, 46, 40],
+            [100000, 'seconds', startDate, 1950, 1, 2, 3, 46, 40],
+
+            [0, 'minutes', startDate, 1950, 1, 1, 0, 0, 0],
+            [1, 'minutes', startDate, 1950, 1, 1, 0, 1, 0],
+            [10, 'minutes', startDate, 1950, 1, 1, 0, 10, 0],
+            [100, 'minutes', startDate, 1950, 1, 1, 1, 40, 0],
+            [1000, 'minutes', startDate, 1950, 1, 1, 16, 40, 0],
+            [10000, 'minutes', startDate, 1950, 1, 7, 22, 40, 0],
+
+            [0, 'hours', startDate, 1950, 1, 1, 0, 0, 0],
+            [1, 'hours', startDate, 1950, 1, 1, 1, 0, 0],
+            [10, 'hours', startDate, 1950, 1, 1, 10, 0, 0],
+            [100, 'hours', startDate, 1950, 1, 5, 4, 0, 0],
+            [1000, 'hours', startDate, 1950, 2, 12, 16, 0, 0],
+
+            [0, 'days', startDate, 1950, 1, 1, 0, 0, 0],
+            [1, 'days', startDate, 1950, 1, 2, 0, 0, 0],
+            [10, 'days', startDate, 1950, 1, 11, 0, 0, 0],
+            [100, 'days', startDate, 1950, 4, 11, 0, 0, 0],
+            [360, 'days', startDate, 1951, 1, 1, 0, 0, 0],
+            [2 * 360, 'days', startDate, 1952, 1, 1, 0, 0, 0],
+            [3 * 360, 'days', startDate, 1953, 1, 1, 0, 0, 0],
+
+            // CF Conventions says to use units months' and 'years'
+            // with caution. Not testing this yet because we haven't
+            // implemented Calendar.msPerUnit to match CF Conventions/
+            // UDUNITS yet.
+        ];
+
+        describe('toCalendarDatetime', function () {
+            each(testCases).it('%d %s since %o', testToCalendarDatetime);
+        });
+
+        describe('fromDatetime', function () {
+            each(testCases).it('works', testFromDatetime);
         });
     });
 });
