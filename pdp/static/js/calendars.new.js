@@ -7,6 +7,10 @@ var classes = require('./classes');
 
 module.exports = (function (window, name) {
     // Utility functions
+    
+    function toInt(string) {
+        return parseInt(string, 10);
+    }
 
     function isUndefined(v) {
         return typeof v === 'undefined';
@@ -56,20 +60,8 @@ module.exports = (function (window, name) {
         );
     }
 
-    function parseLooseIso8601Datetime(datetime) {
-        var looseIso8601DateTimeRegex =
-            /(\d{4})-(\d{1,2})-(\d{1,2})( |T)(\d{1,2}):(\d{1,2}):(\d{1,2})/;
-        var match = looseIso8601DateTimeRegex.exec(datetime);
-        if (!match) {
-            return match;
-        }
-        return new GenericDatetime(
-            match[1], match[2], match[3], match[4], match[5], match[6]);
-    }
-
-
     // class BaseDatetime
-    // Datetime with no calendar and, consequently, no validation
+    // Datetime with no calendar and, consequently, no validation (BEWARE)
 
     function BaseDatetime(year, month, day, hour, minute, second) {
         classes.classCallCheck(this, BaseDatetime);
@@ -80,7 +72,28 @@ module.exports = (function (window, name) {
         this.minute = minute || 0;
         this.second = second || 0;
     }
+    classes.addClassProperties(BaseDatetime, {
+    }, {
+        fromIso8601: function(string) {
+            // Parses an ISO 8601 string into a `BaseDatetime`.
+            //
+            // This is a loose ISO 8601 parser, in two senses:
+            //  - It is more forgiving than the standard. It allows 1-digit
+            //      month, day, hour, minute, and second values.
+            //  - It parses only a subset of the standard, specifically only
+            //      date and time
 
+            var looseIso8601Regex =
+                /^(\d{4})(-(\d{1,2}))?(-(\d{1,2}))?([ T](\d{1,2})(:(\d{1,2}))?(:(\d{1,2}))?)?$/;
+            var match = looseIso8601Regex.exec(string);
+            if (!match) {
+                return match;
+            }
+            return new BaseDatetime(
+                toInt(match[1]), toInt(match[3]), toInt(match[5]), toInt(match[7]), toInt(match[9]), toInt(match[11])
+            );
+        }
+    });
 
     // class Calendar
 
@@ -367,43 +380,73 @@ module.exports = (function (window, name) {
     });
 
 
-    // CfTimeIndex
+    // CfTimeSystem
 
-    function CfTimeIndex(index, interval, startDate) {
-        // Time index with interval and start date, as per CF Conventions.
+    function CfTimeSystem(interval, startDate) {
+        // Time system with interval and start date, as per CF Conventions.
         // Start date is specified with respect to a particular calendar.
-        // `index`: `integer`
         // `interval`: `string`
         // `startDate`: `CalendarDatetime`
-        classes.classCallCheck(this, CfTimeIndex);
-        this.index = index;
+        // TODO: Add conversion from string for startDate
+        classes.classCallCheck(this, CfTimeSystem);
         this.interval = interval;
         this.startDate = startDate;
     }
 
-    classes.addClassProperties(CfTimeIndex, {
+
+    // CfTime
+
+    function CfTime(system, index) {
+        // Time value in a CF time system.
+        // Start date is specified with respect to a particular calendar.
+        // `index`: `integer`
+        // TODO: Reconsider what the time specifier should be - index, CalendarDateTime, string? All?
+        classes.classCallCheck(this, CfTime);
+        this.system = system;
+        this.index = index;
+    }
+
+    classes.addClassProperties(CfTime, {
         toCalendarDatetime: function () {
-            var startMse = this.startDate.toMsSinceEpoch();
-            var indexMse = this.index * this.startDate.calendar.msPerUnit(this.interval);
+            var system = this.system;
+            var startDate = system.startDate;
+            var calendar = startDate.calendar;
+
+            var startMse = startDate.toMsSinceEpoch();
+            var indexMse = this.index * calendar.msPerUnit(system.interval);
+
             return CalendarDatetime.fromMsSinceEpoch(
-                this.startDate.calendar, startMse + indexMse);
+                calendar, startMse + indexMse
+            );
         }
     }, {
-        fromDatetime: function (datetime) {
-            // Factory
-            return new CfTimeIndex()
+        fromDatetime: function (system, year, month, day, hour, minute, second) {
+            var startDate = system.startDate;
+            var calendar = startDate.calendar;
+            var datetime = new CalendarDatetime(
+                calendar, year, month, day, hour, minute, second
+            );
+            var index = Math.floor(
+                (datetime.toMsSinceEpoch() - startDate.toMsSinceEpoch()) /
+                calendar.msPerUnit(system.interval)
+            );
+            return new CfTime(system, index);
         }
     });
 
-    var exports = window[name] = {
+
+    var exports = {
         BaseDatetime: BaseDatetime,
         Calendar: Calendar,
         CalendarGregorian: CalendarGregorian,
         Calendar365Day: Calendar365Day,
         Calendar360Day: Calendar360Day,
         CalendarDatetime: CalendarDatetime,
-        CfTimeIndex: CfTimeIndex
+        CfTimeSystem: CfTimeSystem,
+        CfTime: CfTime
     };
+
+    window[name] = exports;
 
     return exports;
 })(window, 'calendars');
