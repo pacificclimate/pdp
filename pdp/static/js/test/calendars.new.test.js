@@ -18,10 +18,10 @@ var calendar360Day = new Calendar360Day();
 // A true universal, upon which we all can agree.
 var msPerDay = 1000 * 60 * 60 * 24;
 
-function leapDaysSinceEpoch(year) {
+function leapDaysSinceEpoch(calendar, year) {
     // Up and including `year`.
     // Valid only up to 2099!!!
-    return Math.floor((year - Calendar.epochYear) / 4);
+    return Math.floor((year - calendar.epochYear) / 4);
 }
 
 
@@ -165,7 +165,7 @@ describe('Calendar', function () {
 
 
 describe('CalendarGregorian', function () {
-    var calendar = new CalendarGregorian();
+    var calendar = calendarGregorian;
 
     it('describes itself', function () {
         expect(calendar.type).toBe('standard');
@@ -306,9 +306,9 @@ describe('CalendarGregorian', function () {
         [new BaseDatetime(1901, 1, 1),
             msPerDay * 365],
         [new BaseDatetime(1950, 1, 1),
-            msPerDay * (50 * 365 + leapDaysSinceEpoch(1949))],
+            msPerDay * (50 * 365 + leapDaysSinceEpoch(calendar, 1949))],
         [new BaseDatetime(2000, 1, 1),
-            msPerDay * (100 * 365 + leapDaysSinceEpoch(1999))]
+            msPerDay * (100 * 365 + leapDaysSinceEpoch(calendar, 1999))]
     ];
 
     describe('msSinceEpoch', function () {
@@ -330,7 +330,7 @@ describe('CalendarGregorian', function () {
 
 
 describe('Calendar365Day', function () {
-    var calendar = new Calendar365Day();
+    var calendar = calendar365Day;
 
     it('describes itself', function () {
         expect(calendar.type).toBe('365_day');
@@ -478,7 +478,7 @@ describe('Calendar365Day', function () {
 
 
 describe('Calendar360Day', function () {
-    var calendar = new Calendar360Day();
+    var calendar = calendar360Day;
 
     it('describes itself', function () {
         expect(calendar.type).toBe('360_day');
@@ -632,7 +632,7 @@ describe('CalendarDatetime', function () {
             [calendar360Day, 1900, 1, 1, 0, 0, 0, 0],
 
             [calendarGregorian, 1950, 1, 1, 0, 0, 0,
-                msPerDay * (50 * 365 + leapDaysSinceEpoch(1949))],
+                msPerDay * (50 * 365 + leapDaysSinceEpoch(calendarGregorian, 1949))],
             [calendar365Day, 1950, 1, 1, 0, 0, 0,
                 msPerDay * (50 * 365)],
             [calendar360Day, 1950, 1, 1, 0, 0, 0,

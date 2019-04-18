@@ -121,8 +121,9 @@ module.exports = (function (window, name) {
     // Specialized to a concrete calendar by defining the abstract methods
     // `isLeapYear`, `daysPerMonth`, `daysPerYear`.
 
-    function Calendar() {
+    function Calendar(epochYear) {
         classes.classCallCheck(this, Calendar);
+        this.epochYear = epochYear || 1900;
     }
     classes.addClassProperties(Calendar, {
         isLeapYear: classes.unimplementedAbstractMethod('isLeapYear'),
@@ -247,7 +248,7 @@ module.exports = (function (window, name) {
             var result = 0;
 
             // Add full-year contributions
-            for (var year = Calendar.epochYear; year < datetime.year; year++) {
+            for (var year = this.epochYear; year < datetime.year; year++) {
                 result += _this.msPerUnit('year', year);
             }
 
@@ -282,7 +283,7 @@ module.exports = (function (window, name) {
             var remaining = ms;
 
             // Remove full-year contributions
-            for (var year = Calendar.epochYear;
+            for (var year = this.epochYear;
                  remaining >= _this.msPerUnit('year', year);
                  year++
             ) {
@@ -312,8 +313,6 @@ module.exports = (function (window, name) {
             );
         }
     }, {
-        epochYear: 1900,
-
         toRawDatetimeFormat: function (year, month, day, hour, minute, second) {
             // Return a string representing the argument values in an
             // ISO 8601-like format, but without any checking or fancy formatting.
