@@ -445,3 +445,8 @@ MetadataDownloadLink.prototype = {
     }
     // Register for changes with the ncwms layer
 };
+
+
+module.exports = {
+    RasterDownloadLink: RasterDownloadLink,
+};

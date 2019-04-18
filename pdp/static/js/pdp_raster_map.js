@@ -29,27 +29,51 @@ CfTime.prototype.setMaxTimeByIndex = function (index) {
 };
 
 CfTime.prototype.toDate = function(index) {
+    // Is `index` 0-based or 1-based????
+    // And is this the same for standard/gregorian calendars and other calendars?
+
+    // It looks as if this code's purpose is to add `index` time units
+    // (e.g., days) to `this.sDate`, respecting the `this.calendar`.
+    // Therefore index is 0-based
+
     if (index === undefined) {
         return this.sDate;
     }
-    var d = new Date(this.sDate.getTime());
+    var result = new Date(this.sDate.getTime());
+    // NB: This only works for units === 'days'!!!
     if(this.units == "days") {
         if(["standard", "gregorian", "proleptic_gregorian"].includes(this.calendar)) {
-            d.setDate(this.sDate.getDate() + index);
-            return d;
+            result.setDate(this.sDate.getDate() + index);
+            // getDate() returns day of month (origin 1)
+            // setDate() sets day relative to first day of month (origin 1)
+            // So this code adds `index` days to `sDate`
+            return result;
         }
         else if(this.constantDaysPerYear) {
-            d.setFullYear(this.sDate.getFullYear() + Math.floor(index / this.constantDaysPerYear));
+            // This branch is taken for at least one off-by-one case.
+            // What is this code actually doing??
+
+            // What should it be doing?
+            // That depends in part on what the JS Date object does.
+            //  -   The JS Date object always works on a standard/gregorian
+            //      calendar.
+            //  -   To add a certain number of days in a calendar with a
+            //      fixed number of days
+
+            // Add `index` days worth of a year to `sDate`, dropping any partial extra year.
+            result.setFullYear(this.sDate.getFullYear() + Math.floor(index / this.constantDaysPerYear));
+
+            // Holy shit.
             var msPerDay = 1000*60*60*24;
-            var daysAlready = (d.getTime() - new Date(d.getFullYear(), 0, 1).getTime() ) / msPerDay;
+            var daysAlready = (result.getTime() - new Date(result.getFullYear(), 0, 1).getTime() ) / msPerDay;
             var dayRemainder = (index % this.constantDaysPerYear) + daysAlready;
             if(dayRemainder >= this.constantDaysPerYear) {
-                d.setFullYear(d.getFullYear() + 1);
+                result.setFullYear(result.getFullYear() + 1);
                 dayRemainder = dayRemainder - this.constantDaysPerYear;
             }
             dayRemainder += Math.floor((dayRemainder / this.constantDaysPerYear) * (365.242 - this.constantDaysPerYear));
-            d.setTime(d.getTime() + dayRemainder);
-            return d;
+            result.setTime(result.getTime() + dayRemainder);
+            return result;
         }
     }
 };
@@ -86,35 +110,51 @@ function ddsToTimeIndex(data) {
     var reg, match;
     reg = /\[time = (\d+)\]/g;
     match = reg.exec(data)[1];
-    return parseInt(match, 10);
+    return parseInt(match, 10);  // FIXME: Problem here?
 }
 
 function dasToUnitsSince(data) {
     var s = data.match(/time \{[\s\S]*?\}/gm)[0],
+        // Why not ".*?" ??
+        // Will fail with 'T' separator, which code below accepts
         reg = /units \"((year|month|day|hour|minute|second)s?) since (\d{4}-\d{1,2}-\d{1,2} ?[\d:]*)\"/g,
+        // Sloppy matching on time portion of datetime string
         m = reg.exec(s),
         units = m[1],
         dateString = m[3],
         sDate;
+    // Provisionally OK, modulo questions
 
     var calendar;
     reg = /calendar \"(standard|gregorian|proleptic_gregorian|365_day|noleap|360_day)\"/,
     m = reg.exec(s),
     calendar = m ? m[1] : "standard";
+    // Provisionally OK
 
     reg = /(\d{4})-(\d{1,2})-(\d{1,2})( |T)(\d{1,2}):(\d{1,2}):(\d{1,2})/g;
+    // Loose full ISO-8601 datetime; strictly:
+    // - space is not allowed as separator
+    // - months and days must have 2 digits
     m = reg.exec(dateString);
     if (m) {
         sDate = new Date(m[1], parseInt(m[2], 10) - 1, // Months in das result are 1-12, js needs 0-11
                          m[3], m[5], m[6], m[7], 0);
         return [units, sDate, calendar];
     }
+    // Above probably works
+
     // Not ISO Format, maybe YYYY-MM-DD?
+    // This IS loose ISO 8601, date only format
     reg = /(\d{4})-(\d{1,2})-(\d{1,2})/g;
     m = reg.exec(dateString);
     if (m) {
         return [units, new Date(m[1], parseInt(m[2], 10) - 1, m[3]), calendar];
     }
+    // Above probably works
+    // This most common case
+
+    // Why are these 2 separate cases?? DRY.
+
     // Well, crap.
     return undefined;
 }
@@ -168,21 +208,33 @@ function processNcwmsLayerMetadata(ncwms_layer, catalog) {
         var maxTimeIndex, units, startDate, layerTime;
 
         maxTimeIndex = ddsToTimeIndex(maxTime[0]);
+        // This is not max time index, it is number of time indices.
+
         unitsSince = dasToUnitsSince(unitsSince[0]);
         units = unitsSince[0];
         startDate = unitsSince[1];
         calendar = unitsSince[2];
         layerTime = new CfTime(units, startDate, calendar);
+
         layerTime.setMaxTimeByIndex(maxTimeIndex);
+        // setMaxTimeByIndex could be culprit here? Especially if it believes
+        // maxTimeIndex is the max index not the index count.
+
+        // See also CfTime.toDate, .toIndex -- are these really inverses of each other?
+
         ncwms_layer.times = layerTime; // Future access through ncwmslayer?
-	// Some pages don't have date pickers
-	if ($(".datepickerstart").length > 0) {
+        // If page has datepicker(s), set them up.
+        if ($(".datepickerstart").length > 0) {
             setTimeAvailable(layerTime.sDate, layerTime.eDate);
-	}
+	    }
     });
 }
 
 function setTimeAvailable(begin, end) {
+    // Set the datepickers, preserving previous selections if they do not fall
+    // outside the bounds of begin` and `end` (datetimes).
+    // These datetimes are inclusive.
+
     //TODO: only present times available in ncwms capabilities for this layer
     var yearRange = begin.getFullYear().toString(10) + ":" + end.getFullYear().toString(10);
 
@@ -192,7 +244,8 @@ function setTimeAvailable(begin, end) {
     var previousRangeFrom = $(".datepickerstart").datepicker("getDate");
     var previousRangeTo = $(".datepickerend").datepicker("getDate");
 
-    //set new maximums and minimums
+    // Set both datepicker min and max dates to `begin` and `end` respectively,
+    // and limit year selector range to `begin` to `end` range.
     $.each([".datepickerstart", ".datepickerend"], function (idx, val) {
         $(val).datepicker("option", "minDate", begin);
         $(val).datepicker("option", "maxDate", end);
@@ -201,16 +254,32 @@ function setTimeAvailable(begin, end) {
 
     //try to keep the active range, if it was specified and is possible.
     //fall back to the beginning and end of the new dataset.
+
+    // Set start datepicker value to previous start datepicker value, if it
+    //  (a) exists,
+    //  (b) is not the same as the previous minimum time (???)
+    //  (c) is not before `begin`.
+    // Otherwise set to `begin`.
+    //
+    // Question: Why are two datepickers set here? What does .datepicker
+    // select??? (In Downscaled/BCCAQv2, there is no such datepicker.)
+    // Question: What is the consequence of the preservation code above
+    // only using .datepickerstart?
     if(previousMinimum
             && (previousMinimum.getTime() != previousRangeFrom.getTime())
             && (previousRangeFrom.getTime() >= begin.getTime() )) {
         $(".datepickerstart").datepicker("setDate", previousRangeFrom);
-        $(".datepicker").datepicker("setDate", previousRangeFrom);
+        $(".datepicker").datepicker("setDate", previousRangeFrom);  // ???
     } else {
         $(".datepickerstart").datepicker("setDate", begin);
-        $(".datepicker").datepicker("setDate", begin);
+        $(".datepicker").datepicker("setDate", begin);  // ???
     }
 
+    // Set end datepicker value to previous end datepicker value, if it
+    //  (a) exists,
+    //  (b) is not the same as the previous maximum time (???)
+    //  (c) is not after `end`.
+    // Otherwise set to `end`.
     if(previousMaximum
             && (previousMaximum.getTime() != previousRangeTo.getTime())
             && (previousRangeTo.getTime() <= end.getTime() )) {
@@ -312,3 +381,7 @@ function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension, callback
     requestIndex(ul_px.x, ul_px.y);
     requestIndex(lr_px.x, lr_px.y);
 }
+
+module.exports = {
+    CfTime: CfTime
+};
