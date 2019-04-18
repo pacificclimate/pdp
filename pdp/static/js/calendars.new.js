@@ -389,7 +389,7 @@ module.exports = (function (window, name) {
             return false;
         },
 
-        daysPerYear: function (year) {
+        daysPerYear: function () {
             return 365;
         },
 
@@ -416,11 +416,11 @@ module.exports = (function (window, name) {
             return false;
         },
 
-        daysPerYear: function (year) {
+        daysPerYear: function () {
             return 360;
         },
 
-        daysPerMonth: function (year, month) {
+        daysPerMonth: function () {
             return 30;
         }
     });
