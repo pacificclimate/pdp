@@ -44,7 +44,7 @@ module.exports = (function (window, name) {
         return to + formattedParts.join('-');
     }
 
-    function toFormattedDatetime(format, year, month, day, hour, minute, second) {
+    function toFormattedDatetime(year, month, day, hour, minute, second) {
         var dateOnly = appendParts(
             '',
             [year, month, day],
@@ -60,11 +60,14 @@ module.exports = (function (window, name) {
         );
     }
 
-    // class BaseDatetime
-    // Datetime with no calendar and, consequently, no validation (BEWARE)
+    //  class BaseDatetime
+    //      static fromIso8601
+    //
+    //  Datetime with no calendar and, consequently, no validation (BEWARE)
 
     function BaseDatetime(year, month, day, hour, minute, second) {
         classes.classCallCheck(this, BaseDatetime);
+        // TODO: Add some type-checking
         this.year = year;
         this.month = month || 1;
         this.day = day || 1;
@@ -75,7 +78,10 @@ module.exports = (function (window, name) {
     classes.addClassProperties(BaseDatetime, {
     }, {
         fromIso8601: function(string) {
-            // Parses an ISO 8601 string into a `BaseDatetime`.
+            // Parses an ISO 8601 datetime string.
+            // Returns a corresponding `BaseDatetime` (calendar-agnostic).
+            // Returns `null` if the string is not a valid ISO 8601
+            // datetime string.
             //
             // This is a loose ISO 8601 parser, in two senses:
             //  - It is more forgiving than the standard. It allows 1-digit
@@ -95,15 +101,37 @@ module.exports = (function (window, name) {
         }
     });
 
+
     // class Calendar
+    //      abstract isLeapYear
+    //      abstract daysPerMonth
+    //      abstract daysPerYear
+    //
+    //      isValidTime
+    //      isValidDate
+    //      isValidDatetime
+    //      validateDatetime
+    //      msPerUnit
+    //
+    // Base class for calendar classes.
+    //
+    // Represents a calendar in the sense of a system of managing and relating
+    // time units of seconds, minutes, hours, days, months, years.
+    //
+    // Specialized to a concrete calendar by defining the abstract methods
+    // `isLeapYear`, `daysPerMonth`, `daysPerYear`.
 
     function Calendar() {
         classes.classCallCheck(this, Calendar);
     }
     classes.addClassProperties(Calendar, {
         isLeapYear: classes.unimplementedAbstractMethod('isLeapYear'),
+        daysPerMonth: classes.unimplementedAbstractMethod('daysPerMonth'),
+        daysPerYear: classes.unimplementedAbstractMethod('daysPerYear'),
 
         isValidTime: function (hour, minute, second) {
+            // Self-explanatory
+            // TODO: Add some type-checking
             var result = true;
             if (isUndefined(hour)) {
                 result = result && isUndefined(minute) && isUndefined(second);
@@ -122,6 +150,8 @@ module.exports = (function (window, name) {
         },
 
         isValidDate: function (year, month, day) {
+            // Self-explanatory
+            // TODO: Add some type-checking
             var result = true;
             if (isUndefined(year)) {
                 result = false;
@@ -139,11 +169,13 @@ module.exports = (function (window, name) {
         },
 
         isValidDatetime: function (year, month, day, hour, minute, second) {
+            // Self-explanatory
             return this.isValidDate(year, month, day) &&
                 this.isValidTime(hour, minute, second);
         },
 
         validateDatetime: function (year, month, day, hour, minute, second) {
+            // Throw an error if the date and time are not valid.
             if (!this.isValidDatetime(year, month, day, hour, minute, second)) {
                 throw new Error(
                     'Datetime (' +
@@ -154,20 +186,26 @@ module.exports = (function (window, name) {
             }
         },
 
-        daysPerMonth: classes.unimplementedAbstractMethod('daysPerMonth'),
-        daysPerYear: classes.unimplementedAbstractMethod('daysPerYear'),
-
         msPerUnit: function (unit, year, month) {
+            // Return the number of milliseconds per unit.
+            // For the units 'month' and 'year', the value is (potentially)
+            // dependent on the year and month within the calendar.
             switch (unit) {
+                case 's':
+                case 'sec':
                 case 'second':
                 case 'seconds':
                     return 1000;
+                case 'min':
                 case 'minute':
                 case 'minutes':
                     return 60 * this.msPerUnit('second');
+                case 'h':
+                case 'hr':
                 case 'hour':
                 case 'hours':
                     return 60 * this.msPerUnit('minute');
+                case 'd':
                 case 'day':
                 case 'days':
                     return 24 * this.msPerUnit('hour');
@@ -175,16 +213,31 @@ module.exports = (function (window, name) {
                 case 'months':
                     return this.daysPerMonth(year, month) *
                         this.msPerUnit('day');
+                case 'y':
+                case 'yr':
                 case 'year':
                 case 'years':
                     return this.daysPerYear(year) *
                         this.msPerUnit('day');
+                default:
+                    throw new Error('Invalid time unit: ' + unit);
             }
         },
 
         msSinceEpoch: function (datetime) {
-            // This works for all calendars. 
-            // It is a little inefficient for the 365- and 360-day calendars.
+            // Returns the number of milliseconds since the epoch, which
+            // is defined as the (calendar-agnostic) date Jan 1, <epochYear>.
+            //
+            // Throws an error if the datetime supplied is not valid for the
+            // calendar.
+            //
+            // This algorithm works correctly for all calendars.
+            // It is a little inefficient for the 365- and 360-day calendars,
+            // and could be overridden in those cases if efficiency is a
+            // concern.
+            //
+            // See documentation `baseDatetimeFromMsSinceEpoch` for identities
+            // that hold between these two methods.
 
             this.validateDatetime(
                 datetime.year, datetime.month, datetime.day,
@@ -215,6 +268,16 @@ module.exports = (function (window, name) {
         },
 
         baseDatetimeFromMsSinceEpoch: function (ms) {
+            // Returns BasedateTime representing the date that is exactly `ms`
+            // milliseconds from the calendar's epoch.
+            //
+            // Let `cal` be a Calendar. Then the following identities hold:
+            //
+            //      `cal.baseDatetimeFromMsSinceEpoch(cal.msSinceEpoch(b)) = b`
+            //          for all `b`: BaseDatetime
+            //
+            //      `cal.msSinceEpoch(cal.baseDatetimeFromMsSinceEpoch(ms))` = ms`
+            //          for all `ms`: integer
             var _this = this;
             var remaining = ms;
 
@@ -252,13 +315,19 @@ module.exports = (function (window, name) {
         epochYear: 1900,
 
         toRawDatetimeFormat: function (year, month, day, hour, minute, second) {
+            // Return a string representing the argument values in an
+            // ISO 8601-like format, but without any checking or fancy formatting.
+            // Useful for error messages.
             return '' + year + '-' + month + '-' + day +
                 'T' + hour + '-' + minute + '-' + second;
         },
 
         toIso8601Format: function (year, month, day, hour, minute, second) {
+            // Return a string representing the arguments in a fully compliant
+            // ISO 8601 datetime format. Will flip out if the values are not
+            // valid.
             return toFormattedDatetime(
-                format, year, month, day, hour, minute, second
+                year, month, day, hour, minute, second
             );
         }
 
@@ -266,6 +335,8 @@ module.exports = (function (window, name) {
 
 
     // class CalendarGregorian extends Calendar
+    //
+    // Concrete class for representing the Gregorian calendar
 
     function CalendarGregorian() {
         classes.classCallCheck(this, CalendarGregorian);
@@ -273,7 +344,6 @@ module.exports = (function (window, name) {
         this.type = 'standard';
         this.name = 'Gregorian';
     }
-
     classes.inherit(CalendarGregorian, Calendar);
     classes.addClassProperties(CalendarGregorian, {
         isLeapYear: function (year) {
@@ -304,6 +374,8 @@ module.exports = (function (window, name) {
 
 
     // class Calendar365Day extends Calendar
+    //
+    // Concrete class for representing the 365-day calendar
 
     function Calendar365Day() {
         classes.classCallCheck(this, Calendar365Day);
@@ -311,7 +383,6 @@ module.exports = (function (window, name) {
         this.type = '365_day';
         this.name = 'Fixed 365-day';
     }
-
     classes.inherit(Calendar365Day, Calendar);
     classes.addClassProperties(Calendar365Day, {
         isLeapYear: function () {
@@ -330,6 +401,8 @@ module.exports = (function (window, name) {
 
 
     // class Calendar360Day extends Calendar
+    //
+    // Concrete class for representing the 360-day calendar
 
     function Calendar360Day() {
         classes.classCallCheck(this, Calendar360Day);
@@ -337,7 +410,6 @@ module.exports = (function (window, name) {
         this.type = '360_day';
         this.name = 'Fixed 360-day';
     }
-
     classes.inherit(Calendar360Day, Calendar);
     classes.addClassProperties(Calendar360Day, {
         isLeapYear: function () {
@@ -355,22 +427,30 @@ module.exports = (function (window, name) {
 
 
     // class CalendarDatetime
-    // Datetime with calendar and validation
+    //      toMsSinceEpoch
+    //      static fromMsSinceEpoch
+    //
+    // Datetime with calendar and validation relative to calendar
 
     function CalendarDatetime(calendar, year, month, day, hour, minute, second) {
         classes.classCallCheck(this, CalendarDatetime);
+        // TODO: Add some type-checking
         this.calendar = calendar;
         this.calendar.validateDatetime(year, month, day, hour, minute, second);
         // BaseDatetime.call(this, year, month, day, hour, minute, second);
         this.datetime = new BaseDatetime(year, month, day, hour, minute, second);
     }
-
     classes.addClassProperties(CalendarDatetime, {
         toMsSinceEpoch: function () {
+            // Returns the number of milliseconds between the calendar's epoch
+            // and this datetime.
             return this.calendar.msSinceEpoch(this.datetime);
         }
     }, {
         fromMsSinceEpoch: function (calendar, ms) {
+            // Factory method
+            // Returns a CalendarDatetime that is the specified number of
+            // milliseconds since the calendar's epoch.
             var bdt = calendar.baseDatetimeFromMsSinceEpoch(ms);
             return new CalendarDatetime(
                 calendar,
@@ -381,31 +461,41 @@ module.exports = (function (window, name) {
 
 
     // CfTimeSystem
+    //
+    // Represents a CF Conventions time system, which is defined by a calendar,
+    // units, and a start date. In this class, the calendar is part of
+    // `startDate`, which is a `CalendarDatetime`.
 
-    function CfTimeSystem(interval, startDate) {
-        // Time system with interval and start date, as per CF Conventions.
+    function CfTimeSystem(units, startDate) {
         // Start date is specified with respect to a particular calendar.
-        // `interval`: `string`
+        // `units`: `string`
         // `startDate`: `CalendarDatetime`
+        // TODO: Add some type-checking
         // TODO: Add conversion from string for startDate
         classes.classCallCheck(this, CfTimeSystem);
-        this.interval = interval;
+        this.units = units;
         this.startDate = startDate;
     }
 
 
     // CfTime
+    //      toCalendarDatetime
+    //      static fromDatetime
+    //
+    // Represents a time value in a CF time system.
+    //
+    // A time value corresponds to an index of the time axis; the actual time
+    // the index represents is determined by the CF time system.
 
     function CfTime(system, index) {
-        // Time value in a CF time system.
-        // Start date is specified with respect to a particular calendar.
+        // `system`: `CfTimeSystem`
         // `index`: `integer`
+        // TODO: Add some type-checking
         // TODO: Reconsider what the time specifier should be - index, CalendarDateTime, string? All?
         classes.classCallCheck(this, CfTime);
         this.system = system;
         this.index = index;
     }
-
     classes.addClassProperties(CfTime, {
         toCalendarDatetime: function () {
             var system = this.system;
@@ -413,7 +503,7 @@ module.exports = (function (window, name) {
             var calendar = startDate.calendar;
 
             var startMse = startDate.toMsSinceEpoch();
-            var indexMse = this.index * calendar.msPerUnit(system.interval);
+            var indexMse = this.index * calendar.msPerUnit(system.units);
 
             return CalendarDatetime.fromMsSinceEpoch(
                 calendar, startMse + indexMse
@@ -421,6 +511,9 @@ module.exports = (function (window, name) {
         }
     }, {
         fromDatetime: function (system, year, month, day, hour, minute, second) {
+            // Factory method.
+            // Return a CfTime in the specified system, corresponding to the
+            // specified datetime.
             var startDate = system.startDate;
             var calendar = startDate.calendar;
             var datetime = new CalendarDatetime(
@@ -428,7 +521,7 @@ module.exports = (function (window, name) {
             );
             var index = Math.floor(
                 (datetime.toMsSinceEpoch() - startDate.toMsSinceEpoch()) /
-                calendar.msPerUnit(system.interval)
+                calendar.msPerUnit(system.units)
             );
             return new CfTime(system, index);
         }
