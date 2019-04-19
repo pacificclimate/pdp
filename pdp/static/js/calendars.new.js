@@ -1,9 +1,6 @@
 /*globals classes */
 var classes = require('./classes');
 
-// TODO: Calendar classes are really singletons, and in JS a singleton
-// should be represented by an object. Do this.
-
 
 module.exports = (function (window, name) {
     // Utility functions
@@ -103,15 +100,24 @@ module.exports = (function (window, name) {
 
 
     // class Calendar
-    //      abstract isLeapYear
-    //      abstract daysPerMonth
-    //      abstract daysPerYear
+    //      epochYear
+    //      abstract type
+    //      abstract name
     //
-    //      isValidTime
-    //      isValidDate
-    //      isValidDatetime
-    //      validateDatetime
-    //      msPerUnit
+    //      abstract isLeapYear()
+    //      abstract daysPerMonth()
+    //      abstract daysPerYear()
+    //
+    //      isValidTime()
+    //      isValidDate()
+    //      isValidDatetime()
+    //      validateDatetime()
+    //      msPerUnit()
+    //      msSinceEpoch()
+    //      baseDatetimeFromMsSinceEpoch()
+    //
+    //      static toRawDatetimeFormat()
+    //      static toIso8601Format()
     //
     // Base class for calendar classes.
     //
@@ -425,9 +431,49 @@ module.exports = (function (window, name) {
     });
 
 
+    // class CalendarFactory
+    //      epochYear
+    //
+    //      createCalendar()
+    //
+    //      static calendarTypes
+
+    function CalendarFactory(epochYear) {
+        this.epochYear = epochYear;
+    }
+    classes.addClassProperties(CalendarFactory, {
+        createCalendar: function(type) {
+            // Note we do not presently make any distinction between standard,
+            // Gregorian, and proleptic Gregorian calendars. This is actually wrong,
+            // but it will do.
+            switch (type) {
+                case 'standard':
+                case 'gregorian':
+                case 'proleptic_gregorian':
+                    return new CalendarGregorian(this.epochYear);
+                case '365_day':
+                    return new Calendar365Day(this.epochYear);
+                case '360_day':
+                    return new Calendar360Day(this.epochYear);
+                default:
+                    throw new Error('Unknown calendar type: ', type);
+            }
+        }
+    }, {
+        calendarTypes: [
+            'standard', 'gregorian', 'proleptic_gregorian',
+            '365_day', '360_day'
+        ]
+    });
+
+
     // class CalendarDatetime
-    //      toMsSinceEpoch
-    //      static fromMsSinceEpoch
+    //      calendar
+    //      datetime
+    //
+    //      toMsSinceEpoch()
+    //
+    //      static fromMsSinceEpoch()
     //
     // Datetime with calendar and validation relative to calendar
 
@@ -460,6 +506,8 @@ module.exports = (function (window, name) {
 
 
     // CfTimeSystem
+    //      units
+    //      startDate
     //
     // Represents a CF Conventions time system, which is defined by a calendar,
     // units, and a start date. In this class, the calendar is part of
@@ -478,13 +526,19 @@ module.exports = (function (window, name) {
 
 
     // CfTime
-    //      toCalendarDatetime
-    //      static fromDatetime
+    //      system
+    //      index
+    //
+    //      toCalendarDatetime()
+    //
+    //      static fromDatetime()
     //
     // Represents a time value in a CF time system.
     //
-    // A time value corresponds to an index of the time axis; the actual time
-    // the index represents is determined by the CF time system.
+    // A CF time value corresponds to an index of the time axis; the actual
+    // datetime that the index represents is determined by the CF time system,
+    // and is defined as the datetime that is exactly index * unit-length
+    // after the start date.
 
     function CfTime(system, index) {
         // `system`: `CfTimeSystem`
@@ -533,10 +587,18 @@ module.exports = (function (window, name) {
         CalendarGregorian: CalendarGregorian,
         Calendar365Day: Calendar365Day,
         Calendar360Day: Calendar360Day,
+        CalendarFactory: CalendarFactory,
         CalendarDatetime: CalendarDatetime,
         CfTimeSystem: CfTimeSystem,
         CfTime: CfTime
     };
+
+    // Predefined convenience calendars.
+    var calendarFactory = new CalendarFactory();
+    CalendarFactory.calendarTypes.forEach(function(type) {
+        exports[type] = calendarFactory.createCalendar(type);
+    });
+
 
     window[name] = exports;
 

@@ -6,6 +6,7 @@ var Calendar = calendars.Calendar;
 var CalendarGregorian = calendars.CalendarGregorian;
 var Calendar365Day = calendars.Calendar365Day;
 var Calendar360Day = calendars.Calendar360Day;
+var CalendarFactory = calendars.CalendarFactory;
 var CalendarDatetime = calendars.CalendarDatetime;
 var CfTimeSystem = calendars.CfTimeSystem;
 var CfTime = calendars.CfTime;
@@ -646,6 +647,30 @@ describe('CalendarDatetime', function () {
                 );
                 expect(cdt.toMsSinceEpoch()).toBe(ms);
             });
+    });
+});
+
+
+describe('CalendarFactory', function () {
+    var calendarFactory = new CalendarFactory();
+
+    describe('makeCalendar', function () {
+        function reducedType(type) {
+            if (
+                type === 'standard' ||
+                type === 'gregorian' ||
+                type === 'proleptic_gregorian'
+            ) {
+                return 'standard';
+            }
+            return type;
+        }
+
+        each(CalendarFactory.calendarTypes)
+        .it('%s', function (type) {
+            var calendar = calendarFactory.createCalendar(type);
+            expect(calendar.type).toBe(reducedType(type));
+        });
     });
 });
 
