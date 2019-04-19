@@ -1,19 +1,19 @@
 var each = require('jest-each').default;  // WTF?
 
 var calendars = require('../calendars.new');
-var BaseDatetime = calendars.BaseDatetime;
+var SimpleDatetime = calendars.SimpleDatetime;
 var Calendar = calendars.Calendar;
-var CalendarGregorian = calendars.CalendarGregorian;
-var Calendar365Day = calendars.Calendar365Day;
-var Calendar360Day = calendars.Calendar360Day;
+var GregorianCalendar = calendars.GregorianCalendar;
+var Fixed365DayCalendar = calendars.Fixed365DayCalendar;
+var Fixed360DayCalendar = calendars.Fixed360DayCalendar;
 var CalendarFactory = calendars.CalendarFactory;
 var CalendarDatetime = calendars.CalendarDatetime;
 var CfTimeSystem = calendars.CfTimeSystem;
 var CfTime = calendars.CfTime;
 
-var calendarGregorian = new CalendarGregorian();
-var calendar365Day = new Calendar365Day();
-var calendar360Day = new Calendar360Day();
+var gregorianCalendar = new GregorianCalendar();
+var fixed365DayCalendar = new Fixed365DayCalendar();
+var fixed360DayCalendar = new Fixed360DayCalendar();
 
 
 // A true universal, upon which we all can agree.
@@ -28,11 +28,11 @@ function leapDaysSinceEpoch(calendar, year) {
 
 describe('all classes', function () {
     each([
-        BaseDatetime,
+        SimpleDatetime,
         Calendar,
-        CalendarGregorian,
-        Calendar365Day,
-        Calendar360Day,
+        GregorianCalendar,
+        Fixed365DayCalendar,
+        Fixed360DayCalendar,
         CalendarDatetime,
         CfTimeSystem,
         CfTime
@@ -46,24 +46,24 @@ describe('all classes', function () {
 });
 
 
-describe('BaseDatetime', function () {
+describe('SimpleDatetime', function () {
     it('holds the data', function () {
-        var baseDatetime = new BaseDatetime(0, 1, 2, 3, 4, 5)
-        expect(baseDatetime.year).toBe(0);
-        expect(baseDatetime.month).toBe(1);
-        expect(baseDatetime.day).toBe(2);
-        expect(baseDatetime.hour).toBe(3);
-        expect(baseDatetime.minute).toBe(4);
-        expect(baseDatetime.second).toBe(5);
+        var simpleDatetime = new SimpleDatetime(0, 1, 2, 3, 4, 5)
+        expect(simpleDatetime.year).toBe(0);
+        expect(simpleDatetime.month).toBe(1);
+        expect(simpleDatetime.day).toBe(2);
+        expect(simpleDatetime.hour).toBe(3);
+        expect(simpleDatetime.minute).toBe(4);
+        expect(simpleDatetime.second).toBe(5);
     });
 
     it('provides defaults', function () {
-        var baseDatetime = new BaseDatetime(999);
+        var simpleDatetime = new SimpleDatetime(999);
         ['month', 'day'].forEach(function (prop) {
-            expect(baseDatetime[prop]).toBe(1);
+            expect(simpleDatetime[prop]).toBe(1);
         });
         ['hour', 'minute', 'second'].forEach(function (prop) {
-            expect(baseDatetime[prop]).toBe(0);
+            expect(simpleDatetime[prop]).toBe(0);
         });
     });
 
@@ -76,8 +76,8 @@ describe('BaseDatetime', function () {
             ['1900', 1900, 1, 0, 0, 0, 0],
         ]).it('parses the valid string %s',
             function (string, year, month, day, hour, minute, second) {
-            var expected = new BaseDatetime(year, month, day, hour, minute, second);
-            expect(BaseDatetime.fromIso8601(string)).toEqual(expected);
+            var expected = new SimpleDatetime(year, month, day, hour, minute, second);
+            expect(SimpleDatetime.fromIso8601(string)).toEqual(expected);
         });
 
         each([
@@ -90,7 +90,7 @@ describe('BaseDatetime', function () {
             '1900-01-02Txx',
         ]).it('returns null for the invalid string %s',
             function (string) {
-            expect(BaseDatetime.fromIso8601(string)).toBeNull();
+            expect(SimpleDatetime.fromIso8601(string)).toBeNull();
         });
     });
 });
@@ -165,8 +165,8 @@ describe('Calendar', function () {
 // TODO: Check datetime validation for each calendar method that needs it
 
 
-describe('CalendarGregorian', function () {
-    var calendar = calendarGregorian;
+describe('GregorianCalendar', function () {
+    var calendar = gregorianCalendar;
 
     it('describes itself', function () {
         expect(calendar.type).toBe('standard');
@@ -282,33 +282,33 @@ describe('CalendarGregorian', function () {
     });
 
     var dateTimeMsSinceEpoch = [
-        [new BaseDatetime(1900),
+        [new SimpleDatetime(1900),
             0],
-        [new BaseDatetime(1900, 1, 1, 0, 0, 1),
+        [new SimpleDatetime(1900, 1, 1, 0, 0, 1),
             1000],
-        [new BaseDatetime(1900, 1, 1, 0, 1, 0),
+        [new SimpleDatetime(1900, 1, 1, 0, 1, 0),
             1000 * 60],
-        [new BaseDatetime(1900, 1, 1, 1, 0, 0),
+        [new SimpleDatetime(1900, 1, 1, 1, 0, 0),
             1000 * 60 * 60],
-        [new BaseDatetime(1900, 1, 2),
+        [new SimpleDatetime(1900, 1, 2),
             msPerDay],
-        [new BaseDatetime(1900, 1, 3),
+        [new SimpleDatetime(1900, 1, 3),
             msPerDay * 2],
-        [new BaseDatetime(1900, 1, 31),
+        [new SimpleDatetime(1900, 1, 31),
             msPerDay * 30],
-        [new BaseDatetime(1900, 2, 1),
+        [new SimpleDatetime(1900, 2, 1),
             msPerDay * 31],
-        [new BaseDatetime(1900, 3, 1),
+        [new SimpleDatetime(1900, 3, 1),
             msPerDay * (31 + 28)],
-        [new BaseDatetime(1900, 4, 1),
+        [new SimpleDatetime(1900, 4, 1),
             msPerDay * (31 + 28 + 31)],
-        [new BaseDatetime(1900, 12, 1),
+        [new SimpleDatetime(1900, 12, 1),
             msPerDay * (365 - 31)],
-        [new BaseDatetime(1901, 1, 1),
+        [new SimpleDatetime(1901, 1, 1),
             msPerDay * 365],
-        [new BaseDatetime(1950, 1, 1),
+        [new SimpleDatetime(1950, 1, 1),
             msPerDay * (50 * 365 + leapDaysSinceEpoch(calendar, 1949))],
-        [new BaseDatetime(2000, 1, 1),
+        [new SimpleDatetime(2000, 1, 1),
             msPerDay * (100 * 365 + leapDaysSinceEpoch(calendar, 1999))]
     ];
 
@@ -320,18 +320,18 @@ describe('CalendarGregorian', function () {
             });
     });
 
-    describe('baseDatetimeFromMsSinceEpoch', function () {
+    describe('simpleDatetimeFromMsSinceEpoch', function () {
         each(dateTimeMsSinceEpoch)
         .it('correctly converts TO %o FROM %d ms since epoch',
             function (datetime, ms) {
-                expect(calendar.baseDatetimeFromMsSinceEpoch(ms)).toEqual(datetime);
+                expect(calendar.simpleDatetimeFromMsSinceEpoch(ms)).toEqual(datetime);
             });
     });
 });
 
 
-describe('Calendar365Day', function () {
-    var calendar = calendar365Day;
+describe('Fixed365DayCalendar', function () {
+    var calendar = fixed365DayCalendar;
 
     it('describes itself', function () {
         expect(calendar.type).toBe('365_day');
@@ -430,33 +430,33 @@ describe('Calendar365Day', function () {
     });
 
     var dateTimeMsSinceEpoch = [
-        [new BaseDatetime(1900),
+        [new SimpleDatetime(1900),
             0],
-        [new BaseDatetime(1900, 1, 1, 0, 0, 1),
+        [new SimpleDatetime(1900, 1, 1, 0, 0, 1),
             1000],
-        [new BaseDatetime(1900, 1, 1, 0, 1, 0),
+        [new SimpleDatetime(1900, 1, 1, 0, 1, 0),
             1000 * 60],
-        [new BaseDatetime(1900, 1, 1, 1, 0, 0),
+        [new SimpleDatetime(1900, 1, 1, 1, 0, 0),
             1000 * 60 * 60],
-        [new BaseDatetime(1900, 1, 2),
+        [new SimpleDatetime(1900, 1, 2),
             msPerDay],
-        [new BaseDatetime(1900, 1, 3),
+        [new SimpleDatetime(1900, 1, 3),
             msPerDay * 2],
-        [new BaseDatetime(1900, 1, 31),
+        [new SimpleDatetime(1900, 1, 31),
             msPerDay * 30],
-        [new BaseDatetime(1900, 2, 1),
+        [new SimpleDatetime(1900, 2, 1),
             msPerDay * 31],
-        [new BaseDatetime(1900, 3, 1),
+        [new SimpleDatetime(1900, 3, 1),
             msPerDay * (31 + 28)],
-        [new BaseDatetime(1900, 4, 1),
+        [new SimpleDatetime(1900, 4, 1),
             msPerDay * (31 + 28 + 31)],
-        [new BaseDatetime(1900, 12, 1),
+        [new SimpleDatetime(1900, 12, 1),
             msPerDay * (365 - 31)],
-        [new BaseDatetime(1901, 1, 1),
+        [new SimpleDatetime(1901, 1, 1),
             msPerDay * 365],
-        [new BaseDatetime(1950, 1, 1),
+        [new SimpleDatetime(1950, 1, 1),
             msPerDay * (50 * 365)],
-        [new BaseDatetime(2000, 1, 1),
+        [new SimpleDatetime(2000, 1, 1),
             msPerDay * (100 * 365)]
     ];
 
@@ -468,18 +468,18 @@ describe('Calendar365Day', function () {
             });
     });
 
-    describe('baseDatetimeFromMsSinceEpoch', function () {
+    describe('simpleDatetimeFromMsSinceEpoch', function () {
         each(dateTimeMsSinceEpoch)
         .it('correctly converts TO %o FROM %d ms since epoch',
             function (datetime, ms) {
-                expect(calendar.baseDatetimeFromMsSinceEpoch(ms)).toEqual(datetime);
+                expect(calendar.simpleDatetimeFromMsSinceEpoch(ms)).toEqual(datetime);
             });
     });
 });
 
 
-describe('Calendar360Day', function () {
-    var calendar = calendar360Day;
+describe('Fixed360DayCalendar', function () {
+    var calendar = fixed360DayCalendar;
 
     it('describes itself', function () {
         expect(calendar.type).toBe('360_day');
@@ -577,33 +577,33 @@ describe('Calendar360Day', function () {
     });
 
     var dateTimeMsSinceEpoch = [
-        [new BaseDatetime(1900),
+        [new SimpleDatetime(1900),
             0],
-        [new BaseDatetime(1900, 1, 1, 0, 0, 1),
+        [new SimpleDatetime(1900, 1, 1, 0, 0, 1),
             1000],
-        [new BaseDatetime(1900, 1, 1, 0, 1, 0),
+        [new SimpleDatetime(1900, 1, 1, 0, 1, 0),
             1000 * 60],
-        [new BaseDatetime(1900, 1, 1, 1, 0, 0),
+        [new SimpleDatetime(1900, 1, 1, 1, 0, 0),
             1000 * 60 * 60],
-        [new BaseDatetime(1900, 1, 2),
+        [new SimpleDatetime(1900, 1, 2),
             msPerDay],
-        [new BaseDatetime(1900, 1, 3),
+        [new SimpleDatetime(1900, 1, 3),
             msPerDay * 2],
-        [new BaseDatetime(1900, 1, 30),
+        [new SimpleDatetime(1900, 1, 30),
             msPerDay * 29],
-        [new BaseDatetime(1900, 2, 1),
+        [new SimpleDatetime(1900, 2, 1),
             msPerDay * 30],
-        [new BaseDatetime(1900, 3, 1),
+        [new SimpleDatetime(1900, 3, 1),
             msPerDay * 30 * 2],
-        [new BaseDatetime(1900, 4, 1),
+        [new SimpleDatetime(1900, 4, 1),
             msPerDay * 30 * 3],
-        [new BaseDatetime(1900, 12, 1),
+        [new SimpleDatetime(1900, 12, 1),
             msPerDay * 30 * 11],
-        [new BaseDatetime(1901, 1, 1),
+        [new SimpleDatetime(1901, 1, 1),
             msPerDay * 360],
-        [new BaseDatetime(1950, 1, 1),
+        [new SimpleDatetime(1950, 1, 1),
             msPerDay * (50 * 360)],
-        [new BaseDatetime(2000, 1, 1),
+        [new SimpleDatetime(2000, 1, 1),
             msPerDay * (100 * 360)]
     ];
 
@@ -615,11 +615,11 @@ describe('Calendar360Day', function () {
             });
     });
 
-    describe('baseDatetimeFromMsSinceEpoch', function () {
+    describe('simpleDatetimeFromMsSinceEpoch', function () {
         each(dateTimeMsSinceEpoch)
         .it('correctly converts TO %o FROM %d ms since epoch',
             function (datetime, ms) {
-                expect(calendar.baseDatetimeFromMsSinceEpoch(ms)).toEqual(datetime);
+                expect(calendar.simpleDatetimeFromMsSinceEpoch(ms)).toEqual(datetime);
             });
     });
 });
@@ -628,15 +628,15 @@ describe('Calendar360Day', function () {
 describe('CalendarDatetime', function () {
     describe('toMsSinceEpoch', function () {
         each([
-            [calendarGregorian, 1900, 1, 1, 0, 0, 0, 0],
-            [calendar365Day, 1900, 1, 1, 0, 0, 0, 0],
-            [calendar360Day, 1900, 1, 1, 0, 0, 0, 0],
+            [gregorianCalendar, 1900, 1, 1, 0, 0, 0, 0],
+            [fixed365DayCalendar, 1900, 1, 1, 0, 0, 0, 0],
+            [fixed360DayCalendar, 1900, 1, 1, 0, 0, 0, 0],
 
-            [calendarGregorian, 1950, 1, 1, 0, 0, 0,
-                msPerDay * (50 * 365 + leapDaysSinceEpoch(calendarGregorian, 1949))],
-            [calendar365Day, 1950, 1, 1, 0, 0, 0,
+            [gregorianCalendar, 1950, 1, 1, 0, 0, 0,
+                msPerDay * (50 * 365 + leapDaysSinceEpoch(gregorianCalendar, 1949))],
+            [fixed365DayCalendar, 1950, 1, 1, 0, 0, 0,
                 msPerDay * (50 * 365)],
-            [calendar360Day, 1950, 1, 1, 0, 0, 0,
+            [fixed360DayCalendar, 1950, 1, 1, 0, 0, 0,
                 msPerDay * (50 * 360)],
         ]).it('',
             function (
@@ -707,8 +707,8 @@ describe('CfTime', function () {
         expect(cfTime.index).toEqual(index);
     }
 
-    describe('for CalendarGregorian', function () {
-        var startDate = new CalendarDatetime(calendarGregorian, 1950, 1, 1);
+    describe('for GregorianCalendar', function () {
+        var startDate = new CalendarDatetime(gregorianCalendar, 1950, 1, 1);
 
         var testCases = [
             [0, 'seconds', startDate, 1950, 1, 1, 0, 0, 0],
@@ -757,8 +757,8 @@ describe('CfTime', function () {
     });
 
 
-    describe('for Calendar365Day', function () {
-        var startDate = new CalendarDatetime(calendar365Day, 1950, 1, 1);
+    describe('for Fixed365DayCalendar', function () {
+        var startDate = new CalendarDatetime(fixed365DayCalendar, 1950, 1, 1);
 
         var testCases = [
             [0, 'seconds', startDate, 1950, 1, 1, 0, 0, 0],
@@ -806,8 +806,8 @@ describe('CfTime', function () {
         });
     });
 
-    describe('for Calendar360Day', function () {
-        var startDate = new CalendarDatetime(calendar360Day, 1950, 1, 1);
+    describe('for Fixed360DayCalendar', function () {
+        var startDate = new CalendarDatetime(fixed360DayCalendar, 1950, 1, 1);
 
         var testCases = [
             [0, 'seconds', startDate, 1950, 1, 1, 0, 0, 0],

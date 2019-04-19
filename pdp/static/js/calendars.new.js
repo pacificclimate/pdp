@@ -57,13 +57,13 @@ module.exports = (function (window, name) {
         );
     }
 
-    //  class BaseDatetime
+    //  class SimpleDatetime
     //      static fromIso8601
     //
     //  Datetime with no calendar and, consequently, no validation (BEWARE)
 
-    function BaseDatetime(year, month, day, hour, minute, second) {
-        classes.classCallCheck(this, BaseDatetime);
+    function SimpleDatetime(year, month, day, hour, minute, second) {
+        classes.classCallCheck(this, SimpleDatetime);
         // TODO: Add some type-checking
         this.year = year;
         this.month = month || 1;
@@ -72,11 +72,11 @@ module.exports = (function (window, name) {
         this.minute = minute || 0;
         this.second = second || 0;
     }
-    classes.addClassProperties(BaseDatetime, {
+    classes.addClassProperties(SimpleDatetime, {
     }, {
         fromIso8601: function(string) {
             // Parses an ISO 8601 datetime string.
-            // Returns a corresponding `BaseDatetime` (calendar-agnostic).
+            // Returns a corresponding `SimpleDatetime` (calendar-agnostic).
             // Returns `null` if the string is not a valid ISO 8601
             // datetime string.
             //
@@ -92,7 +92,7 @@ module.exports = (function (window, name) {
             if (!match) {
                 return match;
             }
-            return new BaseDatetime(
+            return new SimpleDatetime(
                 toInt(match[1]), toInt(match[3]), toInt(match[5]), toInt(match[7]), toInt(match[9]), toInt(match[11])
             );
         }
@@ -114,7 +114,7 @@ module.exports = (function (window, name) {
     //      validateDatetime()
     //      msPerUnit()
     //      msSinceEpoch()
-    //      baseDatetimeFromMsSinceEpoch()
+    //      simpleDatetimeFromMsSinceEpoch()
     //
     //      static toRawDatetimeFormat()
     //      static toIso8601Format()
@@ -243,7 +243,7 @@ module.exports = (function (window, name) {
             // and could be overridden in those cases if efficiency is a
             // concern.
             //
-            // See documentation `baseDatetimeFromMsSinceEpoch` for identities
+            // See documentation `simpleDatetimeFromMsSinceEpoch` for identities
             // that hold between these two methods.
 
             this.validateDatetime(
@@ -274,17 +274,17 @@ module.exports = (function (window, name) {
             return result;
         },
 
-        baseDatetimeFromMsSinceEpoch: function (ms) {
-            // Returns BasedateTime representing the date that is exactly `ms`
-            // milliseconds from the calendar's epoch.
+        simpleDatetimeFromMsSinceEpoch: function (ms) {
+            // Returns a `SimpleDatetime` representing the date that is 
+            // exactly `ms` milliseconds from the calendar's epoch.
             //
             // Let `cal` be a Calendar. Then the following identities hold:
             //
-            //      `cal.baseDatetimeFromMsSinceEpoch(cal.msSinceEpoch(b)) = b`
-            //          for all `b`: BaseDatetime
+            //      `cal.simpleDatetimeFromMsSinceEpoch(cal.msSinceEpoch(b)) = b`
+            //          for all `b`: `SimpleDatetime`
             //
-            //      `cal.msSinceEpoch(cal.baseDatetimeFromMsSinceEpoch(ms))` = ms`
-            //          for all `ms`: integer
+            //      `cal.msSinceEpoch(cal.simpleDatetimeFromMsSinceEpoch(ms))` = ms`
+            //          for all `ms`: `integer`
             var _this = this;
             var remaining = ms;
 
@@ -313,7 +313,7 @@ module.exports = (function (window, name) {
                 remaining -= amount * msPer;
             });
 
-            return new BaseDatetime(
+            return new SimpleDatetime(
                 year, month, amounts.days + 1,
                 amounts.hour, amounts.minute, amounts.second
             );
@@ -339,18 +339,18 @@ module.exports = (function (window, name) {
     });
 
 
-    // class CalendarGregorian extends Calendar
+    // class GregorianCalendar extends Calendar
     //
     // Concrete class for representing the Gregorian calendar
 
-    function CalendarGregorian() {
-        classes.classCallCheck(this, CalendarGregorian);
+    function GregorianCalendar() {
+        classes.classCallCheck(this, GregorianCalendar);
         Calendar.apply(this, arguments);
         this.type = 'standard';
         this.name = 'Gregorian';
     }
-    classes.inherit(CalendarGregorian, Calendar);
-    classes.addClassProperties(CalendarGregorian, {
+    classes.inherit(GregorianCalendar, Calendar);
+    classes.addClassProperties(GregorianCalendar, {
         isLeapYear: function (year) {
             if (year % 4 !== 0) {
                 return false;
@@ -378,18 +378,18 @@ module.exports = (function (window, name) {
     });
 
 
-    // class Calendar365Day extends Calendar
+    // class Fixed365DayCalendar extends Calendar
     //
     // Concrete class for representing the 365-day calendar
 
-    function Calendar365Day() {
-        classes.classCallCheck(this, Calendar365Day);
+    function Fixed365DayCalendar() {
+        classes.classCallCheck(this, Fixed365DayCalendar);
         Calendar.apply(this, arguments);
         this.type = '365_day';
         this.name = 'Fixed 365-day';
     }
-    classes.inherit(Calendar365Day, Calendar);
-    classes.addClassProperties(Calendar365Day, {
+    classes.inherit(Fixed365DayCalendar, Calendar);
+    classes.addClassProperties(Fixed365DayCalendar, {
         isLeapYear: function () {
             return false;
         },
@@ -405,18 +405,18 @@ module.exports = (function (window, name) {
     });
 
 
-    // class Calendar360Day extends Calendar
+    // class Fixed360DayCalendar extends Calendar
     //
     // Concrete class for representing the 360-day calendar
 
-    function Calendar360Day() {
-        classes.classCallCheck(this, Calendar360Day);
+    function Fixed360DayCalendar() {
+        classes.classCallCheck(this, Fixed360DayCalendar);
         Calendar.apply(this, arguments);
         this.type = '360_day';
         this.name = 'Fixed 360-day';
     }
-    classes.inherit(Calendar360Day, Calendar);
-    classes.addClassProperties(Calendar360Day, {
+    classes.inherit(Fixed360DayCalendar, Calendar);
+    classes.addClassProperties(Fixed360DayCalendar, {
         isLeapYear: function () {
             return false;
         },
@@ -450,11 +450,11 @@ module.exports = (function (window, name) {
                 case 'standard':
                 case 'gregorian':
                 case 'proleptic_gregorian':
-                    return new CalendarGregorian(this.epochYear);
+                    return new GregorianCalendar(this.epochYear);
                 case '365_day':
-                    return new Calendar365Day(this.epochYear);
+                    return new Fixed365DayCalendar(this.epochYear);
                 case '360_day':
-                    return new Calendar360Day(this.epochYear);
+                    return new Fixed360DayCalendar(this.epochYear);
                 default:
                     throw new Error('Unknown calendar type: ', type);
             }
@@ -482,8 +482,8 @@ module.exports = (function (window, name) {
         // TODO: Add some type-checking
         this.calendar = calendar;
         this.calendar.validateDatetime(year, month, day, hour, minute, second);
-        // BaseDatetime.call(this, year, month, day, hour, minute, second);
-        this.datetime = new BaseDatetime(year, month, day, hour, minute, second);
+        // SimpleDatetime.call(this, year, month, day, hour, minute, second);
+        this.datetime = new SimpleDatetime(year, month, day, hour, minute, second);
     }
     classes.addClassProperties(CalendarDatetime, {
         toMsSinceEpoch: function () {
@@ -496,7 +496,7 @@ module.exports = (function (window, name) {
             // Factory method
             // Returns a CalendarDatetime that is the specified number of
             // milliseconds since the calendar's epoch.
-            var bdt = calendar.baseDatetimeFromMsSinceEpoch(ms);
+            var bdt = calendar.simpleDatetimeFromMsSinceEpoch(ms);
             return new CalendarDatetime(
                 calendar,
                 bdt.year, bdt.month, bdt.day, bdt.hour, bdt.minute, bdt.second
@@ -582,11 +582,11 @@ module.exports = (function (window, name) {
 
 
     var exports = {
-        BaseDatetime: BaseDatetime,
+        SimpleDatetime: SimpleDatetime,
         Calendar: Calendar,
-        CalendarGregorian: CalendarGregorian,
-        Calendar365Day: Calendar365Day,
-        Calendar360Day: Calendar360Day,
+        GregorianCalendar: GregorianCalendar,
+        Fixed365DayCalendar: Fixed365DayCalendar,
+        Fixed360DayCalendar: Fixed360DayCalendar,
         CalendarFactory: CalendarFactory,
         CalendarDatetime: CalendarDatetime,
         CfTimeSystem: CfTimeSystem,
