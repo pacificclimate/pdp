@@ -1,6 +1,6 @@
 var each = require('jest-each').default;  // WTF?
 
-var calendars = require('../calendars.new');
+var calendars = require('../calendars');
 var SimpleDatetime = calendars.SimpleDatetime;
 var Calendar = calendars.Calendar;
 var GregorianCalendar = calendars.GregorianCalendar;
