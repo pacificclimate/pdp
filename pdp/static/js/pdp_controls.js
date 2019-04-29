@@ -3,54 +3,137 @@
 "use strict";
 
 // globals
-var pdp, ncwms, map;
+var ncwms, map;
+// var pdp, ncwms, map;
+
+// Note re. "datepickers":
+//
+// At present we are using only ordinary textbox input elements for user date
+// input. We would like to use a more sophisticated UI element such as jQuery
+// UI's Datepicker, but it is limited to the Gregorian calendar (as is the JS
+// native `Date` object). Since we must handle non-Gregorian calendars, we
+// must either roll our own or settle for a simpler UI. We chose the latter.
+//
+// Therefore presently our datepickers are input elements with the following
+// data values attached to them using the jQuery `.data()` method:
+//
+//      'cfDate': a `CfDatetime` object representing the value of the datepicker.
+//          Such an object carries with it the full specification of the
+//          CF time system (units, since, calendar) in which the value is
+//          embedded.
+
+function setDatepickerIndex(element, index) {
+    // Set a datepicker element's value, by index.
+    // Update both the input element's value and the associated cfDate datum.
+    // Return the element, for chaining.
+    var cfDate = element.data('cfDate');
+    cfDate.setIndex(index);
+    element.val(cfDate.toCalendarDatetime().datetime.toLooseDateFormat());
+    return element;
+}
 
 function getDateRange(omitFullTimeCheckbox) {
+    // Unnecessary
     var omitFullTimeCheckbox = (typeof omitFullTimeCheckbox !== 'undefined') ? omitFullTimeCheckbox : false;
-    
-    var rangeDiv = pdp.createDiv("date-range");
-    rangeDiv.appendChild(pdp.createLabel("date-range-label", "Date Range", "date-range"));
-    rangeDiv.appendChild(pdp.createInputElement("text", "datepickerstart", "from-date", "from-date", "YYYY/MM/DD"));
-    rangeDiv.appendChild(document.createTextNode(" to "));
-    rangeDiv.appendChild(pdp.createInputElement("text", "datepickerend", "to-date", "to-date", "YYYY/MM/DD"));
-    rangeDiv.appendChild(pdp.createInputElement("hidden", "", "input-polygon", "input-polygon", ""));
 
-    $('.datepickerstart', rangeDiv).datepicker({
-        inline: true,
-        dateFormat: 'yy/mm/dd',
-        changeMonth: true,
-        changeYear: true,
-        yearRange: '1870:cc',
-        defaultDate: '1870/01/01'
-    });
-    $('.datepickerend', rangeDiv).datepicker({
-        inline: true,
-        dateFormat: 'yy/mm/dd',
-        changeMonth: true,
-        changeYear: true,
-        yearRange: '1870:cc',
-        defaultDate: 'cc'
-    });
+    // TODO: Remove
+    // var rangeDiv = pdp.createDiv("date-range");
+    // rangeDiv.appendChild(pdp.createLabel("date-range-label", "Date Range", "date-range"));
+    // rangeDiv.appendChild(pdp.createInputElement("text", "datepickerstart", "from-date", "from-date", "YYYY/MM/DD"));
+    // rangeDiv.appendChild(document.createTextNode(" to "));
+    // rangeDiv.appendChild(pdp.createInputElement("text", "datepickerend", "to-date", "to-date", "YYYY/MM/DD"));
+    // rangeDiv.appendChild(pdp.createInputElement("hidden", "", "input-polygon", "input-polygon", ""));
+
+    var rangeDiv = $(
+        '<div id="date-range">' +
+        '   <label id="date-range-label" for="date-range">Date Range</label>' +
+        '   <input type="text" id="from-date" name="from-date" ' +
+        '       class="datepickerstart">' +
+        ' to ' +
+        '   <input type="text" id="to-date" name="to-date" ' +
+        '       class="datepickerend">' +
+        '   <input type="hidden" id="input-polygon" name="input-polygon">' +
+        '</div>'
+    );
+
+    // TODO: Remove
+    // $('.datepickerstart', rangeDiv).datepicker({
+    //     inline: true,
+    //     dateFormat: 'yy/mm/dd',
+    //     changeMonth: true,
+    //     changeYear: true,
+    //     yearRange: '1870:cc',
+    //     defaultDate: '1870/01/01'
+    // });
+    // $('.datepickerend', rangeDiv).datepicker({
+    //     inline: true,
+    //     dateFormat: 'yy/mm/dd',
+    //     changeMonth: true,
+    //     changeYear: true,
+    //     yearRange: '1870:cc',
+    //     defaultDate: 'cc'
+    // });
+    var $startDate = rangeDiv.find("#from-date");
+    var $endDate = rangeDiv.find("#to-date");
+
+    // Assign a temporary time system. This should actually be based on the
+    // first ncwms (climate) layer, but that comes later.
+    var calendar = calendars['gregorian'];
+    var cfTimeSystem = new calendars.CfTimeSystem(
+        'days',
+        new calendars.CalendarDatetime(calendar, 1870, 1, 1),
+        Math.floor((2100 - 1870) * 365.2425)
+    );
+    var today = new Date();
+
+    var startDate = calendars.CfDatetime.fromDatetime(
+        cfTimeSystem, 1950, 1, 1);
+    var endDate = calendars.CfDatetime.fromDatetime(
+        cfTimeSystem,
+        today.getFullYear(), today.getMonth()+1, today.getDay());
+    $startDate.data('cfDate', startDate);
+    $endDate.data('cfDate', endDate);
+    console.log('startDate', startDate)
+    console.log('endDate', endDate)
 
     if (!omitFullTimeCheckbox) {
-        var checkboxDiv = pdp.createDiv("download-all-time");
-        checkboxDiv.appendChild(pdp.createInputElement("checkbox", undefined, "download-full-timeseries", "download-full-timeseries", undefined));
-        checkboxDiv.appendChild(pdp.createLabel(undefined, "Download Full Timeseries", "download-full-timeseries"));
-        rangeDiv.appendChild(checkboxDiv);
+        // var checkboxDiv = pdp.createDiv("download-all-time");
+        // checkboxDiv.appendChild(pdp.createInputElement("checkbox", undefined, "download-full-timeseries", "download-full-timeseries", undefined));
+        // checkboxDiv.appendChild(pdp.createLabel(undefined, "Download Full Timeseries", "download-full-timeseries"));
+        // rangeDiv.appendChild(checkboxDiv);
+
+        $(
+            '<div id="download-all-time">' +
+            '   <input type="checkbox" id="download-full-timeseries" name="download-full-timeseries">' +
+            '   <label for="download-full-timeseries">Download Full Timeseries</label>' +
+            '</div>'
+        ).appendTo(rangeDiv);
 
         // Specify full timeseries download by setting to min/max dates
         $("#pdp-controls").on("change", "#download-full-timeseries", function(evt) {
-                if (this.checked) {
-                    $("#from-date").datepicker('disable').addClass("disabled").datepicker("setDate", $("#from-date").datepicker("option", "minDate"));
-                    $("#to-date").datepicker('disable').addClass("disabled").datepicker("setDate", $("#to-date").datepicker("option", "maxDate"));
-                    // Trigger event to call dlLink.onTimeChange()
-                    $("[class^='datepicker']").trigger("change");
-                } else {
-                    $("#from-date").datepicker('enable').removeClass("disabled");
-                    $("#to-date").datepicker('enable').removeClass("disabled");
-                }
+            if (this.checked) {
+                // TODO: Remove
+                // $("#from-date").datepicker('disable').addClass("disabled").datepicker("setDate", $("#from-date").datepicker("option", "minDate"));
+                // $("#to-date").datepicker('disable').addClass("disabled").datepicker("setDate", $("#to-date").datepicker("option", "maxDate"));
+
+                setDatepickerIndex($startDate, 0)
+                    .prop('disabled', true);
+
+                var indexCount = $endDate.data('cfDate').system.indexCount;
+                setDatepickerIndex($endDate, indexCount-1)
+                    .prop('disabled', true);
+
+                // Trigger event to call dlLink.onTimeChange()
+                $("[class^='datepicker']").trigger("change");
+            } else {
+                // TODO: Remove
+                // $("#from-date").datepicker('enable').removeClass("disabled");
+                // $("#to-date").datepicker('enable').removeClass("disabled");
+
+                $startDate.prop('disabled', false);
+                $endDate.prop('disabled', false);
             }
-        );
+        });
     }
 
     return rangeDiv;
@@ -121,7 +204,9 @@ var getRasterDownloadOptions = function (include_dates_selection) {
         downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get")),
         downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
     if (include_dates_selection) {
-        downloadFieldset.appendChild(getDateRange());
+        // [0] converts from jQuery object to HTML element
+        // Alternatively? $(downloadFieldset).append(getDateRange())
+        downloadFieldset.appendChild(getDateRange()[0]);
     }
     downloadFieldset.appendChild(createRasterFormatOptions());
     //downloadFieldset.appendChild(createDownloadButtons("download-buttons", "download-buttons", {"download-timeseries": "Download", "metadata": "Metadata", "permalink": "Permalink"}));
@@ -395,18 +480,26 @@ RasterDownloadLink.prototype = {
                              raster_proj, undefined, callback);
     },
     onTimeChange: function () {
-        var start, end;
+        // TODO: Remove
+        // var start, end;
+        //
+        // start = $(".datepickerstart").datepicker("getDate");
+        // start = this.layer.times.toIndex(start);
+        // end = $(".datepickerend").datepicker("getDate");
+        // end = this.layer.times.toIndex(end);
+        //
+        // //if either start or end is undefined, fall back to the full time range
+        // start = start === undefined ? 0 : start;
+        // end = end === undefined ? "" : end;
 
-        start = $(".datepickerstart").datepicker("getDate");
-        start = this.layer.times.toIndex(start);
-        end = $(".datepickerend").datepicker("getDate");
-        end = this.layer.times.toIndex(end);
+        var startDate = $(".datepickerstart").data('cfDate');
+        var startIndex = startDate ? startDate.toIndex() : 0;
+        var endDate = $(".datepickerend").data('cfDate');
+        var endIndex = endDate ?
+            endDate.toIndex() :
+            this.layer.cfTimeSystem.indexCount -1;
 
-        //if either start or end is undefined, fall back to the full time range
-        start = start === undefined ? 0 : start;
-        end = end === undefined ? "" : end;
-
-        this.trange = start + ':' + end;
+        this.trange = startIndex + ':' + endIndex;
         this.trigger();
     }
 
@@ -448,5 +541,15 @@ MetadataDownloadLink.prototype = {
 
 
 module.exports = {
+    setDatepickerIndex: setDatepickerIndex,
+    getDateRange: getDateRange,
+    generateMenuTree: generateMenuTree,
+    getRasterAccordionMenu: getRasterAccordionMenu,
+    getArchiveDisclaimer: getArchiveDisclaimer,
+    getRasterControls: getRasterControls,
+    getRasterDownloadOptions: getRasterDownloadOptions,
+    round: round,
+    Colorbar: Colorbar,
     RasterDownloadLink: RasterDownloadLink,
+    MetadataDownloadLink: MetadataDownloadLink,
 };
