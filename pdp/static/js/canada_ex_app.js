@@ -22,7 +22,7 @@
 
 "use strict";
 
-$(document).ready(function () {
+var main = function () {
     var map, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog,
         dlLink, mdLink, capabilities_request, ncwms_capabilities;
 
@@ -31,18 +31,18 @@ $(document).ready(function () {
 
     //the two portals have different initial maps
     if (archivePortal) {
-      //the old dataset
-      map = init_raster_map({
-        variable: "tasmax",
-        dataset: "pr-tasmax-tasmin_day_BCSD-ANUSPLIN300-CanESM2_historical-rcp26_r1i1p1_19500101-21001231",
-        timestamp: "2000-01-01"
-      });
+        //the old dataset
+        map = init_raster_map({
+            variable: "tasmax",
+            dataset: "pr-tasmax-tasmin_day_BCSD-ANUSPLIN300-CanESM2_historical-rcp26_r1i1p1_19500101-21001231",
+            timestamp: "2000-01-01"
+        });
     } else {
-      map = init_raster_map({
-        variable: "tasmax",
-        dataset: "tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada",
-        timestamp: "2000-01-01T12:00:00.00Z"
-      });
+        map = init_raster_map({
+            variable: "tasmax",
+            dataset: "tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada",
+            timestamp: "2000-01-01T12:00:00.00Z"
+        });
     }
 
     ncwmsLayer = map.getClimateLayer();
@@ -58,20 +58,20 @@ $(document).ready(function () {
 
     //UI elements vary slightly based on whether this is the archive or new portal.
     if(archivePortal) {
-      //archive portal. link to new portal, add archive disclaimer.
-      const portalLink = pdp.createLink("portal-link",
-          undefined,
-          pdp.app_root + "/downscaled_gcms/map/",
-          "Main Downscaled GCMS Portal");
-      document.getElementById("topnav").appendChild(portalLink);
-      document.getElementById("pdp-controls").appendChild(getArchiveDisclaimer());
+        //archive portal. link to new portal, add archive disclaimer.
+        const portalLink = pdp.createLink("portal-link",
+            undefined,
+            pdp.app_root + "/downscaled_gcms/map/",
+            "Main Downscaled GCMS Portal");
+        document.getElementById("topnav").appendChild(portalLink);
+        document.getElementById("pdp-controls").appendChild(getArchiveDisclaimer());
     } else {
-      //new portal. link to old one
-      const portalLink = pdp.createLink("portal-link",
-          undefined,
-          pdp.app_root + "/downscaled_gcms_archive/map/",
-          "Archive Downscaled GCMS Portal");
-      document.getElementById("topnav").appendChild(portalLink);
+        //new portal. link to old one
+        const portalLink = pdp.createLink("portal-link",
+            undefined,
+            pdp.app_root + "/downscaled_gcms_archive/map/",
+            "Archive Downscaled GCMS Portal");
+        document.getElementById("topnav").appendChild(portalLink);
     }
 
     // Data Download Link
@@ -102,18 +102,18 @@ $(document).ready(function () {
     });
 
     dlLink.register($('#download-timeseries'), function (node) {
-        node.attr('href', dlLink.getUrl());
-    }
-                   );
+            node.attr('href', dlLink.getUrl());
+        }
+    );
     dlLink.trigger();
 
     // Metadata/Attributes Download Link
     mdLink = new MetadataDownloadLink($('#download-metadata'), ncwmsLayer, undefined);
     ncwmsLayer.events.register('change', mdLink, mdLink.onLayerChange);
     mdLink.register($('#download-metadata'), function (node) {
-        node.attr('href', mdLink.getUrl());
-    }
-                   );
+            node.attr('href', mdLink.getUrl());
+        }
+    );
     mdLink.trigger();
 
     // Date picker event for both links
@@ -134,4 +134,12 @@ $(document).ready(function () {
         mdLink.onLayerChange();
     });
 
-});
+};
+
+
+module.exports = main;
+
+
+$(document).ready(main);
+
+
