@@ -30,7 +30,7 @@ module.exports = (function (window, name) {
     var format2 = format.bind(this, 2);
     var format4 = format.bind(this, 4);
 
-    function appendParts(to, parts, formats) {
+    function appendParts(to, parts, formats, sep) {
         var formattedParts = [];
         for (var i = 0; i < parts.length; i++) {
             var part = parts[i];
@@ -38,24 +38,38 @@ module.exports = (function (window, name) {
             var format = isArray(formats) ? formats[i] : formats;
             formattedParts.push(format(part));
         }
-        return to + formattedParts.join('-');
+        return to + formattedParts.join(sep);
     }
 
-    function toFormattedDatetime(year, month, day, hour, minute, second) {
-        var dateOnly = appendParts(
-            '',
-            [year, month, day],
-            [format4, format2, format2]
-        );
-        if (dateOnly.length < 10 || isUndefined(hour)) {
-            return dateOnly;
+    function makeFormatDatetime(formats, ymdSep, timeDelim, hmsSep) {
+        return function formatDateTime(year, month, day, hour, minute, second) {
+            var dateOnly = appendParts(
+                '',
+                [year, month, day],
+                formats,
+                ymdSep
+            );
+            if (dateOnly.length < 10 || isUndefined(hour)) {
+                return dateOnly;
+            }
+            return appendParts(
+                dateOnly + timeDelim,
+                [hour, minute, second],
+                isArray(formats) ? formats.slice(3) : formats,
+                hmsSep
+            );
         }
-        return appendParts(
-            dateOnly + 'T',
-            [hour, minute, second],
-            format2
-        );
     }
+
+    var formatDatetimeISO8601 = makeFormatDatetime(
+        [format4, format2, format2, format2, format2, format2],
+        '-', 'T', ':'
+    );
+
+    var formatDatetimeLoose = makeFormatDatetime(
+        [format4, format2, format2, format2, format2, format2],
+        '/', ' ', ':'
+    );
 
     //  class SimpleDatetime
     //      static fromIso8601
@@ -73,6 +87,25 @@ module.exports = (function (window, name) {
         this.second = second || 0;
     }
     classes.addClassProperties(SimpleDatetime, {
+        fromIso8601: function() {
+            return formatDatetimeISO8601(
+                this.year, this.month, this.day,
+                this.hour, this.minute, this.second
+            );
+        },
+
+        toLooseDateFormat: function() {
+            return formatDatetimeLoose(
+                this.year, this.month, this.day
+            );
+        },
+
+        toLooseDatetimeFormat: function() {
+            return formatDatetimeLoose(
+                this.year, this.month, this.day,
+                this.hour, this.minute, this.second
+            );
+        }
     }, {
         fromIso8601: function(string) {
             // Parses an ISO 8601 datetime string.
@@ -94,6 +127,18 @@ module.exports = (function (window, name) {
             }
             return new SimpleDatetime(
                 toInt(match[1]), toInt(match[3]), toInt(match[5]), toInt(match[7]), toInt(match[9]), toInt(match[11])
+            );
+        },
+
+        fromLooseFormat: function(date) {
+            // Parses a loose-formatted date string.
+            var looseFormatRegex = /^\s*(\d{4})([\/-](\d{1,2}))?([\/-](\d{1,2}))?\s*$/;
+            var match = looseFormatRegex.exec(date);
+            if (!match) {
+                return match;
+            }
+            return new SimpleDatetime(
+                toInt(match[1]), toInt(match[3]), toInt(match[5])
             );
         }
     });
@@ -129,7 +174,7 @@ module.exports = (function (window, name) {
 
     function Calendar(epochYear) {
         classes.classCallCheck(this, Calendar);
-        this.epochYear = epochYear || 1900;
+        this.epochYear = epochYear || 1800;
     }
     classes.addClassProperties(Calendar, {
         isLeapYear: classes.unimplementedAbstractMethod('isLeapYear'),
@@ -319,6 +364,26 @@ module.exports = (function (window, name) {
             );
         }
     }, {
+        validUnits: [
+            's', 'sec', 'second', 'seconds',
+            'min', 'minute', 'minutes',
+            'h', 'hr', 'hour', 'hours',
+            'd', 'day', 'days',
+            'month', 'months',
+            'y', 'yr', 'year', 'years'
+        ],
+
+
+        isValidUnit: function(unit) {
+            return Calendar.validUnits.indexOf(unit) !== -1;
+        },
+
+        validateUnit: function(unit) {
+            if (!Calendar.isValidUnit(unit)) {
+                throw new Error('Invalid time unit: ' + unit);
+            }
+        },
+
         toRawDatetimeFormat: function (year, month, day, hour, minute, second) {
             // Return a string representing the argument values in an
             // ISO 8601-like format, but without any checking or fancy formatting.
@@ -327,11 +392,12 @@ module.exports = (function (window, name) {
                 'T' + hour + '-' + minute + '-' + second;
         },
 
+        // TODO: Remove?
         toIso8601Format: function (year, month, day, hour, minute, second) {
             // Return a string representing the arguments in a fully compliant
             // ISO 8601 datetime format. Will flip out if the values are not
             // valid.
-            return toFormattedDatetime(
+            return formatDatetimeISO8601(
                 year, month, day, hour, minute, second
             );
         }
@@ -486,6 +552,18 @@ module.exports = (function (window, name) {
         this.datetime = new SimpleDatetime(year, month, day, hour, minute, second);
     }
     classes.addClassProperties(CalendarDatetime, {
+        toIso8601: function() {
+            return this.datetime.toIso8601();
+        },
+
+        toLooseDateFormat: function() {
+            return this.datetime.toLooseDateFormat();
+        },
+
+        toLooseDatetimeFormat: function() {
+            return this.datetime.toLooseDatetimeFormat();
+        },
+
         toMsSinceEpoch: function () {
             // Returns the number of milliseconds between the calendar's epoch
             // and this datetime.
@@ -513,19 +591,42 @@ module.exports = (function (window, name) {
     // units, and a start date. In this class, the calendar is part of
     // `startDate`, which is a `CalendarDatetime`.
 
-    function CfTimeSystem(units, startDate) {
+    function CfTimeSystem(units, startDate, indexCount) {
         // Start date is specified with respect to a particular calendar.
         // `units`: `string`
         // `startDate`: `CalendarDatetime`
+        // `indexCount`: `int`
         // TODO: Add some type-checking
         // TODO: Add conversion from string for startDate
         classes.classCallCheck(this, CfTimeSystem);
+        Calendar.validateUnit(units);
+        if (!(startDate instanceof CalendarDatetime)) {
+            throw new Error('startDate must be a CalendarDatetime');
+        }
         this.units = units;
         this.startDate = startDate;
+        this.indexCount = indexCount;
     }
+    classes.addClassProperties(CfTimeSystem, {
+        firstCfDatetime: function() {
+            // Return first date (start date, index 0) in this time system as
+            // a `CfDatetime`
+            return new CfDatetime(this, 0);
+        },
 
+        lastCfDatetime: function() {
+            // Return last date (start date, index `indexCount-1`) in this
+            // time system as a `CfDatetime`.
+            // If `indexCount` is undefined, return undefined.
+            if (this.indexCount) {
+                return new CfDatetime(this, this.indexCount-1);
+            }
+            return undefined;
+        }
+    }, {
+    });
 
-    // CfTime
+    // CfDatetime
     //      system
     //      index
     //
@@ -535,21 +636,39 @@ module.exports = (function (window, name) {
     //
     // Represents a time value in a CF time system.
     //
-    // A CF time value corresponds to an index of the time axis; the actual
+    // A CF datetime value corresponds to an index of the time axis; the actual
     // datetime that the index represents is determined by the CF time system,
     // and is defined as the datetime that is exactly index * unit-length
     // after the start date.
 
-    function CfTime(system, index) {
+    function CfDatetime(system, index) {
         // `system`: `CfTimeSystem`
         // `index`: `integer`
         // TODO: Add some type-checking
         // TODO: Reconsider what the time specifier should be - index, CalendarDateTime, string? All?
-        classes.classCallCheck(this, CfTime);
+        classes.classCallCheck(this, CfDatetime);
         this.system = system;
         this.index = index;
     }
-    classes.addClassProperties(CfTime, {
+    classes.addClassProperties(CfDatetime, {
+        validateIndex: function(index) {
+            if (index < 0) {
+                throw new Error('Index must be >= 0');
+            }
+            if (this.system.indexCount && index >= this.system.indexCount) {
+                throw new Error('Index must be < ' + system.indexCount);
+            }
+        },
+
+        setIndex: function(index) {
+            this.validateIndex(index);
+            this.index = index;
+        },
+
+        toIndex: function() {
+            return this.index;
+        },
+
         toCalendarDatetime: function () {
             var system = this.system;
             var startDate = system.startDate;
@@ -561,11 +680,24 @@ module.exports = (function (window, name) {
             return CalendarDatetime.fromMsSinceEpoch(
                 calendar, startMse + indexMse
             );
-        }
+        },
+
+        toIso8601: function() {
+            return this.toCalendarDatetime().toIso8601();
+        },
+
+        toLooseDateFormat: function() {
+            return this.toCalendarDatetime().toLooseDateFormat();
+        },
+
+        toLooseDatetimeFormat: function() {
+            return this.toCalendarDatetime().toLooseDatetimeFormat();
+        },
+
     }, {
         fromDatetime: function (system, year, month, day, hour, minute, second) {
             // Factory method.
-            // Return a CfTime in the specified system, corresponding to the
+            // Return a CfDatetime in the specified system, corresponding to the
             // specified datetime.
             var startDate = system.startDate;
             var calendar = startDate.calendar;
@@ -576,7 +708,7 @@ module.exports = (function (window, name) {
                 (datetime.toMsSinceEpoch() - startDate.toMsSinceEpoch()) /
                 calendar.msPerUnit(system.units)
             );
-            return new CfTime(system, index);
+            return new CfDatetime(system, index);
         }
     });
 
@@ -590,7 +722,7 @@ module.exports = (function (window, name) {
         CalendarFactory: CalendarFactory,
         CalendarDatetime: CalendarDatetime,
         CfTimeSystem: CfTimeSystem,
-        CfTime: CfTime
+        CfDatetime: CfDatetime
     };
 
     // Predefined convenience calendars.

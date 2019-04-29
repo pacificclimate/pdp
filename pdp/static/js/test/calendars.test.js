@@ -1,4 +1,4 @@
-var each = require('jest-each').default;  // WTF?
+var each = require('jest-each').default;
 
 var calendars = require('../calendars');
 var SimpleDatetime = calendars.SimpleDatetime;
@@ -9,11 +9,15 @@ var Fixed360DayCalendar = calendars.Fixed360DayCalendar;
 var CalendarFactory = calendars.CalendarFactory;
 var CalendarDatetime = calendars.CalendarDatetime;
 var CfTimeSystem = calendars.CfTimeSystem;
-var CfTime = calendars.CfTime;
+var CfDatetime = calendars.CfDatetime;
 
-var gregorianCalendar = new GregorianCalendar();
-var fixed365DayCalendar = new Fixed365DayCalendar();
-var fixed360DayCalendar = new Fixed360DayCalendar();
+var epochYear = 1900;
+var gregorianCalendar = new GregorianCalendar(epochYear);
+var fixed365DayCalendar = new Fixed365DayCalendar(epochYear);
+var fixed360DayCalendar = new Fixed360DayCalendar(epochYear);
+
+// TODO: Add tests for untested methods. These are all mostly shortcuts and
+// convenience methods.
 
 
 // A true universal, upon which we all can agree.
@@ -35,7 +39,7 @@ describe('all classes', function () {
         Fixed360DayCalendar,
         CalendarDatetime,
         CfTimeSystem,
-        CfTime
+        CfDatetime
     ]).describe('%s', function (Class) {
         it('cannot be called as a function', function () {
             expect(function () {
@@ -113,14 +117,14 @@ describe('Calendar', function () {
 
     describe('toIso8601Format', function () {
         each([
-            [1900, 1, 2, 3, 4, 5, '1900-01-02T03-04-05'],
-            [1900, 11, 12, 13, 14, 15, '1900-11-12T13-14-15'],
+            [1900, 1, 2, 3, 4, 5, '1900-01-02T03:04:05'],
+            [1900, 11, 12, 13, 14, 15, '1900-11-12T13:14:15'],
             [undefined, 11, 12, 13, 14, 15, ''],
             [1900, undefined, 12, 13, 14, 15, '1900'],
             [1900, 11, undefined, 13, 14, 15, '1900-11'],
             [1900, 11, 12, undefined, 14, 15, '1900-11-12'],
             [1900, 11, 12, 13, undefined, 15, '1900-11-12T13'],
-            [1900, 11, 12, 13, 14, undefined, '1900-11-12T13-14'],
+            [1900, 11, 12, 13, 14, undefined, '1900-11-12T13:14'],
         ]).it('%#',
             function (year, month, day, hour, minute, second, expected) {
                 expect(Calendar.toIso8601Format(
@@ -685,12 +689,12 @@ describe('CfTimeSystem', function () {
 });
 
 
-describe('CfTime', function () {
+describe('CfDatetime', function () {
     function testToCalendarDatetime(
         index, units, startDate,
         year, month, day, hour, minute, second) {
         var cfTimeSystem = new CfTimeSystem(units, startDate);
-        var cfTime = new CfTime(cfTimeSystem, index);
+        var cfTime = new CfDatetime(cfTimeSystem, index);
         var expected = new CalendarDatetime(
             startDate.calendar, year, month, day, hour, minute, second
         );
@@ -701,7 +705,7 @@ describe('CfTime', function () {
         index, units, startDate,
         year, month, day, hour, minute, second) {
         var cfTimeSystem = new CfTimeSystem(units, startDate);
-        var cfTime = CfTime.fromDatetime(
+        var cfTime = CfDatetime.fromDatetime(
             cfTimeSystem, year, month, day, hour, minute, second
         );
         expect(cfTime.index).toEqual(index);
