@@ -55,3 +55,10 @@ function getLoadingPopup(name, loc) {
     popup.border = '1px solid #808080';
     return popup;
 }
+
+
+module.exports = {
+    filter_undefined: filter_undefined,
+    generateGetFeatureInfoParams: generateGetFeatureInfoParams,
+    getLoadingPopup: getLoadingPopup
+};

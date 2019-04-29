@@ -134,3 +134,8 @@ function init_raster_map(initialMap) {
 
     return map;
 }
+
+
+module.exports = {
+    init_raster_map: init_raster_map
+};

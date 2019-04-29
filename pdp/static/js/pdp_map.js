@@ -315,3 +315,33 @@ function addLoadingIcon(layer) {
                           $("#loading"),
                           function (evt) {this.addClass("invisible"); });
 }
+
+
+module.exports = {
+    getProjection: getProjection,
+    getBC3005Bounds: getBC3005Bounds,
+    getBC3005Bounds_vic: getBC3005Bounds_vic,
+    getBC3005Bounds_obs: getBC3005Bounds_obs,
+    getNA4326Bounds: getNA4326Bounds,
+    getWorld4326Bounds: getWorld4326Bounds,
+    getBC3005Resolutions: getBC3005Resolutions,
+    BC3005_map_options: BC3005_map_options,
+    BC3005_map_options_vic: BC3005_map_options_vic,
+    BC3005_map_options_obs: BC3005_map_options_obs,
+    na4326_map_options: na4326_map_options,
+    world4326_map_options: world4326_map_options,
+    getGSBaseLayer: getGSBaseLayer,
+    getNaBaseLayer: getNaBaseLayer,
+    getTileBaseLayer: getTileBaseLayer,
+    getBC3005OsmBaseLayer: getBC3005OsmBaseLayer,
+    getBasicControls: getBasicControls,
+    getEditingToolbar: getEditingToolbar,
+    getHandNav: getHandNav,
+    getPolygonLayer: getPolygonLayer,
+    getBoxLayer: getBoxLayer,
+    getPolyEditor: getPolyEditor,
+    getBoxEditor: getBoxEditor,
+    getPointEditor: getPointEditor,
+    getOpacitySlider: getOpacitySlider,
+    addLoadingIcon: addLoadingIcon
+};

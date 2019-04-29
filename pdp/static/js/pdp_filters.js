@@ -33,3 +33,10 @@ function polygon_as_text() {
     mp.transform(P3005, P4326); // This does a transform _in_place_ (always clone first)
     return mp.toString();
 }
+
+
+module.exports = {
+    getActiveFilters: getActiveFilters,
+    pp_bignum: pp_bignum,
+    polygon_as_text: polygon_as_text,
+};
