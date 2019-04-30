@@ -1,5 +1,16 @@
 News / Release Notes
 ====================
+2.7.0
+-----
+
+*Release Date: 30-Apr-2019*
+
+* Adds use of the NetCDF 64-bit offset format for large (>2 GB) raster files
+* Adds documentation about downloading timeseries and the expected performance
+* Adds a robots.txt file to the frontend, disallowing backend crawling
+* Addresses security vulnerabilities in requirements
+
+
 2.6.5
 -----
 
