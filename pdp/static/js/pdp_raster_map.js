@@ -1,119 +1,17 @@
 /*jslint browser: true, devel: true */
 /*global pdp, $, OpenLayers, setTimeAvailable, handle_ie8_xml, DOMParser, calendars
 */
-
-
-
 "use strict";
-
-// TODO: Remove
-// var CfTime = function (units, sDate, calendar) {
-//     this.units = units;
-//     this.sDate = sDate;
-//     this.calendar = calendar ? calendar : "standard";
-//
-//     switch(this.calendar) {
-//     case "360_day":
-//         this.constantDaysPerYear = 360;
-//         break;
-//     case "365_day":
-//     case "noleap":
-//         this.constantDaysPerYear = 365;
-//         break;
-//     default:
-//         this.constantDaysPerYear = undefined;
-//     }
-// };
-//
-// CfTime.prototype.setMaxTimeByIndex = function (index) {
-//     this.maxIndex =  index;
-//     this.eDate = this.toDate(index);
-//     return this.eDate;
-// };
-//
-// CfTime.prototype.toDate = function(index) {
-//     // Is `index` 0-based or 1-based????
-//     // And is this the same for standard/gregorian calendars and other calendars?
-//
-//     // It looks as if this code's purpose is to add `index` time units
-//     // (e.g., days) to `this.sDate`, respecting the `this.calendar`.
-//     // Therefore index is 0-based
-//
-//     if (index === undefined) {
-//         return this.sDate;
-//     }
-//     var result = new Date(this.sDate.getTime());
-//     // NB: This only works for units === 'days'!!!
-//     if(this.units == "days") {
-//         if(["standard", "gregorian", "proleptic_gregorian"].includes(this.calendar)) {
-//             result.setDate(this.sDate.getDate() + index);
-//             // getDate() returns day of month (origin 1)
-//             // setDate() sets day relative to first day of month (origin 1)
-//             // So this code adds `index` days to `sDate`
-//             return result;
-//         }
-//         else if(this.constantDaysPerYear) {
-//             // This branch is taken for at least one off-by-one case.
-//             // What is this code actually doing??
-//
-//             // What should it be doing?
-//             // That depends in part on what the JS Date object does.
-//             //  -   The JS Date object always works on a standard/gregorian
-//             //      calendar.
-//             //  -   To add a certain number of days in a calendar with a
-//             //      fixed number of days
-//
-//             // Add `index` days worth of a year to `sDate`, dropping any partial extra year.
-//             result.setFullYear(this.sDate.getFullYear() + Math.floor(index / this.constantDaysPerYear));
-//
-//             // Holy shit.
-//             var msPerDay = 1000*60*60*24;
-//             var daysAlready = (result.getTime() - new Date(result.getFullYear(), 0, 1).getTime() ) / msPerDay;
-//             var dayRemainder = (index % this.constantDaysPerYear) + daysAlready;
-//             if(dayRemainder >= this.constantDaysPerYear) {
-//                 result.setFullYear(result.getFullYear() + 1);
-//                 dayRemainder = dayRemainder - this.constantDaysPerYear;
-//             }
-//             dayRemainder += Math.floor((dayRemainder / this.constantDaysPerYear) * (365.242 - this.constantDaysPerYear));
-//             result.setTime(result.getTime() + dayRemainder);
-//             return result;
-//         }
-//     }
-// };
-//
-// CfTime.prototype.toIndex = function (d) {
-//     if (d < this.sDate || (this.eDate && this.eDate < d)) {
-//         return;
-//     }
-//     var days;
-//     var msPerDay = 1000 * 60 * 60 * 24;
-//     if(this.units=="days") {
-//         if(["standard", "gregorian", "proleptic_gregorian"].includes(this.calendar)) {
-//             var msDiff = d.getTime() - this.sDate.getTime();
-//             days = Math.floor(msDiff / msPerDay);
-//         }
-//         else if(this.constantDaysPerYear) {
-//             days = (d.getFullYear() - this.sDate.getFullYear()) * this.constantDaysPerYear;
-//             var remainderDate  = new Date(d);
-//             remainderDate.setFullYear(this.sDate.getFullYear());
-//             var remainderDays = Math.floor((remainderDate.getTime() - this.sDate.getTime()) / msPerDay);
-//             days += remainderDays;
-//             days -= Math.floor((remainderDays / this.constantDaysPerYear) * (365.242 - this.constantDaysPerYear));
-//             days = Math.floor(days);
-//         }
-//         return days;
-//     }
-// };
 
 function getNcwmsLayerId(ncwms_layer) {
     return ncwms_layer.params.LAYERS.split("/")[0];
 }
 
-function ddsToTimeIndex(data) {
+function ddsToTimeIndex(dds) {
     var reg, match;
     reg = /\[time = (\d+)\]/g;
-    match = reg.exec(data)[1];
-    return parseInt(match, 10);  // FIXME: Problem here?
+    match = reg.exec(dds)[1];
+    return parseInt(match, 10);
 }
 
 function dasToCfTimeSystem(das, indexCount) {
@@ -126,13 +24,12 @@ function dasToCfTimeSystem(das, indexCount) {
     var startDateString = unitsSinceMatch[3];
 
     var calendarRegex = /calendar \"(standard|gregorian|proleptic_gregorian|365_day|noleap|360_day)\"/;
-    var calendarMatch = calendarRegex.exec(timeDimensionDescr)[1];
+    var calendarMatch = calendarRegex.exec(timeDimensionDescr);
     var calendarType = calendarMatch ? calendarMatch[1] : 'standard';
 
     var calendar = calendars[calendarType];
-    var startDate = new calendars.CalendarDatetime(
-        calendar, calendars.SimpleDatetime.fromIso8601(startDateString)
-    );
+    var simpleDatetime = calendars.SimpleDatetime.fromIso8601(startDateString);
+    var startDate = new calendars.CalendarDatetime(calendar, simpleDatetime);
 
     return new calendars.CfTimeSystem(units, startDate, indexCount);
 }
@@ -184,71 +81,15 @@ function dasToUnitsSince(data) {
     return undefined;
 }
 
-function getNCWMSLayerCapabilities(ncwms_layer) {
-
-    // FIXME: this .ajax logic doesn't really work in all cases
-    // What we really want is the fail() handler to _resolve_ the status,
-    // and then have another fail() fallthrough handler .That is impossible, however.
-    // see: http://domenic.me/2012/10/14/youre-missing-the-point-of-promises/
-
-    var deferred = $.Deferred();
-
-    var params = {
-        REQUEST: "GetCapabilities",
-        SERVICE: "WMS",
-        VERSION: "1.1.1",
-        DATASET: ncwms_layer.params.LAYERS.split("/")[0]
-    };
-
-    $.ajax({
-        url: ncwms_layer.url,
-        data: params,
-    })
-    .fail(handle_ie8_xml)
-    .always(function (response, status, jqXHR) {
-        deferred.resolve($(jqXHR.responseXML));
-    });
-
-    return deferred.promise();
-}
-
 function processNcwmsLayerMetadata(ncwms_layer, catalog) {
-    var layerUrl, maxTimeReq, unitsSinceReq;
-
     // transform the data_server url into the un-authed catalog based url for metadata
-    layerUrl = catalog[getNcwmsLayerId(ncwms_layer)];
-    //matches[1] is portal base url, matches[2] is dataset, make catalog url
-
-    // Request time variables
-    maxTimeReq = $.ajax({
-        url: (layerUrl + ".dds?time")
-    });
-
-    unitsSinceReq = $.ajax({
-        url: (layerUrl + ".das")
-    });
+    var layerUrl = catalog[getNcwmsLayerId(ncwms_layer)]; //matches[1] is portal base url, matches[2] is dataset, make catalog url // Request time variables
+    var maxTimeReq = dataServices.getNcwmsLayerDDS(layerUrl);
+    var unitsSinceReq = dataServices.getNcwmsLayerDAS(layerUrl);
 
     // Process times when both returned
     $.when(maxTimeReq, unitsSinceReq).done(function (maxTime, unitsSince) {
         var indexCount = ddsToTimeIndex(maxTime[0]);
-        // This is not max time index, it is number of time indices.
-
-        // unitsSince = dasToUnitsSince(unitsSince[0]);
-        // units = unitsSince[0];
-        // startDate = unitsSince[1];
-        // calendar = unitsSince[2];
-
-        // TODO: remove
-        // layerTime = new CfTime(units, startDate, calendar);
-        //
-        // layerTime.setMaxTimeByIndex(maxTimeIndex);
-        // // setMaxTimeByIndex could be culprit here? Especially if it believes
-        // // maxTimeIndex is the max index not the index count.
-        //
-        // // See also CfTime.toDate, .toIndex -- are these really inverses of each other?
-        //
-        // ncwms_layer.times = layerTime; // Future access through ncwmslayer?
-
         var cfTimeSystem = dasToCfTimeSystem(unitsSince[0], indexCount);
         ncwms_layer.cfTimeSystem = cfTimeSystem;
 
@@ -259,108 +100,48 @@ function processNcwmsLayerMetadata(ncwms_layer, catalog) {
     });
 }
 
+function transferDate(date, newSystem, fallbackDate) {
+    // Transfer `date`, which is a `CfDatetime` object with an
+    // associated `CfTimeSystem` to the (new) `cfTimeSystem`, if possible.
+    //
+    // Transfer is possible if `date`:
+    //  (a) exists
+    //  (b) contains a datetime (year, month, day, etc.) compatible
+    //      with `cfTimeSystem`, meaning the datetime does not throw an
+    //      error when a new `CfDatetime` is created using its values,
+    //      which in turn means it is compatible with `cfTimeSystem.calendar`
+    //      and does not exceed the index bounds of `cfTimeSystem`.
+    //
+    // Otherwise return `fallbackDate`.
+    if (!date) {
+        return new calendars.CfDatetime(newSystem, fallbackDate);
+    }
+    if (_.isEqual(date.cfTimeSystem, newSystem)) {
+        // Same CfTimeSystem, therefore compatible, no need to create new
+        // CfDatetime.
+        return date;
+    }
+    try {
+        var prevDatetime = date.toCalendarDatetime().datetime;
+        var result = new calendars.CfDatetime.fromDatetime(
+            newSystem,
+            prevDatetime.year, prevDatetime.month, prevDatetime.day
+        );
+        return result;
+    } catch(error) {
+        return fallbackDate;
+    }
+}
+
 function setTimeAvailable(cfTimeSystem) {
-    // TODO: Remove
-    // // Set the datepickers, preserving previous selections if they do not fall
-    // // outside the bounds of begin` and `end` (datetimes).
-    // // These datetimes are inclusive.
-    //
-    // //TODO: only present times available in ncwms capabilities for this layer
-    // var yearRange = begin.getFullYear().toString(10) + ":" + end.getFullYear().toString(10);
-    //
-    // //preserve an active range previously set by a user to faciliate downloading matched data.
-    // var previousMinimum = $(".datepickerstart").datepicker("option", "minDate");
-    // var previousMaximum = $(".datepickerend").datepicker("option", "maxDate");
-    // var previousRangeFrom = $(".datepickerstart").datepicker("getDate");
-    // var previousRangeTo = $(".datepickerend").datepicker("getDate");
-    //
-    // // Set both datepicker min and max dates to `begin` and `end` respectively,
-    // // and limit year selector range to `begin` to `end` range.
-    // $.each([".datepickerstart", ".datepickerend"], function (idx, val) {
-    //     $(val).datepicker("option", "minDate", begin);
-    //     $(val).datepicker("option", "maxDate", end);
-    //     $(val).datepicker("option", "yearRange", yearRange);
-    // });
-    //
-    // //try to keep the active range, if it was specified and is possible.
-    // //fall back to the beginning and end of the new dataset.
-    //
-    // // Set start datepicker value to previous start datepicker value, if it
-    // //  (a) exists,
-    // //  (b) is not the same as the previous minimum time (???)
-    // //  (c) is not before `begin`.
-    // // Otherwise set to `begin`.
-    // //
-    // // Question: Why are two datepickers set here? What does .datepicker
-    // // select??? (In Downscaled/BCCAQv2, there is no such datepicker.)
-    // // Question: What is the consequence of the preservation code above
-    // // only using .datepickerstart?
-    // if(previousMinimum
-    //         && (previousMinimum.getTime() != previousRangeFrom.getTime())
-    //         && (previousRangeFrom.getTime() >= begin.getTime() )) {
-    //     $(".datepickerstart").datepicker("setDate", previousRangeFrom);
-    //     $(".datepicker").datepicker("setDate", previousRangeFrom);  // ???
-    // } else {
-    //     $(".datepickerstart").datepicker("setDate", begin);
-    //     $(".datepicker").datepicker("setDate", begin);  // ???
-    // }
-    //
-    // // Note: begin and end were, respectively, the min and max date for
-    // // the layer.
-    // // Set end datepicker value to previous end datepicker value, if it
-    // //  (a) exists,
-    // //  (b) is not the same as the previous maximum time (???)
-    // //  (c) is not after `end`.
-    // // Otherwise set to `end`.
-    // if(previousMaximum
-    //         && (previousMaximum.getTime() != previousRangeTo.getTime())
-    //         && (previousRangeTo.getTime() <= end.getTime() )) {
-    //     $(".datepickerend").datepicker("setDate", previousRangeTo);
-    // } else {
-    //     $(".datepickerend").datepicker("setDate", end);
-    // }
-
-    // -------- New code starts here
-
-    // We associate (using jQuery's .data() method) a date value
+    // We associate, using jQuery's `.data()` method, a date value
     // to the start and end datepicker elements. This value encodes the meaning
     // of the date entered in each element as a `CfDatetime`, which carries
     // all information about the CF time system (units, start date,
     // calendar, index count) as well as the value of the date proper.
     //
-    // We attempt to transfer the previous dates to the next time system.
-
-    function transferDate(prevDate, fallbackIndex) {
-        // Transfer `prevDate`, which is a `CfDatetime` object with an
-        // associated `CfTimeSystem` to the (new) `cfTimeSystem`, if possible.
-        //
-        // Transfer is possible if `prevDate`:
-        //  (a) exists
-        //  (b) contains a datetime (year, month, day, etc.) compatible
-        //      with `cfTimeSystem`, meaning the datetime does not throw an
-        //      error when a new `CfDatetime` is created using its values,
-        //      which in turn means it is compatible with `cfTimeSystem.calendar`
-        //      and does not exceed the index bounds of `cfTimeSystem`.
-        // Otherwise return a new CfTime with the specified `fallbackIndex`.
-        if (!prevDate) {
-            return new calendars.CfDatetime(cfTimeSystem, fallbackIndex);
-        }
-        if (_.isEqual(prevDate.cfTimeSystem, cfTimeSystem)) {
-            // Same CfTimeSystem, therefore compatible, no need to create new
-            // CfDatetime.
-            return prevDate;
-        }
-        try {
-            return new calendars.CfDatetime.fromDatetime(
-                cfTimeSystem,
-                prevDate.year, prevDate.month, prevDate.day
-            )
-        } catch(error) {
-            return new calendars.CfDatetime(cfTimeSystem, fallbackIndex);
-        }
-    }
-
-    // Transfer the previous start and end dates.
+    // We attempt to transfer the existing dates to the next time system.
+    //
     // Note: we don't have yearRange any more.
     // TODO: Find out what yearRange was for and compensate.
 
@@ -368,11 +149,9 @@ function setTimeAvailable(cfTimeSystem) {
     var prevEndDate = $(".datepickerend").data('cfDate');
 
     $(".datepickerstart").data('cfDate',
-        transferDate(prevStartDate, 0));
+        transferDate(prevStartDate, cfTimeSystem, cfTimeSystem.firstCfDatetime()));
     $(".datepickerend").data('cfDate',
-        transferDate(prevEndDate, cfTimeSystem.indexCount-1));
-
-    // -------- New code ends here
+        transferDate(prevEndDate, cfTimeSystem, cfTimeSystem.lastCfDatetime()));
 
     //fire a change event to trigger the download link to update
    $("[class^='datepicker']").trigger("change");
@@ -485,13 +264,12 @@ function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension, callback
 }
 
 module.exports = {
-    // CfTime: CfTime,
     getNcwmsLayerId: getNcwmsLayerId,
     ddsToTimeIndex: ddsToTimeIndex,
     dasToCfTimeSystem: dasToCfTimeSystem,
     dasToUnitsSince: dasToUnitsSince,
-    getNCWMSLayerCapabilities: getNCWMSLayerCapabilities,
     processNcwmsLayerMetadata: processNcwmsLayerMetadata,
+    transferDate: transferDate,
     setTimeAvailable: setTimeAvailable,
     intersection: intersection,
     getRasterNativeProj: getRasterNativeProj,
