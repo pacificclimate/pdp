@@ -1,17 +1,25 @@
 /*globals classes */
 var classes = require('./classes');
 
+// TODO: Convert to nodeExport
+// TODO: This code is logical and works, but its API is hard to remember and
+// inconvenient to use. Refactor and/or add some convenience metods.
 
 module.exports = (function (window, name) {
     // Utility functions
     
     function toInt(string) {
+        if (!string) {
+            return undefined;
+        }
         return parseInt(string, 10);
     }
 
     function isUndefined(v) {
         return typeof v === 'undefined';
     }
+
+    var isInteger = Number.isInteger;
 
     var isArray = Array.isArray;
 
@@ -78,7 +86,18 @@ module.exports = (function (window, name) {
 
     function SimpleDatetime(year, month, day, hour, minute, second) {
         classes.classCallCheck(this, SimpleDatetime);
-        // TODO: Add some type-checking
+        if (isUndefined(year)) {
+            throw new Error('Year must be defined');
+        }
+        var consArgs = arguments;
+        ['year', 'month', 'day', 'hour', 'minute', 'second']
+        .forEach(function (name, i) {
+            var arg = consArgs[i];
+            if(!(isUndefined(arg) || isInteger(arg))) {
+                throw new Error(
+                    'Parameter "' + name + '" must be undefined or an integer, but was ' + arg);
+            }
+        });
         this.year = year;
         this.month = month || 1;
         this.day = day || 1;
@@ -87,7 +106,7 @@ module.exports = (function (window, name) {
         this.second = second || 0;
     }
     classes.addClassProperties(SimpleDatetime, {
-        fromIso8601: function() {
+        toIso8601: function() {
             return formatDatetimeISO8601(
                 this.year, this.month, this.day,
                 this.hour, this.minute, this.second
@@ -543,13 +562,25 @@ module.exports = (function (window, name) {
     //
     // Datetime with calendar and validation relative to calendar
 
-    function CalendarDatetime(calendar, year, month, day, hour, minute, second) {
+    function CalendarDatetime(
+        calendar, sdtOrYear, month, day, hour, minute, second
+    ) {
         classes.classCallCheck(this, CalendarDatetime);
-        // TODO: Add some type-checking
+        classes.validateClass(calendar, Calendar);
         this.calendar = calendar;
-        this.calendar.validateDatetime(year, month, day, hour, minute, second);
-        // SimpleDatetime.call(this, year, month, day, hour, minute, second);
-        this.datetime = new SimpleDatetime(year, month, day, hour, minute, second);
+
+        var datetime;
+        if (sdtOrYear instanceof SimpleDatetime) {
+            datetime = sdtOrYear;
+        } else {
+            datetime = new SimpleDatetime(
+                sdtOrYear, month, day, hour, minute, second);
+        }
+        calendar.validateDatetime(
+            datetime.year, datetime.month, datetime.day,
+            datetime.hour, datetime.minute, datetime.second
+        );
+        this.datetime = datetime;
     }
     classes.addClassProperties(CalendarDatetime, {
         toIso8601: function() {
@@ -574,10 +605,10 @@ module.exports = (function (window, name) {
             // Factory method
             // Returns a CalendarDatetime that is the specified number of
             // milliseconds since the calendar's epoch.
-            var bdt = calendar.simpleDatetimeFromMsSinceEpoch(ms);
+            var sdt = calendar.simpleDatetimeFromMsSinceEpoch(ms);
             return new CalendarDatetime(
                 calendar,
-                bdt.year, bdt.month, bdt.day, bdt.hour, bdt.minute, bdt.second
+                sdt.year, sdt.month, sdt.day, sdt.hour, sdt.minute, sdt.second
             );
         }
     });
@@ -596,13 +627,13 @@ module.exports = (function (window, name) {
         // `units`: `string`
         // `startDate`: `CalendarDatetime`
         // `indexCount`: `int`
-        // TODO: Add some type-checking
         // TODO: Add conversion from string for startDate
         classes.classCallCheck(this, CfTimeSystem);
         Calendar.validateUnit(units);
         if (!(startDate instanceof CalendarDatetime)) {
             throw new Error('startDate must be a CalendarDatetime');
         }
+        classes.validateClass(startDate, CalendarDatetime);
         this.units = units;
         this.startDate = startDate;
         this.indexCount = indexCount;
@@ -647,6 +678,7 @@ module.exports = (function (window, name) {
         // TODO: Add some type-checking
         // TODO: Reconsider what the time specifier should be - index, CalendarDateTime, string? All?
         classes.classCallCheck(this, CfDatetime);
+        classes.validateClass(system, CfTimeSystem, 'system');
         this.system = system;
         this.index = index;
     }
