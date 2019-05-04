@@ -82,7 +82,7 @@ function getDateRange(omitFullTimeCheckbox) {
     var cfTimeSystem = new calendars.CfTimeSystem(
         'days',
         new calendars.CalendarDatetime(calendar, 1870, 1, 1),
-        Math.floor((2100 - 1870) * 365.2425)
+        Math.floor((2100 - 1870 + 1) * 365.2425)
     );
     var today = new Date();
 
@@ -93,8 +93,6 @@ function getDateRange(omitFullTimeCheckbox) {
         today.getFullYear(), today.getMonth()+1, today.getDay());
     $startDate.data('cfDate', startDate);
     $endDate.data('cfDate', endDate);
-    console.log('startDate', startDate)
-    console.log('endDate', endDate)
 
     if (!omitFullTimeCheckbox) {
         // var checkboxDiv = pdp.createDiv("download-all-time");
@@ -166,10 +164,10 @@ function generateMenuTree(subtree, leafNameMapping) {
 }
 
 function getRasterAccordionMenu(ensembleName, leafNameMapping) {
-    var divId = "dataset-menu",
-        div = pdp.createDiv(divId),
-        url = '../menu.json?ensemble_name=' + ensembleName;
-    $.ajax(url, {dataType: "json"}).done(function (data) {
+    var divId = "dataset-menu";
+    var div = pdp.createDiv(divId);
+
+    dataServices.getRasterAccordionMenuData(ensembleName).done(function (data) {
         var menu_tree = generateMenuTree(data, leafNameMapping);
         menu_tree.addClass("dataset-menu");
         $("#" + divId).html(menu_tree);
@@ -517,6 +515,7 @@ function MetadataDownloadLink(element, layer, catalog) {
 MetadataDownloadLink.prototype = {
     constructor: MetadataDownloadLink,
 
+    // Oh man, this looks nasty. Saint Douglas would not approve.
     register: RasterDownloadLink.prototype.register,
     trigger: RasterDownloadLink.prototype.trigger,
     getUrl: RasterDownloadLink.prototype.getUrl,
