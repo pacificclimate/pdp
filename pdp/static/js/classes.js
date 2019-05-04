@@ -10,6 +10,9 @@
 // could obviously be optimized, but you would lose some niceties in naming
 // of functions. This policy is subject to review!
 
+
+// TODO: Convert to nodeExport
+
 module.exports = (function(window, name) {
     function classCallCheck(instance, Constructor) {
         // Throws an error if `Constructor` is not invoked with `new`.
@@ -46,12 +49,20 @@ module.exports = (function(window, name) {
     }
 
 
+    function validateClass(obj, Cls, objName) {
+        if (!(obj instanceof Cls)) {
+            throw new Error('Expected ' + objName + ' to be an instance of ' + Cls.name);
+        }
+    }
+
+
     var exports = window[name] = {
         classCallCheck: classCallCheck,
         inherit: inherit,
         addProperties: addProperties,
         addClassProperties: addClassProperties,
-        unimplementedAbstractMethod: unimplementedAbstractMethod
+        unimplementedAbstractMethod: unimplementedAbstractMethod,
+        validateClass: validateClass
     };
 
     return exports;
