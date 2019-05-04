@@ -107,17 +107,7 @@ function init_raster_map(initialMap) {
     ncwms.events.register('change', ncwms, set_map_title);
 
     ncwms.events.registerPriority('change', ncwms, function (layer_id) {
-        var lyr_params, metadata_req;
-
-        lyr_params = {
-            "id": layer_id.split('/')[0],
-            "var": layer_id.split('/')[1]
-        };
-        metadata_req = $.ajax({
-            url: "../metadata.json?request=GetMinMaxWithUnits",
-            data: lyr_params
-        });
-        metadata_req.done(function (data) {
+        dataServices.getMetadata(layer_id).done(function (data) {
             var new_params = customize_wms_params.call(ncwms, layer_id);
             ncwms.mergeNewParams(new_params); // this does a layer redraw
             cb.force_update(parseFloat(ncwms.params.COLORSCALERANGE.split(",")[0]),
