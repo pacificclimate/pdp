@@ -1,7 +1,19 @@
 var each = require('jest-each').default;
 
+window.pdp = {
+    VERSION: '0.1',
+    app_root: 'https://data.pacificclimate.org/portal',
+    data_root: 'https://data.pacificclimate.org/data',
+    gs_url: 'geoserver_url',
+    ncwms_url: 'ncwms_url',
+    tilecache_url: [
+        'tilecache_url'
+    ],
+    ensemble_name: 'ensemble_name'
+};
 
 require('./globals-helpers').importGlobals([
+    { module: 'js/nodeExport', name: 'nodeExport' },
     { module: 'js/ie8.js' },  // execute only
     { module: 'js/jquery-1.10.2.js', name: ['$', 'jQuery'] },
     { module: 'js/jquery-ui-1.10.2.custom.js' }, // execute only
@@ -9,7 +21,9 @@ require('./globals-helpers').importGlobals([
     { module: 'js/zebra.js' },  // execute only
     { include: 'js/OL/OpenLayers-2.13.1.debug.js' },
     { include: 'js/proj4js-compressed.js' },
+    { module: 'js/lodash.core.js', name: ['_', 'lodash'] },
     { module: 'js/calendars.js' },
+    { module: 'js/data-services.js', name: 'dataServices' },
     { module: 'js/pdp_dom_library.js', spread: false },
     { module: 'js/pdp_controls.js', spread: true },
     { module: 'js/pdp_download.js', spread: true },
@@ -18,44 +32,15 @@ require('./globals-helpers').importGlobals([
     { module: 'js/pdp_raster_map.js', spread: true },
     { module: 'js/pdp_vector_map.js', spread: true },
     { module: 'js/canada_ex_map.js', spread: true },
-    { module: 'js/canada_ex_app.js', name: 'app' },
+    { module: 'js/canada_ex_app.js', name: 'canada_ex_app' },
 ], '../..');
 
-// var app = require('../canada_ex_app');
+
+jest.mock('../../js/data-services');
+var dataServices = require('../../js/data-services');
+
 
 var docBody = document.body;
-
-
-test('pdp_dom_library', function () {
-    expect(pdp).toBeDefined();
-    expect(pdp.createDiv).toBeDefined();
-});
-
-
-describe('ie8.js', function () {
-    it('has created handle_ie8_xml', function () {
-        expect(handle_ie8_xml).toBeDefined();
-    });
-});
-
-
-describe('OpenLayers', function () {
-    it('exists', function () {
-        expect(OpenLayers).toBeDefined();
-    });
-
-    describe('.Bounds', function () {
-        it('exists', function () {
-            expect(OpenLayers.Bounds).toBeDefined();
-        });
-
-        it('is a constructor', function () {
-            expect(function() {
-                var b = new OpenLayers.Bounds(-236114, 41654.75, 2204236, 1947346.25);
-            }).not.toThrow();
-        });
-    });
-});
 
 
 describe('jQuery data', function () {
@@ -74,8 +59,22 @@ describe('jQuery data', function () {
 });
 
 
+// The following lets us check whether there are any actual $.ajax() calls.
+// At this time, all data service calls are mocked
+// in `__mocks__/data-services.js`.
+var $ajax = $.ajax;
+$.ajax = function() {
+    console.log('$.ajax(): request', arguments);
+    var response = $ajax.apply(arguments);
+    response.done(function () {
+        console.log('$.ajax(): response', arguments, response);
+    });
+    return response;
+};
+
 describe('app', function () {
     beforeEach(function () {
+        // Reset the DOM (jsdom)
         docBody.innerHTML =
             // Copied from pdp/templates/map.html
             '<div id="wrapper">' +
@@ -110,12 +109,45 @@ describe('app', function () {
             '     </div><!-- /footer -->' +
             '</div><!-- /wrapper -->';
 
-        app();
+        canada_ex_app();
     });
 
     afterEach(function () {
         // Is this necessary?
         docBody.innerHTML = '';
+    });
+
+    function getDownloadCfDate(selector) {
+        var $downloadForm = $('#download-form');
+        var $date = $downloadForm.find(selector);
+        return $date.data('cfDate');
+    }
+
+    function logDownloadDates() {
+        var fromDate = getDownloadCfDate('#from-date');
+        var toDate = getDownloadCfDate('#to-date');
+        console.log(
+            '#from-date', fromDate && fromDate.toLooseDateFormat(),
+            '#to-date', toDate && toDate.toLooseDateFormat()
+        );
+    }
+
+    function resolveAlldataServices() {
+        logDownloadDates();
+        dataServices.getMetadata.resolveWithDefault();
+        logDownloadDates();
+        dataServices.getCatalog.resolveWithDefault();
+        logDownloadDates();
+        dataServices.getNCWMSLayerCapabilities.resolveWithDefault();
+        logDownloadDates();
+        dataServices.getNcwmsLayerDDS.resolveWithDefault();
+        logDownloadDates();
+        dataServices.getNcwmsLayerDAS.resolveWithDefault();
+        logDownloadDates();
+    }
+
+    test('mocking', function () {
+        resolveAlldataServices();
     });
 
     describe('Download form', function () {
@@ -131,22 +163,29 @@ describe('app', function () {
 
         describe('date inputs', function () {
             each([
-                ['#from-date', 1950],
-                ['#to-date', (new Date()).getFullYear()],
-            ]).describe('%s', function (selector, year) {
+                ['before data services resolve', function() {}],
+                ['after data services resolve', resolveAlldataServices],
+            ]).describe('%s', function (label, setup) {
+                setup();
 
-                it('exists', function () {
-                    var $date = $downloadForm.find(selector);
-                    expect($date.length).toBe(1);
-                });
+                each([
+                    ['#from-date', 1950],
+                    ['#to-date', (new Date()).getFullYear()],
+                ]).describe('%s', function (selector, year) {
 
-                it('has expected cfDate', function () {
-                    var $date = $downloadForm.find(selector);
-                    var cfDate = $date.data('cfDate');
-                    console.log(selector, 'cfDate', cfDate)
-                    expect(cfDate).toBeDefined();
-                    var calDatetime = cfDate.toCalendarDatetime();
-                    expect(calDatetime.datetime.year).toEqual(year);
+                    it('exists', function () {
+                        var $date = $downloadForm.find(selector);
+                        expect($date.length).toBe(1);
+                    });
+
+                    it('has expected cfDate', function () {
+                        var $date = $downloadForm.find(selector);
+                        var cfDate = $date.data('cfDate');
+                        console.log('test', selector, 'cfDate =', cfDate)
+                        expect(cfDate).toBeDefined();
+                        var calDatetime = cfDate.toCalendarDatetime();
+                        expect(calDatetime.datetime.year).toEqual(year);
+                    });
                 });
             });
         });
@@ -159,12 +198,13 @@ describe('app', function () {
             });
 
             describe('sets start and end dates correctly when checked', function () {
+                resolveAlldataServices();
 
-                // We have to use a function to specify the value of `expectedCfDate`
-                // because values set in beforeEach (here, specifically,
-                // `$downloadForm`) are not defined outside of a test body.
-                // So this variable value must be evaluated in the context
-                // of the test body. Sigh.
+                // We have to use a function to specify the value of
+                // `expectedCfDate` because values set in beforeEach (here,
+                // specifically, `$downloadForm`) are not defined outside of
+                // a test body. So this variable value must be evaluated in
+                // the context of the test body.
                 each([
                     ['#from-date', function (system) { return system.firstCfDatetime(); }],
                     ['#to-date', function (system) { return system.lastCfDatetime(); }]
@@ -206,6 +246,27 @@ describe('app', function () {
     });
 
     describe('Data Download link', function () {
+        var $link;
+        beforeEach(function () {
+            $link = $('#download-timeseries');
+        });
+
+        it('exists', function () {
+            expect($link.length).toBeGreaterThan(0);
+        });
+
+        it('has the expected initial time range', function () {
+            var linkUrl = $link.attr('href');
+
+            var startDate = getDownloadCfDate('#from-date');
+            var endDate = getDownloadCfDate('#to-date');
+
+            expect(linkUrl).toMatch(RegExp(
+                '\\?\\w+\\[' +
+                startDate.toIndex() + ':' + endDate.toIndex() +
+                '\\]'
+            ));
+        });
 
     });
 });
@@ -213,6 +274,9 @@ describe('app', function () {
 
 //////////////////////////////////////////////////////////////////
 describe('', function () {
+    beforeEach(function () {
+    });
+
     it('', function () {
     });
 });
