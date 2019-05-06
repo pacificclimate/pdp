@@ -124,6 +124,8 @@ describe('app', function () {
     }
 
     function logDownloadDates() {
+        // For debugging. Now disabled.
+        return;
         var fromDate = getDownloadCfDate('#from-date');
         var toDate = getDownloadCfDate('#to-date');
         console.log(
@@ -178,7 +180,12 @@ describe('app', function () {
                         expect($date.length).toBe(1);
                     });
 
-                    it('has expected cfDate', function () {
+                    it('has expected element content', function () {
+                        var $date = $downloadForm.find(selector);
+                        expect($date.val()).toMatch(year + '/');
+                    });
+
+                    it('has expected attached cfDate', function () {
                         var $date = $downloadForm.find(selector);
                         var cfDate = $date.data('cfDate');
                         console.log('test', selector, 'cfDate =', cfDate)
@@ -186,6 +193,7 @@ describe('app', function () {
                         var calDatetime = cfDate.toCalendarDatetime();
                         expect(calDatetime.datetime.year).toEqual(year);
                     });
+
                 });
             });
         });
@@ -203,8 +211,9 @@ describe('app', function () {
                 // We have to use a function to specify the value of
                 // `expectedCfDate` because values set in beforeEach (here,
                 // specifically, `$downloadForm`) are not defined outside of
-                // a test body. So this variable value must be evaluated in
-                // the context of the test body.
+                // a test body. So this variable must be evaluated in
+                // the context of the test body. Which requires a function in
+                // the `each`.
                 each([
                     ['#from-date', function (system) { return system.firstCfDatetime(); }],
                     ['#to-date', function (system) { return system.lastCfDatetime(); }]
@@ -223,7 +232,6 @@ describe('app', function () {
 
 
                     // Test data associated with input element
-                    // expect(cfDate.toIndex()).toBe(index());
                     expect(cfDate).toEqual(expectedCfDate(cfDate.system));
 
                     // Test input element content
