@@ -15,34 +15,24 @@ var ncwms, map;
 // must either roll our own or settle for a simpler UI. We chose the latter.
 //
 // Therefore presently our datepickers are input elements with the following
-// data values attached to them using the jQuery `.data()` method:
+// data value attached to them using the jQuery `.data()` method:
 //
 //      'cfDate': a `CfDatetime` object representing the value of the datepicker.
 //          Such an object carries with it the full specification of the
 //          CF time system (units, since, calendar) in which the value is
 //          embedded.
 
-function setDatepickerIndex(element, index) {
-    // Set a datepicker element's value, by index.
+function setDatepicker(element, cfDate) {
+    // Set a datepicker element's value.
     // Update both the input element's value and the associated cfDate datum.
-    // Return the element, for chaining.
-    var cfDate = element.data('cfDate');
-    cfDate.setIndex(index);
-    element.val(cfDate.toCalendarDatetime().datetime.toLooseDateFormat());
-    return element;
+    element.data('cfDate', cfDate);
+    element.val(cfDate.toLooseDateFormat());
 }
+
 
 function getDateRange(omitFullTimeCheckbox) {
     // Unnecessary
     var omitFullTimeCheckbox = (typeof omitFullTimeCheckbox !== 'undefined') ? omitFullTimeCheckbox : false;
-
-    // TODO: Remove
-    // var rangeDiv = pdp.createDiv("date-range");
-    // rangeDiv.appendChild(pdp.createLabel("date-range-label", "Date Range", "date-range"));
-    // rangeDiv.appendChild(pdp.createInputElement("text", "datepickerstart", "from-date", "from-date", "YYYY/MM/DD"));
-    // rangeDiv.appendChild(document.createTextNode(" to "));
-    // rangeDiv.appendChild(pdp.createInputElement("text", "datepickerend", "to-date", "to-date", "YYYY/MM/DD"));
-    // rangeDiv.appendChild(pdp.createInputElement("hidden", "", "input-polygon", "input-polygon", ""));
 
     var rangeDiv = $(
         '<div id="date-range">' +
@@ -56,23 +46,6 @@ function getDateRange(omitFullTimeCheckbox) {
         '</div>'
     );
 
-    // TODO: Remove
-    // $('.datepickerstart', rangeDiv).datepicker({
-    //     inline: true,
-    //     dateFormat: 'yy/mm/dd',
-    //     changeMonth: true,
-    //     changeYear: true,
-    //     yearRange: '1870:cc',
-    //     defaultDate: '1870/01/01'
-    // });
-    // $('.datepickerend', rangeDiv).datepicker({
-    //     inline: true,
-    //     dateFormat: 'yy/mm/dd',
-    //     changeMonth: true,
-    //     changeYear: true,
-    //     yearRange: '1870:cc',
-    //     defaultDate: 'cc'
-    // });
     var $startDate = rangeDiv.find("#from-date");
     var $endDate = rangeDiv.find("#to-date");
 
@@ -91,15 +64,10 @@ function getDateRange(omitFullTimeCheckbox) {
     var endDate = calendars.CfDatetime.fromDatetime(
         cfTimeSystem,
         today.getFullYear(), today.getMonth()+1, today.getDay());
-    $startDate.data('cfDate', startDate);
-    $endDate.data('cfDate', endDate);
+    setDatepicker($startDate, startDate);
+    setDatepicker($endDate, endDate);
 
     if (!omitFullTimeCheckbox) {
-        // var checkboxDiv = pdp.createDiv("download-all-time");
-        // checkboxDiv.appendChild(pdp.createInputElement("checkbox", undefined, "download-full-timeseries", "download-full-timeseries", undefined));
-        // checkboxDiv.appendChild(pdp.createLabel(undefined, "Download Full Timeseries", "download-full-timeseries"));
-        // rangeDiv.appendChild(checkboxDiv);
-
         $(
             '<div id="download-all-time">' +
             '   <input type="checkbox" id="download-full-timeseries" name="download-full-timeseries">' +
@@ -107,31 +75,29 @@ function getDateRange(omitFullTimeCheckbox) {
             '</div>'
         ).appendTo(rangeDiv);
 
-        // Specify full timeseries download by setting to min/max dates
-        $("#pdp-controls").on("change", "#download-full-timeseries", function(evt) {
-            if (this.checked) {
-                // TODO: Remove
-                // $("#from-date").datepicker('disable').addClass("disabled").datepicker("setDate", $("#from-date").datepicker("option", "minDate"));
-                // $("#to-date").datepicker('disable').addClass("disabled").datepicker("setDate", $("#to-date").datepicker("option", "maxDate"));
+        $("#pdp-controls").on(
+            "change", "#download-full-timeseries",
+            function(evt) {
+                var $startDate = $('#from-date');
+                var $endDate = $('#to-date');
+                if (this.checked) {
+                    // Specify full timeseries download by setting to min/max dates
+                    var startDate = $startDate.data('cfDate');
+                    setDatepicker($startDate, startDate.system.firstCfDatetime());
+                    $startDate.prop('disabled', true);
 
-                setDatepickerIndex($startDate, 0)
-                    .prop('disabled', true);
+                    var endDate = $endDate.data('cfDate');
+                    setDatepicker($endDate, endDate.system.lastCfDatetime());
+                    $endDate.prop('disabled', true);
 
-                var indexCount = $endDate.data('cfDate').system.indexCount;
-                setDatepickerIndex($endDate, indexCount-1)
-                    .prop('disabled', true);
-
-                // Trigger event to call dlLink.onTimeChange()
-                $("[class^='datepicker']").trigger("change");
-            } else {
-                // TODO: Remove
-                // $("#from-date").datepicker('enable').removeClass("disabled");
-                // $("#to-date").datepicker('enable').removeClass("disabled");
-
-                $startDate.prop('disabled', false);
-                $endDate.prop('disabled', false);
+                    // Trigger event to call dlLink.onTimeChange()
+                    $("[class^='datepicker']").trigger("change");
+                } else {
+                    $startDate.prop('disabled', false);
+                    $endDate.prop('disabled', false);
+                }
             }
-        });
+        );
     }
 
     return rangeDiv;
@@ -540,7 +506,7 @@ MetadataDownloadLink.prototype = {
 
 
 module.exports = {
-    setDatepickerIndex: setDatepickerIndex,
+    setDatepicker: setDatepicker,
     getDateRange: getDateRange,
     generateMenuTree: generateMenuTree,
     getRasterAccordionMenu: getRasterAccordionMenu,
