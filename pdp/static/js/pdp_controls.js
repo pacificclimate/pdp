@@ -29,6 +29,20 @@ function setDatepicker(element, cfDate) {
     element.val(cfDate.toLooseDateFormat());
 }
 
+function setCalendarMessages(within, calendar) {
+    within.find('#date-range-ts-calendar')
+        .html(calendar.name + ' (' + calendar.type + ')');
+}
+
+function setCfTimeSystemMessages(within, cfTimeSystem) {
+    within.find('#date-range-ts-units')
+        .text(cfTimeSystem.units);
+    within.find('#date-range-ts-start-date')
+        .text(cfTimeSystem.startDate.toIso8601());
+    within.find('#date-range-ts-max-date')
+        .text(cfTimeSystem.lastCfDatetime().toIso8601());
+}
+
 
 function getDateRange(omitFullTimeCheckbox) {
     // Unnecessary
@@ -37,12 +51,27 @@ function getDateRange(omitFullTimeCheckbox) {
     var rangeDiv = $(
         '<div id="date-range">' +
         '   <label id="date-range-label" for="date-range">Date Range</label>' +
-        '   <input type="text" id="from-date" name="from-date" ' +
+        '   <div id="date-range-inputs">' +
+        '       <input type="text" id="from-date" name="from-date" ' +
         '       class="datepickerstart">' +
-        ' to ' +
-        '   <input type="text" id="to-date" name="to-date" ' +
+        '       to ' +
+        '       <input type="text" id="to-date" name="to-date" ' +
         '       class="datepickerend">' +
-        '   <input type="hidden" id="input-polygon" name="input-polygon">' +
+        '       <input type="hidden" id="input-polygon" name="input-polygon">' +
+        '   </div>' +
+        '   <div id="date-range-messages">' +
+        '       <div id="date-range-time-system">' +
+        '           Calendar: <span id="date-range-ts-calendar"></span>' +
+        '           Time System: <span id="date-range-ts">' +
+        '               <span id="date-range-ts-units"></span>' +
+        '               since ' +
+        '               <span id="date-range-ts-start-date"></span>' +
+        '               (Max date: ' +
+        '               <span id="date-range-ts-max-date"></span>)' +
+        '           </span>' +
+        '       </div>' +
+        '       <div id="date-range-error"/>' +
+        '   </div>' +
         '</div>'
     );
 
@@ -52,8 +81,9 @@ function getDateRange(omitFullTimeCheckbox) {
     // Assign a temporary time system. This should actually be based on the
     // first ncwms (climate) layer, but that comes later.
     var calendar = calendars['gregorian'];
+    var units = 'days';
     var cfTimeSystem = new calendars.CfTimeSystem(
-        'days',
+        units,
         new calendars.CalendarDatetime(calendar, 1870, 1, 1),
         Math.floor((2100 - 1870 + 1) * 365.2425)
     );
@@ -66,6 +96,9 @@ function getDateRange(omitFullTimeCheckbox) {
         today.getFullYear(), today.getMonth()+1, today.getDay());
     setDatepicker($startDate, startDate);
     setDatepicker($endDate, endDate);
+
+    setCalendarMessages(rangeDiv, calendar);
+    setCfTimeSystemMessages(rangeDiv, cfTimeSystem);
 
     if (!omitFullTimeCheckbox) {
         $(
@@ -444,26 +477,34 @@ RasterDownloadLink.prototype = {
                              raster_proj, undefined, callback);
     },
     onTimeChange: function () {
-        // TODO: Remove
-        // var start, end;
-        //
-        // start = $(".datepickerstart").datepicker("getDate");
-        // start = this.layer.times.toIndex(start);
-        // end = $(".datepickerend").datepicker("getDate");
-        // end = this.layer.times.toIndex(end);
-        //
-        // //if either start or end is undefined, fall back to the full time range
-        // start = start === undefined ? 0 : start;
-        // end = end === undefined ? "" : end;
+        var cfTimeSystem = this.layer.cfTimeSystem;
 
-        var startDate = $(".datepickerstart").data('cfDate');
-        var startIndex = startDate ? startDate.toIndex() : 0;
-        var endDate = $(".datepickerend").data('cfDate');
-        var endIndex = endDate ?
-            endDate.toIndex() :
-            this.layer.cfTimeSystem.indexCount -1;
+        function getInputAsCfDate($date, fallbackFlag) {
+            // Return the content of the date input element `$date`
+            // as a CfDatetime.
+            // If the date input element contains invalid content, use the
+            // date specified by `fallbackFlag`: falsy => first date
+            // in CF time system; truthy => last date.
+            try {
+                return calendars.CfDatetime.fromLooseFormat(
+                    cfTimeSystem, $date.val()
+                );
+            } catch(error) {
+                return fallbackFlag ?
+                    cfTimeSystem.lastCfDatetime() :
+                    cfTimeSystem.firstCfDatetime();
+            }
+        }
 
-        this.trange = startIndex + ':' + endIndex;
+        var $startDate = $('#from-date');
+        var startDate = getInputAsCfDate($startDate, false);
+        $startDate.data('cfDate', startDate);
+
+        var $endDate = $('#to-date');
+        var endDate = getInputAsCfDate($endDate, true);
+        $endDate.data('cfDate', endDate);
+
+        this.trange = startDate.toIndex() + ':' + endDate.toIndex();
         this.trigger();
     }
 

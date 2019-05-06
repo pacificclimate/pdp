@@ -1,3 +1,5 @@
+// TODO: Add tests for user input to time elements
+
 var each = require('jest-each').default;
 
 window.pdp = {
@@ -164,42 +166,162 @@ describe('app', function () {
         });
 
         describe('date inputs', function () {
-            each([
-                ['before data services resolve', function() {}],
-                ['after data services resolve', resolveAlldataServices],
-            ]).describe('%s', function (label, setup) {
-                setup();
-
+            describe('setup', function () {
                 each([
-                    ['#from-date', 1950],
-                    ['#to-date', (new Date()).getFullYear()],
-                ]).describe('%s', function (selector, year) {
+                    ['before data services resolve', function() {}],
+                    ['after data services resolve', resolveAlldataServices],
+                ]).describe('%s', function (label, setup) {
+                    beforeEach(function () {
+                        setup();
+                    });
+
+                    each([
+                        ['#from-date', 1950],
+                        ['#to-date', (new Date()).getFullYear()],
+                    ]).describe('%s', function (selector, year) {
+
+                        it('exists', function () {
+                            var $date = $downloadForm.find(selector);
+                            expect($date.length).toBe(1);
+                        });
+
+                        it('has expected element content', function () {
+                            var $date = $downloadForm.find(selector);
+                            expect($date.val()).toMatch(year + '/');
+                        });
+
+                        it('has expected attached cfDate', function () {
+                            var $date = $downloadForm.find(selector);
+                            var cfDate = $date.data('cfDate');
+                            console.log('test', selector, 'cfDate =', cfDate)
+                            expect(cfDate).toBeDefined();
+                            var calDatetime = cfDate.toCalendarDatetime();
+                            expect(calDatetime.datetime.year).toEqual(year);
+                        });
+                    });
+                });
+            });
+
+            describe('messages', function () {
+                beforeEach(function () {
+                    resolveAlldataServices();
+                });
+
+                describe('calendar', function () {
+                    var $msg;
+                    beforeEach(function () {
+                        $msg = $('#date-range-ts-calendar');
+                    });
 
                     it('exists', function () {
-                        var $date = $downloadForm.find(selector);
-                        expect($date.length).toBe(1);
+                        expect($msg.length).toBe(1);
                     });
 
-                    it('has expected element content', function () {
-                        var $date = $downloadForm.find(selector);
-                        expect($date.val()).toMatch(year + '/');
+                    it('indicates the expected calendar', function () {
+                        var msg = $msg.text();
+                        expect(msg).toMatch('Gregorian');
+                    });
+                });
+
+                describe('time system', function () {
+                    it('indicates the expected units-since', function () {
+                        var msg = $('#date-range-ts').text();
+                        expect(msg).toMatch(/days\s+since\s+1870-01-01/);
                     });
 
-                    it('has expected attached cfDate', function () {
-                        var $date = $downloadForm.find(selector);
-                        var cfDate = $date.data('cfDate');
-                        console.log('test', selector, 'cfDate =', cfDate)
-                        expect(cfDate).toBeDefined();
-                        var calDatetime = cfDate.toCalendarDatetime();
-                        expect(calDatetime.datetime.year).toEqual(year);
+                    it('indicates the expected max date', function () {
+                        var msg = $('#date-range-ts-max-date').text();
+                        expect(msg).toMatch('2100-12-31');
                     });
+                });
 
+            });
+
+            describe('user interaction', function () {
+                var system;
+                beforeEach(function () {
+                    resolveAlldataServices();
+                    var $startDate = $downloadForm.find('#from-date');
+                    var startDate = $startDate.data('cfDate');
+                    system = startDate.system;
+                });
+
+                // TODO: DRY up valid and invalid input tests
+                describe('with valid inputs', function () {
+                    each([
+                        ['#from-date', 1980, 1, 1],
+                        ['#from-date', 1990, 9, 30],
+                        ['#to-date', 1980, 1, 1],
+                        ['#to-date', 1990, 9, 30],
+                    ]).describe(
+                        '%s equals "%d-%d-%d"',
+                        function (selector, year, month, day) {
+                            var $date, dateString;
+                            beforeEach(function () {
+                                // Enter data in the input element
+                                $date = $downloadForm.find(selector);
+                                dateString = year + '/' + month + '/' + day;
+                                $date.val(dateString);
+                                $date.change();
+                            });
+
+                            it('sets cfDate as expected', function () {
+                                var cfDate = $date.data('cfDate');
+                                expect(cfDate).toEqual(
+                                    calendars.CfDatetime.fromDatetime(
+                                        system, year, month, day));
+                            });
+
+                            it('doesn\'t modify the input element', function () {
+                                expect($date.val()).toBe(dateString);
+                            });
+
+                            it('shows no error message', function () {
+                                var $error = $('#date-range-error');
+                                expect($error.text()).toMatch(/^\s*$/);
+                            });
+                        }
+                    );
+                });
+
+                describe('with invalid inputs', function () {
+                    each([
+                        ['#from-date', 'foobar'],
+                        ['#to-date', 'foobar'],
+                    ]).describe(
+                        '%s equals "%s"',
+                        function (selector, dateString) {
+                            var $date;
+                            beforeEach(function () {
+                                // Enter data in the input element
+                                $date = $downloadForm.find(selector);
+                                $date.val(dateString);
+                                $date.change();
+                            });
+
+                            it('sets cfDate as expected', function () {
+                                var fallbackDate = selector === '#to-date' ?
+                                    system.lastCfDatetime() :
+                                    system.firstCfDatetime();
+                                var cfDate = $date.data('cfDate');
+                                expect(cfDate).toEqual(fallbackDate);
+                            });
+
+                            it('doesn\'t modify the input element', function () {
+                                expect($date.val()).toBe(dateString);
+                            });
+
+                            it('shows an error message', function () {
+                                var $error = $('#date-range-error');
+                                expect($error.text()).toMatch('IDIOT');
+                            });
+                        }
+                    );
                 });
             });
         });
 
         describe('Download Full Timeseries checkbox', function () {
-
             it('exists', function () {
                 var $checkbox = $downloadForm.find('#download-full-timeseries');
                 expect($checkbox.length).toBeGreaterThan(0);

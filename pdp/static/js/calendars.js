@@ -724,8 +724,7 @@ module.exports = (function (window, name) {
 
         toLooseDatetimeFormat: function() {
             return this.toCalendarDatetime().toLooseDatetimeFormat();
-        },
-
+        }
     }, {
         fromDatetime: function (system, year, month, day, hour, minute, second) {
             // Factory method.
@@ -741,6 +740,15 @@ module.exports = (function (window, name) {
                 calendar.msPerUnit(system.units)
             );
             return new CfDatetime(system, index);
+        },
+
+        fromLooseFormat: function(system, string) {
+            var sdt = SimpleDatetime.fromLooseFormat(string);
+            return CfDatetime.fromDatetime(
+                system,
+                sdt.year, sdt.month, sdt.day,
+                sdt.hour, sdt.minute, sdt.second
+            );
         }
     });
 
