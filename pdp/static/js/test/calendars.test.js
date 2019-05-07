@@ -5,6 +5,7 @@ require('./globals-helpers').importGlobals([
     { module: 'js/calendars.js', name: 'calendars' },
 ], '../..');
 
+var formatDatetimeISO8601 = calendars.formatDatetimeISO8601;
 var SimpleDatetime = calendars.SimpleDatetime;
 var Calendar = calendars.Calendar;
 var GregorianCalendar = calendars.GregorianCalendar;
@@ -32,6 +33,25 @@ function leapDaysSinceEpoch(calendar, year) {
     // Valid only up to 2099!!!
     return Math.floor((year - calendar.epochYear) / 4);
 }
+
+
+describe('formatDatetimeISO8601', function () {
+    each([
+        [1900, 1, 2, 3, 4, 5, '1900-01-02T03:04:05'],
+        [1900, 11, 12, 13, 14, 15, '1900-11-12T13:14:15'],
+        [undefined, 11, 12, 13, 14, 15, ''],
+        [1900, undefined, 12, 13, 14, 15, '1900'],
+        [1900, 11, undefined, 13, 14, 15, '1900-11'],
+        [1900, 11, 12, undefined, 14, 15, '1900-11-12'],
+        [1900, 11, 12, 13, undefined, 15, '1900-11-12T13'],
+        [1900, 11, 12, 13, 14, undefined, '1900-11-12T13:14'],
+    ]).it('%#',
+        function (year, month, day, hour, minute, second, expected) {
+            expect(formatDatetimeISO8601(
+                year, month, day, hour, minute, second
+            )).toBe(expected);
+        });
+});
 
 
 describe('all classes', function () {
@@ -75,6 +95,7 @@ describe('SimpleDatetime', function () {
         });
     });
 
+
     describe('fromIso8601', function () {
         each([
             ['1900-01-02T06:07:08', 1900, 1, 2, 6, 7, 8],
@@ -114,24 +135,6 @@ describe('Calendar', function () {
         ]).it('%#',
             function (year, month, day, hour, minute, second, expected) {
                 expect(Calendar.toRawDatetimeFormat(
-                    year, month, day, hour, minute, second
-                )).toBe(expected);
-            });
-    });
-
-    describe('toIso8601Format', function () {
-        each([
-            [1900, 1, 2, 3, 4, 5, '1900-01-02T03:04:05'],
-            [1900, 11, 12, 13, 14, 15, '1900-11-12T13:14:15'],
-            [undefined, 11, 12, 13, 14, 15, ''],
-            [1900, undefined, 12, 13, 14, 15, '1900'],
-            [1900, 11, undefined, 13, 14, 15, '1900-11'],
-            [1900, 11, 12, undefined, 14, 15, '1900-11-12'],
-            [1900, 11, 12, 13, undefined, 15, '1900-11-12T13'],
-            [1900, 11, 12, 13, 14, undefined, '1900-11-12T13:14'],
-        ]).it('%#',
-            function (year, month, day, hour, minute, second, expected) {
-                expect(Calendar.toIso8601Format(
                     year, month, day, hour, minute, second
                 )).toBe(expected);
             });

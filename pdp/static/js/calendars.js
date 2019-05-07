@@ -753,6 +753,7 @@ var classes = require('./classes');
 
 
     var exports = {
+        formatDatetimeISO8601: formatDatetimeISO8601,
         SimpleDatetime: SimpleDatetime,
         Calendar: Calendar,
         GregorianCalendar: GregorianCalendar,
