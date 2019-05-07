@@ -31,12 +31,10 @@ function setDatepicker(element, cfDate) {
     element.val(cfDate.toLooseString(true));
 }
 
-function setCalendarMessages(within, calendar) {
-    within.find('#date-range-ts-calendar')
-        .html(calendar.name + ' (' + calendar.type + ')');
-}
-
 function setCfTimeSystemMessages(within, cfTimeSystem) {
+    var calendar = cfTimeSystem.startDate.calendar;
+    within.find('#date-range-ts-calendar span')
+        .html(calendar.name + ' (' + calendar.type + ')');
     within.find('#date-range-ts-units')
         .text(cfTimeSystem.units);
     within.find('#date-range-ts-start-date')
@@ -62,21 +60,26 @@ function getDateRange(omitFullTimeCheckbox) {
         '       <input type="hidden" id="input-polygon" name="input-polygon">' +
         '   </div>' +
         '   <div id="date-range-messages">' +
+        '       <div id="date-range-error-messages">' +
+        '           <div id="from-date-error-message" class="inactive">' +
+        '               From date: <span/>' +
+        '           </div>' +
+        '           <div id="to-date-error-message" class="inactive">' +
+        '               To date: <span/>' +
+        '           </div>' +
+        '       </div>' +
         '       <div id="date-range-time-system">' +
-        '           Calendar: <span id="date-range-ts-calendar"></span>' +
-        '           Time System: <span id="date-range-ts">' +
+        '           <div id="date-range-ts-calendar">' +
+        '               Calendar: <span/>' +
+        '           </div>' +
+        '           <div id="date-range-ts">' +
+        '               Time System:' +
         '               <span id="date-range-ts-units"></span>' +
         '               since ' +
         '               <span id="date-range-ts-start-date"></span>' +
         '               (Max date: ' +
         '               <span id="date-range-ts-max-date"></span>)' +
-        '           </span>' +
-        '       </div>' +
-        '       <div id="from-date-message" class="inactive">' +
-        '           From date: <span/>' +
-        '       </div>' +
-        '       <div id="to-date-message" class="inactive">' +
-        '           To date: <span/>' +
+        '           </div>' +
         '       </div>' +
         '   </div>' +
         '</div>'
@@ -104,7 +107,6 @@ function getDateRange(omitFullTimeCheckbox) {
     setDatepicker($startDate, startDate);
     setDatepicker($endDate, endDate);
 
-    setCalendarMessages(rangeDiv, calendar);
     setCfTimeSystemMessages(rangeDiv, cfTimeSystem);
 
     if (!omitFullTimeCheckbox) {
@@ -500,9 +502,6 @@ RasterDownloadLink.prototype = {
                     cfTimeSystem, $date.val()
                 );
             } catch(error) {
-                console.log('########### caught an error!', $date.selector)
-                console.log('########### caught an error!', $date.val())
-                console.log('########### caught an error!', error)
                 date = fallbackFlag ?
                     cfTimeSystem.lastCfDatetime() :
                     cfTimeSystem.firstCfDatetime();
@@ -523,9 +522,9 @@ RasterDownloadLink.prototype = {
         }
 
         var startDate = processInput(
-            $('#from-date'), false, $('#from-date-message'));
+            $('#from-date'), false, $('#from-date-error-message'));
         var endDate = processInput(
-            $('#to-date'), true, $('#to-date-message'));
+            $('#to-date'), true, $('#to-date-error-message'));
 
         this.trange = startDate.toIndex() + ':' + endDate.toIndex();
         this.trigger();
