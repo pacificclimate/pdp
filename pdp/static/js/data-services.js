@@ -68,7 +68,7 @@
     }
 
 
-    es6export(module, {
+    condExport(module, {
         getCatalog: getCatalog,
         getMetadata: getMetadata,
         getRasterAccordionMenuData: getRasterAccordionMenuData,
