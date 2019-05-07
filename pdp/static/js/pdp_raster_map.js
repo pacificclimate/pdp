@@ -106,6 +106,8 @@ function setTimeAvailable(cfTimeSystem) {
     $(".datepickerend").data('cfDate',
         transferDate(prevEndDate, cfTimeSystem, cfTimeSystem.lastCfDatetime()));
 
+    setCfTimeSystemMessages($('#date-range-messages'), cfTimeSystem);
+
     //fire a change event to trigger the download link to update
    $("[class^='datepicker']").trigger("change");
 }
