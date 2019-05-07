@@ -131,8 +131,8 @@ describe('app', function () {
         var fromDate = getDownloadCfDate('#from-date');
         var toDate = getDownloadCfDate('#to-date');
         console.log(
-            '#from-date', fromDate && fromDate.toLooseDateFormat(),
-            '#to-date', toDate && toDate.toLooseDateFormat()
+            '#from-date', fromDate && fromDate.toLooseString(true),
+            '#to-date', toDate && toDate.toLooseString(true)
         );
     }
 
@@ -366,7 +366,7 @@ describe('app', function () {
                     expect(cfDate).toEqual(expectedCfDate(cfDate.system));
 
                     // Test input element content
-                    expect($date.val()).toEqual(cfDate.toLooseDateFormat());
+                    expect($date.val()).toEqual(cfDate.toLooseString());
 
                     // Uncheck the checkbox
                     $checkbox.attr('checked', false);
@@ -377,7 +377,7 @@ describe('app', function () {
                     expect($date.prop('disabled')).toBe(false);
                     expect($date.data('cfDate')).toEqual(cfDate);
                     // Check input element content
-                    expect($date.val()).toEqual(cfDate.toLooseDateFormat());
+                    expect($date.val()).toEqual(cfDate.toLooseString());
                 });
             });
         });

@@ -106,20 +106,24 @@ module.exports = (function (window, name) {
         this.second = second || 0;
     }
     classes.addClassProperties(SimpleDatetime, {
-        toIso8601: function() {
+        toISOString: function(dateOnly) {
+            if (dateOnly) {
+                return formatDatetimeISO8601(
+                    this.year, this.month, this.day
+                );
+            }
             return formatDatetimeISO8601(
                 this.year, this.month, this.day,
                 this.hour, this.minute, this.second
             );
         },
 
-        toLooseDateFormat: function() {
-            return formatDatetimeLoose(
-                this.year, this.month, this.day
-            );
-        },
-
-        toLooseDatetimeFormat: function() {
+        toLooseString: function(dateOnly) {
+            if (dateOnly) {
+                return formatDatetimeLoose(
+                    this.year, this.month, this.day
+                );
+            }
             return formatDatetimeLoose(
                 this.year, this.month, this.day,
                 this.hour, this.minute, this.second
@@ -149,10 +153,10 @@ module.exports = (function (window, name) {
             );
         },
 
-        fromLooseFormat: function(date) {
+        fromLooseFormat: function(dateString) {
             // Parses a loose-formatted date string.
             var looseFormatRegex = /^\s*(\d{4})([\/-](\d{1,2}))?([\/-](\d{1,2}))?\s*$/;
-            var match = looseFormatRegex.exec(date);
+            var match = looseFormatRegex.exec(dateString);
             if (!match) {
                 return match;
             }
@@ -583,16 +587,12 @@ module.exports = (function (window, name) {
         this.datetime = datetime;
     }
     classes.addClassProperties(CalendarDatetime, {
-        toIso8601: function() {
-            return this.datetime.toIso8601();
+        toISOString: function() {
+            return this.datetime.toISOString();
         },
 
-        toLooseDateFormat: function() {
-            return this.datetime.toLooseDateFormat();
-        },
-
-        toLooseDatetimeFormat: function() {
-            return this.datetime.toLooseDatetimeFormat();
+        toLooseString: function(dateOnly) {
+            return this.datetime.toLooseString(dateOnly);
         },
 
         toMsSinceEpoch: function () {
@@ -714,12 +714,12 @@ module.exports = (function (window, name) {
             );
         },
 
-        toIso8601: function() {
-            return this.toCalendarDatetime().toIso8601();
+        toISOString: function() {
+            return this.toCalendarDatetime().toISOString();
         },
 
-        toLooseDateFormat: function() {
-            return this.toCalendarDatetime().toLooseDateFormat();
+        toLooseString: function(dateOnly) {
+            return this.toCalendarDatetime().toLooseString(dateOnly);
         },
 
         toLooseDatetimeFormat: function() {

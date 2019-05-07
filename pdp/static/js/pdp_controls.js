@@ -25,8 +25,10 @@ var ncwms, map;
 function setDatepicker(element, cfDate) {
     // Set a datepicker element's value.
     // Update both the input element's value and the associated cfDate datum.
+    console.log('setDatepicker: setting', element);
+    console.log('setDatepicker: to', cfDate);
     element.data('cfDate', cfDate);
-    element.val(cfDate.toLooseDateFormat());
+    element.val(cfDate.toLooseString(true));
 }
 
 function setCalendarMessages(within, calendar) {
@@ -38,9 +40,9 @@ function setCfTimeSystemMessages(within, cfTimeSystem) {
     within.find('#date-range-ts-units')
         .text(cfTimeSystem.units);
     within.find('#date-range-ts-start-date')
-        .text(cfTimeSystem.startDate.toIso8601());
+        .text(cfTimeSystem.startDate.toISOString(true));
     within.find('#date-range-ts-max-date')
-        .text(cfTimeSystem.lastCfDatetime().toIso8601());
+        .text(cfTimeSystem.lastCfDatetime().toISOString(true));
 }
 
 
@@ -497,8 +499,10 @@ RasterDownloadLink.prototype = {
                 date = calendars.CfDatetime.fromLooseFormat(
                     cfTimeSystem, $date.val()
                 );
-            } catch(e) {
-                console.log('########### caught an error!')
+            } catch(error) {
+                console.log('########### caught an error!', $date.selector)
+                console.log('########### caught an error!', $date.val())
+                console.log('########### caught an error!', error)
                 date = fallbackFlag ?
                     cfTimeSystem.lastCfDatetime() :
                     cfTimeSystem.firstCfDatetime();
