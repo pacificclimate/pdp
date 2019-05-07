@@ -212,7 +212,7 @@ describe('app', function () {
                 describe('calendar', function () {
                     var $msg;
                     beforeEach(function () {
-                        $msg = $('#date-range-ts-calendar');
+                        $msg = $('#date-range-ts-calendar span');
                     });
 
                     it('exists', function () {
@@ -221,14 +221,14 @@ describe('app', function () {
 
                     it('indicates the expected calendar', function () {
                         var msg = $msg.text();
-                        expect(msg).toMatch('Gregorian');
+                        expect(msg).toMatch('Fixed 365-day');
                     });
                 });
 
                 describe('time system', function () {
                     it('indicates the expected units-since', function () {
                         var msg = $('#date-range-ts').text();
-                        expect(msg).toMatch(/days\s+since\s+1870-01-01/);
+                        expect(msg).toMatch(/days\s+since\s+1950-01-01/);
                     });
 
                     it('indicates the expected max date', function () {
@@ -279,10 +279,10 @@ describe('app', function () {
                             });
 
                             it('shows no error message', function () {
-                                var $error = $(selector + '-message');
+                                var $error = $(selector + '-error-message');
                                 expect($error.length).toBe(1);
                                 expect($error.hasClass('inactive')).toBe(true);
-                                var $errorMsg = $(selector + '-message span');
+                                var $errorMsg = $(selector + '-error-message span');
                                 expect($errorMsg.length).toBe(1);
                                 expect($errorMsg.text()).toMatch(/^\s*$/);
                             });
@@ -319,9 +319,9 @@ describe('app', function () {
                             });
 
                             it('shows an error message', function () {
-                                var $error = $(selector + '-message');
+                                var $error = $(selector + '-error-message');
                                 expect($error.length).toBe(1);
-                                var $errorMsg = $(selector + '-message span');
+                                var $errorMsg = $(selector + '-error-message span');
                                 expect($errorMsg.length).toBe(1);
                                 expect($error.hasClass('inactive')).toBe(false);
                                 expect($errorMsg.text()).toMatch('Invalid date');
