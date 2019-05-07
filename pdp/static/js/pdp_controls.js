@@ -569,6 +569,7 @@ MetadataDownloadLink.prototype = {
 
 
 condExport(module, {
+    setCfTimeSystemMessages: setCfTimeSystemMessages,
     setDatepicker: setDatepicker,
     getDateRange: getDateRange,
     generateMenuTree: generateMenuTree,
