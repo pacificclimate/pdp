@@ -77,6 +77,19 @@ select {
     background-color: #F2F2F2;
 }
 
+#date-range-messages {
+    margin-left: 1em;
+    font-size: 0.9em;
+}
+
+#date-range-messages .inactive {
+    display: none;
+}
+
+#date-range-error-messages {
+    color: red;
+}
+
 #download-all-time input[type="checkbox"] {
     width: 1.5em;
 }
