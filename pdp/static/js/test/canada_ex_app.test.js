@@ -286,6 +286,21 @@ describe('app', function () {
                                 expect($errorMsg.length).toBe(1);
                                 expect($errorMsg.text()).toMatch(/^\s*$/);
                             });
+
+                            it('sets the download data link correctly', function () {
+                                var $link = $('#download-timeseries');
+                                var linkUrl = $link.attr('href');
+
+                                var startDate = getDownloadCfDate('#from-date');
+                                var endDate = getDownloadCfDate('#to-date');
+
+                                expect(linkUrl).toMatch(RegExp(
+                                    '\\?\\w+\\[' +
+                                    startDate.toIndex() + ':' + endDate.toIndex() +
+                                    '\\]'
+                                ));
+                            });
+
                         }
                     );
                 });
@@ -324,7 +339,7 @@ describe('app', function () {
                                 var $errorMsg = $(selector + '-error-message span');
                                 expect($errorMsg.length).toBe(1);
                                 expect($error.hasClass('inactive')).toBe(false);
-                                expect($errorMsg.text()).toMatch('Invalid date');
+                                expect($errorMsg.text()).toMatch('not in acceptable date-time format');
                             });
                         }
                     );
