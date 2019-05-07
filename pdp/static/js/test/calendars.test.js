@@ -2,6 +2,7 @@ var each = require('jest-each').default;
 
 require('./globals-helpers').importGlobals([
     { module: 'js/condExport', name: 'condExport' },
+    { module: 'js/classes.js', name: 'classes' },
     { module: 'js/calendars.js', name: 'calendars' },
 ], '../..');
 
@@ -133,7 +134,7 @@ describe('SimpleDatetime', function () {
             '1900-01-02Txx',
         ]).it('returns null for the invalid string %s',
             function (string) {
-            expect(SimpleDatetime.fromIso8601(string)).toBeNull();
+            expect(function() { SimpleDatetime.fromIso8601(string) }).toThrow();
         });
     });
 });

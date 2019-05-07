@@ -153,7 +153,7 @@
                 /^(\d{4})(-(\d{1,2}))?(-(\d{1,2}))?([ T](\d{1,2})(:(\d{1,2}))?(:(\d{1,2}))?)?$/;
             var match = looseIso8601Regex.exec(string);
             if (!match) {
-                return match;
+                throw new Error('Date string is not in ISO 8601 date-time format');
             }
             return new SimpleDatetime(
                 toInt(match[1]), toInt(match[3]), toInt(match[5]), toInt(match[7]), toInt(match[9]), toInt(match[11])
