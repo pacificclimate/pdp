@@ -366,7 +366,7 @@ describe('app', function () {
                     expect(cfDate).toEqual(expectedCfDate(cfDate.system));
 
                     // Test input element content
-                    expect($date.val()).toEqual(cfDate.toLooseString());
+                    expect($date.val()).toEqual(cfDate.toLooseString(true));
 
                     // Uncheck the checkbox
                     $checkbox.attr('checked', false);
@@ -377,7 +377,7 @@ describe('app', function () {
                     expect($date.prop('disabled')).toBe(false);
                     expect($date.data('cfDate')).toEqual(cfDate);
                     // Check input element content
-                    expect($date.val()).toEqual(cfDate.toLooseString());
+                    expect($date.val()).toEqual(cfDate.toLooseString(true));
                 });
             });
         });

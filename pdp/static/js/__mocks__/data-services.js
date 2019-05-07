@@ -1,72 +1,38 @@
-// This is only for testing, so only has to be a Node module
+// Mock data-services module for testing
+// For tests only, so is a pure Node module
 
 var convert = require('xml-js');
 
 var mockHelpers = require('../test/mock-helpers');
-var mock$AjaxResponse = mockHelpers.mock$AjaxResponse;
+var makeMockGet = mockHelpers.makeMockGet;
 
 // Mocking presently only for tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada
-
-// TODO: Move to mock-helpers
-function makeGet(name, defaultData) {
-    // Returns a get function which acts like `$.ajax()`, i.e. returns a
-    // jQuery deferred.
-    //
-    // The user controls the deferred, which is attached to the function.
-    //
-    // Also attached to the function is a convenience function
-    // `resolveWithDefault`, which resolves the deferred with the
-    // `defaultData` argument to this maker function.
-
-    var deferred = $.Deferred();
-
-    function get() {
-        return deferred;
-    }
-    get.name = name;
-
-    get.deferred = deferred;
-
-    get.resolveWithDefault = function () {
-        console.log('## resolving', name);
-        deferred.resolve(defaultData);
-    };
-
-    return get;
-}
-
 
 var catalog = {
     "tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada": "https://data.pacificclimate.org/data/downscaled_gcms/tasmax_day_BCCAQv2+ANUSPLIN300_CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc",
 };
-// function getCatalog() {
-//     return mock$AjaxResponse(catalog);
-// }
-var getCatalog = makeGet('Catalog', catalog);
+var getCatalog = makeMockGet('Catalog', catalog);
 
 
 var metadata = {
     "units": "degC", "max": 46.4652, "min": -62.0813
 };
-// function getMetadata(layer_id) {
-//     return mock$AjaxResponse(metadata);
-// }
-var getMetadata = makeGet('Metadata', metadata);
+var getMetadata = makeMockGet('Metadata', metadata);
 
 
-function getRasterAccordionMenuData(ensembleName) {
-    return mock$AjaxResponse({
-        "historical,rcp26": {
-            "CanESM2": {
-                "r1i1p1": {
-                    "tasmax": "tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada",
-                    "pr": "pr_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada",
-                    "tasmin": "tasmin_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada"
-                }
+var rasterAccordionMenuData = {
+    "historical,rcp26": {
+        "CanESM2": {
+            "r1i1p1": {
+                "tasmax": "tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada",
+                "pr": "pr_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada",
+                "tasmin": "tasmin_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada"
             }
         }
-    });
-}
+    }
+};
+var getRasterAccordionMenuData = makeMockGet(
+    'RasterAccordionMenuData', rasterAccordionMenuData, true);
 
 
 // TODO: Feckin ell, can we cut this down?
@@ -462,21 +428,13 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '    </Capability>\n' +
     '</WMT_MS_Capabilities>';
 var ncwmsLayerCapabilities = convert.xml2js(ncwmsLayerCapablilitiesXml);
-
-// function getNCWMSLayerCapabilities(ncwms_layer) {
-//     return mock$AjaxResponse(ncwmsLayerCapabilities);
-// }
-var getNCWMSLayerCapabilities = makeGet('NCWMSLayerCapabilities', ncwmsLayerCapabilities);
+var getNCWMSLayerCapabilities = makeMockGet('NCWMSLayerCapabilities', ncwmsLayerCapabilities);
 
 
 var ncwmsLayerDDS = ['Dataset {\n' +
 '    Float64 time[time = 55115];\n' +
 '} tasmax_day_BCCAQv2%2BANUSPLIN300_CanESM2_historical%2Brcp26_r1i1p1_19500101-21001231%2Enc;\n'];
-
-// function getNcwmsLayerDDS(layerUrl) {
-//     return mock$AjaxResponse(ncwmsLayerDDS);
-// }
-var getNcwmsLayerDDS = makeGet('NcwmsLayerDDS', ncwmsLayerDDS);
+var getNcwmsLayerDDS = makeMockGet('NcwmsLayerDDS', ncwmsLayerDDS);
 
 
 var ncwmsLayerDAS = ['Attributes {\n' +
@@ -561,10 +519,7 @@ var ncwmsLayerDAS = ['Attributes {\n' +
 '        Float64 missing_value 32767;\n' +
 '    }\n' +
 '}'];
-// function getNcwmsLayerDAS(layerUrl) {
-//     return mock$AjaxResponse(ncwmsLayerDAS);
-// }
-var getNcwmsLayerDAS = makeGet('NcwmsLayerDAS', ncwmsLayerDAS);
+var getNcwmsLayerDAS = makeMockGet('NcwmsLayerDAS', ncwmsLayerDAS);
 
 module.exports = {
     getCatalog: getCatalog,
