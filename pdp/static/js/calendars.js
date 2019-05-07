@@ -663,8 +663,6 @@ var classes = require('./classes');
     function CfDatetime(system, index) {
         // `system`: `CfTimeSystem`
         // `index`: `integer`
-        // TODO: Add some type-checking
-        // TODO: Reconsider what the time specifier should be - index, CalendarDateTime, string? All?
         classes.classCallCheck(this, CfDatetime);
         classes.validateClass(system, CfTimeSystem, 'system');
         this.system = system;
