@@ -34,53 +34,6 @@ function dasToCfTimeSystem(das, indexCount) {
     return new calendars.CfTimeSystem(units, startDate, indexCount);
 }
 
-// TODO: Remove
-function dasToUnitsSince(data) {
-    var s = data.match(/time \{[\s\S]*?\}/gm)[0],
-        // Why not ".*?" ??
-        // Will fail with 'T' separator, which code below accepts
-        reg = /units \"((year|month|day|hour|minute|second)s?) since (\d{4}-\d{1,2}-\d{1,2} ?[\d:]*)\"/g,
-        // Sloppy matching on time portion of datetime string
-        m = reg.exec(s),
-        units = m[1],
-        dateString = m[3],
-        sDate;
-    // Provisionally OK, modulo questions
-
-    var calendar;
-    reg = /calendar \"(standard|gregorian|proleptic_gregorian|365_day|noleap|360_day)\"/,
-    m = reg.exec(s),
-    calendar = m ? m[1] : "standard";
-    // Provisionally OK
-
-    reg = /(\d{4})-(\d{1,2})-(\d{1,2})( |T)(\d{1,2}):(\d{1,2}):(\d{1,2})/g;
-    // Loose full ISO-8601 datetime; strictly:
-    // - space is not allowed as separator
-    // - months and days must have 2 digits
-    m = reg.exec(dateString);
-    if (m) {
-        sDate = new Date(m[1], parseInt(m[2], 10) - 1, // Months in das result are 1-12, js needs 0-11
-                         m[3], m[5], m[6], m[7], 0);
-        return [units, sDate, calendar];
-    }
-    // Above probably works
-
-    // Not ISO Format, maybe YYYY-MM-DD?
-    // This IS loose ISO 8601, date only format
-    reg = /(\d{4})-(\d{1,2})-(\d{1,2})/g;
-    m = reg.exec(dateString);
-    if (m) {
-        return [units, new Date(m[1], parseInt(m[2], 10) - 1, m[3]), calendar];
-    }
-    // Above probably works
-    // This most common case
-
-    // Why are these 2 separate cases?? DRY.
-
-    // Well, crap.
-    return undefined;
-}
-
 function processNcwmsLayerMetadata(ncwms_layer, catalog) {
     // transform the data_server url into the un-authed catalog based url for metadata
     var layerUrl = catalog[getNcwmsLayerId(ncwms_layer)]; //matches[1] is portal base url, matches[2] is dataset, make catalog url // Request time variables
@@ -267,7 +220,6 @@ module.exports = {
     getNcwmsLayerId: getNcwmsLayerId,
     ddsToTimeIndex: ddsToTimeIndex,
     dasToCfTimeSystem: dasToCfTimeSystem,
-    dasToUnitsSince: dasToUnitsSince,
     processNcwmsLayerMetadata: processNcwmsLayerMetadata,
     transferDate: transferDate,
     setTimeAvailable: setTimeAvailable,
