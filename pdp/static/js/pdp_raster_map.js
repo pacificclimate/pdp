@@ -139,32 +139,6 @@ function getRasterBbox(capabilities, layer_name) {
     return real_bounds;
 }
 
-function getTimeSelected(ncwms_layer) {
-    //var base = new Date($(".datepickerstart").datepicker("option", "minDate")),
-    // var t0 = $(".datepickerstart").datepicker("getDate"),
-    //     tn = $(".datepickerend").datepicker("getDate"),
-    // //  units = ncwms_layer.times.units,
-    //     t0i = ncwms_layer.times.toIndex(t0),
-    //     tni = ncwms_layer.times.toIndex(tn);
-    // return [t0i, tni];
-
-    function toCfTime(string) {
-        var datetime = calendars.SimpleDatetime.fromLooseFormat(string);
-        var t0 = calendars.CfTime.fromDatetime(
-            ncwms_layer.cfTimeSystem,
-            datetime.year, datetime.month, datetime.day
-        );
-    }
-
-    var t0 = toCfTime($('.datepickerstart').val());
-    var t0Index = t0.toIndex();
-
-    var t1 = toCfTime($('.datepickerend').val());
-    var t1Index = t1.toIndex();
-
-    return [t0Index, t1Index];
-}
-
 function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension, callback) {
     var ul, lr, ul_px, lr_px,
         indexBounds = new OpenLayers.Bounds();
@@ -228,6 +202,5 @@ condExport(module,  {
     intersection: intersection,
     getRasterNativeProj: getRasterNativeProj,
     getRasterBbox: getRasterBbox,
-    getTimeSelected: getTimeSelected,
     rasterBBoxToIndicies: rasterBBoxToIndicies
 });
