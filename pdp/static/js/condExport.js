@@ -41,6 +41,10 @@
 //         });
 //     })();
 
+// To prevent problems in the browser environment, we must declare `module`.
+// That declaration is as logically placed here as anywhere.
+var module;
+
 (function(window, module) {
     // TODO: Should `window` be a param of `condExport`?
     function condExport(module, exports, name) {
