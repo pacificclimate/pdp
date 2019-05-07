@@ -496,27 +496,21 @@ RasterDownloadLink.prototype = {
             //      in CF time system; truthy => last date.
             //  - set an error message
             var date;
-            var hasError = false;
             try {
                 date = calendars.CfDatetime.fromLooseFormat(
                     cfTimeSystem, $date.val()
                 );
+                $error.addClass('inactive');
+                $error.find('span').html('');
             } catch(error) {
                 date = fallbackFlag ?
                     cfTimeSystem.lastCfDatetime() :
                     cfTimeSystem.firstCfDatetime();
-                hasError = true;
+                $error.removeClass('inactive');
+                $error.find('span').html(error.message);
             }
 
             $date.data('cfDate', date);
-
-            if (hasError) {
-                $error.removeClass('inactive');
-                $error.find('span').html('Invalid date');
-            } else {
-                $error.addClass('inactive');
-                $error.find('span').html('');
-            }
 
             return date;
         }
