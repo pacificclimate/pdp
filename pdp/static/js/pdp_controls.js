@@ -531,7 +531,6 @@ RasterDownloadLink.prototype = {
         this.trigger();
     }
 
-    // TODO: What is this???? Did I accidentally delete something?
     // Register for changes with the ncwms layer, the box selection layer, or the download extension
 };
 
