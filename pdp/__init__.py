@@ -69,7 +69,7 @@ def get_config():
             'js/multiaccordion.js',
             'js/lodash.core.min.js',
         ] + wrap_mini([
-            'js/condExport',
+            'js/condExport.js',
             'js/classes.js',
             'js/calendars.js',
             'js/data-services.js',
