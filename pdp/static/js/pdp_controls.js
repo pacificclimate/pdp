@@ -70,7 +70,12 @@ function getDateRange(omitFullTimeCheckbox) {
         '               <span id="date-range-ts-max-date"></span>)' +
         '           </span>' +
         '       </div>' +
-        '       <div id="date-range-error"/>' +
+        '       <div id="from-date-message" class="inactive">' +
+        '           From date: <span/>' +
+        '       </div>' +
+        '       <div id="to-date-message" class="inactive">' +
+        '           To date: <span/>' +
+        '       </div>' +
         '   </div>' +
         '</div>'
     );
@@ -479,35 +484,50 @@ RasterDownloadLink.prototype = {
     onTimeChange: function () {
         var cfTimeSystem = this.layer.cfTimeSystem;
 
-        function getInputAsCfDate($date, fallbackFlag) {
+        function processInput($date, fallbackFlag, $error) {
             // Return the content of the date input element `$date`
             // as a CfDatetime.
-            // If the date input element contains invalid content, use the
-            // date specified by `fallbackFlag`: falsy => first date
-            // in CF time system; truthy => last date.
+            // If the date input element contains invalid content:
+            //  - use the date specified by `fallbackFlag`: falsy => first date
+            //      in CF time system; truthy => last date.
+            //  - set an error message
+            var date;
+            var hasError = false;
             try {
-                return calendars.CfDatetime.fromLooseFormat(
+                date = calendars.CfDatetime.fromLooseFormat(
                     cfTimeSystem, $date.val()
                 );
-            } catch(error) {
-                return fallbackFlag ?
+            } catch(e) {
+                console.log('########### caught an error!')
+                date = fallbackFlag ?
                     cfTimeSystem.lastCfDatetime() :
                     cfTimeSystem.firstCfDatetime();
+                hasError = true;
             }
+
+            $date.data('cfDate', date);
+
+            if (hasError) {
+                $error.removeClass('inactive');
+                $error.find('span').html('Invalid date');
+            } else {
+                $error.addClass('inactive');
+                $error.find('span').html('');
+            }
+
+            return date;
         }
 
-        var $startDate = $('#from-date');
-        var startDate = getInputAsCfDate($startDate, false);
-        $startDate.data('cfDate', startDate);
-
-        var $endDate = $('#to-date');
-        var endDate = getInputAsCfDate($endDate, true);
-        $endDate.data('cfDate', endDate);
+        var startDate = processInput(
+            $('#from-date'), false, $('#from-date-message'));
+        var endDate = processInput(
+            $('#to-date'), true, $('#to-date-message'));
 
         this.trange = startDate.toIndex() + ':' + endDate.toIndex();
         this.trigger();
     }
 
+    // TODO: What is this???? Did I accidentally delete something?
     // Register for changes with the ncwms layer, the box selection layer, or the download extension
 };
 

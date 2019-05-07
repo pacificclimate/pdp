@@ -277,8 +277,12 @@ describe('app', function () {
                             });
 
                             it('shows no error message', function () {
-                                var $error = $('#date-range-error');
-                                expect($error.text()).toMatch(/^\s*$/);
+                                var $error = $(selector + '-message');
+                                expect($error.length).toBe(1);
+                                expect($error.hasClass('inactive')).toBe(true);
+                                var $errorMsg = $(selector + '-message span');
+                                expect($errorMsg.length).toBe(1);
+                                expect($errorMsg.text()).toMatch(/^\s*$/);
                             });
                         }
                     );
@@ -297,6 +301,7 @@ describe('app', function () {
                                 $date = $downloadForm.find(selector);
                                 $date.val(dateString);
                                 $date.change();
+                                console.log('TTTTTTTTT $date.val()', $date.val())
                             });
 
                             it('sets cfDate as expected', function () {
@@ -312,8 +317,12 @@ describe('app', function () {
                             });
 
                             it('shows an error message', function () {
-                                var $error = $('#date-range-error');
-                                expect($error.text()).toMatch('IDIOT');
+                                var $error = $(selector + '-message');
+                                expect($error.length).toBe(1);
+                                var $errorMsg = $(selector + '-message span');
+                                expect($errorMsg.length).toBe(1);
+                                expect($error.hasClass('inactive')).toBe(false);
+                                expect($errorMsg.text()).toMatch('Invalid date');
                             });
                         }
                     );
