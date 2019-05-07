@@ -10,10 +10,7 @@
 // could obviously be optimized, but you would lose some niceties in naming
 // of functions. This policy is subject to review!
 
-
-// TODO: Convert to condExport
-
-module.exports = (function(window, name) {
+(function() {
     function classCallCheck(instance, Constructor) {
         // Throws an error if `Constructor` is not invoked with `new`.
         if (!(instance instanceof Constructor)) {
@@ -56,14 +53,12 @@ module.exports = (function(window, name) {
     }
 
 
-    var exports = window[name] = {
+    condExport(module, {
         classCallCheck: classCallCheck,
         inherit: inherit,
         addProperties: addProperties,
         addClassProperties: addClassProperties,
         unimplementedAbstractMethod: unimplementedAbstractMethod,
         validateClass: validateClass
-    };
-
-    return exports;
-})(window, 'classes');
+    }, 'classes')
+})();

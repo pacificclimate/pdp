@@ -1,4 +1,7 @@
-var classes = require('../classes');
+require('./globals-helpers').importGlobals([
+    { module: 'js/condExport', name: 'condExport' },
+    { module: 'js/classes.js', name: 'classes' },
+], '../..');
 
 
 // A: a base class
