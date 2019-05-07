@@ -569,7 +569,7 @@ MetadataDownloadLink.prototype = {
 };
 
 
-module.exports = {
+condExport(module, {
     setDatepicker: setDatepicker,
     getDateRange: getDateRange,
     generateMenuTree: generateMenuTree,
@@ -581,4 +581,4 @@ module.exports = {
     Colorbar: Colorbar,
     RasterDownloadLink: RasterDownloadLink,
     MetadataDownloadLink: MetadataDownloadLink,
-};
+});

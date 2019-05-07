@@ -216,7 +216,7 @@ function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension, callback
     requestIndex(lr_px.x, lr_px.y);
 }
 
-module.exports = {
+condExport(module,  {
     getNcwmsLayerId: getNcwmsLayerId,
     ddsToTimeIndex: ddsToTimeIndex,
     dasToCfTimeSystem: dasToCfTimeSystem,
@@ -228,4 +228,4 @@ module.exports = {
     getRasterBbox: getRasterBbox,
     getTimeSelected: getTimeSelected,
     rasterBBoxToIndicies: rasterBBoxToIndicies
-};
+});

@@ -317,7 +317,7 @@ function addLoadingIcon(layer) {
 }
 
 
-module.exports = {
+condExport(module, {
     getProjection: getProjection,
     getBC3005Bounds: getBC3005Bounds,
     getBC3005Bounds_vic: getBC3005Bounds_vic,
@@ -344,4 +344,4 @@ module.exports = {
     getPointEditor: getPointEditor,
     getOpacitySlider: getOpacitySlider,
     addLoadingIcon: addLoadingIcon
-};
+});

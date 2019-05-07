@@ -50,10 +50,10 @@ function createDownloadLink(id, divClass, links) {
 }
 
 
-module.exports = {
+condExport(module,  {
     createFormatOptions: createFormatOptions,
     createRasterFormatOptions: createRasterFormatOptions,
     createMetadataFormatOptions: createMetadataFormatOptions,
     createDownloadButtons: createDownloadButtons,
     createDownloadLink: createDownloadLink,
-};
+});

@@ -35,8 +35,8 @@ function polygon_as_text() {
 }
 
 
-module.exports = {
+condExport(module,  {
     getActiveFilters: getActiveFilters,
     pp_bignum: pp_bignum,
     polygon_as_text: polygon_as_text,
-};
+});

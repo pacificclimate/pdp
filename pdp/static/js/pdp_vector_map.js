@@ -57,8 +57,8 @@ function getLoadingPopup(name, loc) {
 }
 
 
-module.exports = {
+condExport(module,  {
     filter_undefined: filter_undefined,
     generateGetFeatureInfoParams: generateGetFeatureInfoParams,
     getLoadingPopup: getLoadingPopup
-};
+});
