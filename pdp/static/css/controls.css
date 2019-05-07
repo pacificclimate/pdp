@@ -72,7 +72,7 @@ select {
     width: 8em;
 }
 
-#date-range input.disabled {
+#date-range input:disabled {
     color: #808080;
     background-color: #F2F2F2;
 }
