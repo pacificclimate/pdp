@@ -69,7 +69,7 @@ function transferDate(date, newSystem, fallbackDate) {
     if (!date) {
         return new calendars.CfDatetime(newSystem, fallbackDate);
     }
-    if (_.isEqual(date.cfTimeSystem, newSystem)) {
+    if (_.isEqual(date.system, newSystem)) {
         // Same CfTimeSystem, therefore compatible, no need to create new
         // CfDatetime.
         return date;
