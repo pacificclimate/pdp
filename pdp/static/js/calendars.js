@@ -165,7 +165,9 @@
             var looseFormatRegex = /^\s*(\d{4})([\/-](\d{1,2}))?([\/-](\d{1,2}))?\s*$/;
             var match = looseFormatRegex.exec(dateString);
             if (!match) {
-                return match;
+                throw new Error(
+                    'Date string is not in acceptable date-time format ' +
+                    '(YYYY/MM/DD or YYYY-MM-DD)');
             }
             return new SimpleDatetime(
                 toInt(match[1]), toInt(match[3]), toInt(match[5])
@@ -665,6 +667,7 @@
         classes.classCallCheck(this, CfDatetime);
         classes.validateClass(system, CfTimeSystem, 'system');
         this.system = system;
+        this.validateIndex(index);
         this.index = index;
     }
     classes.addClassProperties(CfDatetime, {
@@ -673,7 +676,7 @@
                 throw new Error('Index must be >= 0');
             }
             if (this.system.indexCount && index >= this.system.indexCount) {
-                throw new Error('Index must be < ' + system.indexCount);
+                throw new Error('Index must be < ' + this.system.indexCount);
             }
         },
 
@@ -724,7 +727,20 @@
                 (datetime.toMsSinceEpoch() - startDate.toMsSinceEpoch()) /
                 calendar.msPerUnit(system.units)
             );
-            return new CfDatetime(system, index);
+            try {
+                return new CfDatetime(system, index);
+            } catch(error) {
+                // var msg = error.message.match(/>=/) ?
+                //     'before time system start date' :
+                //     'after time system maximum date';
+                var msg =
+                    (error.message.match(/>=/) &&
+                        'Date is before time system start date') ||
+                    (error.message.match(/</) &&
+                        'Date is after time system maximum date') ||
+                    error.message;
+                throw new Error(msg)
+            }
         },
 
         fromLooseFormat: function(system, string) {
