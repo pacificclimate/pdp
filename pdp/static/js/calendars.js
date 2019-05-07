@@ -1,11 +1,10 @@
 /*globals classes */
 var classes = require('./classes');
 
-// TODO: Convert to condExport
 // TODO: This code is logical and works, but its API is hard to remember and
 // inconvenient to use. Refactor and/or add some convenience metods.
 
-module.exports = (function (window, name) {
+(function () {
     // Utility functions
     
     function toInt(string) {
@@ -771,8 +770,5 @@ module.exports = (function (window, name) {
         exports[type] = calendarFactory.createCalendar(type);
     });
 
-
-    window[name] = exports;
-
-    return exports;
-})(window, 'calendars');
+    condExport(module, exports, 'calendars');
+})();

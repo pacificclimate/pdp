@@ -1,6 +1,10 @@
 var each = require('jest-each').default;
 
-var calendars = require('../calendars');
+require('./globals-helpers').importGlobals([
+    { module: 'js/condExport', name: 'condExport' },
+    { module: 'js/calendars.js', name: 'calendars' },
+], '../..');
+
 var SimpleDatetime = calendars.SimpleDatetime;
 var Calendar = calendars.Calendar;
 var GregorianCalendar = calendars.GregorianCalendar;

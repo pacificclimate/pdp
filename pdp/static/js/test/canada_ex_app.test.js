@@ -22,7 +22,7 @@ require('./globals-helpers').importGlobals([
     { include: 'js/OL/OpenLayers-2.13.1.debug.js' },
     { include: 'js/proj4js-compressed.js' },
     { module: 'js/lodash.core.js', name: ['_', 'lodash'] },
-    { module: 'js/calendars.js' },
+    { module: 'js/calendars.js', name: 'calendars' },
     { module: 'js/data-services.js', name: 'dataServices' },
     { module: 'js/pdp_dom_library.js', spread: false },
     { module: 'js/pdp_controls.js', spread: true },
