@@ -5,6 +5,7 @@ require('./globals-helpers').importGlobals([
     { module: 'js/calendars.js', name: 'calendars' },
 ], '../..');
 
+var formatDatetimeRaw = calendars.formatDatetimeRaw;
 var formatDatetimeISO8601 = calendars.formatDatetimeISO8601;
 var SimpleDatetime = calendars.SimpleDatetime;
 var Calendar = calendars.Calendar;
@@ -33,6 +34,19 @@ function leapDaysSinceEpoch(calendar, year) {
     // Valid only up to 2099!!!
     return Math.floor((year - calendar.epochYear) / 4);
 }
+
+
+describe('formatDatetimeRaw', function () {
+    each([
+        [1900, 1, 2, 3, 4, 5, '1900-1-2T3-4-5'],
+        [undefined, 1, 2, 3, 4, 5, 'undefined-1-2T3-4-5'],
+    ]).it('%#',
+        function (year, month, day, hour, minute, second, expected) {
+            expect(formatDatetimeRaw(
+                year, month, day, hour, minute, second
+            )).toBe(expected);
+        });
+});
 
 
 describe('formatDatetimeISO8601', function () {
@@ -127,18 +141,6 @@ describe('SimpleDatetime', function () {
 
 describe('Calendar', function () {
     var calendar = new Calendar();
-
-    describe('toRawDatetimeFormat', function () {
-        each([
-            [1900, 1, 2, 3, 4, 5, '1900-1-2T3-4-5'],
-            [undefined, 1, 2, 3, 4, 5, 'undefined-1-2T3-4-5'],
-        ]).it('%#',
-            function (year, month, day, hour, minute, second, expected) {
-                expect(Calendar.toRawDatetimeFormat(
-                    year, month, day, hour, minute, second
-                )).toBe(expected);
-            });
-    });
 
     describe('isValidTime', function () {
         each([

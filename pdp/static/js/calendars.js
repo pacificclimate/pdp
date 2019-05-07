@@ -68,6 +68,15 @@ var classes = require('./classes');
         }
     }
 
+
+    function formatDatetimeRaw(year, month, day, hour, minute, second) {
+        // Return a string representing the argument values in an
+        // ISO 8601-like format, but without any checking or fancy formatting.
+        // Useful for error messages.
+        return '' + year + '-' + month + '-' + day +
+            'T' + hour + '-' + minute + '-' + second;
+    }
+
     var formatDatetimeISO8601 = makeFormatDatetime(
         [format4, format2, format2, format2, format2, format2],
         '-', 'T', ':'
@@ -184,7 +193,6 @@ var classes = require('./classes');
     //      simpleDatetimeFromMsSinceEpoch()
     //
     //      static toRawDatetimeFormat()
-    //      static toIso8601Format()
     //
     // Base class for calendar classes.
     //
@@ -253,7 +261,7 @@ var classes = require('./classes');
             if (!this.isValidDatetime(year, month, day, hour, minute, second)) {
                 throw new Error(
                     'Datetime (' +
-                    Calendar.toRawDatetimeFormat(year, month, day, hour, minute, second) +
+                    formatDatetimeRaw(year, month, day, hour, minute, second) +
                     ') is not valid for calendar type ' +
                     this.name
                 )
@@ -405,25 +413,6 @@ var classes = require('./classes');
                 throw new Error('Invalid time unit: ' + unit);
             }
         },
-
-        toRawDatetimeFormat: function (year, month, day, hour, minute, second) {
-            // Return a string representing the argument values in an
-            // ISO 8601-like format, but without any checking or fancy formatting.
-            // Useful for error messages.
-            return '' + year + '-' + month + '-' + day +
-                'T' + hour + '-' + minute + '-' + second;
-        },
-
-        // TODO: Remove?
-        toIso8601Format: function (year, month, day, hour, minute, second) {
-            // Return a string representing the arguments in a fully compliant
-            // ISO 8601 datetime format. Will flip out if the values are not
-            // valid.
-            return formatDatetimeISO8601(
-                year, month, day, hour, minute, second
-            );
-        }
-
     });
 
 
@@ -753,6 +742,7 @@ var classes = require('./classes');
 
 
     var exports = {
+        formatDatetimeRaw: formatDatetimeRaw,
         formatDatetimeISO8601: formatDatetimeISO8601,
         SimpleDatetime: SimpleDatetime,
         Calendar: Calendar,
