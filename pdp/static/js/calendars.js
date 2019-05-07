@@ -574,8 +574,8 @@
         this.datetime = datetime;
     }
     classes.addClassProperties(CalendarDatetime, {
-        toISOString: function() {
-            return this.datetime.toISOString();
+        toISOString: function(dateOnly) {
+            return this.datetime.toISOString(dateOnly);
         },
 
         toLooseString: function(dateOnly) {
@@ -699,8 +699,8 @@
             );
         },
 
-        toISOString: function() {
-            return this.toCalendarDatetime().toISOString();
+        toISOString: function(dateOnly) {
+            return this.toCalendarDatetime().toISOString(dateOnly);
         },
 
         toLooseString: function(dateOnly) {
