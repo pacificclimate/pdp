@@ -5,7 +5,7 @@
         return 'foo';
     }
 
-    nodeExport(module, {
+    condExport(module, {
         foo: foo
     }, 'nodeExportTestExporterObj');
 })();

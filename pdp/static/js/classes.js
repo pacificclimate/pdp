@@ -11,7 +11,7 @@
 // of functions. This policy is subject to review!
 
 
-// TODO: Convert to nodeExport
+// TODO: Convert to condExport
 
 module.exports = (function(window, name) {
     function classCallCheck(instance, Constructor) {

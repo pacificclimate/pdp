@@ -136,7 +136,7 @@
 
     }
 
-    nodeExport(module, canada_ex_app, 'canada_ex_app');
+    condExport(module, canada_ex_app, 'canada_ex_app');
 
     $(document).ready(canada_ex_app);
 })(jQuery);

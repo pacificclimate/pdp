@@ -1,5 +1,3 @@
-// TODO: Add tests for user input to time elements
-
 var each = require('jest-each').default;
 
 window.pdp = {
@@ -15,7 +13,7 @@ window.pdp = {
 };
 
 require('./globals-helpers').importGlobals([
-    { module: 'js/nodeExport', name: 'nodeExport' },
+    { module: 'js/condExport', name: 'condExport' },
     { module: 'js/ie8.js' },  // execute only
     { module: 'js/jquery-1.10.2.js', name: ['$', 'jQuery'] },
     { module: 'js/jquery-ui-1.10.2.custom.js' }, // execute only
