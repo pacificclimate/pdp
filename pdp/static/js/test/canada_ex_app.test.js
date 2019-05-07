@@ -13,7 +13,7 @@ window.pdp = {
 };
 
 require('./globals-helpers').importGlobals([
-    { module: 'js/condExport', name: 'condExport' },
+    // External packages
     { module: 'js/ie8.js' },  // execute only
     { module: 'js/jquery-1.10.2.js', name: ['$', 'jQuery'] },
     { module: 'js/jquery-ui-1.10.2.custom.js' }, // execute only
@@ -22,6 +22,10 @@ require('./globals-helpers').importGlobals([
     { include: 'js/OL/OpenLayers-2.13.1.debug.js' },
     { include: 'js/proj4js-compressed.js' },
     { module: 'js/lodash.core.js', name: ['_', 'lodash'] },
+
+    // Local packages
+    { module: 'js/condExport', name: 'condExport' },
+    { module: 'js/classes.js', name: 'classes' },
     { module: 'js/calendars.js', name: 'calendars' },
     { module: 'js/data-services.js', name: 'dataServices' },
     { module: 'js/pdp_dom_library.js', spread: false },

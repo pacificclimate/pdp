@@ -1,5 +1,4 @@
 /*globals classes */
-var classes = require('./classes');
 
 // TODO: This code is logical and works, but its API is hard to remember and
 // inconvenient to use. Refactor and/or add some convenience metods.
