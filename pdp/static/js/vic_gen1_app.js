@@ -12,10 +12,9 @@ $(document).ready(function () {
     ncwmsLayer = map.getClimateLayer();
     selectionLayer = map.getSelectionLayer();
 
-    catalogUrl = "../catalog/catalog.json";
-    catalog_request = $.ajax(catalogUrl, {dataType: "json"});
+    catalog_request = dataServices.getCatalog();
 
-    capabilities_request = getNCWMSLayerCapabilities(ncwmsLayer);
+    capabilities_request = dataServices.getNCWMSLayerCapabilities(ncwmsLayer);
 
     document.getElementById("pdp-controls").appendChild(getVICControls(pdp.ensemble_name));
     document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(true));
@@ -30,7 +29,7 @@ $(document).ready(function () {
 
     ncwmsLayer.events.register('change', dlLink, function () {
         processNcwmsLayerMetadata(ncwmsLayer, catalog);
-        capabilities_request = getNCWMSLayerCapabilities(ncwmsLayer);
+        capabilities_request = dataServices.getNCWMSLayerCapabilities(ncwmsLayer);
         capabilities_request.done(function(data) {
             ncwms_capabilities = data;
             if (selectionLayer.features.length > 0) {
