@@ -136,8 +136,22 @@ function getResetButton(map) {
 }
 
 function getCRMPDateRange(map) {
-    var dateRange = getDateRange(true);
-    $('#from-date, #to-date', dateRange).change(pdp.curry(dateChange, map)).change(pdp.curry(CRMPFilterChange, map));
+    var calendar = calendars['gregorian'];
+    var units = 'days';
+    var cfTimeSystem = new calendars.CfTimeSystem(
+        units,
+        new calendars.CalendarDatetime(calendar, 1870, 1, 1),
+        Math.floor((2100 - 1870 + 1) * 365.2425)
+    );
+    var startDate = cfTimeSystem.firstCfDatetime();
+    var endDate = cfTimeSystem.todayAsCfDatetime();
+
+    var dateRange = getDateRange(startDate, endDate, true, true);
+
+    $('#from-date, #to-date', dateRange)
+        .change(pdp.curry(dateChange, map))
+        .change(pdp.curry(CRMPFilterChange, map));
+
     return dateRange;
 }
 

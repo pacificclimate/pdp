@@ -177,10 +177,12 @@ function freqChange(map, e) { filterChange(freq_filter, 'freq', map, e); }
 function varChange(map, e) { filterChange(var_filter, 'stn_var', map, e); }
 
 function dateChange(map, e) {
-    var sdate = $('#from-date').val(),
-        edate = $('#to-date').val(),
-        fil = date_filter(sdate, edate);
-    map.filters.date = fil;
+    // Handle a change of start and/or end date.
+    var $startDate = $('#from-date');
+    var $endDate = $('#to-date');
+    processDateRangeInput($startDate, false, $('#from-date-error-message'))
+    processDateRangeInput($endDate, true, $('#to-date-error-message'));
+    map.filters.date = date_filter($startDate.val(), $endDate.val());
 }
 
 function polyChange(map) {
