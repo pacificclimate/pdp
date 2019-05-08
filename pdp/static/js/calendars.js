@@ -638,10 +638,20 @@
             // Return last date (start date, index `indexCount-1`) in this
             // time system as a `CfDatetime`.
             // If `indexCount` is undefined, return undefined.
+            // TODO: Should this throw an error instead?
             if (this.indexCount) {
                 return new CfDatetime(this, this.indexCount-1);
             }
             return undefined;
+        },
+
+        todayAsCfDatetime: function() {
+            // Return today's date as a `CfDatetime`.
+            var today = new Date();
+            return new CfDatetime.fromDatetime(
+                this,
+                today.getFullYear(), today.getMonth()+1, today.getDay()
+            );
         }
     }, {
     });
