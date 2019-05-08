@@ -15,10 +15,9 @@ $(document).ready(function () {
     ncwmsLayer = map.getClimateLayer();
     selectionLayer = map.getSelectionLayer();
 
-    catalogUrl = "../catalog/catalog.json";
-    catalog_request = $.ajax(catalogUrl, {dataType: "json"});
+    catalog_request = dataServices.getCatalog();
 
-    capabilities_request = getNCWMSLayerCapabilities(ncwmsLayer);
+    capabilities_request = dataServices.getNCWMSLayerCapabilities(ncwmsLayer);
 
     // Ensure that climatology_bounds are included in non-aig data downloads
     function setBoundsInUrlTemplate() {
