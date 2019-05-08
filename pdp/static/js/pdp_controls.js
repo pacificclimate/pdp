@@ -142,7 +142,8 @@ function getDateRange(omitFullTimeCheckbox) {
         );
     }
 
-    return rangeDiv;
+    // [0] converts from jQuery object to HTML element
+    return rangeDiv[0];
 }
 
 function generateMenuTree(subtree, leafNameMapping) {
@@ -210,9 +211,7 @@ var getRasterDownloadOptions = function (include_dates_selection) {
         downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get")),
         downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
     if (include_dates_selection) {
-        // [0] converts from jQuery object to HTML element
-        // Alternatively? $(downloadFieldset).append(getDateRange())
-        downloadFieldset.appendChild(getDateRange()[0]);
+        downloadFieldset.appendChild(getDateRange());
     }
     downloadFieldset.appendChild(createRasterFormatOptions());
     //downloadFieldset.appendChild(createDownloadButtons("download-buttons", "download-buttons", {"download-timeseries": "Download", "metadata": "Metadata", "permalink": "Permalink"}));
