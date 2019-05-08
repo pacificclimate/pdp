@@ -3,10 +3,12 @@ var _ = require('lodash');
 
 require('./globals-helpers').importGlobals([
     { module: 'js/lodash.core.js', name: ['_', 'lodash'] },
+    { module: 'js/condExport.js', name: 'condExport' },
+    { module: 'js/classes.js', name: 'classes' },
+    { module: 'js/calendars.js', name: 'calendars' },
     { module: 'js/pdp_raster_map.js', spread: true },
 ], '../..');
 
-var calendars = require('../calendars');
 var CalendarDatetime = calendars.CalendarDatetime;
 var CfTimeSystem = calendars.CfTimeSystem;
 var CfDatetime = calendars.CfDatetime;

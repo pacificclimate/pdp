@@ -67,7 +67,7 @@ function transferDate(date, newSystem, fallbackDate) {
     //
     // Otherwise return `fallbackDate`.
     if (!date) {
-        return new calendars.CfDatetime(newSystem, fallbackDate);
+        return fallbackDate;
     }
     if (_.isEqual(date.system, newSystem)) {
         // Same CfTimeSystem, therefore compatible, no need to create new
@@ -75,10 +75,9 @@ function transferDate(date, newSystem, fallbackDate) {
         return date;
     }
     try {
-        var prevDatetime = date.toCalendarDatetime().datetime;
+        var dt = date.toCalendarDatetime().datetime;
         var result = new calendars.CfDatetime.fromDatetime(
-            newSystem,
-            prevDatetime.year, prevDatetime.month, prevDatetime.day
+            newSystem, dt.year, dt.month, dt.day
         );
         return result;
     } catch(error) {
