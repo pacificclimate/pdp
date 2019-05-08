@@ -44,10 +44,9 @@ function setCfTimeSystemMessages(within, cfTimeSystem) {
 }
 
 
-function getDateRange(omitFullTimeCheckbox) {
-    // Unnecessary
-    var omitFullTimeCheckbox = (typeof omitFullTimeCheckbox !== 'undefined') ? omitFullTimeCheckbox : false;
-
+function getDateRange(
+    startDate, endDate, omitFullTimeCheckbox, omitTimeSystemInfo
+) {
     var rangeDiv = $(
         '<div id="date-range">' +
         '   <label id="date-range-label" for="date-range">Date Range</label>' +
@@ -85,29 +84,18 @@ function getDateRange(omitFullTimeCheckbox) {
         '</div>'
     );
 
+    if (omitTimeSystemInfo) {
+        // This could be done by omitting the HTML, but this is easy.
+        rangeDiv.find('#date-range-time-system').css({ display: 'none'});
+    }
+
     var $startDate = rangeDiv.find("#from-date");
     var $endDate = rangeDiv.find("#to-date");
 
-    // Assign a temporary time system. This should actually be based on the
-    // first ncwms (climate) layer, but that comes later.
-    var calendar = calendars['gregorian'];
-    var units = 'days';
-    var cfTimeSystem = new calendars.CfTimeSystem(
-        units,
-        new calendars.CalendarDatetime(calendar, 1870, 1, 1),
-        Math.floor((2100 - 1870 + 1) * 365.2425)
-    );
-    var today = new Date();
-
-    var startDate = calendars.CfDatetime.fromDatetime(
-        cfTimeSystem, 1950, 1, 1);
-    var endDate = calendars.CfDatetime.fromDatetime(
-        cfTimeSystem,
-        today.getFullYear(), today.getMonth()+1, today.getDay());
     setDatepicker($startDate, startDate);
     setDatepicker($endDate, endDate);
 
-    setCfTimeSystemMessages(rangeDiv, cfTimeSystem);
+    setCfTimeSystemMessages(rangeDiv, startDate.system);
 
     if (!omitFullTimeCheckbox) {
         $(
@@ -244,7 +232,20 @@ var getRasterDownloadOptions = function (include_dates_selection) {
         downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get")),
         downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
     if (include_dates_selection) {
-        downloadFieldset.appendChild(getDateRange());
+        // Assign a temporary time system. This should actually be based on the
+        // first ncwms (climate) layer, but that comes later.
+        var calendar = calendars['gregorian'];
+        var units = 'days';
+        var cfTimeSystem = new calendars.CfTimeSystem(
+            units,
+            new calendars.CalendarDatetime(calendar, 1870, 1, 1),
+            Math.floor((2100 - 1870 + 1) * 365.2425)
+        );
+        var startDate = calendars.CfDatetime.fromDatetime(
+            cfTimeSystem, 1950, 1, 1);
+        var endDate = cfTimeSystem.todayAsCfDatetime();
+
+        downloadFieldset.appendChild(getDateRange(startDate, endDate));
     }
     downloadFieldset.appendChild(createRasterFormatOptions());
     //downloadFieldset.appendChild(createDownloadButtons("download-buttons", "download-buttons", {"download-timeseries": "Download", "metadata": "Metadata", "permalink": "Permalink"}));
