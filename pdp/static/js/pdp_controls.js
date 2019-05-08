@@ -25,8 +25,6 @@ var ncwms, map;
 function setDatepicker(element, cfDate) {
     // Set a datepicker element's value.
     // Update both the input element's value and the associated cfDate datum.
-    console.log('setDatepicker: setting', element);
-    console.log('setDatepicker: to', cfDate);
     element.data('cfDate', cfDate);
     element.val(cfDate.toLooseString(true));
 }
@@ -520,7 +518,6 @@ RasterDownloadLink.prototype = {
                              raster_proj, undefined, callback);
     },
     onTimeChange: function () {
-        var cfTimeSystem = this.layer.cfTimeSystem;
         var startDate = processDateRangeInput(
             $('#from-date'), false, $('#from-date-error-message'));
         var endDate = processDateRangeInput(
