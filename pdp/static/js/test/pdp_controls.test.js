@@ -1,7 +1,11 @@
-var $ = require('../jquery-1.10.2');
-
-var pdp_controls = require('../pdp_controls');
-var RasterDownloadLink = pdp_controls.RasterDownloadLink;
+require('./globals-helpers').importGlobals([
+    { module: 'js/jquery-1.10.2.js', name: ['$', 'jQuery'] },
+    { module: 'js/lodash.core.js', name: ['_', 'lodash'] },
+    { module: 'js/condExport.js', name: 'condExport' },
+    { module: 'js/classes.js', name: 'classes' },
+    { module: 'js/calendars.js', name: 'calendars' },
+    { module: 'js/pdp_controls.js', spread: true },
+], '../..');
 
 
 describe('RasterDownloadLink', function() {
