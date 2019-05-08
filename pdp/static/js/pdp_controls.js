@@ -146,6 +146,39 @@ function getDateRange(omitFullTimeCheckbox) {
     return rangeDiv[0];
 }
 
+function processDateRangeInput($date, fallbackFlag, $error) {
+    // Process the content of a date range input element `$date` by:
+    //    - updating its associated `cfDate` data value according to the
+    //      input element content; convert it to a CfTime in the same
+    //      CF time system as the existing data value
+    //    - updating the error element `$error` according to success or
+    //      failure of the conversion
+    // If the date input element contains invalid content:
+    //  - use the date specified by `fallbackFlag`: falsy => first date
+    //      in CF time system; truthy => last date.
+    //  - set an error message
+    // Finally, return the actual date set (from input or fallback if error).
+    var cfTimeSystem = $date.data('cfDate').system;
+
+    var date;
+    try {
+        date = calendars.CfDatetime.fromLooseFormat(cfTimeSystem, $date.val());
+        $error.addClass('inactive');
+        $error.find('span').html('');
+    } catch(error) {
+        date = fallbackFlag ?
+            cfTimeSystem.lastCfDatetime() :
+            cfTimeSystem.firstCfDatetime();
+        $error.removeClass('inactive');
+        $error.find('span').html(error.message);
+    }
+
+    $date.data('cfDate', date);
+
+    return date;
+}
+
+
 function generateMenuTree(subtree, leafNameMapping) {
     var ul = $("<ul/>");
     /*jslint unparam: true*/
@@ -356,6 +389,7 @@ Colorbar.prototype = {
     }
 };
 
+
 function RasterDownloadLink(element, layer, catalog, ext, varname, trange, yrange, xrange) {
     this.element = element;
     this.layer = layer;
@@ -486,37 +520,9 @@ RasterDownloadLink.prototype = {
     },
     onTimeChange: function () {
         var cfTimeSystem = this.layer.cfTimeSystem;
-
-        function processInput($date, fallbackFlag, $error) {
-            // Return the content of the date input element `$date`
-            // as a CfDatetime.
-            // If the date input element contains invalid content:
-            //  - use the date specified by `fallbackFlag`: falsy => first date
-            //      in CF time system; truthy => last date.
-            //  - set an error message
-            var date;
-            try {
-                date = calendars.CfDatetime.fromLooseFormat(
-                    cfTimeSystem, $date.val()
-                );
-                $error.addClass('inactive');
-                $error.find('span').html('');
-            } catch(error) {
-                date = fallbackFlag ?
-                    cfTimeSystem.lastCfDatetime() :
-                    cfTimeSystem.firstCfDatetime();
-                $error.removeClass('inactive');
-                $error.find('span').html(error.message);
-            }
-
-            $date.data('cfDate', date);
-
-            return date;
-        }
-
-        var startDate = processInput(
+        var startDate = processDateRangeInput(
             $('#from-date'), false, $('#from-date-error-message'));
-        var endDate = processInput(
+        var endDate = processDateRangeInput(
             $('#to-date'), true, $('#to-date-error-message'));
 
         this.trange = startDate.toIndex() + ':' + endDate.toIndex();
@@ -565,6 +571,7 @@ condExport(module, {
     setCfTimeSystemMessages: setCfTimeSystemMessages,
     setDatepicker: setDatepicker,
     getDateRange: getDateRange,
+    processDateRangeInput: processDateRangeInput,
     generateMenuTree: generateMenuTree,
     getRasterAccordionMenu: getRasterAccordionMenu,
     getArchiveDisclaimer: getArchiveDisclaimer,
