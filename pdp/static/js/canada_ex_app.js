@@ -84,7 +84,7 @@
 
         ncwmsLayer.events.register('change', dlLink, function () {
             processNcwmsLayerMetadata(ncwmsLayer, catalog);
-            capabilities_request = getNCWMSLayerCapabilities(ncwmsLayer);
+            capabilities_request = dataServices.getNCWMSLayerCapabilities(ncwmsLayer);
             capabilities_request.done(function(data) {
                 ncwms_capabilities = data;
                 if (selectionLayer.features.length > 0) {
