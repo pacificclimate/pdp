@@ -75,6 +75,7 @@ function getDateRange(
         '               since ' +
         '               <span id="date-range-ts-start-date" class="value"/>' +
         '               \n(up to ' +
+        '               <span id="date-range-ts-max-date"/>)' +
         '           </div>' +
         '       </div>' +
         '   </div>' +

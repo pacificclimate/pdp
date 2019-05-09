@@ -76,6 +76,15 @@ $.ajax = function() {
     return response;
 };
 
+// The following lets us check whether there are any actual OpenLayers HTTP
+// requests.
+var OLXHR = OpenLayers.XMLHttpRequest;
+OpenLayers.XMLHttpRequest = function() {
+    console.log('OpenLayers.XMLHttpRequest: request', arguments);
+    var response = OLXHR.apply(arguments);
+    return response;
+};
+
 describe('app', function () {
     beforeEach(function () {
         // Reset the DOM (jsdom)
@@ -212,7 +221,7 @@ describe('app', function () {
                 describe('calendar', function () {
                     var $msg;
                     beforeEach(function () {
-                        $msg = $('#date-range-ts-calendar span');
+                        $msg = $('#date-range-calendar .value');
                     });
 
                     it('exists', function () {
@@ -282,7 +291,7 @@ describe('app', function () {
                                 var $error = $(selector + '-error-message');
                                 expect($error.length).toBe(1);
                                 expect($error.hasClass('inactive')).toBe(true);
-                                var $errorMsg = $(selector + '-error-message span');
+                                var $errorMsg = $(selector + '-error-message .value');
                                 expect($errorMsg.length).toBe(1);
                                 expect($errorMsg.text()).toMatch(/^\s*$/);
                             });
@@ -336,7 +345,7 @@ describe('app', function () {
                             it('shows an error message', function () {
                                 var $error = $(selector + '-error-message');
                                 expect($error.length).toBe(1);
-                                var $errorMsg = $(selector + '-error-message span');
+                                var $errorMsg = $(selector + '-error-message .value');
                                 expect($errorMsg.length).toBe(1);
                                 expect($error.hasClass('inactive')).toBe(false);
                                 expect($errorMsg.text()).toMatch('not in acceptable date-time format');
