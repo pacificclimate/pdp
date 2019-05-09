@@ -31,8 +31,8 @@ function setDatepicker(element, cfDate) {
 
 function setCfTimeSystemMessages(within, cfTimeSystem) {
     var calendar = cfTimeSystem.startDate.calendar;
-    within.find('#date-range-ts-calendar span')
-        .html(calendar.name + ' (' + calendar.type + ')');
+    within.find('#date-range-calendar .value')
+        .html(calendar.name + ' (\'' + calendar.type + '\')');
     within.find('#date-range-ts-units')
         .text(cfTimeSystem.units);
     within.find('#date-range-ts-start-date')
@@ -59,23 +59,22 @@ function getDateRange(
         '   <div id="date-range-messages">' +
         '       <div id="date-range-error-messages">' +
         '           <div id="from-date-error-message" class="inactive">' +
-        '               From date: <span/>' +
+        '               <span class="label">From date: </span><span class="value"/>' +
         '           </div>' +
         '           <div id="to-date-error-message" class="inactive">' +
-        '               To date: <span/>' +
+        '               <span class="label">To date: </span><span class="value"/>' +
         '           </div>' +
         '       </div>' +
-        '       <div id="date-range-time-system">' +
-        '           <div id="date-range-ts-calendar">' +
-        '               Calendar: <span/>' +
+        '       <div id="date-range-annotations">' +
+        '           <div id="date-range-calendar">' +
+        '               <span class="label">Calendar: </span><span class="value"/>' +
         '           </div>' +
         '           <div id="date-range-ts">' +
-        '               Time System:' +
-        '               <span id="date-range-ts-units"></span>' +
+        '               <span class="label">Time System: </span>' +
+        '               <span id="date-range-ts-units" class="value"/>' +
         '               since ' +
-        '               <span id="date-range-ts-start-date"></span>' +
-        '               (Max date: ' +
-        '               <span id="date-range-ts-max-date"></span>)' +
+        '               <span id="date-range-ts-start-date" class="value"/>' +
+        '               \n(up to ' +
         '           </div>' +
         '       </div>' +
         '   </div>' +
@@ -84,7 +83,7 @@ function getDateRange(
 
     if (omitTimeSystemInfo) {
         // This could be done by omitting the HTML, but this is easy.
-        rangeDiv.find('#date-range-time-system').css({ display: 'none'});
+        rangeDiv.find('#date-range-annotations').css({ display: 'none'});
     }
 
     var $startDate = rangeDiv.find("#from-date");
@@ -150,13 +149,13 @@ function processDateRangeInput($date, fallbackFlag, $error) {
     try {
         date = calendars.CfDatetime.fromLooseFormat(cfTimeSystem, $date.val());
         $error.addClass('inactive');
-        $error.find('span').html('');
+        $error.find('.value').html('');
     } catch(error) {
         date = fallbackFlag ?
             cfTimeSystem.lastCfDatetime() :
             cfTimeSystem.firstCfDatetime();
         $error.removeClass('inactive');
-        $error.find('span').html(error.message);
+        $error.find('.value').html(error.message);
     }
 
     $date.data('cfDate', date);

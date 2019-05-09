@@ -78,8 +78,20 @@ select {
 }
 
 #date-range-messages {
-    margin-left: 1em;
+    margin-left: 2em;
     font-size: 0.9em;
+    text-indent: -1em;
+}
+
+#date-range-messages .label {
+    font-style: italic;
+}
+
+#date-range-messages .value {
+}
+
+#date-range-ts {
+    white-space: pre-line;
 }
 
 #date-range-messages .inactive {
