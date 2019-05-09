@@ -47,22 +47,6 @@ var dataServices = require('../../js/data-services');
 var docBody = document.body;
 
 
-describe('jQuery data', function () {
-    document.body.innerHTML = '<div></div>';
-    var $elt = $('div');
-
-    it('can set and retrieve string data', function () {
-        $elt.data('test', 'TEST');
-        expect($elt.data('test')).toBe('TEST');
-    });
-
-    it('can set and retrieve object data', function () {
-        $elt.data('test', { a: 1, b: 2 });
-        expect($elt.data('test')).toEqual({ a: 1, b: 2 });
-    });
-});
-
-
 // The following lets us check whether there are any actual $.ajax() calls.
 // At this time, all data service calls are mocked
 // in `__mocks__/data-services.js`.
@@ -84,6 +68,7 @@ OpenLayers.XMLHttpRequest = function() {
     var response = OLXHR.apply(arguments);
     return response;
 };
+
 
 describe('app', function () {
     beforeEach(function () {
@@ -161,10 +146,6 @@ describe('app', function () {
         logDownloadDates();
     }
 
-    test('mocking', function () {
-        resolveAlldataServices();
-    });
-
     describe('Download form', function () {
         var $downloadForm;
 
@@ -172,12 +153,8 @@ describe('app', function () {
             $downloadForm = $('#download-form');
         });
 
-        it('exists', function () {
-            expect($downloadForm.length).toBe(1);
-        });
-
         describe('date inputs', function () {
-            describe('setup', function () {
+            describe('initial values', function () {
                 each([
                     ['before data services resolve', function() {}],
                     ['after data services resolve', resolveAlldataServices],
@@ -190,11 +167,6 @@ describe('app', function () {
                         ['#from-date', 1950],
                         ['#to-date', (new Date()).getFullYear()],
                     ]).describe('%s', function (selector, year) {
-
-                        it('exists', function () {
-                            var $date = $downloadForm.find(selector);
-                            expect($date.length).toBe(1);
-                        });
 
                         it('has expected element content', function () {
                             var $date = $downloadForm.find(selector);
@@ -211,41 +183,6 @@ describe('app', function () {
                         });
                     });
                 });
-            });
-
-            describe('messages', function () {
-                beforeEach(function () {
-                    resolveAlldataServices();
-                });
-
-                describe('calendar', function () {
-                    var $msg;
-                    beforeEach(function () {
-                        $msg = $('#date-range-calendar .value');
-                    });
-
-                    it('exists', function () {
-                        expect($msg.length).toBe(1);
-                    });
-
-                    it('indicates the expected calendar', function () {
-                        var msg = $msg.text();
-                        expect(msg).toMatch('Fixed 365-day');
-                    });
-                });
-
-                describe('time system', function () {
-                    it('indicates the expected units-since', function () {
-                        var msg = $('#date-range-ts').text();
-                        expect(msg).toMatch(/days\s+since\s+1950-01-01/);
-                    });
-
-                    it('indicates the expected max date', function () {
-                        var msg = $('#date-range-ts-max-date').text();
-                        expect(msg).toMatch('2100-12-31');
-                    });
-                });
-
             });
 
             describe('user interaction', function () {
@@ -356,14 +293,51 @@ describe('app', function () {
             });
         });
 
+        describe('annotations', function () {
+            beforeEach(function () {
+                resolveAlldataServices();
+            });
+
+            describe('calendar', function () {
+                var $msg;
+                beforeEach(function () {
+                    $msg = $('#date-range-calendar .value');
+                });
+
+                it('exists', function () {
+                    expect($msg.length).toBe(1);
+                });
+
+                it('indicates the expected calendar', function () {
+                    var msg = $msg.text();
+                    expect(msg).toMatch('Fixed 365-day');
+                });
+            });
+
+            describe('time system', function () {
+                it('indicates the expected units-since', function () {
+                    var msg = $('#date-range-ts').text();
+                    expect(msg).toMatch(/days\s+since\s+1950-01-01/);
+                });
+
+                it('indicates the expected max date', function () {
+                    var msg = $('#date-range-ts-max-date').text();
+                    expect(msg).toMatch('2100-12-31');
+                });
+            });
+
+        });
+
         describe('Download Full Timeseries checkbox', function () {
             it('exists', function () {
                 var $checkbox = $downloadForm.find('#download-full-timeseries');
                 expect($checkbox.length).toBeGreaterThan(0);
             });
 
-            describe('sets start and end dates correctly when checked', function () {
-                resolveAlldataServices();
+            describe('sets inputs correctly when checked', function () {
+                beforeEach(function() {
+                    resolveAlldataServices();
+                });
 
                 // We have to use a function to specify the value of
                 // `expectedCfDate` because values set in beforeEach (here,
