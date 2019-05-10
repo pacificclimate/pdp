@@ -41,6 +41,50 @@ function makeMockGet(name, defaultData, autoResolve) {
 }
 
 
+function mock$ajax(config) {
+    // Replace jQuery.ajax() with a mock call that can log and/or
+    // throw an error if such a request is made. This makes it easy to find
+    // places in code where unmocked requests are being issued.
+    var $ajax = $.ajax;
+    $.ajax = function() {
+        if (config.log) {
+            console.log('$.ajax(): request', arguments);
+        }
+        if (config.throw) {
+            throw new Error('Unexpected $.ajax()')
+        }
+        var response = $ajax.apply(arguments);
+        response.done(function () {
+            if (config.log) {
+                console.log('$.ajax(): response', arguments, response);
+            }
+        });
+        return response;
+    };
+}
+
+
+function mockOLXMLHttpRequest(config) {
+    // Replace OpenLayers.XMLHttpRequest() with a mock call that can log and/or
+    // throw an error if such a request is made. This makes it easy to find
+    // places in code where unmocked requests are being issued.
+    // We don't log responses in this one, because lazy ...
+    var OLXHR = OpenLayers.XMLHttpRequest;
+    OpenLayers.XMLHttpRequest = function() {
+        if (config.log) {
+            console.log('OpenLayers.XMLHttpRequest(): request', arguments);
+        }
+        if (config.throw) {
+            throw new Error('Unexpected OpenLayers.XMLHttpRequest()')
+        }
+        var response = OLXHR.apply(arguments);
+        return response;
+    };
+}
+
+
 module.exports = {
-    makeMockGet: makeMockGet
+    makeMockGet: makeMockGet,
+    mock$ajax: mock$ajax,
+    mockOLXMLHttpRequest: mockOLXMLHttpRequest
 };

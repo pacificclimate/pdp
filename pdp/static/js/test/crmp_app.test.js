@@ -27,9 +27,13 @@ require('./globals-helpers').importGlobals([
     { module: 'js/pdp_raster_map.js', spread: true },
     { module: 'js/pdp_vector_map.js', spread: true },
 
-    // Statistically Downscaled GCM Scenarios apps
-    { module: 'js/canada_ex_map.js', spread: true },
-    { module: 'js/canada_ex_app.js', name: 'canada_ex_app' },
+    // BC Station Data - PCDS app
+    { module: 'js/crmp_map.js', spread: true },
+    { module: 'js/crmp_controls.js', spread: true },
+    { module: 'js/crmp_download.js', spread: true },
+    { module: 'js/crmp_filters.js', spread: true },
+    { module: 'js/crmp_app.js', name: 'crmp_app' },
+
 ], '../..');
 
 var dateFilterTests = require('./date-filter-tests');
@@ -44,30 +48,36 @@ mockHelpers.mock$ajax({ log: true, throw: true });
 mockHelpers.mockOLXMLHttpRequest({ log: true, throw: true });
 
 
-var beforeCalendar = calendars['gregorian'];
-var beforeUnits = 'days';
-var beforeDefaultCfTimeSystem = new calendars.CfTimeSystem(
-    beforeUnits,
-    new calendars.CalendarDatetime(beforeCalendar, 1870, 1, 1),
+var calendar = calendars['gregorian'];
+var units = 'days';
+var defaultCfTimeSystem = new calendars.CfTimeSystem(
+    units,
+    new calendars.CalendarDatetime(calendar, 1870, 1, 1),
     Math.floor((2100 - 1870 + 1) * 365.2425)
 );
+var defaultStartDate = defaultCfTimeSystem.firstCfDatetime();
+var defaultEndDate = defaultCfTimeSystem.todayAsCfDatetime();
 
-var afterCalendar = calendars['365_day'];
-var afterUnits = 'days';
-var afterDefaultCfTimeSystem = new calendars.CfTimeSystem(
-    afterUnits,
-    new calendars.CalendarDatetime(afterCalendar, 1870, 1, 1),
-    Math.floor((2100 - 1870 + 1) * 365)
-);
-
-dateFilterTests(canada_ex_app, {
-    defaultCfTimeSystem: afterDefaultCfTimeSystem,
+dateFilterTests(crmp_app, {
+    defaultCfTimeSystem: defaultCfTimeSystem,
     defaultStartDate: {
-        before: calendars.CfDatetime.fromDatetime(beforeDefaultCfTimeSystem, 1950, 1, 1),
-        after: calendars.CfDatetime.fromDatetime(afterDefaultCfTimeSystem, 1950, 1, 1)
+        before: defaultStartDate,
+        after: defaultStartDate
     },
     defaultEndDate: {
-        before: beforeDefaultCfTimeSystem.todayAsCfDatetime(),
-        after: afterDefaultCfTimeSystem.todayAsCfDatetime()
-    }
+        before: defaultEndDate,
+        after: defaultEndDate
+    },
+    omitsDownloadDataLink: true,
+    omitsloadFullTimeSeriesCheckbox: true,
+});
+
+
+//////////////////////////////////////////////////////////////////
+describe('', function () {
+    beforeEach(function () {
+    });
+
+    it('', function () {
+    });
 });
