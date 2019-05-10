@@ -201,3 +201,24 @@ function hasClimaChange(map, e) {
     }
 }
 
+condExport(module, {
+    net_filter: net_filter,
+    date_filter: date_filter,
+    freq_filter: freq_filter,
+    var_filter: var_filter,
+    has_climatology_filter: has_climatology_filter,
+    polygon_filter: polygon_filter,
+    update_station_count: update_station_count,
+    update_record_length: update_record_length ,
+    update_filter_layer: update_filter_layer,
+    CRMPFilterChange: CRMPFilterChange,
+    filter_append: filter_append,
+    filter_clear: filter_clear,
+    filterChange: filterChange,
+    netChange: netChange,
+    freqChange: freqChange,
+    varChange: varChange,
+    dateChange: dateChange,
+    polyChange: polyChange,
+    hasClimaChange: hasClimaChange,
+});

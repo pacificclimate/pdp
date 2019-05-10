@@ -210,3 +210,17 @@ function downloadMetadata(e, map) {
     url = url + '&' + $.param(params);
     window.open(url);
 }
+
+condExport(module, {
+    createVariableOptions: createVariableOptions,
+    createNetworkHelpItem: createNetworkHelpItem,
+    getNetworkHelpRecursive: getNetworkHelpRecursive,
+    getNetworkHelp: getNetworkHelp,
+    createNetworkOptions: createNetworkOptions,
+    createFrequencyOptions: createFrequencyOptions,
+    getClimatologyCheckbox: getClimatologyCheckbox,
+    getResetButton: getResetButton,
+    getCRMPDateRange: getCRMPDateRange,
+    getCRMPControls: getCRMPControls,
+    downloadMetadata: downloadMetadata,
+});
