@@ -68,6 +68,28 @@
     }
 
 
+    function getStationCount(data, success) {
+        return $.ajax({
+            url: '../count_stations',
+            data: data,
+            type: 'GET',
+            dataType: 'json',
+            success: success
+        });
+    }
+
+
+    function getRecordLength(data, success) {
+        return $.ajax({
+            url: '../record_length',
+            data: data,
+            type: 'GET',
+            dataType: 'json',
+            success: success
+        });
+    }
+
+
     condExport(module, {
         getCatalog: getCatalog,
         getMetadata: getMetadata,

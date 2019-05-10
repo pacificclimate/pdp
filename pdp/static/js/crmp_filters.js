@@ -97,12 +97,8 @@ function update_station_count(box) {
         box.readonly = 'readonly';
     }
 
-    $.ajax({'url': '../count_stations',
-            'data': $('form').serialize(),
-            'type': 'GET',
-            'dataType': 'json',
-            'success': success
-           });
+    // TODO: Replace callback with .done
+    dataServices.getStationCount($('form').serialize(), success);
 }
 
 function update_record_length(box) {
@@ -119,13 +115,8 @@ function update_record_length(box) {
         box.readonly = 'readonly';
     }
 
-    $.ajax({'url': '../record_length',
-            'data': $('form').serialize(),
-            'type': 'GET',
-            'dataType': 'json',
-            'success': success
-           }
-          );
+    // TODO: Replace callback with .done
+    dataServices.getRecordLength($('form').serialize(), success);
 }
 
 function update_filter_layer(map) {

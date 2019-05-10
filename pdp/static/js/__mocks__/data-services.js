@@ -521,6 +521,15 @@ var ncwmsLayerDAS = ['Attributes {\n' +
 '}'];
 var getNcwmsLayerDAS = makeMockGet('NcwmsLayerDAS', ncwmsLayerDAS);
 
+
+var stationCount = { stations_selected: 1000 };
+var getStationCount = makeMockGet('StationCount', stationCount, true);
+
+
+var recordLength = { climo_length: 1001, record_length: 1002 };
+var getRecordLength = makeMockGet('RecordLength', recordLength, true);
+
+
 module.exports = {
     getCatalog: getCatalog,
     getMetadata: getMetadata,
@@ -528,6 +537,8 @@ module.exports = {
     getNCWMSLayerCapabilities: getNCWMSLayerCapabilities,
     getNcwmsLayerDDS: getNcwmsLayerDDS,
     getNcwmsLayerDAS: getNcwmsLayerDAS,
+    getStationCount: getStationCount,
+    getRecordLength: getRecordLength,
 };
 
 
