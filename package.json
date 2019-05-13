@@ -10,6 +10,7 @@
     "xml-js": "^1.6.11"
   },
   "scripts": {
-    "reinstall": "rm -rf ./node_modules && npm install"
+    "reinstall": "rm -rf ./node_modules && npm install",
+    "test": "jest"
   }
 }
