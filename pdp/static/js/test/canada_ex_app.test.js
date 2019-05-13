@@ -56,8 +56,8 @@ var afterCalendar = calendars['365_day'];
 var afterUnits = 'days';
 var afterDefaultCfTimeSystem = new calendars.CfTimeSystem(
     afterUnits,
-    new calendars.CalendarDatetime(afterCalendar, 1870, 1, 1),
-    Math.floor((2100 - 1870 + 1) * 365)
+    new calendars.CalendarDatetime(afterCalendar, 1950, 1, 1),
+    Math.floor((2100 - 1950 + 1) * 365)
 );
 
 dateFilterTests(canada_ex_app, {
