@@ -1,5 +1,38 @@
 var each = require('jest-each').default;
 
+function logDownloadDates() {
+    // For debugging. Now disabled.
+    return;
+    var fromDate = getDownloadCfDate('#from-date');
+    var toDate = getDownloadCfDate('#to-date');
+    console.log(
+        '#from-date', fromDate && fromDate.toLooseString(true),
+        '#to-date', toDate && toDate.toLooseString(true)
+    );
+}
+
+function resolveAlldataServices() {
+    logDownloadDates();
+    dataServices.getMetadata.resolveWithDefault();
+    logDownloadDates();
+    dataServices.getCatalog.resolveWithDefault();
+    logDownloadDates();
+    dataServices.getNCWMSLayerCapabilities.resolveWithDefault();
+    logDownloadDates();
+    dataServices.getNcwmsLayerDDS.resolveWithDefault();
+    logDownloadDates();
+    dataServices.getNcwmsLayerDAS.resolveWithDefault();
+    logDownloadDates();
+}
+
+function resetAllDataServices() {
+    dataServices.getMetadata.reset();
+    dataServices.getCatalog.reset();
+    dataServices.getNCWMSLayerCapabilities.reset();
+    dataServices.getNcwmsLayerDDS.reset();
+    dataServices.getNcwmsLayerDAS.reset();
+}
+
 function dateFilterTests(
     app, config
 ) {
@@ -39,7 +72,7 @@ function dateFilterTests(
                 '        </ul>' +
                 '     </div><!-- /footer -->' +
                 '</div><!-- /wrapper -->';
-
+            resetAllDataServices();
             app();
         });
 
@@ -52,31 +85,6 @@ function dateFilterTests(
             var $downloadForm = $('#download-form');
             var $date = $downloadForm.find(selector);
             return $date.data('cfDate');
-        }
-
-        function logDownloadDates() {
-            // For debugging. Now disabled.
-            return;
-            var fromDate = getDownloadCfDate('#from-date');
-            var toDate = getDownloadCfDate('#to-date');
-            console.log(
-                '#from-date', fromDate && fromDate.toLooseString(true),
-                '#to-date', toDate && toDate.toLooseString(true)
-            );
-        }
-
-        function resolveAlldataServices() {
-            logDownloadDates();
-            dataServices.getMetadata.resolveWithDefault();
-            logDownloadDates();
-            dataServices.getCatalog.resolveWithDefault();
-            logDownloadDates();
-            dataServices.getNCWMSLayerCapabilities.resolveWithDefault();
-            logDownloadDates();
-            dataServices.getNcwmsLayerDDS.resolveWithDefault();
-            logDownloadDates();
-            dataServices.getNcwmsLayerDAS.resolveWithDefault();
-            logDownloadDates();
         }
 
         describe('Download form', function () {
@@ -200,7 +208,6 @@ function dateFilterTests(
                                     $date = $downloadForm.find(selector);
                                     $date.val(dateString);
                                     $date.change();
-                                    console.log('TTTTTTTTT $date.val()', $date.val())
                                 });
 
                                 it('sets cfDate as expected', function () {
@@ -337,6 +344,7 @@ function dateFilterTests(
             describe('Data Download link', function () {
                 var $link;
                 beforeEach(function () {
+                    resolveAlldataServices();
                     $link = $('#download-timeseries');
                 });
 
