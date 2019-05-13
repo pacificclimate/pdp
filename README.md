@@ -127,10 +127,23 @@ pyenv/bin/py.test -vv --tb=short tests
 
 ### Development
 
-Provided you installed everything with `tox`, you should be able to run a development server with
+Provided you installed everything with `tox`, you should be able to run a development server as follows:
+
+First set up the environment variables that do not default to usable values. 
+Obtain the user ID's and passwords necessary for the two databases from PCIC IT.
+We typically use port 8000 but any port will do.
 
 ```bash
-devenv/bin/python scripts/rast_serve -p <port> [-t]
+export DSN=postgresql://<USER>:<PASSWORD>@db3.pcic.uvic.ca/pcic_meta
+export DATA_ROOT=http://127.0.0.1:<PORT>/data
+export PCDS_DSN=postgresql://<USER>:<PASSWORD>@db3.pcic.uvic.ca/crmp
+export APP_ROOT=http://127.0.0.1:<PORT>
+```
+
+Run the server:
+
+```bash
+devenv/bin/python scripts/rast_serve.py -p <PORT> [-t]
 ```
 
 ### Production
