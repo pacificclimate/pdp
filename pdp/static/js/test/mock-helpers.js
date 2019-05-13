@@ -29,13 +29,16 @@ function makeMockGet(name, defaultData, autoResolve) {
     get.deferred = deferred;
 
     get.resolveWithDefault = function () {
-        console.log('## resolving', name);
         deferred.resolve(defaultData);
     };
 
     if (autoResolve) {
         get.resolveWithDefault();
     }
+
+    get.reset = function () {
+        deferred = $.Deferred();
+    };
 
     return get;
 }
