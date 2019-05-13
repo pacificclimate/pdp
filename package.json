@@ -1,0 +1,16 @@
+{
+  "name": "pdp",
+  "version": "1.0.0",
+  "devDependencies": {
+    "jest": "^24.7.1",
+    "jest-canvas-mock": "^2.0.0",
+    "jest-each": "^24.7.1",
+    "jest-environment-jsdom-fourteen": "^0.1.0",
+    "lodash": "^4.17.11",
+    "xml-js": "^1.6.11"
+  },
+  "scripts": {
+    "reinstall": "rm -rf ./node_modules && npm install",
+    "test": "jest"
+  }
+}
