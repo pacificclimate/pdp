@@ -1,4 +1,4 @@
-// A test user of es6export
+// A test user of condExport
 
 (function () {
     function foo() {
