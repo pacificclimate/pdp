@@ -43,6 +43,8 @@
 //
 // Alternatively, without the revealing module pattern:
 //
+// Use case (1):
+//
 //     function a() {
 //         // ...
 //     }
@@ -57,6 +59,26 @@
 //         b: b,
 //         c: c
 //     }, 'myModule');
+//
+// In the browser, this results in the following:
+//
+// - `a`, `b`, and `c` are all defined on the global object.
+// - `myModule` is defined on the global object, containing properties `b`, `c`.
+// - Yuck. But not actually erroneous.
+//
+// Use case (2):
+//
+//     ...
+//
+//     condExport(module, {
+//         b: b,
+//         c: c
+//     });
+//
+// In the browser, this results in the following:
+//
+// - `a`, `b`, and `c` are all defined on the global object.
+// - Yuck. But not actually erroneous.
 
 
 // To prevent problems in the browser environment, we must declare `module`.
