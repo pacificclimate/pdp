@@ -1,0 +1,22 @@
+{
+  "name": "pdp_frontend_js_tests",
+  "version": "1.0.0",
+  "description": "Tests for the PDP frontend JS. Only the tests are a Node project; the frontend proper is served by a Python app",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pacificclimate/pdp"
+  },
+  "devDependencies": {
+    "jest": "^24.7.1",
+    "jest-canvas-mock": "^2.0.0",
+    "jest-each": "^24.7.1",
+    "jest-environment-jsdom-fourteen": "^0.1.0",
+    "lodash": "^4.17.11",
+    "xml-js": "^1.6.11"
+  },
+  "scripts": {
+    "reinstall": "rm -rf ./node_modules && npm install",
+    "test": "jest"
+  }
+}
