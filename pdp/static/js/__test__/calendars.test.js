@@ -1,5 +1,3 @@
-var each = require('jest-each').default;
-
 require('./globals-helpers').importGlobals([
     { module: 'js/condExport', name: 'condExport' },
     { module: 'js/classes.js', name: 'classes' },
@@ -38,20 +36,20 @@ function leapDaysSinceEpoch(calendar, year) {
 
 
 describe('formatDatetimeRaw', function () {
-    each([
+    it.each([
         [1900, 1, 2, 3, 4, 5, '1900-1-2T3-4-5'],
         [undefined, 1, 2, 3, 4, 5, 'undefined-1-2T3-4-5'],
-    ]).it('%#',
+    ])('%#',
         function (year, month, day, hour, minute, second, expected) {
             expect(formatDatetimeRaw(
                 year, month, day, hour, minute, second
             )).toBe(expected);
-        });
+    });
 });
 
 
 describe('formatDatetimeISO8601', function () {
-    each([
+    it.each([
         [1900, 1, 2, 3, 4, 5, '1900-01-02T03:04:05'],
         [1900, 11, 12, 13, 14, 15, '1900-11-12T13:14:15'],
         [undefined, 11, 12, 13, 14, 15, ''],
@@ -60,17 +58,17 @@ describe('formatDatetimeISO8601', function () {
         [1900, 11, 12, undefined, 14, 15, '1900-11-12'],
         [1900, 11, 12, 13, undefined, 15, '1900-11-12T13'],
         [1900, 11, 12, 13, 14, undefined, '1900-11-12T13:14'],
-    ]).it('%#',
+    ])('%#',
         function (year, month, day, hour, minute, second, expected) {
             expect(formatDatetimeISO8601(
                 year, month, day, hour, minute, second
             )).toBe(expected);
-        });
+    });
 });
 
 
 describe('all classes', function () {
-    each([
+    describe.each([
         SimpleDatetime,
         Calendar,
         GregorianCalendar,
@@ -79,7 +77,7 @@ describe('all classes', function () {
         CalendarDatetime,
         CfTimeSystem,
         CfDatetime
-    ]).describe('%s', function (Class) {
+    ])('%s', function (Class) {
         it('cannot be called as a function', function () {
             expect(function () {
                 Class();
@@ -112,19 +110,21 @@ describe('SimpleDatetime', function () {
 
 
     describe('fromIso8601', function () {
-        each([
+        it.each([
             ['1900-01-02T06:07:08', 1900, 1, 2, 6, 7, 8],
             ['1900-1-2T6:7:8', 1900, 1, 2, 6, 7, 8],
             ['1900-01-02', 1900, 1, 2, 0, 0, 0],
             ['1900-01', 1900, 1, 0, 0, 0, 0],
             ['1900', 1900, 1, 0, 0, 0, 0],
-        ]).it('parses the valid string %s',
+        ])('parses the valid string %s',
             function (string, year, month, day, hour, minute, second) {
-            var expected = new SimpleDatetime(year, month, day, hour, minute, second);
-            expect(SimpleDatetime.fromIso8601(string)).toEqual(expected);
-        });
+                var expected = new SimpleDatetime(
+                  year, month, day, hour, minute, second);
+                expect(SimpleDatetime.fromIso8601(string)).toEqual(expected);
+            }
+        );
 
-        each([
+        it.each([
             'x',
             'xxxx',
             '190',
@@ -132,10 +132,12 @@ describe('SimpleDatetime', function () {
             '1900-x',
             '1900-01-xx',
             '1900-01-02Txx',
-        ]).it('returns null for the invalid string %s',
+        ])('returns null for the invalid string %s',
             function (string) {
-            expect(function() { SimpleDatetime.fromIso8601(string) }).toThrow();
-        });
+                expect(function() { SimpleDatetime.fromIso8601(string) })
+                    .toThrow();
+            }
+        );
     });
 });
 
@@ -144,7 +146,7 @@ describe('Calendar', function () {
     var calendar = new Calendar();
 
     describe('isValidTime', function () {
-        each([
+        it.each([
             // one undefined
             [undefined, 1, 2, false],
             [1, undefined, 2, false],
@@ -167,10 +169,11 @@ describe('Calendar', function () {
             [24, 0, 0, false],
             [0, 60, 0, false],
             [0, 0, 60, false],
-        ]).it('%d-%d-%d: %s',
+        ])('%d-%d-%d: %s',
             function (hour, minute, second, expected) {
                 expect(calendar.isValidTime(hour, minute, second)).toBe(expected);
-            });
+            }
+        );
     });
 
 });
@@ -188,7 +191,7 @@ describe('GregorianCalendar', function () {
     });
 
     describe('isValidDate', function () {
-        each([
+        it.each([
             [undefined, 1, 1, false],
             [1900, undefined, 1, false],
             [1900, 1, undefined, true],
@@ -206,29 +209,31 @@ describe('GregorianCalendar', function () {
 
             [1901, 2, 28, true],
             [1901, 2, 29, false],
-        ]).it('%d-%d-%d: %s',
+        ])('%d-%d-%d: %s',
             function (year, month, day, expected) {
                 expect(calendar.isValidDate(year, month, day)).toBe(expected);
-            });
+            }
+        );
     });
 
     describe('validateDatetime', function () {
-        each([
+        it.each([
             [undefined, 1, 1, 1, 1, 1],
             [1901, 2, 29, 1, 1, 1],
             [1901, 1, 1, 99, 1, 1],
-        ]).it('',
+        ])('',
             function (year, month, day, hour, minute, second) {
                 expect(
                     function () {
                         calendar.validateDatetime(year, month, day, hour, minute, second)
                     }
                 ).toThrow();
-            });
+            }
+        );
     });
 
     describe('isLeapYear', function () {
-        each([
+        it.each([
             [1600, true],
             [1700, false],
             [1800, false],
@@ -242,39 +247,41 @@ describe('GregorianCalendar', function () {
             [2002, false],
             [2003, false],
             [2004, true],
-        ]).it('correctly determines if %d is a leap year',
+        ])('correctly determines if %d is a leap year',
             function (year, expected) {
                 expect(calendar.isLeapYear(year)).toBe(expected);
             });
     });
 
     describe('daysPerYear', function () {
-        each([
+        it.each([
             [1900, 365],
             [1901, 365],
             [2000, 366],
-        ]).it('correctly returns the number of days for year %d',
+        ])('correctly returns the number of days for year %d',
             function (year, days) {
                 expect(calendar.daysPerYear(year)).toBe(days);
-            });
+            }
+        );
     });
 
     describe('daysPerMonth', function () {
-        each([
+        it.each([
             [1900, 1, 31],
             [1900, 2, 28],
             [1900, 3, 31],
             [1900, 4, 30],
             [1904, 2, 29],
             [2000, 2, 29],
-        ]).it('correctly returns the number of days for month %d-%d',
+        ])('correctly returns the number of days for month %d-%d',
             function (year, month, days) {
                 expect(calendar.daysPerMonth(year, month)).toBe(days);
-            });
+            }
+        );
     });
 
     describe('msPerUnit', function () {
-        each([
+        it.each([
             ['second', undefined, undefined, 1000],
             ['day', undefined, undefined, msPerDay],
             ['month', 1901, 1, 31 * msPerDay],
@@ -289,10 +296,11 @@ describe('GregorianCalendar', function () {
             ['year', 1902, undefined, 365 * msPerDay],
             ['year', 1903, undefined, 365 * msPerDay],
             ['year', 1904, undefined, 366 * msPerDay],
-        ]).it('correctly computes ms per %s for %d-%d',
+        ])('correctly computes ms per %s for %d-%d',
             function (unit, year, month, ms) {
                 expect(calendar.msPerUnit(unit, year, month)).toBe(ms);
-            });
+            }
+        );
     });
 
     var dateTimeMsSinceEpoch = [
@@ -327,19 +335,21 @@ describe('GregorianCalendar', function () {
     ];
 
     describe('msSinceEpoch', function () {
-        each(dateTimeMsSinceEpoch)
-        .it('correctly converts FROM %o TO %d ms since epoch',
+        it.each(dateTimeMsSinceEpoch)(
+            'correctly converts FROM %o TO %d ms since epoch',
             function (datetime, ms) {
                 expect(calendar.msSinceEpoch(datetime)).toBe(ms);
-            });
+            }
+        );
     });
 
     describe('simpleDatetimeFromMsSinceEpoch', function () {
-        each(dateTimeMsSinceEpoch)
-        .it('correctly converts TO %o FROM %d ms since epoch',
+        it.each(dateTimeMsSinceEpoch)(
+            'correctly converts TO %o FROM %d ms since epoch',
             function (datetime, ms) {
                 expect(calendar.simpleDatetimeFromMsSinceEpoch(ms)).toEqual(datetime);
-            });
+            }
+        );
     });
 });
 
@@ -353,7 +363,7 @@ describe('Fixed365DayCalendar', function () {
     });
 
     describe('isValidDate', function () {
-        each([
+        it.each([
             [undefined, 1, 1, false],
             [1900, undefined, 1, false],
             [1900, 1, undefined, true],
@@ -372,59 +382,63 @@ describe('Fixed365DayCalendar', function () {
 
             [1901, 2, 28, true],
             [1901, 2, 29, false],
-        ]).it('%d-%d-%d: %s',
+        ])('%d-%d-%d: %s',
             function (year, month, day, expected) {
                 expect(calendar.isValidDate(year, month, day)).toBe(expected);
-            });
+            }
+        );
     });
 
     describe('validateDatetime', function () {
-        each([
+        it.each([
             [undefined, 1, 1, 1, 1, 1],
             [1901, 2, 29, 1, 1, 1],
             [1901, 1, 1, 99, 1, 1],
-        ]).it('',
+        ])('',
             function (year, month, day, hour, minute, second) {
                 expect(
                     function () {
                         calendar.validateDatetime(year, month, day, hour, minute, second)
                     }
                 ).toThrow();
-            });
+            }
+        );
     });
 
     describe('isLeapYear', function () {
-        each([
+        it.each([
             1900, 1901, 1904, 2000, 2001, 2100
-        ]).it('correctly says %d is not a leap year', function (year) {
+        ])('correctly says %d is not a leap year', function (year) {
             expect(calendar.isLeapYear(year)).toBe(false);
         });
     });
 
     describe('daysPerYear', function () {
-        each([
+        it.each([
             1900, 1901, 1904, 2000, 2001, 2100
-        ]).it('correctly says there are 365 days in every year',
+        ])('correctly says there are 365 days in every year',
             function (year) {
                 expect(calendar.daysPerYear(year)).toBe(365);
-            });
+            }
+        );
     });
 
     describe('daysPerMonth', function () {
-        each([
+        it.each([
             [1900, 1, 31],
             [1900, 2, 28],
             [1900, 3, 31],
             [1900, 4, 30],
             [2000, 2, 28],
-        ]).it('correctly returns the number of days for month %d-%d',
+        ])('correctly returns the number of days for month %d-%d',
             function (year, month, days) {
                 expect(calendar.daysPerMonth(year, month)).toBe(days);
-            });
+            }
+        );
     });
 
     describe('msPerUnit', function () {
-        each([
+        it.each([
             ['second', undefined, undefined, 1000],
             ['day', undefined, undefined, msPerDay],
             ['month', 1901, 1, 31 * msPerDay],
@@ -437,10 +451,11 @@ describe('Fixed365DayCalendar', function () {
             ['year', 1901, undefined, 365 * msPerDay],
             ['year', 1902, undefined, 365 * msPerDay],
             ['year', 1903, undefined, 365 * msPerDay],
-        ]).it('correctly computes ms per %s for %d-%d',
+        ])('correctly computes ms per %s for %d-%d',
             function (unit, year, month, ms) {
                 expect(calendar.msPerUnit(unit, year, month)).toBe(ms);
-            });
+            }
+        );
     });
 
     var dateTimeMsSinceEpoch = [
@@ -475,19 +490,21 @@ describe('Fixed365DayCalendar', function () {
     ];
 
     describe('msSinceEpoch', function () {
-        each(dateTimeMsSinceEpoch)
-        .it('correctly converts FROM %o TO %d ms since epoch',
+        it.each(dateTimeMsSinceEpoch)(
+            'correctly converts FROM %o TO %d ms since epoch',
             function (datetime, ms) {
                 expect(calendar.msSinceEpoch(datetime)).toBe(ms);
-            });
+            }
+        );
     });
 
     describe('simpleDatetimeFromMsSinceEpoch', function () {
-        each(dateTimeMsSinceEpoch)
-        .it('correctly converts TO %o FROM %d ms since epoch',
+        it.each(dateTimeMsSinceEpoch)(
+            'correctly converts TO %o FROM %d ms since epoch',
             function (datetime, ms) {
                 expect(calendar.simpleDatetimeFromMsSinceEpoch(ms)).toEqual(datetime);
-            });
+            }
+        );
     });
 });
 
@@ -501,7 +518,7 @@ describe('Fixed360DayCalendar', function () {
     });
 
     describe('isValidDate', function () {
-        each([
+        it.each([
             [undefined, 1, 1, false],
             [1900, undefined, 1, false],
             [1900, 1, undefined, true],
@@ -519,59 +536,61 @@ describe('Fixed360DayCalendar', function () {
 
             [1901, 2, 28, true],
             [1901, 2, 29, true],
-        ]).it('%d-%d-%d: %s',
+        ])('%d-%d-%d: %s',
             function (year, month, day, expected) {
                 expect(calendar.isValidDate(year, month, day)).toBe(expected);
-            });
+            }
+        );
     });
 
     describe('validateDatetime', function () {
-        each([
+        it.each([
             [undefined, 1, 1, 1, 1, 1],
             [1901, 2, 33, 1, 1, 1],
             [1901, 1, 1, 99, 1, 1],
-        ]).it('',
+        ])('',
             function (year, month, day, hour, minute, second) {
                 expect(
                     function () {
                         calendar.validateDatetime(year, month, day, hour, minute, second)
                     }
                 ).toThrow();
-            });
+            }
+        );
     });
 
     describe('isLeapYear', function () {
-        each([
+        it.each([
             1900, 1901, 1904, 2000, 2001, 2100
-        ]).it('correctly says %d is not a leap year', function (year) {
+        ])('correctly says %d is not a leap year', function (year) {
             expect(calendar.isLeapYear(year)).toBe(false);
         });
     });
 
     describe('daysPerYear', function () {
-        each([
+        it.each([
             1900, 1901, 1904, 2000, 2001, 2100
-        ]).it('correctly says there are 360 days in %d',
-            function (year) {
-                expect(calendar.daysPerYear(year)).toBe(360);
-            });
+        ])('correctly says there are 360 days in %d', function (year) {
+            expect(calendar.daysPerYear(year)).toBe(360);
+        });
     });
 
     describe('daysPerMonth', function () {
-        each([
+        it.each([
             [1900, 1],
             [1900, 2],
             [1900, 3],
             [1900, 4],
             [2000, 2],
-        ]).it('correctly returns the number of days for month %d-%d',
+        ])('correctly returns the number of days for month %d-%d',
             function (year, month) {
                 expect(calendar.daysPerMonth(year, month)).toBe(30);
-            });
+            }
+        );
     });
 
     describe('msPerUnit', function () {
-        each([
+        it.each([
             ['second', undefined, undefined, 1000],
             ['day', undefined, undefined, msPerDay],
             ['month', 1901, 1, 30 * msPerDay],
@@ -584,10 +603,11 @@ describe('Fixed360DayCalendar', function () {
             ['year', 1901, undefined, 360 * msPerDay],
             ['year', 1902, undefined, 360 * msPerDay],
             ['year', 1903, undefined, 360 * msPerDay],
-        ]).it('correctly computes ms per %s for %d-%d',
+        ])('correctly computes ms per %s for %d-%d',
             function (unit, year, month, ms) {
                 expect(calendar.msPerUnit(unit, year, month)).toBe(ms);
-            });
+            }
+        );
     });
 
     var dateTimeMsSinceEpoch = [
@@ -622,26 +642,27 @@ describe('Fixed360DayCalendar', function () {
     ];
 
     describe('msSinceEpoch', function () {
-        each(dateTimeMsSinceEpoch)
-        .it('correctly converts FROM %o TO %d ms since epoch',
+        it.each(dateTimeMsSinceEpoch)(
+            'correctly converts FROM %o TO %d ms since epoch',
             function (datetime, ms) {
                 expect(calendar.msSinceEpoch(datetime)).toBe(ms);
-            });
+            }
+        );
     });
 
     describe('simpleDatetimeFromMsSinceEpoch', function () {
-        each(dateTimeMsSinceEpoch)
-        .it('correctly converts TO %o FROM %d ms since epoch',
+        it.each(dateTimeMsSinceEpoch)('correctly converts TO %o FROM %d ms since epoch',
             function (datetime, ms) {
                 expect(calendar.simpleDatetimeFromMsSinceEpoch(ms)).toEqual(datetime);
-            });
+            }
+        );
     });
 });
 
 
 describe('CalendarDatetime', function () {
     describe('toMsSinceEpoch', function () {
-        each([
+        it.each([
             [gregorianCalendar, 1900, 1, 1, 0, 0, 0, 0],
             [fixed365DayCalendar, 1900, 1, 1, 0, 0, 0, 0],
             [fixed360DayCalendar, 1900, 1, 1, 0, 0, 0, 0],
@@ -652,7 +673,7 @@ describe('CalendarDatetime', function () {
                 msPerDay * (50 * 365)],
             [fixed360DayCalendar, 1950, 1, 1, 0, 0, 0,
                 msPerDay * (50 * 360)],
-        ]).it('',
+        ])('',
             function (
                 calendar, year, month, day, hour, minute, second, ms
             ) {
@@ -660,7 +681,8 @@ describe('CalendarDatetime', function () {
                     calendar, year, month, day, hour, minute, second
                 );
                 expect(cdt.toMsSinceEpoch()).toBe(ms);
-            });
+            }
+        );
     });
 });
 
@@ -680,8 +702,7 @@ describe('CalendarFactory', function () {
             return type;
         }
 
-        each(CalendarFactory.calendarTypes)
-        .it('%s', function (type) {
+        it.each(CalendarFactory.calendarTypes)('%s', function (type) {
             var calendar = calendarFactory.createCalendar(type);
             expect(calendar.type).toBe(reducedType(type));
         });
@@ -762,11 +783,11 @@ describe('CfDatetime', function () {
         ];
 
         describe('toCalendarDatetime', function () {
-            each(testCases).it('%d %s since %o', testToCalendarDatetime);
+            it.each(testCases)('%d %s since %o', testToCalendarDatetime);
         });
 
         describe('fromDatetime', function () {
-            each(testCases).it('works', testFromDatetime);
+            it.each(testCases)('works', testFromDatetime);
         });
     });
 
@@ -812,11 +833,16 @@ describe('CfDatetime', function () {
         ];
 
         describe('toCalendarDatetime', function () {
-            each(testCases).it('%d %s since %o', testToCalendarDatetime);
+describe('', function () {
+    it('', function () {
+
+    });
+});
+            it.each(testCases)('%d %s since %o', testToCalendarDatetime);
         });
 
         describe('fromDatetime', function () {
-            each(testCases).it('works', testFromDatetime);
+            it.each(testCases)('works', testFromDatetime);
         });
     });
 
@@ -860,18 +886,11 @@ describe('CfDatetime', function () {
         ];
 
         describe('toCalendarDatetime', function () {
-            each(testCases).it('%d %s since %o', testToCalendarDatetime);
+            it.each(testCases)('%d %s since %o', testToCalendarDatetime);
         });
 
         describe('fromDatetime', function () {
-            each(testCases).it('works', testFromDatetime);
+            it.each(testCases)('works', testFromDatetime);
         });
-    });
-});
-
-
-describe('', function () {
-    it('', function () {
-
     });
 });
