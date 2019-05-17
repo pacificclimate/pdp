@@ -87,7 +87,10 @@
     );
 
     //  class SimpleDatetime
+    //      toISOString
+    //      toLooseString
     //      static fromIso8601
+    //      static fromLooseFormat
     //
     //  Datetime with no calendar and, consequently, no validation (BEWARE)
 
@@ -193,7 +196,9 @@
     //      msSinceEpoch()
     //      simpleDatetimeFromMsSinceEpoch()
     //
-    //      static toRawDatetimeFormat()
+    //      static validUnits
+    //      static isValidUnit
+    //      static validateUnit
     //
     // Base class for calendar classes.
     //
@@ -404,7 +409,6 @@
             'y', 'yr', 'year', 'years'
         ],
 
-
         isValidUnit: function(unit) {
             return Calendar.validUnits.indexOf(unit) !== -1;
         },
@@ -549,6 +553,8 @@
     //      calendar
     //      datetime
     //
+    //      toISOString
+    //      toLooseString
     //      toMsSinceEpoch()
     //
     //      static fromMsSinceEpoch()
@@ -607,6 +613,10 @@
     //      units
     //      startDate
     //
+    //      firstCfDatetime()
+    //      lastCfDatetime()
+    //      todayAsCfDatetime()
+    //
     // Represents a CF Conventions time system, which is defined by a calendar,
     // units, and a start date. In this class, the calendar is part of
     // `startDate`, which is a `CalendarDatetime`.
@@ -660,9 +670,16 @@
     //      system
     //      index
     //
+    //      validateIndex()
+    //      setIndex()
+    //      toIndex()
     //      toCalendarDatetime()
+    //      toISOString()
+    //      toLooseString()
+    //      toLooseDatetimeFormat()
     //
     //      static fromDatetime()
+    //      static fromLooseFormat()
     //
     // Represents a time value in a CF time system.
     //
@@ -691,6 +708,8 @@
         },
 
         setIndex: function(index) {
+            // Yick. Prefer functional style.
+            // As Zathros said of a different tool, "Never use this."
             this.validateIndex(index);
             this.index = index;
         },
