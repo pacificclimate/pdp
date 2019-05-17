@@ -18,7 +18,7 @@ env:
 before_install:
   # Travis's apt-sources addon seems to be broken for the ubuntugis PPA
   # Install it manually
-  - sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable -y
+  - sudo add-apt-repository ppa:ubuntugis/ppa -y
   - sudo apt-get update -q
   - sudo apt-get install libgdal-dev -y
   # Install Node.js
