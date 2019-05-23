@@ -656,12 +656,22 @@
         },
 
         todayAsCfDatetime: function() {
-            // Return today's date as a `CfDatetime`.
+            // Return today's date as a `CfDatetime` ...
+            // or the latest valid date before or equal to today in the
+            // system's calendar.
             var today = new Date();
-            return new CfDatetime.fromDatetime(
-                this,
-                today.getFullYear(), today.getMonth()+1, today.getDay()
-            );
+            while (true) {
+                try {
+                    return new CfDatetime.fromDatetime(
+                      this,
+                      today.getFullYear(), today.getMonth()+1, today.getDate()
+                    );
+                } catch {
+                    // Decrement by one day. This happens at most once to
+                    // reach a valid date in any non-Gregorian calendar.
+                    today.setDate(today.getDate() - 1);
+                }
+            }
         }
     }, {
     });

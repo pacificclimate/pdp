@@ -711,12 +711,48 @@ describe('CalendarFactory', function () {
 
 
 describe('CfTimeSystem', function () {
-    // Not much to see here.
-    // describe('', function () {
-    //     it('', function () {
-    //
-    //     });
-    // });
+    describe('todayAsCfDatetime', function () {
+        var OrigDate;
+        beforeAll(function () {
+            OrigDate = Date;
+            jest.spyOn(global, 'Date');
+            Date.prototype = OrigDate.prototype;
+        });
+        afterAll(function () {
+            Date.mockRestore();
+        });
+
+        describe.each([
+            ['days', 'gregorian', 1950, 1, 1],
+            ['days', '365_day', 1950, 1, 1],
+            ['days', '360_day', 1950, 1, 1],
+        ])(
+          'system: %s since %s %d-%d-%d',
+          function(units, cal, sYear, sMonth, sDay) {
+            var system = new CfTimeSystem(
+              units, new CalendarDatetime(calendars[cal], sYear, sMonth, sDay));
+            describe.each([
+                [2019, 5, 23],
+                [1950, 1, 2],
+                [1950, 1, 30],
+                [1950, 1, 31],
+                [1950, 2, 28],
+                [1952, 2, 28],
+                [1952, 2, 29],
+            ])('for %d-%d-%d', function (year, month, day) {
+                it('returns a date very close to today\'s date', function () {
+                    Date.mockImplementation(() => new OrigDate(year, month-1, day));
+                    let result = system.todayAsCfDatetime();
+                    // It should return the latest valid date before or equal
+                    // to today, which is always within 1 day of today.
+                    expect(result.toCalendarDatetime().datetime.year).toBe(year);
+                    expect(result.toCalendarDatetime().datetime.month).toBe(month);
+                    expect(day - result.toCalendarDatetime().datetime.day)
+                        .toBeLessThanOrEqual(1);
+                });
+            });
+        });
+    });
 });
 
 
