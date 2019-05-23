@@ -534,6 +534,7 @@
                 case 'proleptic_gregorian':
                     return new GregorianCalendar(this.epochYear);
                 case '365_day':
+                case 'noleap':
                     return new Fixed365DayCalendar(this.epochYear);
                 case '360_day':
                     return new Fixed360DayCalendar(this.epochYear);
@@ -544,7 +545,7 @@
     }, {
         calendarTypes: [
             'standard', 'gregorian', 'proleptic_gregorian',
-            '365_day', '360_day'
+            '365_day', 'noleap', '360_day'
         ]
     });
 
