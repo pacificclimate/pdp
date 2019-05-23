@@ -693,11 +693,15 @@ describe('CalendarFactory', function () {
     describe('makeCalendar', function () {
         function reducedType(type) {
             if (
-                type === 'standard' ||
                 type === 'gregorian' ||
                 type === 'proleptic_gregorian'
             ) {
                 return 'standard';
+            }
+            if (
+                type === 'noleap'
+            ) {
+                return '365_day';
             }
             return type;
         }

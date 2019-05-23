@@ -667,7 +667,7 @@
                       this,
                       today.getFullYear(), today.getMonth()+1, today.getDate()
                     );
-                } catch {
+                } catch(error) {
                     // Decrement by one day. This happens at most once to
                     // reach a valid date in any non-Gregorian calendar.
                     today.setDate(today.getDate() - 1);
