@@ -318,7 +318,7 @@ Instead of mutation, prefer to create a new object containing the new value, rat
 
 ### Calendars
 
-PDP datasets use a variety of different, mutually incompatible calendrical systems. These systems include:
+PDP datasets use a variety of different, mutually incompatible calendar systems. These systems include:
 
 - Standard or Gregorian calendar.
 - 365-day calendar: Like the Gregorian calendar, but without leap years.
@@ -332,10 +332,12 @@ To address this situation, we have defined a module `calendars` containing the f
 
 - Class `Calendar`, which represents the general notion of a calendar, 
 and subclasses `GregorianCalendar`, `Fixed365DayCalendar`, `Fixed360DayCalendar`, which represent specific, 
-different calendar types. In particular:
+different calendar types.
    - Rightly or wrongly, `Calendar`s are used as instances (so far we have only discussed things that could be
-   supplied by a fixed object, or singleton). Each `Calendar`instance has an epoch year, which defines the 
-   epoch or origin date for computations the calendar can perform.
+   equally well be supplied by a fixed object, or singleton). 
+   - Each `Calendar` instance has an epoch year, which defines the epoch or origin date for computations the calendar 
+   can perform. Dates before Jan 1 of the epoch year are not valid. This is stupid, a result of lazy implementation, 
+   but it is true for now. Default epoch year is 1800.
    - `Calendar` has abstract methods `isLeapYear()`,  `daysPerMonth()`, `daysPerYear()` that concrete subclasses 
    define in order to specify different particular calendars.
    - `Calendar` provides a number of service methods for validating datetimes and for computing essential 
@@ -343,13 +345,15 @@ different calendar types. In particular:
    any given calendar system.
    
 Most users of this module will not need to define their own `Calendar` subclasses, nor their own instances of
-`Calendar`s (specifying `epochYear`), since the provided standard instances are designed to meet known use cases
+those subclasses (specifying `epochYear`), since the provided standard instances are designed to meet known use cases
 in PDP. However, the option is there for unforeseen applications.
 
-- The standard (and default) `epochYear` is 1900.
-- `calendars` offers pre-instantiated standard calendars of each type, indexed by the standard CF identifiers
+- The standard (and default) `epochYear` is 1800. 
+- The `calendars` module offers pre-instantiated standard calendars of each type, indexed by the standard CF identifiers
 for each type:
-   - `calendars['gregorian']`
+   - `calendars['standard']`,`calendars['gregorian']`
+   - `calendars['365_day']`, `calendars['noleap']`
+   - `calendars['360_day']`
 
 ### Datetimes (in specific calendars)
 
@@ -366,13 +370,13 @@ calendar. (Note: We [prefer composition over inheritance](https://en.wikipedia.o
 
 ### CF time systems
    
-In CF standards compliant datasets, datetimes are represented by index values in a time system defined by units, 
-start datetime, and calendar. 
+In CF standards compliant datasets, datetimes are represented by index values (values of the time dimension) 
+in a time system defined by units, start datetime, and calendar. 
 
 - Units are fixed intervals of time labelled by terms such as 'day', 'hour', 'minute'. 
-- A start datetime is simply a specification of year, month, day, etc., in a calendrical system specified by calendar.
+- A start datetime is a specification of year, month, day, etc., in a specified calendar system.
 - The calendar is specified an identifier chosen from a fixed CF vocabulary that includes 'standard', 'gregorian', 
-'365_day', and '360_day', with the obvious meanings.
+'365_day', 'noleap', and '360_day', with the obvious meanings.
 - A time index _t_ specifies a time point defined as _t_ time units after the start datetime, in the specified calendar.
 
 The following classes represent time systems and datetimes within such a system:
@@ -442,5 +446,5 @@ const end = cfTimeSystem.lastCfDatetime();
 console.log(end.index);  // -> 99999
 
 const today = cfTimeSystem.todayAsCfDatetime();
-console.log(today.index);  // -> some value around (2019 - 1950) * 360
+console.log(today.index);  // -> some value around (<current year> - 1950) * 360
 ```
