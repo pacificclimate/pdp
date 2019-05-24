@@ -37,8 +37,8 @@ function leapDaysSinceEpoch(calendar, year) {
 
 describe('formatDatetimeRaw', function () {
     it.each([
-        [1900, 1, 2, 3, 4, 5, '1900-1-2T3-4-5'],
-        [undefined, 1, 2, 3, 4, 5, 'undefined-1-2T3-4-5'],
+        [1900, 1, 2, 3, 4, 5, '1900-1-2T3:4:5'],
+        [undefined, 1, 2, 3, 4, 5, 'undefined-1-2T3:4:5'],
     ])('%#',
         function (year, month, day, hour, minute, second, expected) {
             expect(formatDatetimeRaw(
