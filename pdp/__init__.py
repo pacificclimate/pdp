@@ -66,15 +66,21 @@ def get_config():
             'js/zebra.js',
             'js/OL/OpenLayers-2.13.1.js',
             'js/proj4js-compressed.js',
-            'js/multiaccordion.js'] +
-        wrap_mini(['js/pdp_dom_library.js',
-                   'js/pdp_controls.js',
-                   'js/pdp_download.js',
-                   'js/pdp_filters.js',
-                   'js/pdp_map.js',
-                   'js/pdp_raster_map.js',
-                   'js/pdp_vector_map.js'
-                   ], debug=(not env_config['js_min'])),
+            'js/multiaccordion.js',
+            'js/lodash.core.min.js',
+        ] + wrap_mini([
+            'js/condExport.js',
+            'js/classes.js',
+            'js/calendars.js',
+            'js/data-services.js',
+            'js/pdp_dom_library.js',
+            'js/pdp_controls.js',
+            'js/pdp_download.js',
+            'js/pdp_filters.js',
+            'js/pdp_map.js',
+            'js/pdp_raster_map.js',
+            'js/pdp_vector_map.js'
+        ], debug=(not env_config['js_min'])),
         'templates': resource_filename('pdp', 'templates'),
         'version': parse_version("version"),
         'revision': parse_version("revision")
