@@ -25,7 +25,9 @@
         return min <= v && v < max;
     }
 
-    function format(places, num) {
+    function leadingZeros(places, num) {
+        // Format an integer with `places` places, padding with leading 0's
+        // as needed.
         if (isUndefined(num)) {
             return undefined;
         }
@@ -33,8 +35,8 @@
         return s.substr(s.length - places);
     }
 
-    var format2 = format.bind(this, 2);
-    var format4 = format.bind(this, 4);
+    var lz2 = leadingZeros.bind(this, 2);
+    var lz4 = leadingZeros.bind(this, 4);
 
     function appendParts(to, parts, formats, sep) {
         var formattedParts = [];
@@ -77,12 +79,12 @@
     }
 
     var formatDatetimeISO8601 = makeFormatDatetime(
-        [format4, format2, format2, format2, format2, format2],
+        [lz4, lz2, lz2, lz2, lz2, lz2],
         '-', 'T', ':'
     );
 
     var formatDatetimeLoose = makeFormatDatetime(
-        [format4, format2, format2, format2, format2, format2],
+        [lz4, lz2, lz2, lz2, lz2, lz2],
         '/', ' ', ':'
     );
 
