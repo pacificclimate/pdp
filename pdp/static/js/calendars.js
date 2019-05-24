@@ -75,7 +75,7 @@
         // ISO 8601-like format, but without any checking or fancy formatting.
         // Useful for error messages.
         return '' + year + '-' + month + '-' + day +
-            'T' + hour + '-' + minute + '-' + second;
+            'T' + hour + ':' + minute + ':' + second;
     }
 
     var formatDatetimeISO8601 = makeFormatDatetime(
