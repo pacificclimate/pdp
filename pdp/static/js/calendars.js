@@ -765,10 +765,9 @@
             var datetime = new CalendarDatetime(
                 calendar, year, month, day, hour, minute, second
             );
-            var index = Math.floor(
+            var index =
                 (datetime.toMsSinceEpoch() - startDate.toMsSinceEpoch()) /
-                calendar.msPerUnit(system.units)
-            );
+                calendar.msPerUnit(system.units);
             try {
                 return new CfDatetime(system, index);
             } catch(error) {
