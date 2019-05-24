@@ -795,6 +795,7 @@ describe('CfDatetime', function () {
             [100000, 'seconds', startDate, 1950, 1, 2, 3, 46, 40],
 
             [0, 'minutes', startDate, 1950, 1, 1, 0, 0, 0],
+            [0.5, 'minutes', startDate, 1950, 1, 1, 0, 0, 30],
             [1, 'minutes', startDate, 1950, 1, 1, 0, 1, 0],
             [10, 'minutes', startDate, 1950, 1, 1, 0, 10, 0],
             [100, 'minutes', startDate, 1950, 1, 1, 1, 40, 0],
@@ -803,6 +804,7 @@ describe('CfDatetime', function () {
 
             [0, 'hours', startDate, 1950, 1, 1, 0, 0, 0],
             [1, 'hours', startDate, 1950, 1, 1, 1, 0, 0],
+            [1.1, 'hours', startDate, 1950, 1, 1, 1, 6, 0],
             [10, 'hours', startDate, 1950, 1, 1, 10, 0, 0],
             [100, 'hours', startDate, 1950, 1, 5, 4, 0, 0],
             [1000, 'hours', startDate, 1950, 2, 11, 16, 0, 0],
@@ -811,6 +813,7 @@ describe('CfDatetime', function () {
             [0, 'days', startDate, 1950, 1, 1, 0, 0, 0],
             [1, 'days', startDate, 1950, 1, 2, 0, 0, 0],
             [10, 'days', startDate, 1950, 1, 11, 0, 0, 0],
+            [10.5, 'days', startDate, 1950, 1, 11, 12, 0, 0],
             [100, 'days', startDate, 1950, 4, 11, 0, 0, 0],
             [365, 'days', startDate, 1951, 1, 1, 0, 0, 0],
             [2 * 365, 'days', startDate, 1952, 1, 1, 0, 0, 0],
@@ -873,11 +876,6 @@ describe('CfDatetime', function () {
         ];
 
         describe('toCalendarDatetime', function () {
-describe('', function () {
-    it('', function () {
-
-    });
-});
             it.each(testCases)('%d %s since %o', testToCalendarDatetime);
         });
 

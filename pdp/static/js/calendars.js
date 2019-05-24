@@ -703,7 +703,7 @@
 
     function CfDatetime(system, index) {
         // `system`: `CfTimeSystem`
-        // `index`: `integer`
+        // `index`: `Number`
         classes.classCallCheck(this, CfDatetime);
         classes.validateClass(system, CfTimeSystem, 'system');
         this.system = system;

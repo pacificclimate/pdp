@@ -387,7 +387,7 @@ The following classes represent time systems and datetimes within such a system:
   could perhaps be improved.
   
 - Class `CfDatetime`, which [composes](https://en.wikipedia.org/wiki/Composition_over_inheritance) a 
-`CfTimeSystem` and an (integer) index to represent a specific time within a CF time system.
+`CfTimeSystem` and a real-valued index to represent a specific time within a CF time system.
    - Like `CalendarDatetime` (to which it is a parallel), `CfDatetime` offers only conversion methods 
    (e.g., `toISOString()`, `toCalendarDatetime`) and factories (e.g., `fromLooseFormat()`).
    - Like `CalendarDatetime`, this is the class in which time arithmetic methods would be placed, but none are
