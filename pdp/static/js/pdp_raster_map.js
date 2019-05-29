@@ -97,13 +97,17 @@ function setTimeAvailable(cfTimeSystem) {
     // Note: we don't have yearRange any more.
     // TODO: Find out what yearRange was for and compensate.
 
-    var prevStartDate = $(".datepickerstart").data('cfDate');
-    var prevEndDate = $(".datepickerend").data('cfDate');
+    var $startDate = $("#from-date");
+    var $endDate = $("#to-date");
 
-    $(".datepickerstart").data('cfDate',
-        transferDate(prevStartDate, cfTimeSystem, cfTimeSystem.firstCfDatetime()));
-    $(".datepickerend").data('cfDate',
-        transferDate(prevEndDate, cfTimeSystem, cfTimeSystem.lastCfDatetime()));
+    var prevStartDate = $startDate.data('cfDate');
+    var prevEndDate = $endDate.data('cfDate');
+
+    var startDate = transferDate(prevStartDate, cfTimeSystem, cfTimeSystem.firstCfDatetime());
+    setDatepicker($startDate, startDate);
+
+    var endDate = transferDate(prevEndDate, cfTimeSystem, cfTimeSystem.lastCfDatetime());
+    setDatepicker($endDate, endDate);
 
     setCfTimeSystemMessages($('#date-range-messages'), cfTimeSystem);
 
