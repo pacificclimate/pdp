@@ -46,7 +46,7 @@ mockHelpers.mockOLXMLHttpRequest({ log: true, throw: true });
 
 var beforeCalendar = calendars['gregorian'];
 var beforeUnits = 'days';
-var beforeDefaultCfTimeSystem = new calendars.CfTimeSystem(
+var beforeCfTimeSystem = new calendars.CfTimeSystem(
     beforeUnits,
     new calendars.CalendarDatetime(beforeCalendar, 1870, 1, 1),
     Math.floor((2100 - 1870 + 1) * 365.2425)
@@ -54,20 +54,23 @@ var beforeDefaultCfTimeSystem = new calendars.CfTimeSystem(
 
 var afterCalendar = calendars['365_day'];
 var afterUnits = 'days';
-var afterDefaultCfTimeSystem = new calendars.CfTimeSystem(
+var afterCfTimeSystem = new calendars.CfTimeSystem(
     afterUnits,
     new calendars.CalendarDatetime(afterCalendar, 1950, 1, 1),
     Math.floor((2100 - 1950 + 1) * 365)
 );
 
 dateFilterTests(canada_ex_app, {
-    defaultCfTimeSystem: afterDefaultCfTimeSystem,
+    cfTimeSystem: {
+        before: beforeCfTimeSystem,
+        after: afterCfTimeSystem,
+    },
     defaultStartDate: {
-        before: beforeDefaultCfTimeSystem.firstCfDatetime(),
-        after: afterDefaultCfTimeSystem.firstCfDatetime()
+        before: beforeCfTimeSystem.firstCfDatetime(),
+        after: afterCfTimeSystem.firstCfDatetime()
     },
     defaultEndDate: {
-        before: beforeDefaultCfTimeSystem.lastCfDatetime(),
-        after: afterDefaultCfTimeSystem.lastCfDatetime()
+        before: beforeCfTimeSystem.lastCfDatetime(),
+        after: afterCfTimeSystem.lastCfDatetime()
     }
 });

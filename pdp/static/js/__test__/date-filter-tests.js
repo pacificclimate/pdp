@@ -1,3 +1,6 @@
+// Test suite to test date filter (download start, end date) 
+// functionality. Abstracted out so it can be used by tests of multiple apps.
+
 var each = require('jest-each').default;
 
 function logDownloadDates() {
@@ -33,9 +36,31 @@ function resetAllDataServices() {
     dataServices.getNcwmsLayerDAS.reset();
 }
 
-function dateFilterTests(
-    app, config
-) {
+function dateFilterTests(app, config) {
+    // Test date-filter components of an app.
+    // `app`: Function
+    //      builds the app, e.g., `canada_ex_app`
+    //
+    // 'config`: Object
+    //      configures the tests with specifics that vary by app
+    //      `cfTimeSystem`: Object
+    //          Time system ...
+    //          `before`: Assigned by app before data services resolve
+    //          `after`: Assigned by app after data services resolve
+    //      `defaultStartDate`: Object
+    //          Default start date ...
+    //          `before`: Assigned by app before data services resolve
+    //          `after`: Assigned by app after data services resolve
+    //      `defaultEndDate`: Object
+    //          Default end date ...
+    //          `before`: Assigned by app before data services resolve
+    //          `after`: Assigned by app after data services resolve
+    //      `omitsDownloadDataLink`: Boolean
+    //          Set to true to skip tests on (presumably omitted) download
+    //          data link.
+    //      `omitsloadFullTimeSeriesCheckbox`: Boolean
+    //          Set to true to skip tests on (presumably omitted) download
+    //          full time series checkbox.
     describe('app', function () {
         beforeEach(function () {
             // Reset the DOM (jsdom)
@@ -175,7 +200,6 @@ function dateFilterTests(
 
                                 if (!config.omitsDownloadDataLink) {
                                     it('sets the download data link correctly', function () {
-                                        if (!config.hasDownloadDataLink) return;
 
                                         var $link = $('#download-timeseries');
                                         var linkUrl = $link.attr('href');
@@ -254,7 +278,7 @@ function dateFilterTests(
                     it('indicates the expected calendar', function () {
                         var msg = $msg.text();
                         expect(msg).toMatch(
-                            config.defaultCfTimeSystem.startDate.calendar.name
+                            config.cfTimeSystem.after.startDate.calendar.name
                         );  // FFFFFFUUUUUU
                     });
                 });
@@ -262,7 +286,7 @@ function dateFilterTests(
                 describe('time system', function () {
                     it('indicates the expected units-since', function () {
                         var msg = $('#date-range-ts').text();
-                        var ts = config.defaultCfTimeSystem;
+                        var ts = config.cfTimeSystem.after;
                         expect(msg).toMatch(new RegExp(
                             ts.units + '\\s+since\\s+' +
                             ts.startDate.toISOString(true)
