@@ -9,7 +9,7 @@ var makeMockGet = mockHelpers.makeMockGet;
 // Mocking presently only for tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada
 
 var catalog = {
-    "tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada": "https://data.pacificclimate.org/data/downscaled_gcms/tasmax_day_BCCAQv2+ANUSPLIN300_CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc",
+    "tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada": "https://data.fake.org/data/downscaled_gcms/tasmax_day_BCCAQv2+ANUSPLIN300_CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc",
 };
 var getCatalog = makeMockGet('Catalog', catalog);
 
