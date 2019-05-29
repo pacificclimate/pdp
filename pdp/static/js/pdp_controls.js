@@ -224,12 +224,25 @@ var getRasterControls = function (ensemble_name) {
     return div;
 };
 
-var getRasterDownloadOptions = function (include_dates_selection) {
+
+function cfDateTimeFor(cfTimeSystem, specifier) {
+    if (_.isString(specifier)) {
+        var spec2Method = {
+            first: 'firstCfDatetime',
+            last: 'lastCfDatetime',
+            today: 'todayAsCfDatetime',
+        };
+        var method = _.get(spec2Method, specifier, 'todayAsCfDatetime');
+        return cfTimeSystem[method]();
+    }
+}
+
+var getRasterDownloadOptions = function (startDateSpec, endDateSpec) {
     var frag = document.createDocumentFragment(),
         div = frag.appendChild(pdp.createDiv('', 'control')),
         downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get")),
         downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
-    if (include_dates_selection) {
+    if (startDateSpec || endDateSpec) {
         // Assign a temporary time system. This should actually be based on the
         // first ncwms (climate) layer, but that comes later.
         var calendar = calendars['gregorian'];
@@ -239,9 +252,8 @@ var getRasterDownloadOptions = function (include_dates_selection) {
             new calendars.CalendarDatetime(calendar, 1870, 1, 1),
             Math.floor((2100 - 1870 + 1) * 365.2425)
         );
-        var startDate = calendars.CfDatetime.fromDatetime(
-            cfTimeSystem, 1950, 1, 1);
-        var endDate = cfTimeSystem.todayAsCfDatetime();
+        var startDate = cfDateTimeFor(cfTimeSystem, startDateSpec);
+        var endDate = cfDateTimeFor(cfTimeSystem, endDateSpec);
 
         downloadFieldset.appendChild(getDateRange(startDate, endDate));
     }
