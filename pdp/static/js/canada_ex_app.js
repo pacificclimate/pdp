@@ -53,8 +53,10 @@
 
         capabilities_request = dataServices.getNCWMSLayerCapabilities(ncwmsLayer);
 
-        document.getElementById("pdp-controls").appendChild(getRasterControls(pdp.ensemble_name));
-        document.getElementById("pdp-controls").appendChild(getRasterDownloadOptions(true));
+        document.getElementById("pdp-controls")
+            .appendChild(getRasterControls(pdp.ensemble_name));
+        document.getElementById("pdp-controls")
+            .appendChild(getRasterDownloadOptions('first', 'last'));
 
         //UI elements vary slightly based on whether this is the archive or new portal.
         if(archivePortal) {

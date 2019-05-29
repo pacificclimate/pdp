@@ -63,11 +63,11 @@ var afterDefaultCfTimeSystem = new calendars.CfTimeSystem(
 dateFilterTests(canada_ex_app, {
     defaultCfTimeSystem: afterDefaultCfTimeSystem,
     defaultStartDate: {
-        before: calendars.CfDatetime.fromDatetime(beforeDefaultCfTimeSystem, 1950, 1, 1),
-        after: calendars.CfDatetime.fromDatetime(afterDefaultCfTimeSystem, 1950, 1, 1)
+        before: beforeDefaultCfTimeSystem.firstCfDatetime(),
+        after: afterDefaultCfTimeSystem.firstCfDatetime()
     },
     defaultEndDate: {
-        before: beforeDefaultCfTimeSystem.todayAsCfDatetime(),
-        after: afterDefaultCfTimeSystem.todayAsCfDatetime()
+        before: beforeDefaultCfTimeSystem.lastCfDatetime(),
+        after: afterDefaultCfTimeSystem.lastCfDatetime()
     }
 });
