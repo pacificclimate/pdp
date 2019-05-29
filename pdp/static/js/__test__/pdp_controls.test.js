@@ -1,6 +1,6 @@
 require('./globals-helpers').importGlobals([
     { module: 'js/jquery-1.10.2.js', name: ['$', 'jQuery'] },
-    { module: 'js/lodash.core.js', name: ['_', 'lodash'] },
+    { module: 'js/lodash.custom.js', name: ['_', 'lodash'] },
     { module: 'js/condExport.js', name: 'condExport' },
     { module: 'js/classes.js', name: 'classes' },
     { module: 'js/calendars.js', name: 'calendars' },

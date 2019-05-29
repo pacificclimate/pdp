@@ -11,7 +11,7 @@ require('./globals-helpers').importGlobals([
     { module: 'js/zebra.js' },  // execute only
     { include: 'js/OL/OpenLayers-2.13.1.debug.js' },
     { include: 'js/proj4js-compressed.js' },
-    { module: 'js/lodash.core.js', name: ['_', 'lodash'] },
+    { module: 'js/lodash.custom.js', name: ['_', 'lodash'] },
 
     // Local packages
     { module: 'js/condExport', name: 'condExport' },

@@ -67,7 +67,7 @@ def get_config():
             'js/OL/OpenLayers-2.13.1.js',
             'js/proj4js-compressed.js',
             'js/multiaccordion.js',
-            'js/lodash.core.min.js',
+            'js/lodash.custom.min.js',
         ] + wrap_mini([
             'js/condExport.js',
             'js/classes.js',

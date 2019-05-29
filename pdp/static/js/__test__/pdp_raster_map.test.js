@@ -2,7 +2,7 @@ var each = require('jest-each').default;
 var _ = require('lodash');
 
 require('./globals-helpers').importGlobals([
-    { module: 'js/lodash.core.js', name: ['_', 'lodash'] },
+    { module: 'js/lodash.custom.js', name: ['_', 'lodash'] },
     { module: 'js/condExport.js', name: 'condExport' },
     { module: 'js/classes.js', name: 'classes' },
     { module: 'js/calendars.js', name: 'calendars' },
