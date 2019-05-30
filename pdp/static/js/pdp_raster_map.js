@@ -1,223 +1,114 @@
 /*jslint browser: true, devel: true */
-/*global pdp, $, OpenLayers, setTimeAvailable, handle_ie8_xml, DOMParser
+/*global pdp, $, OpenLayers, setTimeAvailable, handle_ie8_xml, DOMParser, calendars
 */
-
 "use strict";
-
-var CfTime = function (units, sDate, calendar) {
-    this.units = units;
-    this.sDate = sDate;
-    this.calendar = calendar ? calendar : "standard";
-
-    switch(this.calendar) {
-    case "360_day":
-        this.constantDaysPerYear = 360;
-        break;
-    case "365_day":
-    case "noleap":
-        this.constantDaysPerYear = 365;
-        break;
-    default:
-        this.constantDaysPerYear = undefined;
-    }
-};
-
-CfTime.prototype.setMaxTimeByIndex = function (index) {
-    this.maxIndex =  index;
-    this.eDate = this.toDate(index);
-    return this.eDate;
-};
-
-CfTime.prototype.toDate = function(index) {
-    if (index === undefined) {
-        return this.sDate;
-    }
-    var d = new Date(this.sDate.getTime());
-    if(this.units == "days") {
-        if(["standard", "gregorian", "proleptic_gregorian"].includes(this.calendar)) {
-            d.setDate(this.sDate.getDate() + index);
-            return d;
-        }
-        else if(this.constantDaysPerYear) {
-            d.setFullYear(this.sDate.getFullYear() + Math.floor(index / this.constantDaysPerYear));
-            var msPerDay = 1000*60*60*24;
-            var daysAlready = (d.getTime() - new Date(d.getFullYear(), 0, 1).getTime() ) / msPerDay;
-            var dayRemainder = (index % this.constantDaysPerYear) + daysAlready;
-            if(dayRemainder >= this.constantDaysPerYear) {
-                d.setFullYear(d.getFullYear() + 1);
-                dayRemainder = dayRemainder - this.constantDaysPerYear;
-            }
-            dayRemainder += Math.floor((dayRemainder / this.constantDaysPerYear) * (365.242 - this.constantDaysPerYear));
-            d.setTime(d.getTime() + dayRemainder);
-            return d;
-        }
-    }
-};
-
-CfTime.prototype.toIndex = function (d) {
-    if (d < this.sDate || (this.eDate && this.eDate < d)) {
-        return;
-    }
-    var days;
-    var msPerDay = 1000 * 60 * 60 * 24;
-    if(this.units=="days") {
-        if(["standard", "gregorian", "proleptic_gregorian"].includes(this.calendar)) {
-            var msDiff = d.getTime() - this.sDate.getTime();
-            days = Math.floor(msDiff / msPerDay);
-        }
-        else if(this.constantDaysPerYear) {
-            days = (d.getFullYear() - this.sDate.getFullYear()) * this.constantDaysPerYear;
-            var remainderDate  = new Date(d);
-            remainderDate.setFullYear(this.sDate.getFullYear());
-            var remainderDays = Math.floor((remainderDate.getTime() - this.sDate.getTime()) / msPerDay);
-            days += remainderDays;
-            days -= Math.floor((remainderDays / this.constantDaysPerYear) * (365.242 - this.constantDaysPerYear));
-            days = Math.floor(days);
-        }
-        return days;
-    }
-};
 
 function getNcwmsLayerId(ncwms_layer) {
     return ncwms_layer.params.LAYERS.split("/")[0];
 }
 
-function ddsToTimeIndex(data) {
+function ddsToTimeIndex(dds) {
     var reg, match;
     reg = /\[time = (\d+)\]/g;
-    match = reg.exec(data)[1];
+    match = reg.exec(dds)[1];
     return parseInt(match, 10);
 }
 
-function dasToUnitsSince(data) {
-    var s = data.match(/time \{[\s\S]*?\}/gm)[0],
-        reg = /units \"((year|month|day|hour|minute|second)s?) since (\d{4}-\d{1,2}-\d{1,2} ?[\d:]*)\"/g,
-        m = reg.exec(s),
-        units = m[1],
-        dateString = m[3],
-        sDate;
+function dasToCfTimeSystem(das, indexCount) {
+    var timeDimensionRegex = /time \{[\s\S]*?\}/gm;
+    var timeDimensionDescr = das.match(timeDimensionRegex)[0];
 
-    var calendar;
-    reg = /calendar \"(standard|gregorian|proleptic_gregorian|365_day|noleap|360_day)\"/,
-    m = reg.exec(s),
-    calendar = m ? m[1] : "standard";
+    var unitsSinceRegex = /units \"((year|month|day|hour|minute|second)s?) since (\d{4}-\d{1,2}-\d{1,2}[ T]?[\d:]*)\"/g;
+    var unitsSinceMatch = unitsSinceRegex.exec(timeDimensionDescr);
+    var units = unitsSinceMatch[1];
+    var startDateString = unitsSinceMatch[3];
 
-    reg = /(\d{4})-(\d{1,2})-(\d{1,2})( |T)(\d{1,2}):(\d{1,2}):(\d{1,2})/g;
-    m = reg.exec(dateString);
-    if (m) {
-        sDate = new Date(m[1], parseInt(m[2], 10) - 1, // Months in das result are 1-12, js needs 0-11
-                         m[3], m[5], m[6], m[7], 0);
-        return [units, sDate, calendar];
-    }
-    // Not ISO Format, maybe YYYY-MM-DD?
-    reg = /(\d{4})-(\d{1,2})-(\d{1,2})/g;
-    m = reg.exec(dateString);
-    if (m) {
-        return [units, new Date(m[1], parseInt(m[2], 10) - 1, m[3]), calendar];
-    }
-    // Well, crap.
-    return undefined;
-}
+    var calendarRegex = /calendar \"(standard|gregorian|proleptic_gregorian|365_day|noleap|360_day)\"/;
+    var calendarMatch = calendarRegex.exec(timeDimensionDescr);
+    var calendarType = calendarMatch ? calendarMatch[1] : 'standard';
 
-function getNCWMSLayerCapabilities(ncwms_layer) {
+    var calendar = calendars[calendarType];
+    var simpleDatetime = calendars.SimpleDatetime.fromIso8601(startDateString);
+    var startDate = new calendars.CalendarDatetime(calendar, simpleDatetime);
 
-    // FIXME: this .ajax logic doesn't really work in all cases
-    // What we really want is the fail() handler to _resolve_ the status,
-    // and then have another fail() fallthrough handler .That is impossible, however.
-    // see: http://domenic.me/2012/10/14/youre-missing-the-point-of-promises/
-
-    var deferred = $.Deferred();
-
-    var params = {
-        REQUEST: "GetCapabilities",
-        SERVICE: "WMS",
-        VERSION: "1.1.1",
-        DATASET: ncwms_layer.params.LAYERS.split("/")[0]
-    };
-
-    $.ajax({
-        url: ncwms_layer.url,
-        data: params,
-    })
-    .fail(handle_ie8_xml)
-    .always(function (response, status, jqXHR) {
-        deferred.resolve($(jqXHR.responseXML));
-    });
-
-    return deferred.promise();
+    return new calendars.CfTimeSystem(units, startDate, indexCount);
 }
 
 function processNcwmsLayerMetadata(ncwms_layer, catalog) {
-    var layerUrl, maxTimeReq, unitsSinceReq, calendar;
-
     // transform the data_server url into the un-authed catalog based url for metadata
-    layerUrl = catalog[getNcwmsLayerId(ncwms_layer)];
-    //matches[1] is portal base url, matches[2] is dataset, make catalog url
-
-    // Request time variables
-    maxTimeReq = $.ajax({
-        url: (layerUrl + ".dds?time")
-    });
-
-    unitsSinceReq = $.ajax({
-        url: (layerUrl + ".das")
-    });
+    var layerUrl = catalog[getNcwmsLayerId(ncwms_layer)]; //matches[1] is portal base url, matches[2] is dataset, make catalog url // Request time variables
+    var maxTimeReq = dataServices.getNcwmsLayerDDS(layerUrl);
+    var unitsSinceReq = dataServices.getNcwmsLayerDAS(layerUrl);
 
     // Process times when both returned
     $.when(maxTimeReq, unitsSinceReq).done(function (maxTime, unitsSince) {
-        var maxTimeIndex, units, startDate, layerTime;
+        var indexCount = ddsToTimeIndex(maxTime[0]);
+        var cfTimeSystem = dasToCfTimeSystem(unitsSince[0], indexCount);
+        ncwms_layer.cfTimeSystem = cfTimeSystem;
 
-        maxTimeIndex = ddsToTimeIndex(maxTime[0]);
-        unitsSince = dasToUnitsSince(unitsSince[0]);
-        units = unitsSince[0];
-        startDate = unitsSince[1];
-        calendar = unitsSince[2];
-        layerTime = new CfTime(units, startDate, calendar);
-        layerTime.setMaxTimeByIndex(maxTimeIndex);
-        ncwms_layer.times = layerTime; // Future access through ncwmslayer?
-	// Some pages don't have date pickers
-	if ($(".datepickerstart").length > 0) {
-            setTimeAvailable(layerTime.sDate, layerTime.eDate);
-	}
+        // If page has datepicker(s), set them up.
+        if ($(".datepickerstart").length > 0) {
+            setTimeAvailable(cfTimeSystem);
+	    }
     });
 }
 
-function setTimeAvailable(begin, end) {
-    //TODO: only present times available in ncwms capabilities for this layer
-    var yearRange = begin.getFullYear().toString(10) + ":" + end.getFullYear().toString(10);
-
-    //preserve an active range previously set by a user to faciliate downloading matched data.
-    var previousMinimum = $(".datepickerstart").datepicker("option", "minDate");
-    var previousMaximum = $(".datepickerend").datepicker("option", "maxDate");
-    var previousRangeFrom = $(".datepickerstart").datepicker("getDate");
-    var previousRangeTo = $(".datepickerend").datepicker("getDate");
-
-    //set new maximums and minimums
-    $.each([".datepickerstart", ".datepickerend"], function (idx, val) {
-        $(val).datepicker("option", "minDate", begin);
-        $(val).datepicker("option", "maxDate", end);
-        $(val).datepicker("option", "yearRange", yearRange);
-    });
-
-    //try to keep the active range, if it was specified and is possible.
-    //fall back to the beginning and end of the new dataset.
-    if(previousMinimum
-            && (previousMinimum.getTime() != previousRangeFrom.getTime())
-            && (previousRangeFrom.getTime() >= begin.getTime() )) {
-        $(".datepickerstart").datepicker("setDate", previousRangeFrom);
-        $(".datepicker").datepicker("setDate", previousRangeFrom);
-    } else {
-        $(".datepickerstart").datepicker("setDate", begin);
-        $(".datepicker").datepicker("setDate", begin);
+// TODO: This belongs in the `calendars` module
+function transferDate(date, newSystem, fallbackDate) {
+    // Transfer `date`, which is a `CfDatetime` object with an
+    // associated `CfTimeSystem` to the (new) `cfTimeSystem`, if possible.
+    //
+    // Transfer is possible if `date`:
+    //  (a) exists
+    //  (b) contains a datetime (year, month, day, etc.) compatible
+    //      with `cfTimeSystem`, meaning the datetime does not throw an
+    //      error when a new `CfDatetime` is created using its values,
+    //      which in turn means it is compatible with `cfTimeSystem.calendar`
+    //      and does not exceed the index bounds of `cfTimeSystem`.
+    //
+    // Otherwise return `fallbackDate`.
+    if (!date) {
+        return fallbackDate;
     }
-
-    if(previousMaximum
-            && (previousMaximum.getTime() != previousRangeTo.getTime())
-            && (previousRangeTo.getTime() <= end.getTime() )) {
-        $(".datepickerend").datepicker("setDate", previousRangeTo);
-    } else {
-        $(".datepickerend").datepicker("setDate", end);
+    if (_.isEqual(date.system, newSystem)) {
+        // Same CfTimeSystem, therefore compatible, no need to create new
+        // CfDatetime.
+        return date;
     }
+    try {
+        var dt = date.toCalendarDatetime().datetime;
+        var result = new calendars.CfDatetime.fromDatetime(
+            newSystem, dt.year, dt.month, dt.day
+        );
+        return result;
+    } catch(error) {
+        return fallbackDate;
+    }
+}
+
+function setTimeAvailable(cfTimeSystem) {
+    // We associate, using jQuery's `.data()` method, a date value
+    // to the start and end datepicker elements. This value encodes the meaning
+    // of the date entered in each element as a `CfDatetime`, which carries
+    // all information about the CF time system (units, start date,
+    // calendar, index count) as well as the value of the date proper.
+    //
+    // We attempt to transfer the existing dates to the next time system,
+    // using the function `transferDate`.
+
+    var $startDate = $("#from-date");
+    var $endDate = $("#to-date");
+
+    var prevStartDate = $startDate.data('cfDate');
+    var prevEndDate = $endDate.data('cfDate');
+
+    var startDate = transferDate(prevStartDate, cfTimeSystem, cfTimeSystem.firstCfDatetime());
+    setDatepicker($startDate, startDate);
+
+    var endDate = transferDate(prevEndDate, cfTimeSystem, cfTimeSystem.lastCfDatetime());
+    setDatepicker($endDate, endDate);
+
+    setCfTimeSystemMessages($('#date-range-messages'), cfTimeSystem);
 
     //fire a change event to trigger the download link to update
    $("[class^='datepicker']").trigger("change");
@@ -248,16 +139,6 @@ function getRasterBbox(capabilities, layer_name) {
     real_bounds.extend(new OpenLayers.LonLat(parseFloat(bbox.attributes.getNamedItem('minx').value), parseFloat(bbox.attributes.getNamedItem('miny').value)));
     real_bounds.extend(new OpenLayers.LonLat(parseFloat(bbox.attributes.getNamedItem('maxx').value), parseFloat(bbox.attributes.getNamedItem('maxy').value)));
     return real_bounds;
-}
-
-function getTimeSelected(ncwms_layer) {
-    //var base = new Date($(".datepickerstart").datepicker("option", "minDate")),
-    var t0 = $(".datepickerstart").datepicker("getDate"),
-        tn = $(".datepickerend").datepicker("getDate"),
-    //  units = ncwms_layer.times.units,
-        t0i = ncwms_layer.times.toIndex(t0),
-        tni = ncwms_layer.times.toIndex(tn);
-    return [t0i, tni];
 }
 
 function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension, callback) {
@@ -312,3 +193,16 @@ function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension, callback
     requestIndex(ul_px.x, ul_px.y);
     requestIndex(lr_px.x, lr_px.y);
 }
+
+condExport(module,  {
+    getNcwmsLayerId: getNcwmsLayerId,
+    ddsToTimeIndex: ddsToTimeIndex,
+    dasToCfTimeSystem: dasToCfTimeSystem,
+    processNcwmsLayerMetadata: processNcwmsLayerMetadata,
+    transferDate: transferDate,
+    setTimeAvailable: setTimeAvailable,
+    intersection: intersection,
+    getRasterNativeProj: getRasterNativeProj,
+    getRasterBbox: getRasterBbox,
+    rasterBBoxToIndicies: rasterBBoxToIndicies
+});
