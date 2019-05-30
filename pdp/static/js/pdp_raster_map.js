@@ -53,6 +53,7 @@ function processNcwmsLayerMetadata(ncwms_layer, catalog) {
     });
 }
 
+// TODO: This belongs in the `calendars` module
 function transferDate(date, newSystem, fallbackDate) {
     // Transfer `date`, which is a `CfDatetime` object with an
     // associated `CfTimeSystem` to the (new) `cfTimeSystem`, if possible.
@@ -92,10 +93,8 @@ function setTimeAvailable(cfTimeSystem) {
     // all information about the CF time system (units, start date,
     // calendar, index count) as well as the value of the date proper.
     //
-    // We attempt to transfer the existing dates to the next time system.
-    //
-    // Note: we don't have yearRange any more.
-    // TODO: Find out what yearRange was for and compensate.
+    // We attempt to transfer the existing dates to the next time system,
+    // using the function `transferDate`.
 
     var $startDate = $("#from-date");
     var $endDate = $("#to-date");
