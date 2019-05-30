@@ -33,6 +33,7 @@ describe('RasterDownloadLink', function() {
                 'y0:y1',
                 'x0:x1'
             );
+            dlLink.dl_url = 'test-dl-url'
         });
 
         afterEach(function() {
@@ -44,7 +45,7 @@ describe('RasterDownloadLink', function() {
         });
 
         it('generates the expected download URL', function() {
-           expect(dlLink.getUrl()).toBe('.nc?tasmax[t0:t1][y0:y1][x0:x1]&')
+           expect(dlLink.getUrl()).toBe('test-dl-url.nc?tasmax[t0:t1][y0:y1][x0:x1]&')
         });
 
         it('calls back a registered function with supplied context', function() {
@@ -64,7 +65,7 @@ describe('RasterDownloadLink', function() {
                 );
                 dlLink.trigger();
                 expect($('#download-timeseries').attr('href'))
-                    .toEqual('.nc?tasmax[t0:t1][y0:y1][x0:x1]&')
+                    .toEqual('test-dl-url.nc?tasmax[t0:t1][y0:y1][x0:x1]&')
             }
         );
     });
