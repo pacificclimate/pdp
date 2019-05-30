@@ -226,6 +226,14 @@ var getRasterControls = function (ensemble_name) {
 
 
 function cfDateTimeFor(cfTimeSystem, specifier) {
+    // Converts the time system-independent specifier `specifier` to a
+    // a CfDatetime having the time system given by `cfTimeSystem`.
+    //
+    // Currently `specifier` is a string with fairly obvious meanings.
+    // This could easily be extended to allow `specifier` values of, e.g.,
+    // type `SimpleDatetime`, which is another time system-independent
+    // way of describing a date (but absolute, rather than relative, as the
+    // strings currently give).
     if (_.isString(specifier)) {
         var spec2Method = {
             first: 'firstCfDatetime',
