@@ -306,7 +306,8 @@ function dateFilterTests(app, config) {
 
                     it('indicates the expected max date', function () {
                         var msg = $('#date-range-ts-max-date').text();
-                        expect(msg).toMatch('2100-12-31');
+                        var ts = config.cfTimeSystem.after;
+                        expect(msg).toMatch(ts.lastCfDatetime().toISOString(true));
                     });
                 });
 
