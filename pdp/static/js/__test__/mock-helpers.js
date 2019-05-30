@@ -44,6 +44,18 @@ function makeMockGet(name, defaultData, autoResolve) {
 }
 
 
+function unexpectedRequest(config) {
+    return function () {
+        if (config.log) {
+            console.log('Unexpected request ' + config.name, arguments);
+        }
+        if (config.throw) {
+            throw new Error('Unexpected request '+ config.name);
+        }
+    }
+}
+
+
 function mock$ajax(config) {
     // Replace jQuery.ajax() with a mock call that can log and/or
     // throw an error if such a request is made. This makes it easy to find
@@ -54,7 +66,7 @@ function mock$ajax(config) {
             console.log('$.ajax(): request', arguments);
         }
         if (config.throw) {
-            throw new Error('Unexpected $.ajax()')
+            throw new Error('Unexpected $.ajax()');
         }
         var response = $ajax.apply(arguments);
         response.done(function () {
@@ -88,6 +100,7 @@ function mockOLXMLHttpRequest(config) {
 
 module.exports = {
     makeMockGet: makeMockGet,
+    unexpectedRequest: unexpectedRequest,
     mock$ajax: mock$ajax,
     mockOLXMLHttpRequest: mockOLXMLHttpRequest
 };
