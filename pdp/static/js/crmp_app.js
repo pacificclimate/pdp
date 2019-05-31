@@ -1,14 +1,13 @@
 /*jslint browser: true, devel: true */
 /*global $, jQuery, pdp, map, init_crmp_map, CRMPFilterChange, getCRMPControls, getCRMPDownloadOptions, getActiveFilters, polyChange, downloadMetadata*/
-"use strict";
-
-// var map;
 
 (function (window, $) {
-    function crmp_app() {
-        var filtChange, downloadForm;
+    "use strict";
 
-        window.map = init_crmp_map();
+    function crmp_app() {
+        var map, filtChange, downloadForm;
+
+        window.map = map = init_crmp_map();
 
         filtChange = pdp.curry(CRMPFilterChange, map);
 
