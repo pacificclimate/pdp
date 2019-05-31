@@ -97,5 +97,7 @@
         getNCWMSLayerCapabilities: getNCWMSLayerCapabilities,
         getNcwmsLayerDDS: getNcwmsLayerDDS,
         getNcwmsLayerDAS: getNcwmsLayerDAS,
+        getStationCount: getStationCount,
+        getRecordLength: getRecordLength,
     }, 'dataServices');
 })(jQuery);
