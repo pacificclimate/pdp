@@ -25,3 +25,8 @@ function getVICControls(ensemble_name) {
     div.appendChild(form);
     return div;
 }
+
+
+condExport(module, {
+    getVICControls: getVICControls
+});
