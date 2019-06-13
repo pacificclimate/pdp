@@ -71,7 +71,5 @@ dateFilterTests(gridded_observations_app, {
     defaultEndDate: {
         before: beforeCfTimeSystem.todayAsCfDatetime(),
         after: afterCfTimeSystem.todayAsCfDatetime()
-    },
-    omitsDownloadDataLink: true,
-    omitsloadFullTimeSeriesCheckbox: true,
+    }
 });
