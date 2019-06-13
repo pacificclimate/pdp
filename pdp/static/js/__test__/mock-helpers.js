@@ -18,6 +18,10 @@ function makeMockGet(name, defaultData, autoResolve) {
     // to resolve immediately with the provided default data.
     // This is for cases where there is no wish to perform before-and-after
     // tests.
+    //
+    // Also attached to the function is a function `reset`, which sets the
+    // Deferred to a new deferred so that it can be invoked repeatedly with
+    // fresh data each time.
 
     var deferred = $.Deferred();
 
@@ -45,7 +49,14 @@ function makeMockGet(name, defaultData, autoResolve) {
 
 
 function unexpectedRequest(config) {
-    return function () {
+    // Parallel to `makeMockGet`, but returns a `get` function that only
+    // signals a problem if it is called.
+    //
+    // The attached functions `resolveWithDefault` and `reset` do nothing,
+    // but permit the returned `get` to be used identically so that
+    // test setup and teardown does not have to have special cases for these
+    // mocks.
+    function get() {
         if (config.log) {
             console.log('Unexpected request ' + config.name, arguments);
         }
@@ -53,7 +64,13 @@ function unexpectedRequest(config) {
             throw new Error('Unexpected request '+ config.name);
         }
     }
+
+    get.resolveWithDefault = function() {};
+    get.reset = function() {};
+
+    return get;
 }
+
 
 
 function mock$ajax(config) {
