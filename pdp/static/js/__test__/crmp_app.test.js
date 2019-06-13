@@ -69,5 +69,5 @@ dateFilterTests(crmp_app, {
         after: defaultEndDate
     },
     omitsDownloadDataLink: true,
-    omitsloadFullTimeSeriesCheckbox: true,
+    omitsDownloadFullTimeSeriesCheckbox: true,
 });
