@@ -85,26 +85,18 @@ function init_obs_map() {
     ncwms.events.register('change', ncwms, set_map_title);
 
     ncwms.events.registerPriority('change', ncwms, function (layer_id) {
-        var lyr_params, metadata_req;
-        lyr_params = {
-            "id": layer_id.split('/')[0],
-            "var": layer_id.split('/')[1]
-        };
-        metadata_req = $.ajax({
-            url: "../metadata.json?request=GetMinMaxWithUnits",
-            data: lyr_params
-        });
-        metadata_req.done(function (data) {
+        dataServices.getMetadata(layer_id).done(function (data) {
             var newParams = {};
             var min, max;
-            if(lyr_params["var"] == "pr"){
+            var layer_var = layer_id.split('/')[1];
+            if(layer_var === "pr"){
               newParams["LOGSCALE"] = true;
               min = 1;
               max = data.max;
               newParams["STYLES"] = "boxfill/blueheat";
             }
             else {
-              newParams["LOGSCALE"] == "false";
+              newParams["LOGSCALE"] = "false";
               newParams["STYLES"] = "boxfill/default";
               min = data.min;
               max = data.max;
@@ -127,3 +119,8 @@ function init_obs_map() {
 
     return map;
 }
+
+
+condExport(module, {
+    init_obs_map: init_obs_map
+});

@@ -1,9 +1,11 @@
-// Mock data-services module for testing
+// Mock data-services module for testing canada_ex_app
 // For tests only, so is a pure Node module
+// Note this does not follow the arrangement for
+// [Jest module "manual mocks"] (https://jestjs.io/docs/en/manual-mocks)
 
 var convert = require('xml-js');
 
-var mockHelpers = require('../__test__/mock-helpers');
+var mockHelpers = require('../../__test__/mock-helpers');
 var makeMockGet = mockHelpers.makeMockGet;
 
 // Mocking presently only for tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada
