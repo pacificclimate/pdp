@@ -17,7 +17,8 @@ require('./globals-helpers').importGlobals([
     { module: 'js/condExport', name: 'condExport' },
     { module: 'js/classes.js', name: 'classes' },
     { module: 'js/calendars.js', name: 'calendars' },
-    { module: 'js/data-services.js', name: 'dataServices' },
+    // Note: Mocking!
+    { module: 'js/__mocks__/data-services/crmp_app.js', name: 'dataServices' },
 
     { module: 'js/pdp_dom_library.js', spread: false },
     { module: 'js/pdp_controls.js', spread: true },
@@ -37,10 +38,6 @@ require('./globals-helpers').importGlobals([
 ], '../..');
 
 var dateFilterTests = require('./date-filter-tests');
-
-
-jest.mock('../../js/data-services');
-var dataServices = require('../../js/data-services');
 
 
 var mockHelpers = require('./mock-helpers');
