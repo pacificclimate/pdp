@@ -796,6 +796,7 @@
 
 
     var exports = {
+        lz2: lz2,
         formatDatetimeRaw: formatDatetimeRaw,
         formatDatetimeISO8601: formatDatetimeISO8601,
         SimpleDatetime: SimpleDatetime,

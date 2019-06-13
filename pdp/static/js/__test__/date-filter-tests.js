@@ -122,11 +122,11 @@ function dateFilterTests(app, config) {
             describe('date inputs', function () {
                 describe('initial values', function () {
                     each([
-                        ['before', function() {}],
+                        ['before', null],
                         ['after', resolveAlldataServices],
                     ]).describe('%s data services resolve', function (phase, action) {
                         beforeEach(function () {
-                            action();
+                            if (action) action();
                         });
 
                         each([
@@ -162,18 +162,24 @@ function dateFilterTests(app, config) {
                     // TODO: DRY up valid and invalid input tests
                     describe('with valid inputs', function () {
                         each([
-                            ['#from-date', 1980, 1, 1],
-                            ['#from-date', 1990, 9, 30],
-                            ['#to-date', 1980, 1, 1],
-                            ['#to-date', 1990, 9, 30],
+                            // Full date inputs
+                            ['#from-date', '1980/01/01', 1980, 1, 1],
+                            ['#from-date', '1990/09/30', 1990, 9, 30],
+                            ['#to-date', '1980/01/01', 1980, 1, 1],
+                            ['#to-date', '1990/09/30', 1990, 9, 30],
+
+                            // Partial date inputs
+                            ['#from-date', '1980/01', 1980, 1, 1],
+                            ['#from-date', '1980', 1980, 1, 1],
+                            ['#to-date', '1980/01', 1980, 1, 1],
+                            ['#to-date', '1980', 1980, 1, 1],
                         ]).describe(
-                            '%s equals "%d-%d-%d"',
-                            function (selector, year, month, day) {
-                                var $date, dateString;
+                            '%s equals "%s"',
+                            function (selector, dateString, year, month, day) {
+                                var $date;
                                 beforeEach(function () {
                                     // Enter data in the input element
                                     $date = $downloadForm.find(selector);
-                                    dateString = year + '/' + month + '/' + day;
                                     $date.val(dateString);
                                     $date.change();
                                 });
@@ -185,9 +191,13 @@ function dateFilterTests(app, config) {
                                             system, year, month, day));
                                 });
 
-                                it('doesn\'t modify the input element', function () {
-                                    expect($date.val()).toBe(dateString);
-                                });
+                                it('sets the input element to full date',
+                                    function () {
+                                        var lz2 = calendars.lz2;
+                                        var expected = year + '/' + lz2(month) + '/' + lz2(day);
+                                        expect($date.val()).toBe(expected);
+                                    }
+                                );
 
                                 it('shows no error message', function () {
                                     var $error = $(selector + '-error-message');

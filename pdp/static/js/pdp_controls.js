@@ -149,6 +149,7 @@ function processDateRangeInput($date, fallbackFlag, $error) {
     var date;
     try {
         date = calendars.CfDatetime.fromLooseFormat(cfTimeSystem, $date.val());
+        $date.val(date.toLooseString(true));
         $error.addClass('inactive');
         $error.find('.value').html('');
     } catch(error) {

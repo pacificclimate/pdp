@@ -251,3 +251,8 @@ function init_crmp_map() {
 
     return map;
 }
+
+
+condExport(module, {
+    init_crmp_map: init_crmp_map
+});
