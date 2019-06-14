@@ -40,7 +40,7 @@
             }
         });
 
-        dataServices.getRoutedFlowMetadata.done(function (data) {
+        dataServices.getRoutedFlowMetadata().done(function (data) {
             var inProj = new OpenLayers.Projection("EPSG:4326");
 
             dataArray = $.csv.toObjects(data);
