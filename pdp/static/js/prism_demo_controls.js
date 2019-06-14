@@ -18,3 +18,7 @@ function getPRISMControls(ensemble_name) {
     div.appendChild(form);
     return div;
 }
+
+condExport(module, {
+    getPRISMControls: getPRISMControls
+});

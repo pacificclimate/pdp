@@ -252,8 +252,16 @@ var getRasterDownloadOptions = function (startDateSpec, endDateSpec) {
         downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get")),
         downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
     if (startDateSpec || endDateSpec) {
-        // Assign a temporary time system. This should actually be based on the
-        // first ncwms (climate) layer, but that comes later.
+        // If a start date or end date is specified, then add the date range
+        // controls to the form.
+
+        // Assign an initial time system. This will be replaced by the time
+        // system dictated by the ncwms layer, but it loads asynchronously
+        // and is not available at this point.
+        // TODO: Should this be removed and replaced with 'undefined' for
+        // the values of the temporary start and end date? It would make more
+        // sense, but this is safer in that it is less likely to break existing
+        // code, a major consideration.
         var calendar = calendars['gregorian'];
         var units = 'days';
         var cfTimeSystem = new calendars.CfTimeSystem(
@@ -264,6 +272,7 @@ var getRasterDownloadOptions = function (startDateSpec, endDateSpec) {
         var startDate = cfDateTimeFor(cfTimeSystem, startDateSpec);
         var endDate = cfDateTimeFor(cfTimeSystem, endDateSpec);
 
+        // Add date range controls.
         downloadFieldset.appendChild(getDateRange(startDate, endDate));
     }
     downloadFieldset.appendChild(createRasterFormatOptions());

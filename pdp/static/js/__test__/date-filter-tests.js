@@ -1,6 +1,9 @@
 // Test suite to test date filter (download start, end date) 
 // functionality. Abstracted out so it can be used by tests of multiple apps.
 
+// TODO: This test suite, while useful and correct, needs some refactoring.
+// It could be DRYed up in places and organized better overall.
+
 var each = require('jest-each').default;
 
 function logDownloadDates() {
@@ -42,7 +45,13 @@ function dateFilterTests(app, config) {
     //      builds the app, e.g., `canada_ex_app`
     //
     // 'config`: Object
-    //      configures the tests with specifics that vary by app
+    //      configures the tests with specifics that vary by app, using the
+    //      following properties:
+    //
+    //      `omitsDateFilter`: Boolean
+    //          Set to true to skip tests of date filter and to assert that
+    //          date filter controls are not present. This skips almost
+    //          all tests that the following properties control.
     //      `cfTimeSystem`: Object
     //          Time system ...
     //          `before`: Assigned by app before data services resolve
@@ -56,11 +65,11 @@ function dateFilterTests(app, config) {
     //          `before`: Assigned by app before data services resolve
     //          `after`: Assigned by app after data services resolve
     //      `omitsDownloadDataLink`: Boolean
-    //          Set to true to skip tests on (presumably omitted) download
-    //          data link.
+    //          Set to true to skip tests on download data link
+    //          and to assert that it is absent.
     //      `omitsDownloadFullTimeSeriesCheckbox`: Boolean
-    //          Set to true to skip tests on (presumably omitted) download
-    //          full time series checkbox.
+    //          Set to true to skip tests on download full time series checkbox
+    //          and to assert that it is absent.
     describe('app', function () {
         beforeEach(function () {
             // Reset the DOM (jsdom)
@@ -118,6 +127,20 @@ function dateFilterTests(app, config) {
             beforeEach(function () {
                 $downloadForm = $('#download-form');
             });
+
+            if (config.omitsDateFilter) {
+                describe('contains no date filter controls', function () {
+                    each([
+                        '#from-date',
+                        '#to-date',
+                        '#download-full-timeseries'
+                    ]).it('%s is absent', function (selector) {
+                        var $control = $downloadForm.find(selector);
+                        expect($control.length).toBe(0);
+                    })
+                });
+                return;
+            }
 
             describe('date inputs', function () {
                 describe('initial values', function () {
@@ -405,14 +428,18 @@ function dateFilterTests(app, config) {
                 it('has the expected initial time range', function () {
                     var linkUrl = $link.attr('href');
 
-                    var startDate = getDownloadCfDate('#from-date');
-                    var endDate = getDownloadCfDate('#to-date');
+                    if (config.omitsDateFilter) {
+                        expect(linkUrl).toMatch(/\?[^[]+\[\]/);
+                    } else {
+                        var startDate = getDownloadCfDate('#from-date');
+                        var endDate = getDownloadCfDate('#to-date');
 
-                    expect(linkUrl).toMatch(RegExp(
-                        '\\?\\w+\\[' +
-                        startDate.toIndex() + ':' + endDate.toIndex() +
-                        '\\]'
-                    ));
+                        expect(linkUrl).toMatch(RegExp(
+                            '\\?\\w+\\[' +
+                            startDate.toIndex() + ':' + endDate.toIndex() +
+                            '\\]'
+                        ));
+                    }
                 });
 
             });
