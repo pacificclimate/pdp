@@ -42,6 +42,9 @@ function dateFilterTests(app, config) {
     //      builds the app, e.g., `canada_ex_app`
     //
     // 'config`: Object
+    //      `omitsDateFilter`: Boolean
+    //          Set to true to skip tests of date filter and to test that
+    //          date filter controls are not present.
     //      configures the tests with specifics that vary by app
     //      `cfTimeSystem`: Object
     //          Time system ...
@@ -118,6 +121,20 @@ function dateFilterTests(app, config) {
             beforeEach(function () {
                 $downloadForm = $('#download-form');
             });
+
+            if (config.omitsDateFilter) {
+                describe('contains no date filter controls', function () {
+                    each([
+                        '#from-date',
+                        '#to-date',
+                        '#download-full-timeseries'
+                    ]).it('%s is absent', function (selector) {
+                        var $control = $downloadForm.find(selector);
+                        expect($control.length).toBe(0);
+                    })
+                });
+                return;
+            }
 
             describe('date inputs', function () {
                 describe('initial values', function () {
@@ -405,14 +422,18 @@ function dateFilterTests(app, config) {
                 it('has the expected initial time range', function () {
                     var linkUrl = $link.attr('href');
 
-                    var startDate = getDownloadCfDate('#from-date');
-                    var endDate = getDownloadCfDate('#to-date');
+                    if (config.omitsDateFilter) {
+                        expect(linkUrl).toMatch(/\?[^[]+\[\]/);
+                    } else {
+                        var startDate = getDownloadCfDate('#from-date');
+                        var endDate = getDownloadCfDate('#to-date');
 
-                    expect(linkUrl).toMatch(RegExp(
-                        '\\?\\w+\\[' +
-                        startDate.toIndex() + ':' + endDate.toIndex() +
-                        '\\]'
-                    ));
+                        expect(linkUrl).toMatch(RegExp(
+                            '\\?\\w+\\[' +
+                            startDate.toIndex() + ':' + endDate.toIndex() +
+                            '\\]'
+                        ));
+                    }
                 });
 
             });
