@@ -68,14 +68,6 @@ function init_prism_map() {
         return true;
     }
 
-    // TODO: Remove. Unused. Contains error.
-    // function month_name(mon) {
-    //   months = ["January","February","March","April",
-    //            "May","June","July","August",
-    //            "September","October","November","December"];
-    //   return names[mon - 1];
-    // }
-
     function ncwms_params(layer_name) {
         var varname = layer_name.split('/')[1];
         var isClimatology = layer_name.split('/')[0].indexOf("Clim") !== -1;
