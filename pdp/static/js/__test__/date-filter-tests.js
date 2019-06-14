@@ -58,7 +58,7 @@ function dateFilterTests(app, config) {
     //      `omitsDownloadDataLink`: Boolean
     //          Set to true to skip tests on (presumably omitted) download
     //          data link.
-    //      `omitsloadFullTimeSeriesCheckbox`: Boolean
+    //      `omitsDownloadFullTimeSeriesCheckbox`: Boolean
     //          Set to true to skip tests on (presumably omitted) download
     //          full time series checkbox.
     describe('app', function () {
@@ -147,6 +147,26 @@ function dateFilterTests(app, config) {
                                 expect(cfDate).toEqual(expectedCfDate)
                             });
                         });
+                    });
+
+                    describe('Download Full Dataset checkbox', function () {
+                        it(
+                            'is ' + (config.omitsDownloadFullTimeSeriesCheckbox ? 'absent' : 'present'),
+                            function () {
+                                var $checkbox = $downloadForm.find('#download-full-timeseries');
+                                expect($checkbox.length).toEqual(
+                                    config.omitsDownloadFullTimeSeriesCheckbox ? 0 : 1);
+                            });
+                    });
+
+                    describe('Data download link', function () {
+                        it(
+                            'is ' + (config.omitsDownloadDataLink ? 'absent' : 'present'),
+                            function () {
+                                var $link = $downloadForm.find('a#download-timeseries');
+                                expect($link.length).toEqual(
+                                    config.omitsDownloadDataLink ? 0 : 1);
+                            });
                     });
                 });
 
@@ -313,13 +333,8 @@ function dateFilterTests(app, config) {
 
             });
 
-            if (!config.omitsloadFullTimeSeriesCheckbox) {
+            if (!config.omitsDownloadFullTimeSeriesCheckbox) {
                 describe('Download Full Timeseries checkbox', function () {
-                    it('exists', function () {
-                        var $checkbox = $downloadForm.find('#download-full-timeseries');
-                        expect($checkbox.length).toBeGreaterThan(0);
-                    });
-
                     describe('sets inputs correctly when checked', function () {
                         beforeEach(function () {
                             resolveAlldataServices();
