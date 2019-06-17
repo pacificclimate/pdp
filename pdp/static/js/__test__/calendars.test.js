@@ -209,6 +209,11 @@ describe('GregorianCalendar', function () {
 
             [1901, 2, 28, true],
             [1901, 2, 29, false],
+
+            [1950, 0, 1, false],
+            [1950, -1, 1, false],
+            [1950, 1, 0, false],
+            [1950, 1, -1, false],
         ])('%d-%d-%d: %s',
             function (year, month, day, expected) {
                 expect(calendar.isValidDate(year, month, day)).toBe(expected);
