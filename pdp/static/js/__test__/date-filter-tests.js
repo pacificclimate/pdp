@@ -190,6 +190,11 @@ function dateFilterTests(app, config) {
                                             system, year, month, day));
                                 });
 
+                                it('sets validEntry to true', function () {
+                                    var validEntry = $date.data('validEntry');
+                                    expect(validEntry).toBe(true);
+                                });
+
                                 it('sets the input element to full date',
                                     function () {
                                         var lz2 = calendars.lz2;
@@ -249,6 +254,11 @@ function dateFilterTests(app, config) {
                                         system.firstCfDatetime();
                                     var cfDate = $date.data('cfDate');
                                     expect(cfDate).toEqual(fallbackDate);
+                                });
+
+                                it('sets validEntry to false', function () {
+                                    var validEntry = $date.data('validEntry');
+                                    expect(validEntry).toBe(false);
                                 });
 
                                 it('doesn\'t modify the input element', function () {
