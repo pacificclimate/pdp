@@ -111,3 +111,10 @@ function createSearchBox(id, cssClass, data, select_callback) {
     sbox.placeholder = "Station Name or ID";
     return sbox;
 }
+
+condExport(module, {
+    createClearSelectionButton: createClearSelectionButton,
+    getHydroStnControls: getHydroStnControls,
+    addToSidebar: addToSidebar,
+    createSearchBox: createSearchBox,
+});

@@ -90,6 +90,11 @@
     }
 
 
+    function getRoutedFlowMetadata() {
+        return $.ajax(pdp.app_root + "/csv/routed_flow_metadatav4.csv");
+    }
+
+
     condExport(module, {
         getCatalog: getCatalog,
         getMetadata: getMetadata,
@@ -99,5 +104,6 @@
         getNcwmsLayerDAS: getNcwmsLayerDAS,
         getStationCount: getStationCount,
         getRecordLength: getRecordLength,
+        getRoutedFlowMetadata: getRoutedFlowMetadata,
     }, 'dataServices');
 })(jQuery);

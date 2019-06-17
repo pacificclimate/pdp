@@ -141,3 +141,7 @@ function init_hydro_stn_map() {
     };
     return map;
 }
+
+condExport(module, {
+    init_hydro_stn_map: init_hydro_stn_map,
+});
