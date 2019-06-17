@@ -5,6 +5,7 @@
 // It could be DRYed up in places and organized better overall.
 
 var each = require('jest-each').default;
+var mockHelpers = require('./mock-helpers');
 var htmlTemplate = require('./html-template');
 
 function logDownloadDates() {
@@ -18,28 +19,12 @@ function logDownloadDates() {
     );
 }
 
-function resolveAlldataServices() {
-    logDownloadDates();
-    dataServices.getMetadata.resolveWithDefault();
-    logDownloadDates();
-    dataServices.getCatalog.resolveWithDefault();
-    logDownloadDates();
-    dataServices.getNCWMSLayerCapabilities.resolveWithDefault();
-    logDownloadDates();
-    dataServices.getNcwmsLayerDDS.resolveWithDefault();
-    logDownloadDates();
-    dataServices.getNcwmsLayerDAS.resolveWithDefault();
-    logDownloadDates();
-    // TODO: Resolve other data services?
+function resolveAllDataServices() {
+    mockHelpers.resolveAllWithDefault(dataServices);
 }
 
 function resetAllDataServices() {
-    dataServices.getMetadata.reset();
-    dataServices.getCatalog.reset();
-    dataServices.getNCWMSLayerCapabilities.reset();
-    dataServices.getNcwmsLayerDDS.reset();
-    dataServices.getNcwmsLayerDAS.reset();
-    // TODO: Reset other data services?
+    mockHelpers.resetAll(dataServices);
 }
 
 function dateFilterTests(app, config) {
@@ -117,7 +102,7 @@ function dateFilterTests(app, config) {
                 describe('initial values', function () {
                     each([
                         ['before', null],
-                        ['after', resolveAlldataServices],
+                        ['after', resolveAllDataServices],
                     ]).describe('%s data services resolve', function (phase, action) {
                         beforeEach(function () {
                             if (action) action();
@@ -167,7 +152,7 @@ function dateFilterTests(app, config) {
                 describe('user interaction', function () {
                     var system;
                     beforeEach(function () {
-                        resolveAlldataServices();
+                        resolveAllDataServices();
                         var $startDate = $downloadForm.find('#from-date');
                         var startDate = $startDate.data('cfDate');
                         system = startDate.system;
@@ -286,7 +271,7 @@ function dateFilterTests(app, config) {
 
             describe('annotations', function () {
                 beforeEach(function () {
-                    resolveAlldataServices();
+                    resolveAllDataServices();
                 });
 
                 describe('calendar', function () {
@@ -331,7 +316,7 @@ function dateFilterTests(app, config) {
                 describe('Download Full Timeseries checkbox', function () {
                     describe('sets inputs correctly when checked', function () {
                         beforeEach(function () {
-                            resolveAlldataServices();
+                            resolveAllDataServices();
                         });
 
                         // We have to use a function to specify the value of
@@ -388,7 +373,7 @@ function dateFilterTests(app, config) {
             describe('Data Download link', function () {
                 var $link;
                 beforeEach(function () {
-                    resolveAlldataServices();
+                    resolveAllDataServices();
                     $link = $('#download-timeseries');
                 });
 
