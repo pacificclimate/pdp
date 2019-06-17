@@ -174,6 +174,10 @@ function dateChange(map, e) {
     processDateRangeInput($startDate, false, $('#from-date-error-message'))
     processDateRangeInput($endDate, true, $('#to-date-error-message'));
     map.filters.date = date_filter($startDate.val(), $endDate.val());
+    var validEntries =
+        $startDate.data('validEntry') && $endDate.data('validEntry');
+    $('#download-climatology').prop('disabled', !validEntries);
+    $('#download-timeseries').prop('disabled', !validEntries);
 }
 
 function polyChange(map) {
