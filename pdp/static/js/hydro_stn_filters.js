@@ -1,3 +1,5 @@
+// TODO: Remove? See https://github.com/pacificclimate/pdp/issues/130
+
 /*jslint browser: true, devel: true */
 /*global $, jQuery, OpenLayers, pdp, map, pp_bignum, CRMPFilterChange, polygon_as_text*/
 

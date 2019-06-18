@@ -68,13 +68,6 @@ function init_prism_map() {
         return true;
     }
 
-    function month_name(mon) {
-      months = ["January","February","March","April",
-               "May","June","July","August",
-               "September","October","November","December"];
-      return names[mon - 1];
-    }
-
     function ncwms_params(layer_name) {
         var varname = layer_name.split('/')[1];
         var isClimatology = layer_name.split('/')[0].indexOf("Clim") !== -1;
@@ -131,17 +124,7 @@ function init_prism_map() {
     cb.refresh_values();
 
     ncwms.events.registerPriority('change', ncwms, function (layer_id) {
-        var lyr_params, metadata_req;
-
-        lyr_params = {
-            "id": layer_id.split('/')[0],
-            "var": layer_id.split('/')[1]
-        };
-        metadata_req = $.ajax({
-            url: "../metadata.json?request=GetMinMaxWithUnits",
-            data: lyr_params
-        });
-        metadata_req.done(function (data) {
+        dataServices.getMetadata(layer_id).done(function (data) {
             var new_params = ncwms_params.call(ncwms, layer_id);
             ncwms.mergeNewParams(new_params); // this does a layer redraw
             cb.force_update(parseFloat(ncwms.params.COLORSCALERANGE.split(',')[0]),
@@ -160,3 +143,7 @@ function init_prism_map() {
 
     return map;
 }
+
+condExport(module, {
+    init_prism_map: init_prism_map
+});

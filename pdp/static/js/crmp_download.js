@@ -36,3 +36,9 @@ function getCRMPDownloadOptions() {
 
     return frag;
 }
+
+condExport(module, {
+    getClipCheckbox: getClipCheckbox,
+    createDownloadButtons: createDownloadButtons,
+    getCRMPDownloadOptions: getCRMPDownloadOptions,
+});

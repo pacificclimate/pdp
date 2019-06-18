@@ -47,4 +47,13 @@ function createDownloadLink(id, divClass, links) {
         downloadDiv.appendChild(l);
     });
     return downloadDiv;
-};
+}
+
+
+condExport(module,  {
+    createFormatOptions: createFormatOptions,
+    createRasterFormatOptions: createRasterFormatOptions,
+    createMetadataFormatOptions: createMetadataFormatOptions,
+    createDownloadButtons: createDownloadButtons,
+    createDownloadLink: createDownloadLink,
+});

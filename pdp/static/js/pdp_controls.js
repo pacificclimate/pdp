@@ -3,58 +3,170 @@
 "use strict";
 
 // globals
-var pdp, ncwms, map;
+var ncwms, map;
+// var pdp, ncwms, map;
 
-function getDateRange(omitFullTimeCheckbox) {
-    var omitFullTimeCheckbox = (typeof omitFullTimeCheckbox !== 'undefined') ? omitFullTimeCheckbox : false;
-    
-    var rangeDiv = pdp.createDiv("date-range");
-    rangeDiv.appendChild(pdp.createLabel("date-range-label", "Date Range", "date-range"));
-    rangeDiv.appendChild(pdp.createInputElement("text", "datepickerstart", "from-date", "from-date", "YYYY/MM/DD"));
-    rangeDiv.appendChild(document.createTextNode(" to "));
-    rangeDiv.appendChild(pdp.createInputElement("text", "datepickerend", "to-date", "to-date", "YYYY/MM/DD"));
-    rangeDiv.appendChild(pdp.createInputElement("hidden", "", "input-polygon", "input-polygon", ""));
+// Note re. "datepickers":
+//
+// At present we are using only ordinary textbox input elements for user date
+// input. We would like to use a more sophisticated UI element such as jQuery
+// UI's Datepicker, but it is limited to the Gregorian calendar (as is the JS
+// native `Date` object). Since we must handle non-Gregorian calendars, we
+// must either roll our own or settle for a simpler UI. We chose the latter.
+//
+// Therefore presently our datepickers are input elements with the following
+// data value attached to them using the jQuery `.data()` method:
+//
+//      'cfDate': a `CfDatetime` object representing the value of the datepicker.
+//          Such an object carries with it the full specification of the
+//          CF time system (units, since, calendar) in which the value is
+//          embedded.
 
-    $('.datepickerstart', rangeDiv).datepicker({
-        inline: true,
-        dateFormat: 'yy/mm/dd',
-        changeMonth: true,
-        changeYear: true,
-        yearRange: '1870:cc',
-        defaultDate: '1870/01/01'
-    });
-    $('.datepickerend', rangeDiv).datepicker({
-        inline: true,
-        dateFormat: 'yy/mm/dd',
-        changeMonth: true,
-        changeYear: true,
-        yearRange: '1870:cc',
-        defaultDate: 'cc'
-    });
+function setDatepicker(element, cfDate) {
+    // Set a datepicker element's value.
+    // Update both the input element's value and the associated cfDate datum.
+    element.data('cfDate', cfDate);
+    element.val(cfDate.toLooseString(true));
+}
+
+function setCfTimeSystemMessages(within, cfTimeSystem) {
+    var calendar = cfTimeSystem.startDate.calendar;
+    within.find('#date-range-calendar .value')
+        .html(calendar.name + ' (\'' + calendar.type + '\')');
+    within.find('#date-range-ts-units')
+        .text(cfTimeSystem.units);
+    within.find('#date-range-ts-start-date')
+        .text(cfTimeSystem.startDate.toISOString(true));
+    within.find('#date-range-ts-max-date')
+        .text(cfTimeSystem.lastCfDatetime().toISOString(true));
+}
+
+
+function getDateRange(
+    startDate, endDate, omitFullTimeCheckbox, omitTimeSystemInfo
+) {
+    var rangeDiv = $(
+        '<div id="date-range">' +
+        '   <label id="date-range-label" for="date-range">Date Range</label>' +
+        '   <div id="date-range-inputs">' +
+        '       <input type="text" id="from-date" name="from-date" ' +
+        '       class="datepickerstart">' +
+        '       to ' +
+        '       <input type="text" id="to-date" name="to-date" ' +
+        '       class="datepickerend">' +
+        '       <input type="hidden" id="input-polygon" name="input-polygon">' +
+        '   </div>' +
+        '   <div id="date-range-messages">' +
+        '       <div id="date-range-error-messages">' +
+        '           <div id="from-date-error-message" class="inactive">' +
+        '               <span class="label">From date: </span><span class="value"/>' +
+        '           </div>' +
+        '           <div id="to-date-error-message" class="inactive">' +
+        '               <span class="label">To date: </span><span class="value"/>' +
+        '           </div>' +
+        '       </div>' +
+        '       <div id="date-range-annotations">' +
+        '           <div id="date-range-calendar">' +
+        '               <span class="label">Calendar: </span><span class="value"/>' +
+        '           </div>' +
+        '           <div id="date-range-ts">' +
+        '               <span class="label">Time System: </span>' +
+        '               <span id="date-range-ts-units" class="value"/>' +
+        '               since ' +
+        '               <span id="date-range-ts-start-date" class="value"/>' +
+        '               \n(up to ' +
+        '               <span id="date-range-ts-max-date"/>)' +
+        '           </div>' +
+        '       </div>' +
+        '   </div>' +
+        '</div>'
+    );
+
+    if (omitTimeSystemInfo) {
+        // This could be done by omitting the HTML, but this is easy.
+        rangeDiv.find('#date-range-annotations').css({ display: 'none'});
+    }
+
+    var $startDate = rangeDiv.find("#from-date");
+    var $endDate = rangeDiv.find("#to-date");
+
+    setDatepicker($startDate, startDate);
+    setDatepicker($endDate, endDate);
+
+    setCfTimeSystemMessages(rangeDiv, startDate.system);
 
     if (!omitFullTimeCheckbox) {
-        var checkboxDiv = pdp.createDiv("download-all-time");
-        checkboxDiv.appendChild(pdp.createInputElement("checkbox", undefined, "download-full-timeseries", "download-full-timeseries", undefined));
-        checkboxDiv.appendChild(pdp.createLabel(undefined, "Download Full Timeseries", "download-full-timeseries"));
-        rangeDiv.appendChild(checkboxDiv);
+        $(
+            '<div id="download-all-time">' +
+            '   <input type="checkbox" id="download-full-timeseries" name="download-full-timeseries">' +
+            '   <label for="download-full-timeseries">Download Full Timeseries</label>' +
+            '</div>'
+        ).appendTo(rangeDiv);
 
-        // Specify full timeseries download by setting to min/max dates
-        $("#pdp-controls").on("change", "#download-full-timeseries", function(evt) {
+        $("#pdp-controls").on(
+            "change", "#download-full-timeseries",
+            function(evt) {
+                var $startDate = $('#from-date');
+                var $endDate = $('#to-date');
                 if (this.checked) {
-                    $("#from-date").datepicker('disable').addClass("disabled").datepicker("setDate", $("#from-date").datepicker("option", "minDate"));
-                    $("#to-date").datepicker('disable').addClass("disabled").datepicker("setDate", $("#to-date").datepicker("option", "maxDate"));
+                    // Specify full timeseries download by setting to min/max dates
+                    var startDate = $startDate.data('cfDate');
+                    setDatepicker($startDate, startDate.system.firstCfDatetime());
+                    $startDate.prop('disabled', true);
+
+                    var endDate = $endDate.data('cfDate');
+                    setDatepicker($endDate, endDate.system.lastCfDatetime());
+                    $endDate.prop('disabled', true);
+
                     // Trigger event to call dlLink.onTimeChange()
                     $("[class^='datepicker']").trigger("change");
                 } else {
-                    $("#from-date").datepicker('enable').removeClass("disabled");
-                    $("#to-date").datepicker('enable').removeClass("disabled");
+                    $startDate.prop('disabled', false);
+                    $endDate.prop('disabled', false);
                 }
             }
         );
     }
 
-    return rangeDiv;
+    // [0] converts from jQuery object to HTML element
+    return rangeDiv[0];
 }
+
+function processDateRangeInput($date, fallbackFlag, $error) {
+    // Process the content of a date range input element `$date` by:
+    //    - updating its associated `cfDate` data value according to the
+    //      input element content; convert it to a CfTime in the same
+    //      CF time system as the existing data value
+    //    - updating the error element `$error` according to success or
+    //      failure of the conversion
+    // If the date input element contains invalid content:
+    //  - use the date specified by `fallbackFlag`: falsy => first date
+    //      in CF time system; truthy => last date.
+    //  - set an error message
+    // Finally, return the actual date set (from input or fallback if error).
+    var cfTimeSystem = $date.data('cfDate').system;
+
+    var date;
+    try {
+        date = calendars.CfDatetime.fromLooseFormat(cfTimeSystem, $date.val());
+        $date.val(date.toLooseString(true));
+        $date.data('validEntry', true);
+        $error.addClass('inactive');
+        $error.find('.value').html('');
+    } catch(error) {
+        date = fallbackFlag ?
+            cfTimeSystem.lastCfDatetime() :
+            cfTimeSystem.firstCfDatetime();
+        $date.data('validEntry', false);
+        $error.removeClass('inactive');
+        $error.find('.value').html(error.message);
+    }
+
+    $date.data('cfDate', date);
+
+    return date;
+}
+
 
 function generateMenuTree(subtree, leafNameMapping) {
     var ul = $("<ul/>");
@@ -83,10 +195,10 @@ function generateMenuTree(subtree, leafNameMapping) {
 }
 
 function getRasterAccordionMenu(ensembleName, leafNameMapping) {
-    var divId = "dataset-menu",
-        div = pdp.createDiv(divId),
-        url = '../menu.json?ensemble_name=' + ensembleName;
-    $.ajax(url, {dataType: "json"}).done(function (data) {
+    var divId = "dataset-menu";
+    var div = pdp.createDiv(divId);
+
+    dataServices.getRasterAccordionMenuData(ensembleName).done(function (data) {
         var menu_tree = generateMenuTree(data, leafNameMapping);
         menu_tree.addClass("dataset-menu");
         $("#" + divId).html(menu_tree);
@@ -115,13 +227,55 @@ var getRasterControls = function (ensemble_name) {
     return div;
 };
 
-var getRasterDownloadOptions = function (include_dates_selection) {
+
+function cfDateTimeFor(cfTimeSystem, specifier) {
+    // Converts the time system-independent specifier `specifier` to a
+    // a CfDatetime having the time system given by `cfTimeSystem`.
+    //
+    // Currently `specifier` is a string with fairly obvious meanings.
+    // This could easily be extended to allow `specifier` values of, e.g.,
+    // type `SimpleDatetime`, which is another time system-independent
+    // way of describing a date (but absolute, rather than relative, as the
+    // strings currently give).
+    if (_.isString(specifier)) {
+        var spec2Method = {
+            first: 'firstCfDatetime',
+            last: 'lastCfDatetime',
+            today: 'todayAsCfDatetime',
+        };
+        var method = _.get(spec2Method, specifier, 'todayAsCfDatetime');
+        return cfTimeSystem[method]();
+    }
+}
+
+var getRasterDownloadOptions = function (startDateSpec, endDateSpec) {
     var frag = document.createDocumentFragment(),
         div = frag.appendChild(pdp.createDiv('', 'control')),
         downloadForm = div.appendChild(pdp.createForm("download-form", "download-form", "get")),
         downloadFieldset = downloadForm.appendChild(pdp.createFieldset("downloadset", "Download Data"));
-    if (include_dates_selection) {
-        downloadFieldset.appendChild(getDateRange());
+    if (startDateSpec || endDateSpec) {
+        // If a start date or end date is specified, then add the date range
+        // controls to the form.
+
+        // Assign an initial time system. This will be replaced by the time
+        // system dictated by the ncwms layer, but it loads asynchronously
+        // and is not available at this point.
+        // TODO: Should this be removed and replaced with 'undefined' for
+        // the values of the temporary start and end date? It would make more
+        // sense, but this is safer in that it is less likely to break existing
+        // code, a major consideration.
+        var calendar = calendars['gregorian'];
+        var units = 'days';
+        var cfTimeSystem = new calendars.CfTimeSystem(
+            units,
+            new calendars.CalendarDatetime(calendar, 1870, 1, 1),
+            Math.floor((2100 - 1870 + 1) * 365.2425)
+        );
+        var startDate = cfDateTimeFor(cfTimeSystem, startDateSpec);
+        var endDate = cfDateTimeFor(cfTimeSystem, endDateSpec);
+
+        // Add date range controls.
+        downloadFieldset.appendChild(getDateRange(startDate, endDate));
     }
     downloadFieldset.appendChild(createRasterFormatOptions());
     //downloadFieldset.appendChild(createDownloadButtons("download-buttons", "download-buttons", {"download-timeseries": "Download", "metadata": "Metadata", "permalink": "Permalink"}));
@@ -233,17 +387,14 @@ Colorbar.prototype = {
     },
 
     refresh_values: function (lyr_id) {
-        var url = this.metadata_url(lyr_id),
-            request = $.ajax({
-                url: url,
-                context: this
-            });
+        var _this = this;
+        var request = dataServices.getMetadata(lyr_id || this.layer.params.LAYERS);
 
         request.done(function (data) {
-            this.minimum = data.min;
-            this.maximum = data.max;
-            this.units = this.format_units(data.units);
-            this.redraw();
+            _this.minimum = data.min;
+            _this.maximum = data.max;
+            _this.units = _this.format_units(data.units);
+            _this.redraw();
         });
     },
 
@@ -265,6 +416,7 @@ Colorbar.prototype = {
         div.find("#midpoint").html(this.round_to_nearest(this.calculate_midpoint(), prec) + " " + this.units);
     }
 };
+
 
 function RasterDownloadLink(element, layer, catalog, ext, varname, trange, yrange, xrange) {
     this.element = element;
@@ -395,18 +547,12 @@ RasterDownloadLink.prototype = {
                              raster_proj, undefined, callback);
     },
     onTimeChange: function () {
-        var start, end;
+        var startDate = processDateRangeInput(
+            $('#from-date'), false, $('#from-date-error-message'));
+        var endDate = processDateRangeInput(
+            $('#to-date'), true, $('#to-date-error-message'));
 
-        start = $(".datepickerstart").datepicker("getDate");
-        start = this.layer.times.toIndex(start);
-        end = $(".datepickerend").datepicker("getDate");
-        end = this.layer.times.toIndex(end);
-
-        //if either start or end is undefined, fall back to the full time range
-        start = start === undefined ? 0 : start;
-        end = end === undefined ? "" : end;
-
-        this.trange = start + ':' + end;
+        this.trange = startDate.toIndex() + ':' + endDate.toIndex();
         this.trigger();
     }
 
@@ -424,6 +570,7 @@ function MetadataDownloadLink(element, layer, catalog) {
 MetadataDownloadLink.prototype = {
     constructor: MetadataDownloadLink,
 
+    // Oh man, this looks nasty. Saint Douglas would not approve.
     register: RasterDownloadLink.prototype.register,
     trigger: RasterDownloadLink.prototype.trigger,
     getUrl: RasterDownloadLink.prototype.getUrl,
@@ -445,3 +592,20 @@ MetadataDownloadLink.prototype = {
     }
     // Register for changes with the ncwms layer
 };
+
+
+condExport(module, {
+    setCfTimeSystemMessages: setCfTimeSystemMessages,
+    setDatepicker: setDatepicker,
+    getDateRange: getDateRange,
+    processDateRangeInput: processDateRangeInput,
+    generateMenuTree: generateMenuTree,
+    getRasterAccordionMenu: getRasterAccordionMenu,
+    getArchiveDisclaimer: getArchiveDisclaimer,
+    getRasterControls: getRasterControls,
+    getRasterDownloadOptions: getRasterDownloadOptions,
+    round: round,
+    Colorbar: Colorbar,
+    RasterDownloadLink: RasterDownloadLink,
+    MetadataDownloadLink: MetadataDownloadLink,
+});

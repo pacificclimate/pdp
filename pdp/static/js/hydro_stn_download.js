@@ -19,3 +19,7 @@ function show_permalinks(base_urls, extension) {
         width: 650,
     });
 }
+
+condExport(module, {
+    show_permalinks: show_permalinks,
+});

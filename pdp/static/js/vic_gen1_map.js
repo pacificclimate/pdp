@@ -79,16 +79,7 @@ function init_vic_map() {
     ncwms.events.register('change', ncwms, set_map_title);
 
     ncwms.events.registerPriority('change', ncwms, function (layer_id) {
-        var lyr_params, metadata_req;
-        lyr_params = {
-            "id": layer_id.split('/')[0],
-            "var": layer_id.split('/')[1]
-        };
-        metadata_req = $.ajax({
-            url: "../metadata.json?request=GetMinMaxWithUnits",
-            data: lyr_params
-        });
-        metadata_req.done(function (data) {
+        dataServices.getMetadata(layer_id).done(function (data) {
             ncwms.redraw(); // this does a layer redraw
             cb.force_update(data.min, data.max, data.units); // must be called AFTER ncwms params updated
         });
@@ -103,3 +94,8 @@ function init_vic_map() {
 
     return map;
 }
+
+
+condExport(module, {
+    init_vic_map: init_vic_map
+});

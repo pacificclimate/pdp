@@ -2,7 +2,7 @@
 # Dockerfile to run the PCIC data portal   #
 ############################################
 
-FROM ubuntu:17.10
+FROM ubuntu:18.04
 MAINTAINER James Hiebert <hiebert@uvic.ca>
 
 RUN apt-get update && apt-get install -y \
