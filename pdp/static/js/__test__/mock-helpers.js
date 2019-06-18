@@ -1,6 +1,9 @@
 // Helper functions for creating mocks
 // For tests only, so is a pure Node module
 
+var _ = require('lodash');
+
+
 function makeMockGet(name, defaultData, autoResolve) {
     // Returns a get function which acts like `$.ajax()`, i.e. returns a
     // jQuery deferred.
@@ -115,9 +118,23 @@ function mockOLXMLHttpRequest(config) {
 }
 
 
+var invokeOnAll = _.curry(function(methodName, dataServices) {
+    _.forEach(dataServices, function (service) {
+        var method = service[methodName];
+        if (_.isFunction(method)) method();
+    });
+});
+
+
+var resetAll = invokeOnAll('reset');
+var resolveAllWithDefault = invokeOnAll('resolveWithDefault');
+
+
 module.exports = {
     makeMockGet: makeMockGet,
     unexpectedRequest: unexpectedRequest,
     mock$ajax: mock$ajax,
-    mockOLXMLHttpRequest: mockOLXMLHttpRequest
+    mockOLXMLHttpRequest: mockOLXMLHttpRequest,
+    resetAll: resetAll,
+    resolveAllWithDefault: resolveAllWithDefault,
 };

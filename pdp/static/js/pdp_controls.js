@@ -150,12 +150,14 @@ function processDateRangeInput($date, fallbackFlag, $error) {
     try {
         date = calendars.CfDatetime.fromLooseFormat(cfTimeSystem, $date.val());
         $date.val(date.toLooseString(true));
+        $date.data('validEntry', true);
         $error.addClass('inactive');
         $error.find('.value').html('');
     } catch(error) {
         date = fallbackFlag ?
             cfTimeSystem.lastCfDatetime() :
             cfTimeSystem.firstCfDatetime();
+        $date.data('validEntry', false);
         $error.removeClass('inactive');
         $error.find('.value').html(error.message);
     }

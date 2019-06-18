@@ -1,4 +1,8 @@
+var each = require('jest-each').default;
+
+
 test('test', function () {});
+
 
 require('./app-test-helpers').initializeGlobals();
 
@@ -43,6 +47,7 @@ var dateFilterTests = require('./date-filter-tests');
 var mockHelpers = require('./mock-helpers');
 mockHelpers.mock$ajax({ log: true, throw: true });
 mockHelpers.mockOLXMLHttpRequest({ log: true, throw: true });
+var htmlTemplate = require('./html-template');
 
 
 var calendar = calendars['gregorian'];
@@ -70,4 +75,48 @@ dateFilterTests(crmp_app, {
     },
     omitsDownloadDataLink: true,
     omitsDownloadFullTimeSeriesCheckbox: true,
+});
+
+
+describe('Download buttons', function () {
+    beforeEach(function () {
+        // Reset the DOM (jsdom)
+        document.body.innerHTML = htmlTemplate();
+        mockHelpers.resetAll(dataServices);
+        mockHelpers.resolveAllWithDefault(dataServices);
+        crmp_app();
+    });
+
+    afterEach(function () {
+        // Is this necessary?
+        document.body.innerHTML = '';
+    });
+
+    each([
+        '#from-date',
+        '#to-date',
+    ]).describe('%s', function (dateSelector) {
+        each([
+            ['1950/01/01', true],
+            ['1950/01/99', false],
+        ]).describe('= %s', function (dateString, validEntry) {
+            var $date;
+            beforeEach(function () {
+                // Enter data in the input element
+                $date = $(dateSelector);
+                $date.val(dateString);
+                $date.change();
+                console.log('validEntry', $date.data('validEntry'))
+            });
+
+            each([
+                '#download-climatology',
+                '#download-timeseries',
+            ]).describe('%s button', function (buttonSelector) {
+                it('is ' + (validEntry ? 'enabled' : 'disabled'), function () {
+                    expect($(buttonSelector).prop('disabled')).toBe(!validEntry)
+                });
+            });
+        });
+    });
 });

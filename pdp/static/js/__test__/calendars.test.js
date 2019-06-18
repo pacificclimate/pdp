@@ -114,8 +114,8 @@ describe('SimpleDatetime', function () {
             ['1900-01-02T06:07:08', 1900, 1, 2, 6, 7, 8],
             ['1900-1-2T6:7:8', 1900, 1, 2, 6, 7, 8],
             ['1900-01-02', 1900, 1, 2, 0, 0, 0],
-            ['1900-01', 1900, 1, 0, 0, 0, 0],
-            ['1900', 1900, 1, 0, 0, 0, 0],
+            ['1900-01', 1900, 1, 1, 0, 0, 0],
+            ['1900', 1900, 1, 1, 0, 0, 0],
         ])('parses the valid string %s',
             function (string, year, month, day, hour, minute, second) {
                 var expected = new SimpleDatetime(
@@ -209,6 +209,11 @@ describe('GregorianCalendar', function () {
 
             [1901, 2, 28, true],
             [1901, 2, 29, false],
+
+            [1950, 0, 1, false],
+            [1950, -1, 1, false],
+            [1950, 1, 0, false],
+            [1950, 1, -1, false],
         ])('%d-%d-%d: %s',
             function (year, month, day, expected) {
                 expect(calendar.isValidDate(year, month, day)).toBe(expected);

@@ -16,6 +16,10 @@
     function isUndefined(v) {
         return typeof v === 'undefined';
     }
+    
+    function dfault(value, defaultValue) {
+        return isUndefined(value) ? defaultValue : value;
+    }
 
     var isInteger = Number.isInteger;
 
@@ -111,11 +115,11 @@
             }
         });
         this.year = year;
-        this.month = month || 1;
-        this.day = day || 1;
-        this.hour = hour || 0;
-        this.minute = minute || 0;
-        this.second = second || 0;
+        this.month = dfault(month, 1);
+        this.day = dfault(day, 1);
+        this.hour = dfault(hour, 0);
+        this.minute = dfault(minute, 0);
+        this.second = dfault(second, 0);
     }
     classes.addClassProperties(SimpleDatetime, {
         toISOString: function(dateOnly) {
