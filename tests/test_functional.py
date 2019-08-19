@@ -613,40 +613,7 @@ def test_empty_hyperslabs(pcic_data_portal, projection, length):
 
 
 @pytest.mark.bulk_data
-@pytest.mark.parametrize(("file,expected_mean"),
-                         [('pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+MRI-CGCM3_'
-                           'historical+rcp85_r1i1p1_19500101-21001231.nc.nc?'
-                           'tasmax[55000:55151][239:239][210:210]&',
-                           8.052631378),
-                          ('/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+HadGEM2-ES'
-                            '_historical+rcp85_r1i1p1_19500101-20991230.nc.nc?'
-                            'tasmax[13467:13467][150:178][877:900]&',
-                            -6.884425163)])
-def test_record_variables(pcic_data_portal, file, expected_mean):
-
-    url = "/data/downscaled_gcms_archive/{}".format(file)
-    req = Request.blank(url)
-    resp = req.get_response(pcic_data_portal)
-    assert resp.status == '200 OK'
-    assert resp.content_type == 'application/x-netcdf'
-
-    f = NamedTemporaryFile(suffix='.nc', delete=False)
-    for block in resp.app_iter:
-        f.write(block)
-    f.close()
-
-    nc = netCDF4.Dataset(f.name)
-
-    assert 'tasmax' in nc.variables
-    mean = np.mean(nc.variables['tasmax'][:])
-    assert_almost_equal(mean, expected_mean)
-
-    nc.close()
-    os.remove(f.name)
-
-
-@pytest.mark.bulk_data
-@pytest.mark.parametrize(("file,expected_mean"),
+@pytest.mark.parametrize("file,expected_mean",
                          [('tasmax_day_BCCAQv2+ANUSPLIN300_IPSL-CM5A-MR_'
                            'historical+rcp26_r1i1p1_19500101-21001231.nc.nc?'
                            'tasmax[5000:5200][132:132][334:334]&',
