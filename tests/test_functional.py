@@ -610,3 +610,36 @@ def test_empty_hyperslabs(pcic_data_portal, projection, length):
 
     nc.close()
     os.remove(f.name)
+
+
+@pytest.mark.bulk_data
+@pytest.mark.parametrize("file,expected_mean",
+                         [('tasmax_day_BCCAQv2+ANUSPLIN300_IPSL-CM5A-MR_'
+                           'historical+rcp26_r1i1p1_19500101-21001231.nc.nc?'
+                           'tasmax[5000:5200][132:132][334:334]&',
+                           4.38851693),
+                          ('tasmax_day_BCCAQv2+ANUSPLIN300_NorESM1-ME_'
+                           'historical+rcp85_r1i1p1_19500101-21001231.nc.nc?'
+                           'tasmax[55021:55021][158:265][156:334]&',
+                           11.69472020)])
+def test_nonrecord_variables(pcic_data_portal, file, expected_mean):
+
+    url = "/data/downscaled_gcms/{}".format(file)
+    req = Request.blank(url)
+    resp = req.get_response(pcic_data_portal)
+    assert resp.status == '200 OK'
+    assert resp.content_type == 'application/x-netcdf'
+
+    f = NamedTemporaryFile(suffix='.nc', delete=False)
+    for block in resp.app_iter:
+        f.write(block)
+    f.close()
+
+    nc = netCDF4.Dataset(f.name)
+
+    assert 'tasmax' in nc.variables
+    mean = np.mean(nc.variables['tasmax'][:])
+    assert_almost_equal(mean, expected_mean)
+
+    nc.close()
+    os.remove(f.name)
