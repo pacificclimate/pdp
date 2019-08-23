@@ -1,5 +1,19 @@
 News / Release Notes
 ====================
+2.8.0
+-----
+*Release Date: 23-Aug-2019*
+
+* Updates bulk data test suite to include files without record variables
+* Fixes a MemoryError caused by unnecesary allocation in pupynere-pdp
+* Adds tests for javascript components of portal
+* Fixes to time range selection UI:
+  
+  * disable download button when invalud dates are selected
+  * correct off-by-one date calculation error
+  * add calendar handling and calculation classes
+  
+
 2.7.0
 -----
 
