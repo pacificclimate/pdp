@@ -1,5 +1,7 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, pdp, map, init_raster_map, processNcwmsLayerMetadata, getRasterControls, getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
+/*global $, jQuery, OpenLayers, pdp, map, init_raster_map, processNcwmsLayerMetadata, 
+isArchivePortal, getArchiveDisclaimer, getRasterControls, getRasterDownloadOptions, 
+RasterDownloadLink, MetadataDownloadLink*/
 
 /*
  * This front end displays both the BCSD/BCCAQ version 1 data and the
@@ -27,11 +29,8 @@
         var map, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog,
             dlLink, mdLink, capabilities_request, ncwms_capabilities;
 
-        //check whether we're on the archive portal: is "archive" in the url?
-        const archivePortal = $(location).attr('href').indexOf("archive") != -1;
-
         //the two portals have different initial maps
-        if (archivePortal) {
+        if (isArchivePortal()) {
             //the old dataset
             map = init_raster_map({
                 variable: "tasmax",
@@ -58,22 +57,15 @@
         document.getElementById("pdp-controls")
             .appendChild(getRasterDownloadOptions('first', 'last'));
 
-        //UI elements vary slightly based on whether this is the archive or new portal.
-        if(archivePortal) {
+        //UI adjustments based on whether this is the archive or new portal.
+        if(isArchivePortal()) {
             //archive portal. link to new portal, add archive disclaimer.
-            const portalLink = pdp.createLink("portal-link",
-                undefined,
-                pdp.app_root + "/downscaled_gcms/map/",
-                "Main Downscaled GCMS Portal");
-            document.getElementById("topnav").appendChild(portalLink);
+            addPortalLink("downscaled_gcms", "Main Downscaled GCMS Portal");
             document.getElementById("pdp-controls").appendChild(getArchiveDisclaimer());
         } else {
+        	// new data portal; link to old one.
+        	addPortalLinke("downscaled_gcms_archive", "Archive Downscaled GCMS Portal");
             //new portal. link to old one
-            const portalLink = pdp.createLink("portal-link",
-                undefined,
-                pdp.app_root + "/downscaled_gcms_archive/map/",
-                "Archive Downscaled GCMS Portal");
-            document.getElementById("topnav").appendChild(portalLink);
         }
 
         // Data Download Link
