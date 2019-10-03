@@ -232,7 +232,7 @@ function getArchiveDisclaimer() {
 function addPortalLink(url_base, text) {
 	const portalLink = pdp.createLink("portal-link",
                 undefined,
-                pdp.app_root + '/' + url_base + "/map",
+                pdp.app_root + '/' + url_base + "/map/",
                 text);
     document.getElementById("topnav").appendChild(portalLink);
 };

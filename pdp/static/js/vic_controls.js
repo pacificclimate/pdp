@@ -10,6 +10,7 @@ function getVICControls(ensemble_name) {
     form = pdp.createForm(undefined, undefined, undefined);
     fieldset = pdp.createFieldset("filterset", "Dataset Selection");
     varMapping = {
+    	// vic gen 1 data
         'bf': "Base Flow",
         'R': "Runoff",
         'swe': "Snow Water Equivalent",
@@ -19,6 +20,20 @@ function getVICControls(ensemble_name) {
         'tasmin': 'Minimum Temperature',
         'pr': 'Precipitation',
         'wind': 'Wind',
+        // vic gen 2 data
+        'BASEFLOW': "Baseflow",
+        'EVAP': "Evapotranspiration",
+        'GLAC_AREA': "Glacier Area",
+        'GLAC_MBAL': "Glacier Mass Balance",
+        'GLAC_OUTFLOW': "Glacier Outflow",
+        'PET_NATVEG': "Potential Evapotranspiration of Natural Vegetation",
+        'PREC': "Precipitation",
+        'RAINF': "Rainfall",
+        'RUNOFF': "Surface Runoff",
+        'SNOW_MELT': "Snow Melt",
+        'SOIL_MOIST_TOT': "Total Column Soil Moisture",
+        'SWE': "Snow Water Equivalent",
+        'TRANSP_VEG': "Transpiration"
          };
     fieldset.appendChild(getRasterAccordionMenu(ensemble_name, varMapping));
     form.appendChild(fieldset);

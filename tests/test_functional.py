@@ -450,7 +450,7 @@ def test_aaigrid_response(pcic_data_portal, url):
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('layers', [0, 1, 100, 38000])
 def test_aaigrid_response_layers(pcic_data_portal, layers):
-    url = '/data/hydro_model_out/pr+tasmin+tasmax+wind_day_HadCM_A1B_run1_'\
+    url = '/data/hydro_model_archive/pr+tasmin+tasmax+wind_day_HadCM_A1B_run1_'\
           '19500101-21001231.nc.aig?pr[0:{}][119:120][242:243]&'.format(layers)
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
@@ -470,7 +470,7 @@ def test_aaigrid_response_layers(pcic_data_portal, layers):
         ('downscaled_gcms_archive', 'downscaled_gcms_archive'),
         ('downscaled_gcms', 'bccaq_version_2'),
         ('downscaled_gcm_extremes', 'bccaq_extremes'),
-        ('hydro_model_out', 'vic_gen1'),
+        ('hydro_model_archive', 'vic_gen1'),
         ('gridded_observations', 'gridded-obs-met-data')
     ])
 def test_menu_json(pcic_data_portal, portal, ensemble):
@@ -540,13 +540,13 @@ ccsm3_A2run1
 
 
 @pytest.mark.bulk_data
-def test_hydro_model_out_catalog(pcic_data_portal):
-    url = '/hydro_model_out/catalog/'
+def test_hydro_model_archive_catalog(pcic_data_portal):
+    url = '/hydro_model_archive/catalog/'
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/json'
-    assert 'hydro_model_out/5var_day_HadCM_B1_run1_19500101-20981231.nc' in \
+    assert 'hydro_model_archive/5var_day_HadCM_B1_run1_19500101-20981231.nc' in \
         resp.body
     data = json.loads(resp.body)
     assert len(data) > 0
@@ -559,8 +559,8 @@ def test_hydro_model_out_catalog(pcic_data_portal):
     '{}MIROC3.2_B1_run1_19500101-20991231.nc.nc?swe[0:1][0:1][0:1]&',
     '{}BASE_historical_run1_19500101-20061231.nc.nc?aet[0:1][0:1][0:1]&'
 ])
-def test_hydro_model_out_5var(pcic_data_portal, url):
-    base = '/data/hydro_model_out/5var_day_'
+def test_hydro_model_archive_5var(pcic_data_portal, url):
+    base = '/data/hydro_model_archive/5var_day_'
     req = Request.blank(url.format(base))
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
@@ -573,8 +573,8 @@ def test_hydro_model_out_5var(pcic_data_portal, url):
     '{}CSIRO35_A2_run1_19500101-21001231.nc.nc?tasmax[0:1][0:1][0:1]&',
     '{}MIROC3.2_B1_run1_19500101-21001231.nc.nc?wind[0:1][0:1][0:1]&'
 ])
-def test_hydro_model_out_pr_tasmin_tasmax_wind(pcic_data_portal, url):
-    base = '/data/hydro_model_out/pr+tasmin+tasmax+wind_day_'
+def test_hydro_model_archive_pr_tasmin_tasmax_wind(pcic_data_portal, url):
+    base = '/data/hydro_model_archive/pr+tasmin+tasmax+wind_day_'
     req = Request.blank(url.format(base))
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'

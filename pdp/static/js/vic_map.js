@@ -1,9 +1,11 @@
 /*jslint browser: true, devel: true */
 /*global $, jQuery, OpenLayers, pdp, Colorbar, BC3005_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getBC3005Bounds_vic, getBC3005OsmBaseLayer, getOpacitySlider*/
 
+
+
 "use strict";
 
-function init_vic_map() {
+function init_vic_map(init_dataset, init_variable, init_time) {
     var options, mapControls, selLayerName, selectionLayer, panelControls,
         defaults, map, params, datalayerName, cb, ncwms;
 
@@ -21,19 +23,14 @@ function init_vic_map() {
     options.controls = mapControls;
     map = new OpenLayers.Map('pdp-map', options);
 
-    defaults = {
-        dataset: "5var_day_CCSM3_A1B_run1_19500101-20991231",
-        variable: "sm"
-    };
-
     params = {
-        layers: defaults.dataset + "/" + defaults.variable,
+        layers: init_dataset + "/" + init_variable,
         transparent: 'true',
         // styles: '',
         numcolorbands: 254,
         version: '1.1.1',
         srs: 'EPSG:3005',
-        TIME: '2000-01-01T00:00:00Z'
+        TIME: init_time
     };
 
     datalayerName = "Climate raster";
@@ -85,7 +82,7 @@ function init_vic_map() {
         });
     });
 
-    ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
+    ncwms.events.triggerEvent('change', init_dataset + "/" + init_variable);
 
     // Expose ncwms as a global
     (function (globals) {

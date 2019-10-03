@@ -1,7 +1,7 @@
 /*jslint browser: true, devel: true */
 /*global $, jQuery, OpenLayers, pdp, map, init_raster_map, processNcwmsLayerMetadata, 
-isArchivePortal, getArchiveDisclaimer, getRasterControls, getRasterDownloadOptions, 
-RasterDownloadLink, MetadataDownloadLink*/
+isArchivePortal, getArchiveDisclaimer, addPortalLink, getRasterControls,
+getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
 
 /*
  * This front end displays both the BCSD/BCCAQ version 1 data and the
@@ -64,7 +64,7 @@ RasterDownloadLink, MetadataDownloadLink*/
             document.getElementById("pdp-controls").appendChild(getArchiveDisclaimer());
         } else {
         	// new data portal; link to old one.
-        	addPortalLinke("downscaled_gcms_archive", "Archive Downscaled GCMS Portal");
+            addPortalLink("downscaled_gcms_archive", "Archive Downscaled GCMS Portal");
             //new portal. link to old one
         }
 
