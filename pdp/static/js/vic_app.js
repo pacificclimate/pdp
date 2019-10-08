@@ -28,19 +28,9 @@ CMIP5 data:
     function vic_app() {
         var map, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog,
             dlLink, mdLink, capabilities_request, ncwms_capabilities;
-         
-        //the two portals have different initial maps
-        if (isArchivePortal()) {
-            //the old dataset
-            map = init_vic_map("5var_day_CCSM3_A1B_run1_19500101-20991231", 
-            				   "sm", 
-                               "2000-01-01T00:00:00Z");           
-        } else {
-            map = init_vic_map("BASEFLOW_day_VICGL_ACCESS1-0_rcp85_rr1ii1pp1_20450101-20451231_columbia", 
-                               "BASEFLOW",
-                               "2045-01-01T00:00:00Z");
-        }
         
+        // the two portals have different initial maps
+        map = init_vic_map(isArchivePortal());
         window.map = map;
 
         ncwmsLayer = map.getClimateLayer();
@@ -63,11 +53,13 @@ CMIP5 data:
         } else {
         	// new data portal; link to old one.
         	addPortalLink("hydro_model_archive", "Archive Hydrologic Model Output Portal");
-            //new portal. link to old one
         }
 
         // Data Download Link
-        dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', 'sm', '', '', '');
+        dlLink = new RasterDownloadLink($('#download-timeseries'),
+                                        ncwmsLayer, undefined, 'nc',
+                                        isArchivePortal ? 'sm' : "BASEFLOW",
+                                        '', '', '');
         $('#data-format-selector').change(
             function (evt) {
                 dlLink.onExtensionChange($(this).val());

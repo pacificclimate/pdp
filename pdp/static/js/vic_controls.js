@@ -26,7 +26,7 @@ function getVICControls(ensemble_name) {
         'GLAC_AREA': "Glacier Area",
         'GLAC_MBAL': "Glacier Mass Balance",
         'GLAC_OUTFLOW': "Glacier Outflow",
-        'PET_NATVEG': "Potential Evapotranspiration of Natural Vegetation",
+        'PET_NATVEG': "Potential Evapotranspiration",
         'PREC': "Precipitation",
         'RAINF': "Rainfall",
         'RUNOFF': "Surface Runoff",

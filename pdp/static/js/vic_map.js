@@ -5,12 +5,26 @@
 
 "use strict";
 
-function init_vic_map(init_dataset, init_variable, init_time) {
+function init_vic_map(archive_portal) {
     var options, mapControls, selLayerName, selectionLayer, panelControls,
         defaults, map, params, datalayerName, cb, ncwms;
+        
+	// Initial options vary by whether we're mapping the old or
+	// new dataset.
+	const vic_gen1_init = {
+		dataset:"5var_day_CCSM3_A1B_run1_19500101-20991231",
+		variable: "sm",
+		time:  "2000-01-01T00:00:00Z"
+		};
+	const vic_gen2_init = {
+		dataset: "BASEFLOW_day_VICGL_ACCESS1-0_rcp85_rr1ii1pp1_19450101-19451231_columbia",
+		variable: "BASEFLOW",
+		time: "1945-01-01T00:00:00Z"
+	};
+	const init = archive_portal ? vic_gen1_init : vic_gen2_init;
 
     // Map Config
-    options = BC3005_map_options();
+    options = BC3005_map_options_vic(archive_portal);
     options.tileManager = null;
 
     // Map Controls
@@ -24,13 +38,13 @@ function init_vic_map(init_dataset, init_variable, init_time) {
     map = new OpenLayers.Map('pdp-map', options);
 
     params = {
-        layers: init_dataset + "/" + init_variable,
+        layers: init.dataset + "/" + init.variable,
         transparent: 'true',
         // styles: '',
         numcolorbands: 254,
         version: '1.1.1',
         srs: 'EPSG:3005',
-        TIME: init_time
+        TIME: init.time
     };
 
     datalayerName = "Climate raster";
@@ -39,7 +53,7 @@ function init_vic_map(init_dataset, init_variable, init_time) {
         pdp.ncwms_url,
         params,
         {
-            maxExtent: getBC3005Bounds_vic(),
+            maxExtent: getBC3005Bounds_vic(archive_portal),
             buffer: 1,
             ratio: 1.5,
             opacity: 0.7,
@@ -57,7 +71,7 @@ function init_vic_map(init_dataset, init_variable, init_time) {
     );
 
     document.getElementById("pdp-map").appendChild(getOpacitySlider(ncwms));
-    map.zoomToExtent(new OpenLayers.Bounds(611014.125, 251336.4375, 2070975.0625, 1737664.5625), true);
+    map.zoomToExtent(getBC3005Bounds_vic(archive_portal));
 
     map.getClimateLayer = function () {
         return map.getLayersByName(datalayerName)[0];
@@ -82,7 +96,7 @@ function init_vic_map(init_dataset, init_variable, init_time) {
         });
     });
 
-    ncwms.events.triggerEvent('change', init_dataset + "/" + init_variable);
+    ncwms.events.triggerEvent('change', init.dataset + "/" + init.variable);
 
     // Expose ncwms as a global
     (function (globals) {
