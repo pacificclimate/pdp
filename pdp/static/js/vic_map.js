@@ -8,7 +8,7 @@
 function init_vic_map(archive_portal) {
     var options, mapControls, selLayerName, selectionLayer, panelControls,
         defaults, map, params, datalayerName, cb, ncwms;
-        
+
 	// Initial options vary by whether we're mapping the old or
 	// new dataset.
 	const vic_gen1_init = {
@@ -17,7 +17,7 @@ function init_vic_map(archive_portal) {
 		time:  "2000-01-01T00:00:00Z"
 		};
 	const vic_gen2_init = {
-		dataset: "BASEFLOW_day_VICGL_ACCESS1-0_rcp85_rr1ii1pp1_19450101-19451231_columbia",
+		dataset: "BASEFLOW_day_VICGL_ACCESS1-0_rcp85_r1i1p1_19450101-20991231_columbia",
 		variable: "BASEFLOW",
 		time: "1945-01-01T00:00:00Z"
 	};
