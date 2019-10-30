@@ -2,7 +2,6 @@ node {
     stage('Code Collection') {
         checkout scm
     }
-
     nodejs('node') {
         stage('NPM Installation') {
             sh 'npm install'
@@ -50,7 +49,7 @@ node {
     }
 
     stage('Build Image') {
-        String image_name = 'pdp-test-feature-jenkins-support'
+        String image_name = 'pdp'
         String branch_name = BRANCH_NAME.toLowerCase()
 
         // Update image name if we are not on the master branch
