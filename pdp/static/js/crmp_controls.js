@@ -128,6 +128,11 @@ function getResetButton(map) {
     $(reset_button).bind('click', function () {
         this.form.reset();
         filter_clear(map);
+        // This wipes the date filters so the call to dateChange gets an empty string and
+        //throws ugly errors that eventually leads to erroneous tile loading from WMS.
+        map.filters.date = date_filter('YYYY/MM/DD','YYYY/MM/DD');
+        $('#from-date')[0].value=map.filters.date.filters[0].value
+        $('#to-date')[0].value=map.filters.date.filters[1].value
         dateChange(map);
         CRMPFilterChange(map);
         return false;
