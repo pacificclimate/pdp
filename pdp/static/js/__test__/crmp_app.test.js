@@ -78,6 +78,40 @@ dateFilterTests(crmp_app, {
 });
 
 
+describe('CRMP app', function() {
+    beforeEach(function () {
+        // Reset the DOM (jsdom)
+        document.body.innerHTML = htmlTemplate();
+        mockHelpers.resetAll(dataServices);
+        mockHelpers.resolveAllWithDefault(dataServices);
+        crmp_app();
+    });
+
+    afterEach(function () {
+        // Is this necessary?
+        document.body.innerHTML = '';
+    });
+
+    describe('Reset Filters button', function() {
+        it('Resets the date filters to valid values', function () {
+            // Enter dates into the date range input elements
+            $('#from-date').val('1950/01/01').change();
+            $('#to-date').val('1951/01/01').change();
+
+            // Click Reset Filters button
+            $('#filter-reset').click();
+
+            // Check that date range input elements have been reset
+            expect($('#from-date').val()).toBe('1870/01/01');
+            today = new Date();
+            expect($('#to-date').val()).toBe(calendars.formatDatetimeLoose(
+              today.getFullYear(), today.getMonth() + 1, today.getDate()
+            ));
+        });
+    });
+});
+
+
 describe('Download buttons', function () {
     beforeEach(function () {
         // Reset the DOM (jsdom)
