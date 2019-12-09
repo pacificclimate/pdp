@@ -42,7 +42,7 @@ def run_tests() {
 def build_image(image_name) {
     def image
     withDockerServer([uri: PCIC_DOCKER]) {
-        image = docker.build(image_name)
+        image = docker.build(image_name, '--pull .')
     }
 
     return image
