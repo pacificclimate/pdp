@@ -15,7 +15,7 @@ node {
         def requirements = ['requirements.txt', 'test_requirements.txt',
                             'deploy_requirements.txt']
         def pytestArgs = '-vv --tb=short tests'
-        def options = [pythonVersion: 2, gitExecInstall: true, buildDocs: true,
+        def options = [pythonVersion: 2, aptPackages: ['git'], buildDocs: true,
                        containerData: 'pdp']
 
         runPythonTestSuite(pyImage, requirements, pytestArgs, options)
