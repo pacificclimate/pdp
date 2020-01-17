@@ -450,8 +450,9 @@ def test_aaigrid_response(pcic_data_portal, url):
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('layers', [0, 1, 100, 38000])
 def test_aaigrid_response_layers(pcic_data_portal, layers):
-    url = '/data/hydro_model_archive/pr+tasmin+tasmax+wind_day_HadCM_A1B_run1_'\
-          '19500101-21001231.nc.aig?pr[0:{}][119:120][242:243]&'.format(layers)
+    url = '/data/hydro_model_archive/pr+tasmin+tasmax+wind_day_HadCM_A1B_'\
+          'run1_19500101-21001231.nc.aig?pr[0:{}][119:120]'\
+          '[242:243]&'.format(layers)
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
 
@@ -546,8 +547,8 @@ def test_hydro_model_archive_catalog(pcic_data_portal):
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/json'
-    assert 'hydro_model_archive/5var_day_HadCM_B1_run1_19500101-20981231.nc' in \
-        resp.body
+    assert 'hydro_model_archive/5var_day_HadCM_B1_run1_19500101-'\
+        '20981231.nc' in resp.body
     data = json.loads(resp.body)
     assert len(data) > 0
 
