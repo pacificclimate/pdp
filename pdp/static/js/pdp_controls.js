@@ -171,7 +171,23 @@ function processDateRangeInput($date, fallbackFlag, $error) {
 function generateMenuTree(subtree, leafNameMapping) {
     var ul = $("<ul/>");
     /*jslint unparam: true*/
-    $.each(Object.keys(subtree), function (index, stuff) {
+
+    // elements in each subtree are arranged in alphabetical order
+    // by display name.
+    function compareDisplayName(a, b) {
+        const adn = ( leafNameMapping && a in leafNameMapping ? 
+            leafNameMapping[a] : a).toLowerCase();
+        const bdn = (leafNameMapping && b in leafNameMapping ?
+            leafNameMapping[b] : b).toLowerCase();
+        if(adn < bdn) {
+            return -1;
+        }
+        if(adn > bdn) {
+            return 1;
+        }
+        return 0;
+    }
+    $.each(Object.keys(subtree).sort(compareDisplayName), function (index, stuff) {
         var newlayer, linkText,
             li = $('<li/>');
         if (subtree[stuff] instanceof Object) {
@@ -363,7 +379,7 @@ Colorbar.prototype = {
 
     format_units: function (units) {
         // reformat known units:
-        // 'mm d-1', '%', 'days', 'meters s-1', 'm', 'mm',
+        // 'mm d-1', '%', 'days', 'meters s-1', 'm', 'mm', '1'
         // 'degrees_C', 'kg m-2', 'degC', 'mm day-1', 'celsius'
         switch (units) {
         case "degC":
@@ -377,6 +393,8 @@ Colorbar.prototype = {
             return "m/s";
         case "kg m-2":
             return "kg/m<sup>2</sup>";
+        case "1":
+        	return "fraction"
         default:
             return units;
         }

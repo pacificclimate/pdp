@@ -21,10 +21,14 @@ title = 'Gridded Hydrologic Model Output'
 
 
 class VicGen2EnsembleLister(EnsembleMemberLister):
+    # formats model entries to include run number; may be
+    # an issue if there ever more than one run per model
     def list_stuff(self, ensemble):
         for dfv in ensemble.data_file_variables:
             yield dfv.file.run.emission.short_name,\
-                dfv.file.run.model.short_name, dfv.netcdf_variable_name,\
+                "{} {}".format(dfv.file.run.model.short_name,
+                               dfv.file.run.name),\
+                dfv.netcdf_variable_name,\
                 dfv.file.unique_id.replace('+', '-')
 
 

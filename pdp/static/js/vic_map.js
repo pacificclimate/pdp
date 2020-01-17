@@ -19,7 +19,7 @@ function init_vic_map(archive_portal) {
 	const vic_gen2_init = {
 		dataset: "BASEFLOW_day_VICGL_ACCESS1-0_rcp85_r1i1p1_19450101-20991231_columbia",
 		variable: "BASEFLOW",
-		time: "1945-01-01T00:00:00Z"
+		time: "2000-01-01T00:00:00Z"
 	};
 	const init = archive_portal ? vic_gen1_init : vic_gen2_init;
 
