@@ -1,43 +1,24 @@
+@Library('pcic-pipeline-library')_
+
+
 node {
     stage('Code Collection') {
-        checkout scm
-    }
-    nodejs('node') {
-        stage('NPM Installation') {
-            sh 'npm install'
-        }
-        stage('NPM Test Suite') {
-            sh 'npm run test'
-        }
+        collectCode()
     }
 
-    withDockerServer([uri: PCIC_DOCKER]) {
-        // Use image with gdal already installed
-        def gdalenv = docker.image('pcic/geospatial-python')
+    stage('Node Test Suite') {
+        runNodeTestSuite('node', 'test')
+    }
 
-        gdalenv.inside('-u root --volumes-from pdp_data --env-file /storage/data/projects/comp_support/jenkins/pdp_envs/pdp_deployment.env') {
-            stage('Git Executable Install') {
-                sh 'apt-get update'
-                sh 'apt-get install -y git'
-            }
+    stage('Python Test Suite') {
+        def pyImage = 'pcic/geospatial-python'
+        def requirements = ['requirements.txt', 'test_requirements.txt',
+                            'deploy_requirements.txt']
+        def pytestArgs = '-vv --tb=short tests'
+        def options = [pythonVersion: 2, aptPackages: ['git'], buildDocs: true,
+                       containerData: 'pdp']
 
-            stage('Python Installs') {
-                withEnv(['PIP_INDEX_URL=https://pypi.pacificclimate.org/simple']) {
-                    sh 'pip install -i https://pypi.pacificclimate.org/simple/ -r requirements.txt -r test_requirements.txt -r deploy_requirements.txt'
-                    sh 'pip install -e .'
-                }
-            }
-
-            stage('Build Docs') {
-                sh 'python setup.py install'
-                sh 'python setup.py build_sphinx'
-                sh 'python setup.py install'
-            }
-
-            stage('Python Test Suite') {
-                sh 'py.test -vv --tb=short tests'
-            }
-        }
+        runPythonTestSuite(pyImage, requirements, pytestArgs, options)
     }
 
     stage('Clean Workspace') {
@@ -45,20 +26,32 @@ node {
     }
 
     stage('Recollect Code') {
-        checkout scm
+        collectCode()
     }
 
+    def image
+    def imageName
+
     stage('Build Image') {
-        String image_name = 'pdp'
-        String branch_name = BRANCH_NAME.toLowerCase()
+        (image, imageName) = buildDockerImage('pdp')
+    }
 
-        // Update image name if we are not on the master branch
-        if (branch_name != 'master') {
-            image_name = image_name + '/' + branch_name
-        }
+    stage('Publish Image') {
+        publishDockerImage(image, 'PCIC_DOCKERHUB_CREDS')
+    }
 
-        withDockerServer([uri: PCIC_DOCKER]) {
-            def image = docker.build(image_name)
+    if(BRANCH_NAME.contains('PR')) {
+        stage('Security Scan') {
+            writeFile file: 'anchore_images', text: imageName
+            anchore name: 'anchore_images', engineRetries: '700'
         }
+    }
+
+    stage('Clean Local Image') {
+        removeDockerImage(imageName)
+    }
+
+    stage('Clean Workspace') {
+        cleanWs()
     }
 }
