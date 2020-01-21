@@ -171,3 +171,8 @@ Why is the "CSV" format nothing like what I expect? Why can't I import it into E
 -------------------------------------------------------------------------------------
 
 Let me respond to the question with a question. What is CSV defined to be? There is not actual answer to that question. CSV is defined as "Character Separated Values", but aside from that, there's no provision for what character is the separator, what information should be included, how many rows/columns should exist, where to include attributes and metadata, and a wide variety of other questions. Essentially, no one, including any of our users, agrees 100% on the structure of a CSV, especially for attributed, multi-dimensional output. We provide CSV as a convenience, but it is impossible to make any guarantees that semantics and structure of CSV output will be unambiguous to all users. If you want well-defined, structured, attributed data, we recommend that you make the effort to learn and use NetCDF. We promise that it will make your life easier.
+
+Why do some datasets have slightly negative precipitation values?
+-----------------------------------------------------------------
+
+In order to make them a more manageable size, the largest datasets are packed according to `netCDF guidelines <https://www.unidata.ucar.edu/software/netcdf/workshops/2010/bestpractices/Packing.html>`_. The data values are scaled so that they can be represented by a data type that takes up less space in memory. This results in a small loss of precision. The loss of precision may result in values, including zero values, being off by a small amount in either direction. Rounding or setting these slightly negative precipitation values to 0 for analysis is fine.
