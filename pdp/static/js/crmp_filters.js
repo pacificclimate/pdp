@@ -15,11 +15,13 @@ function net_filter(net_name) {
 
 function date_filter(sdate, edate) {
     var d = new Date();
-    if (edate === 'YYYY/MM/DD') {
-        edate = d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate(); //today
+    if (edate === 'YYYY/MM/DD' || edate === '') {
+        //today
+        edate = d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate();
     }
-    if (sdate === 'YYYY/MM/DD') {
-        sdate = '1870/01/01'; // ~beginning of our data (unless we find a magic data set)
+    if (sdate === 'YYYY/MM/DD' || sdate === '') {
+        // ~beginning of our data (unless we find a magic data set)
+        sdate = '1870/01/01';
     }
     // http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
     return new OpenLayers.Filter.Logical({
@@ -147,9 +149,13 @@ function filter_append(map, fil) {
 }
 
 function filter_clear(map) {
-    var filtValsFunc = map.filters.values;
-    map.filters = {};
-    map.filters.values = filtValsFunc;
+    var date = date_filter('YYYY/MM/DD','YYYY/MM/DD');
+    map.filters = {
+        values: map.filters.values,
+        date: date
+    };
+    $('#from-date').val(date.filters[0].value);
+    $('#to-date').val(date.filters[1].value);
     map.getLayersByName("Polygon selection")[0].removeAllFeatures();
 }
 

@@ -803,6 +803,7 @@
         lz2: lz2,
         formatDatetimeRaw: formatDatetimeRaw,
         formatDatetimeISO8601: formatDatetimeISO8601,
+        formatDatetimeLoose: formatDatetimeLoose,
         SimpleDatetime: SimpleDatetime,
         Calendar: Calendar,
         GregorianCalendar: GregorianCalendar,
