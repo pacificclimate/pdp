@@ -139,13 +139,19 @@ We have downloaded 10 timesteps of a downscaled GCM data and saved it to /tmp/sa
     [-120.12500083500001, -120.04166750499999, -119.958334175, -119.875000845]
 
 The file lists data for four properties: tasmax, time, lat, and lon.
-The first thing that the file lists is the data from the variable that we requested, in this case `tasmax` or daily maximum temperature. Thereafter, it lists values that correspond to each of the axes in the hyper cube from major dimension (time) to minor dimension(lon). Interpreting the multidimensional values of `tasmax` can be non-trivial. Each line corresponds to one step of the major dimension (i.e time). Each line lists a two-dimensional array, where latitude is the major dimension and longitude is the minor dimension. Therefor the first two lines of data can be interpreted as: ::
+The first thing that the file lists is the data from the variable that we requested, in this case `tasmax` or daily maximum temperature. Thereafter, it lists values that correspond to each of the axes in the hyper cube from major dimension (time) to minor dimension(lon). Interpreting the multidimensional values of `tasmax` can be non-trivial. Each line corresponds to one step of the major dimension (i.e time). Each line lists a two-dimensional array, where latitude is the major dimension and longitude is the minor dimension. Therefore the first two lines of data can be interpreted as: ::
 
     timestep0: [[ tasmax at lat0:lon0, tasmax at lat0:lon1, tasmax at lat0:lon2, tasmax at lat0:lon3], [tasmax at lat1:lon0, tasmax at lat0:lon1, tasmax at lat0:lon2, tasmax at lat0:lon3]]
     timestep1: [[ tasmax at lat0:lon0, tasmax at lat0:lon1, tasmax at lat0:lon2, tasmax at lat0:lon3], [tasmax at lat1:lon0, tasmax at lat1:lon1, tasmax at lat1:lon2, tasmax at lat1:lon3]]
     ...
 
 Please note that the CSV contains no attributed metadata such as references, variable units, variable descriptions, fill values, etc., all of which you almost certainly want. You can retrieve these attributes with the "Metadata" button on the map page (or they are included if you download using NetCDF, instead).
+
+Some of the larger datasets have been packed in accordance with the `netCDF standard <https://www.unidata.ucar.edu/software/netcdf/workshops/2010/bestpractices/Packing.html>`_. This process maps data of one numerical type (such as floating point numbers) to a numerical type that requires fewer bits per value (such as short integers). To preserve as much precision as possible, the values are scaled so that their minimum and maximum are mapped to the minimum and maximum of the new data type. When you download CSV data from a packed variable, you can unpack it according to the following process: ::
+
+    unpacked_value = packed_value * scale_factor + add_offset
+    
+The `scale_factor` and `add_offset` values are documented in the metadata of a packed variable.
 
 
 ArcInfo/ASCII Grid
