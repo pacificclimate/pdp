@@ -12,7 +12,7 @@
     "jest-canvas-mock": "^2.0.0",
     "jest-each": "^24.7.1",
     "jest-environment-jsdom-fourteen": "^0.1.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "xml-js": "^1.6.11"
   },
   "scripts": {
