@@ -32,7 +32,7 @@ function init_obs_map() {
         numcolorbands: 254,
         version: '1.1.1',
         srs: "EPSG:4326",
-        TIME: "1997-3-17T00:00:00Z",
+        TIME: "1997-03-17T00:00:00Z",
     };
 
     datalayerName = "Climate raster";
