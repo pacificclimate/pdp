@@ -1,5 +1,16 @@
 News / Release Notes
 ====================
+2.9.0
+-----
+*Release Date: 22-Jan-2020*
+
+* Sets up Jenkins testing and automatic docker building for this project
+* Fixes a bug that caused invalid ncWMS requests when filters were reset
+* Fixes a date formatting bug in the map legend of the Gridded Observations portal
+* Add notes on working with packed data to user documentation
+* Add new data to the Gridded Hydrologic Model Output portal
+
+
 2.8.0
 -----
 *Release Date: 23-Aug-2019*
