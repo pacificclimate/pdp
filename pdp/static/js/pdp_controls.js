@@ -171,7 +171,18 @@ function processDateRangeInput($date, fallbackFlag, $error) {
 function generateMenuTree(subtree, leafNameMapping) {
     var ul = $("<ul/>");
     /*jslint unparam: true*/
-    $.each(Object.keys(subtree), function (index, stuff) {
+
+    // elements in each subtree are arranged in alphabetical order
+    // by display name.
+    function compareDisplayName(a, b) {
+        const adn = ( leafNameMapping && a in leafNameMapping ? 
+            leafNameMapping[a] : a).toLowerCase();
+        const bdn = (leafNameMapping && b in leafNameMapping ?
+            leafNameMapping[b] : b).toLowerCase();
+        return adn.localeCompare(bdn);
+    }
+
+    $.each(Object.keys(subtree).sort(compareDisplayName), function (index, stuff) {
         var newlayer, linkText,
             li = $('<li/>');
         if (subtree[stuff] instanceof Object) {
@@ -212,10 +223,31 @@ function getRasterAccordionMenu(ensembleName, leafNameMapping) {
     return div;
 }
 
+// Some portals (vic_app and canada_ex_app) display two versions of the same
+// dataset: an up-to-date version, and an archive of the older version that was
+// previously displayed on the site and is only maintained for comparison or 
+// compatibility with other old data.
+// These functions support the portals that display multiple versions of a dataset.
+function isArchivePortal() {
+	// not a sophisticated function; just checks to see if "archive" is in the URL.
+	return $(location).attr('href').indexOf("archive") != -1;
+};
+
+// Make a label with text disclaimer for archived datasets
 function getArchiveDisclaimer() {
   const disText = "These methods are provided for research / comparison to older analysis purposes only, and caution with their use is advised.";
   return pdp.createLabel("disclaimer", disText);
-}
+};
+
+// Adds a link to the other portal to the navbar
+function addPortalLink(url_base, text) {
+	const portalLink = pdp.createLink("portal-link",
+                undefined,
+                pdp.app_root + '/' + url_base + "/map/",
+                text);
+    document.getElementById("topnav").appendChild(portalLink);
+};
+
 
 var getRasterControls = function (ensemble_name) {
     var div = pdp.createDiv('', 'control'),
@@ -342,7 +374,7 @@ Colorbar.prototype = {
 
     format_units: function (units) {
         // reformat known units:
-        // 'mm d-1', '%', 'days', 'meters s-1', 'm', 'mm',
+        // 'mm d-1', '%', 'days', 'meters s-1', 'm', 'mm', '1'
         // 'degrees_C', 'kg m-2', 'degC', 'mm day-1', 'celsius'
         switch (units) {
         case "degC":
@@ -356,6 +388,8 @@ Colorbar.prototype = {
             return "m/s";
         case "kg m-2":
             return "kg/m<sup>2</sup>";
+        case "1":
+        	return "fraction"
         default:
             return units;
         }
@@ -601,7 +635,9 @@ condExport(module, {
     processDateRangeInput: processDateRangeInput,
     generateMenuTree: generateMenuTree,
     getRasterAccordionMenu: getRasterAccordionMenu,
+    isArchivePortal: isArchivePortal,
     getArchiveDisclaimer: getArchiveDisclaimer,
+    addPortalLink: addPortalLink,
     getRasterControls: getRasterControls,
     getRasterDownloadOptions: getRasterDownloadOptions,
     round: round,

@@ -18,7 +18,7 @@ require('./globals-helpers').importGlobals([
     { module: 'js/classes.js', name: 'classes' },
     { module: 'js/calendars.js', name: 'calendars' },
     // Note: mocking!
-    { module: 'js/__mocks__/data-services/vic_gen1_app.js', name: 'dataServices' },
+    { module: 'js/__mocks__/data-services/vic_app.js', name: 'dataServices' },
 
     { module: 'js/pdp_dom_library.js', spread: false },
     { module: 'js/pdp_controls.js', spread: true },
@@ -28,10 +28,10 @@ require('./globals-helpers').importGlobals([
     { module: 'js/pdp_raster_map.js', spread: true },
     { module: 'js/pdp_vector_map.js', spread: true },
 
-    // Gridded Observations app
-    { module: 'js/vic_gen1_map.js', spread: true },
-    { module: 'js/vic_gen1_controls.js', spread: true },
-    { module: 'js/vic_gen1_app.js', name: 'vic_gen1_app' },
+    // VIC outputs app
+    { module: 'js/vic_map.js', spread: true },
+    { module: 'js/vic_controls.js', spread: true },
+    { module: 'js/vic_app.js', name: 'vic_app' },
 
 ], '../..');
 
@@ -55,11 +55,11 @@ var afterCalendar = calendars['standard'];
 var afterUnits = 'days';
 var afterCfTimeSystem = new calendars.CfTimeSystem(
     afterUnits,
-    new calendars.CalendarDatetime(afterCalendar, 1950, 1, 1),
-    54787
+    new calendars.CalendarDatetime(afterCalendar, 1945, 1, 1),
+    56613
 );
 
-dateFilterTests(vic_gen1_app, {
+dateFilterTests(vic_app, {
     cfTimeSystem: {
         before: beforeCfTimeSystem,
         after: afterCfTimeSystem,

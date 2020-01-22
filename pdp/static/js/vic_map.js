@@ -1,14 +1,30 @@
 /*jslint browser: true, devel: true */
 /*global $, jQuery, OpenLayers, pdp, Colorbar, BC3005_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getBC3005Bounds_vic, getBC3005OsmBaseLayer, getOpacitySlider*/
 
+
+
 "use strict";
 
-function init_vic_map() {
+function init_vic_map(archive_portal) {
     var options, mapControls, selLayerName, selectionLayer, panelControls,
         defaults, map, params, datalayerName, cb, ncwms;
 
+	// Initial options vary by whether we're mapping the old or
+	// new dataset.
+	const vic_gen1_init = {
+		dataset:"5var_day_CCSM3_A1B_run1_19500101-20991231",
+		variable: "sm",
+		time:  "2000-01-01T00:00:00Z"
+		};
+	const vic_gen2_init = {
+		dataset: "BASEFLOW_day_VICGL_ACCESS1-0_rcp85_r1i1p1_19450101-20991231_columbia",
+		variable: "BASEFLOW",
+		time: "2000-01-01T00:00:00Z"
+	};
+	const init = archive_portal ? vic_gen1_init : vic_gen2_init;
+
     // Map Config
-    options = BC3005_map_options();
+    options = BC3005_map_options_vic(archive_portal);
     options.tileManager = null;
 
     // Map Controls
@@ -21,19 +37,14 @@ function init_vic_map() {
     options.controls = mapControls;
     map = new OpenLayers.Map('pdp-map', options);
 
-    defaults = {
-        dataset: "5var_day_CCSM3_A1B_run1_19500101-20991231",
-        variable: "sm"
-    };
-
     params = {
-        layers: defaults.dataset + "/" + defaults.variable,
+        layers: init.dataset + "/" + init.variable,
         transparent: 'true',
         // styles: '',
         numcolorbands: 254,
         version: '1.1.1',
         srs: 'EPSG:3005',
-        TIME: '2000-01-01T00:00:00Z'
+        TIME: init.time
     };
 
     datalayerName = "Climate raster";
@@ -42,7 +53,7 @@ function init_vic_map() {
         pdp.ncwms_url,
         params,
         {
-            maxExtent: getBC3005Bounds_vic(),
+            maxExtent: getBC3005Bounds_vic(archive_portal),
             buffer: 1,
             ratio: 1.5,
             opacity: 0.7,
@@ -60,7 +71,7 @@ function init_vic_map() {
     );
 
     document.getElementById("pdp-map").appendChild(getOpacitySlider(ncwms));
-    map.zoomToExtent(new OpenLayers.Bounds(611014.125, 251336.4375, 2070975.0625, 1737664.5625), true);
+    map.zoomToExtent(getBC3005Bounds_vic(archive_portal));
 
     map.getClimateLayer = function () {
         return map.getLayersByName(datalayerName)[0];
@@ -85,7 +96,7 @@ function init_vic_map() {
         });
     });
 
-    ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
+    ncwms.events.triggerEvent('change', init.dataset + "/" + init.variable);
 
     // Expose ncwms as a global
     (function (globals) {

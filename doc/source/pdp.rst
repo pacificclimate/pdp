@@ -35,5 +35,8 @@ The pdp module
 .. automodule:: pdp.portals.vic_gen1
    :members:
 
+.. automodule:: pdp.portals.vic_gen2
+   :members:
+
 .. automodule:: pdp.portals.gridded_observations
    :members:

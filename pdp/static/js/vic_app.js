@@ -1,14 +1,37 @@
 /*jslint browser: true, devel: true */
 /*global $, jQuery, OpenLayers, pdp, init_vic_map, processNcwmsLayerMetadata, getVICControls, getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
 
+/* 
+This front end displays data output by the VIC-GL model.
+There are two such data ensembles; one made with CMIP3 modeled
+input, and one made with CMIP5 modeled input downscaled by the
+BCCAQ2. The CMIP5 dataset is the newest, most up-to-date one,
+but the CMIP3-based data is provided for archive purposes.
+
+Data display and UI are similar for both datasets; they 
+differ only in URL, starting dataset, and data ensemble.
+
+CMIP3 data:
+	backend: vic_gen1
+	url_base: hydro_model_archive
+	ensemble: vic_gen1
+
+CMIP5 data:
+	backend: vic_gen2
+	url_base: hydro_model_out
+	ensemble: vicgl_cmip5
+*/
+
 (function ($) {
     "use strict";
 
-    function vic_gen1_app() {
+    function vic_app() {
         var map, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog,
             dlLink, mdLink, capabilities_request, ncwms_capabilities;
-
-        window.map = map = init_vic_map();
+        
+        // the two portals have different initial maps
+        map = init_vic_map(isArchivePortal());
+        window.map = map;
 
         ncwmsLayer = map.getClimateLayer();
         selectionLayer = map.getSelectionLayer();
@@ -21,9 +44,22 @@
             .appendChild(getVICControls(pdp.ensemble_name));
         document.getElementById("pdp-controls")
             .appendChild(getRasterDownloadOptions('first', 'last'));
+            
+        // the archive and current portals link to eachother.
+        if(isArchivePortal()) {
+            //archive portal. link to new portal, add archive disclaimer.
+            addPortalLink("hydro_model_out", "Main Hydrologic Model Output Portal");
+            document.getElementById("pdp-controls").appendChild(getArchiveDisclaimer());
+        } else {
+        	// new data portal; link to old one.
+        	addPortalLink("hydro_model_archive", "Archive Hydrologic Model Output Portal");
+        }
 
         // Data Download Link
-        dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', 'sm', '', '', '');
+        dlLink = new RasterDownloadLink($('#download-timeseries'),
+                                        ncwmsLayer, undefined, 'nc',
+                                        isArchivePortal ? 'sm' : "BASEFLOW",
+                                        '', '', '');
         $('#data-format-selector').change(
             function (evt) {
                 dlLink.onExtensionChange($(this).val());
@@ -83,7 +119,7 @@
         });
     }
 
-    condExport(module, vic_gen1_app, 'vic_gen1_app');
+    condExport(module, vic_app, 'vic_app');
 
-    $(document).ready(vic_gen1_app);
+    $(document).ready(vic_app);
 })(jQuery);

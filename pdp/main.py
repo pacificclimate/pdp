@@ -19,10 +19,11 @@ import portals.bccaq2_downscale as bccaq2
 import portals.bccaq_extremes as bccaq_extremes
 import portals.gridded_observations as gridded_observations
 import portals.vic_gen1 as vic_gen1
+import portals.vic_gen2 as vic_gen2
 
 
-apps = (bc_prism, downscale_archive, bccaq2, vic_gen1, gridded_observations,
-        bccaq_extremes, pcds, hydro_stn)
+apps = (bc_prism, downscale_archive, bccaq2, vic_gen1, vic_gen2,
+        gridded_observations, bccaq_extremes, pcds, hydro_stn)
 
 
 def initialize_frontend(global_config, use_analytics=False):

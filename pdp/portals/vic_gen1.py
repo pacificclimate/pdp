@@ -2,6 +2,10 @@
 serves the first generation of output from the VIC Hydrologic
 Model. The spatial domain is specific watersheds within BC and the
 model was run using CMIP3 forcings.
+
+It shares many characteristics with the CMIP5 VIC data served by the
+pdp.portals.vic_gen2 module. The two datasets are displayed by the same
+portal code, vic_app.js, and map code, vic_map.js.
 '''
 
 from pdp.portals import make_raster_frontend, data_server
@@ -12,8 +16,8 @@ __all__ = ['url_base', 'mk_frontend', 'mk_backend']
 
 
 ensemble_name = 'vic_gen1'
-url_base = '/hydro_model_out'
-title = 'Gridded Hydrologic Model Output'
+url_base = '/hydro_model_archive'
+title = 'Gridded Hydrologic Model Output Archive'
 
 
 class VicGen1EnsembleLister(EnsembleMemberLister):
@@ -27,9 +31,9 @@ class VicGen1EnsembleLister(EnsembleMemberLister):
 def mk_frontend(config):
     return make_raster_frontend(config, ensemble_name, url_base,
                                 title, VicGen1EnsembleLister,
-                                ['js/vic_gen1_map.js',
-                                 'js/vic_gen1_controls.js',
-                                 'js/vic_gen1_app.js'])
+                                ['js/vic_map.js',
+                                 'js/vic_controls.js',
+                                 'js/vic_app.js'])
 
 
 def mk_backend(config):
