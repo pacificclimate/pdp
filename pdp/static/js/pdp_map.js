@@ -17,13 +17,13 @@ function getBC3005Bounds() {
 }
 
 // the vic map displays two datasets with different extents but same projection
-function getBC3005Bounds_vic(archive_dataset) {
-	if(archive_dataset) {
-		// archive dataset: BC only
+function getBC3005Bounds_vic(archive_portal) {
+	if(archive_portal) {
+		// archive portal's dataset cover watersheds in BC only
 		return new OpenLayers.Bounds(611014.125, 251336.4375, 2070975.0625, 1737664.5625);
 	}
 	else {
-		// new dataset: includs entire columbia watershed south to NV, USA
+		// new dataset includes entire Columbia watershed south to NV, USA
 		return new OpenLayers.Bounds(611014.125, -400000, 2070975.0625, 1737664.5625);
 	}
 }

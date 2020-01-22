@@ -179,14 +179,9 @@ function generateMenuTree(subtree, leafNameMapping) {
             leafNameMapping[a] : a).toLowerCase();
         const bdn = (leafNameMapping && b in leafNameMapping ?
             leafNameMapping[b] : b).toLowerCase();
-        if(adn < bdn) {
-            return -1;
-        }
-        if(adn > bdn) {
-            return 1;
-        }
-        return 0;
+        return adn.localeCompare(bdn);
     }
+
     $.each(Object.keys(subtree).sort(compareDisplayName), function (index, stuff) {
         var newlayer, linkText,
             li = $('<li/>');
