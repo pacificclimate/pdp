@@ -10,7 +10,8 @@ from ga_wsgi_client import AnalyticsMiddleware
 
 # Station portals
 import portals.pcds as pcds
-import portals.hydro_stn as hydro_stn
+import portals.hydro_stn_archive as hydro_stn_archive
+import portals.hydro_stn_cmip5 as hydro_stn_cmip5
 
 # Raster portals
 import portals.bc_prism as bc_prism
@@ -23,7 +24,8 @@ import portals.vic_gen2 as vic_gen2
 
 
 apps = (bc_prism, downscale_archive, bccaq2, vic_gen1, vic_gen2,
-        gridded_observations, bccaq_extremes, pcds, hydro_stn)
+        gridded_observations, bccaq_extremes, pcds, 
+        hydro_stn_archive, hydro_stn_cmip5)
 
 
 def initialize_frontend(global_config, use_analytics=False):

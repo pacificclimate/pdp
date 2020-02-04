@@ -1,3 +1,16 @@
+'''This portal serves routed streamflow data from around British Columbia.
+The data is CSV files; users select a station and receives a single CSV
+file containing all timestamps for all runs (model / scenario) available
+for that station. It serves every file in a directory specified by the
+resource yaml.
+
+Metadata about these files, such as station locations and name,
+is not served by this portal; the front end retrieves it from
+a separate CSV.
+
+This portal is very similar to the hydro_stn_cmip5 portal, which serves
+a more up to date data collection of similar format from a different
+directory. The two portals share a frontend, hydro_stn_app.'''
 from pkg_resources import resource_filename
 
 from werkzeug import DispatcherMiddleware
@@ -10,7 +23,7 @@ from pdp.portals import updateConfig
 
 __all__ = ['url_base', 'mk_frontend', 'mk_backend']
 
-url_base = '/hydro_stn'
+url_base = '/hydro_stn_archive'
 
 
 class HydroStationDataServer(DapServer):
@@ -31,7 +44,7 @@ class HydroStationDataServer(DapServer):
 
 def mk_backend(config):
     data_server = HydroStationDataServer(
-            resource_filename('pdp', 'portals/hydro_stn.yaml'),
+            resource_filename('pdp', 'resources/hydro_stn_archive.yaml'),
             config['data_root'].rstrip('/') + '/'
     )
     return data_server
@@ -39,7 +52,7 @@ def mk_backend(config):
 
 def mk_frontend(config):
     hydro_stn_config = {
-        'title': 'Modelled Streamflow Data',
+        'title': 'Modelled Streamflow Data Archive',
         'js_files':
         wrap_mini([
             'js/jquery.csv-0.71.js',

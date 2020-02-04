@@ -1,4 +1,4 @@
-name: hydro-station-data-server
+name: hydro-station-archive-data-server
 version: 0
 api_version: 0
 handlers:

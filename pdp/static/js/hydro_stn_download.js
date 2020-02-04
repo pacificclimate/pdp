@@ -4,6 +4,8 @@
 "use strict";
 
 function show_permalinks(base_urls, extension) {
+	console.log("inside show_permalinks");
+	console.log(base_urls);
     var url_list, d, p;
     url_list = $.map(base_urls, function (url) {
         return url + "." + extension;

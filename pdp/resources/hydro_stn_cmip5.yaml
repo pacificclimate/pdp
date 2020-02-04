@@ -1,0 +1,6 @@
+name: hydro-station-cmip5-data-server
+version: 0
+api_version: 0
+handlers:
+    - url: hydro_stn
+      dir: /storage/data/projects/hydrology/dataportal/CMIP5/routedflow/merged
