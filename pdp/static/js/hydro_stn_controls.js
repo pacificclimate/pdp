@@ -55,7 +55,7 @@ function getHydroStnControls() {
     // Create download links control
     div = pdp.createDiv('', 'control');
     frag.appendChild(div);
-    fieldset = pdp.createFieldset("filterset", "Downoad Links");
+    fieldset = pdp.createFieldset("filterset", "Download Links");
     div.appendChild(fieldset)
     selection = pdp.createDiv('selectedStations', '');
     fieldset.appendChild(selection);

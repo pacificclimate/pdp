@@ -97,7 +97,6 @@
 
                 row.idx = idx;
                 parser = document.createElement('a');
-                // const data_dir = isArchivePortal() ? "hydro_stn_archive" : "hydro_stn_cmip5";
                 parser.href = pdp.data_root + "/" + dataURL() + "/" + row.FileName;
                 row.url = parser.href;
                 pt = new OpenLayers.Geometry.Point(
@@ -132,6 +131,16 @@
             });
             show_permalinks(url_list, 'ascii');
         });
+        
+                // the archive and current portals link to eachother.
+        if(isArchivePortal()) {
+            //archive portal. link to new portal, add archive disclaimer.
+            addPortalLink("hydro_stn_cmip5", "Main Modeled Streamflow Portal");
+            document.getElementById("pdp-controls").appendChild(getArchiveDisclaimer());
+        } else {
+        	// new data portal; link to old one.
+        	addPortalLink("hydro_stn_archive", "Archive Modeled Streamflow Portal");
+        }
     }
 
     condExport(module, hydro_stn_app, 'hydro_stn_app');
