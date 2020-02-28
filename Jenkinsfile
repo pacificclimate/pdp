@@ -1,4 +1,4 @@
-@Library('pcic-pipeline-library')_
+@Library('pcic-pipeline-library@1.0.1')_
 
 
 node {
@@ -30,17 +30,17 @@ node {
     }
 
     def image
-    def imageName
+    def imageName = buildImageName('pdp')
 
     stage('Build Image') {
-        (image, imageName) = buildDockerImage('pdp')
+        image = buildDockerImage(imageName)
     }
 
     stage('Publish Image') {
         publishDockerImage(image, 'PCIC_DOCKERHUB_CREDS')
     }
 
-    if(BRANCH_NAME.contains('PR')) {
+    if(BRANCH_NAME.contains('PR') || BRANCH_NAME == 'master') {
         stage('Security Scan') {
             writeFile file: 'anchore_images', text: imageName
             anchore name: 'anchore_images', engineRetries: '700'
