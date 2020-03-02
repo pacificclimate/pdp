@@ -1,6 +1,6 @@
-'''This portal serves routed streamflow data for the Peace, Fraser, and 
+'''This portal serves routed streamflow data for the Peace, Fraser, and
 Columbia watersheds. The data is CSV files; users select a station and
-receives a single CSV file containing all timestamps for all runs 
+receives a single CSV file containing all timestamps for all runs
 (model / scenario) available for that station. It serves every file in
 a directory specified by the resource yaml.
 

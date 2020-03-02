@@ -24,7 +24,7 @@ import portals.vic_gen2 as vic_gen2
 
 
 apps = (bc_prism, downscale_archive, bccaq2, vic_gen1, vic_gen2,
-        gridded_observations, bccaq_extremes, pcds, 
+        gridded_observations, bccaq_extremes, pcds,
         hydro_stn_archive, hydro_stn_cmip5)
 
 
