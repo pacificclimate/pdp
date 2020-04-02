@@ -76,7 +76,7 @@ function getBC3005Bounds_stn(archive_portal) {
 	}
 	else {
 		// new dataset includes entire Columbia watershed south to NV, USA
-		return new OpenLayers.Bounds(611014.125, -400000, 2070975.0625, 1300000.5625);
+		return new OpenLayers.Bounds(511014.125, -250000, 2170975.0625, 1500000.5625);
 	}
 }
 

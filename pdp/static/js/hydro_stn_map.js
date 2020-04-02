@@ -102,7 +102,6 @@ function init_hydro_stn_map() {
         ]
     );
     map.zoomToMaxExtent();
-    map.zoomToExtent(getBC3005Bounds(), true);
 
     map.getStnLayer = function () {
         return map.getLayersByName("Stations")[0];

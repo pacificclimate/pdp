@@ -54,9 +54,6 @@
             alert("This portal does not support IE8. Please upgrade your browser or use an alternative.");
             return;
         }
-        if(isArchivePortal()) {
-        	console.log("this is an archive portal.");
-        }
         
         window.map = map = init_hydro_stn_map();
         mapProj = map.getProjectionObject();
@@ -90,7 +87,6 @@
             var inProj = new OpenLayers.Projection("EPSG:4326");
 
             dataArray = $.csv.toObjects(data);
-            console.log(dataArray);
 
             $(dataArray).each(function (idx, row) {
                 var parser, pt, feature;
