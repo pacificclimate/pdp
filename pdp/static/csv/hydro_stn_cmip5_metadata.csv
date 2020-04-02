@@ -153,3 +153,36 @@ WAV,WAV,"MCKENZIE RIVER NEAR WALTERVILLE, OR",44.09375,-122.78125,REG,TRUE,WAV.c
 WEII,WEII,"SNAKE RIVER NEAR WEISER, ID",44.21875,-117.03125,REG,TRUE,WEII.csv,Columbia
 WENPE,12459000,"WENATCHEE RIVER AT PESHASTIN, WA",47.59375,-120.59375,NAT,TRUE,WENPE.csv,Columbia
 WHB,WHB,"SALMON RIVER AT WHITE BIRD, ID",45.71875,-116.34375,REG,TRUE,WHB.csv,Columbia
+ARNT7,07EA007,Akie River near 760m Contour,57.21875,-124.90625,,TRUE,ARNT7.csv,Peace
+BRBAC,07FC003,Blueberry River below Aitken Creek,56.65625,-121.21875,,TRUE,BRBAC.csv,Peace
+BRNFS,07FC001,Beatton River near Fort St. John,56.28125,-120.71875,,TRUE,BRNFS.csv,Peace
+FRAAR,07EA005,Finlay River above Akie River,57.15625,-125.28125,,TRUE,FRAAR.csv,Peace
+GRACC,07FA005,Graham River above Colt Creek,56.46875,-122.34375,,TRUE,GRACC.csv,Peace
+HERNN,07HA003,"Heart River near Nampa, AB",56.03125,-117.03125,,TRUE,HERNN.csv,Peace
+HRAGR,07FA003,Halfway River above Graham River,56.53125,-122.34375,,TRUE,HRAGR.csv,Peace
+HRNFC,07FA006,Halfway River near Farrell Creek,56.21875,-121.59375,,TRUE,HRNFC.csv,Peace
+IRASR,07EA004,Ingeneka River above Swannell River,56.71875,-125.21875,,TRUE,IRASR.csv,Peace
+KIRNF,07FD001,Kiskatinaw River near Farmington,55.96875,-120.53125,,TRUE,KIRNF.csv,Peace
+KWRNW,07EA002,Kwadacha River near Ware,57.46875,-125.65625,,TRUE,KWRNW.csv,Peace
+LSRNG,07GH002,"Little Smoky River near Guy, AB",55.46875,-117.15625,,TRUE,LSRNG.csv,Peace
+MRAGC,07EC003,Mesilinka River above Gopherhole Creek,56.21875,-124.65625,,TRUE,MRAGC.csv,Peace
+MRAWR,07FB006,Murray River above Wolverine River,55.03125,-121.03125,,TRUE,MRAWR.csv,Peace
+MRNFS,07FB008,Moberly River near Fort St. John,56.09375,-121.34375,,TRUE,MRNFS.csv,Peace
+MRNTM,07FB002,Murray River near the Mouth,55.53125,-121.21875,,TRUE,MRNTM.csv,Peace
+NRNFS,07ED001,Nation River near Fort St. James,55.21875,-124.28125,,TRUE,NRNFS.csv,Peace
+NRNTM,07ED003,Nation River near the Mouth,55.46875,-123.59375,,TRUE,NRNTM.csv,Peace
+ORAAC,07EB002,Ospika River above Aley Creek,56.53125,-123.96875,,TRUE,ORAAC.csv,Peace
+ORAOR,07EC002,Omineca River above Osilinka River,55.90625,-124.59375,,TRUE,ORAOR.csv,Peace
+ORNEL,07EC004,Oslinka River near End Lake,56.09375,-124.78125,,TRUE,ORNEL.csv,Peace
+PCRBH,07FD007,Pouce Coupe River below Henderson Creek,55.84375,-120.03125,,TRUE,PCRBH.csv,Peace
+PERNT,07FD002,Peace River near Taylor,56.15625,-120.65625,,TRUE,PERNT.csv,Peace
+PRABD,BCGMS,Peace River at Bennett Dam,56.03125,-122.21875,,TRUE,PRABD.csv,Peace
+PRAEP,07FB001,Pine River at East Pine,55.71875,-121.21875,,TRUE,PRAEP.csv,Peace
+PRAMR,07EE007,Parsnip River above Misinchinka River,55.03125,-122.84375,,TRUE,PRAMR.csv,Peace
+PRAOO,07EE010,Pack River at Outlet of McLeod Lake,54.96875,-123.03125,,TRUE,PRAOO.csv,Peace
+PRAPR,07HA001,"Peace River at Peace River, AB",56.21875,-117.28125,,TRUE,PRAPR.csv,Peace
+RRNRG,07GD004,"Redwillow River near Rio Grande, AB",55.09375,-119.71875,,TRUE,RRNRG.csv,Peace
+SMRAW,07GJ001,"Smoky River at Watino, AB",55.78125,-117.59375,,TRUE,SMRAW.csv,Peace
+SRNTM,07FB003,Sukunka River near the Mouth,55.53125,-121.59375,,TRUE,SRNTM.csv,Peace
+WRNGP,07GE001,"Wapiti River near Grande Prairie, AB",55.09375,-118.78125,,TRUE,WRNGP.csv,Peace
+WRNTM,07GG001,"Waskahigan River near the Mouth, AB",54.71875,-117.21875,,TRUE,WRNTM.csv,Peace
