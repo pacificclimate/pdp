@@ -33,3 +33,7 @@ Each portal serves data out of a different directory, which is configured by a y
 ### StationName
 A description of the location of the station, something like "CAMPBELL RIVER AT STRATHCONA DAM". 
 Displayed to the user when the station is selected.
+
+### SiteID
+An authoritative alphanumeric code for the station. Not displayed directly in the UI, but can be
+searched for. Sometimes, but not always, the same as the FileName.
