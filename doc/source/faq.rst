@@ -176,3 +176,7 @@ Why do some datasets have slightly negative precipitation values?
 -----------------------------------------------------------------
 
 In order to make them a more manageable size, the largest datasets are packed according to `netCDF guidelines <https://www.unidata.ucar.edu/software/netcdf/workshops/2010/bestpractices/Packing.html>`_. The data values are scaled so that they can be represented by a data type that takes up less space on disk and in memory. This results in a small loss of precision. The loss of precision may result in values, including zero values, being off by up to the amount of the scale factor, which is documented in the variable metadata, in either direction. Negative precipitation is, of course, nonsensical, but rounding or setting these slightly negative precipitation values to 0 for analysis is fine.
+
+Why are there blank cells in downloaded routed streamflow data?
+---------------------------------------------------------------
+This is expected. Routed flow data includes timeseries derived from driving the VIC hydrologic model with gridded observations and downscaled climate models. The former, referred to as `base` or `PNWNAmet` represent the historical record and therefore extend over a shorter time period, such as 1945 to 2012. Outside of the time range of the historical dataset, cells in its column will be empty, or contain a space. Make sure your CSV-reading software uses only commas as cell delimiters in order to read these blank cells correctly.
