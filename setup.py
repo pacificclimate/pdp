@@ -44,7 +44,7 @@ def get_commitish():
     return "{}.{}".format(safe_branch, repo.git.rev_parse(sha, short=6))
 
 
-__version__ = '2.9.0'
+__version__ = '2.10.0'
 __revision__ = get_commitish()
 
 setup(

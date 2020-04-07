@@ -1,5 +1,12 @@
 News / Release Notes
 ====================
+2.10.0
+------
+*Release Date: 07-Apr-2020*
+
+* Updates Jenkins pipeline to latest version of PCIC Jenkins library
+* Adds new data to the Modelled Streamflow Data portal
+
 2.9.0
 -----
 *Release Date: 22-Jan-2020*
