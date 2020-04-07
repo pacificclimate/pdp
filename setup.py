@@ -79,7 +79,9 @@ setup(
                    'BeautifulSoup4'],
     scripts=['scripts/rast_serve.py'],
     package_dir={'pdp': 'pdp'},
-    package_data={'pdp': ['templates/*.html', 'portals/hydro_stn.yaml'] +
+    package_data={'pdp': ['templates/*.html',
+                          'resources/hydro_stn_archive.yaml',
+                          'resources/hydro_stn_cmip5.yaml'] +
                   recursive_list('pdp/', 'pdp/static') +
                   recursive_list('pdp/', 'pdp/docs/html')},
     cmdclass={

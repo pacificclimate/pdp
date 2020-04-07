@@ -486,7 +486,7 @@ def test_menu_json(pcic_data_portal, portal, ensemble):
 
 @pytest.mark.bulk_data
 def test_hydro_stn_data_catalog(pcic_data_portal):
-    url = '/data/hydro_stn/catalog.json'
+    url = '/data/hydro_stn_archive/catalog.json'
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
@@ -498,7 +498,7 @@ def test_hydro_stn_data_catalog(pcic_data_portal):
 
 @pytest.mark.bulk_data
 def test_hydro_stn_data_csv_csv(pcic_data_portal):
-    url = '/data/hydro_stn/BCHSCA_Campbell.csv.csv'
+    url = '/data/hydro_stn_archive/BCHSCA_Campbell.csv.csv'
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
@@ -519,7 +519,7 @@ def test_hydro_stn_data_csv_csv(pcic_data_portal):
 
 @pytest.mark.bulk_data
 def test_hydro_stn_data_csv_selection_projection(pcic_data_portal):
-    url = '/data/hydro_stn/BCHSCA_Campbell.csv.csv?'\
+    url = '/data/hydro_stn_archive/BCHSCA_Campbell.csv.csv?'\
           'sequence.ccsm3_A2run1&sequence.ccsm3_A2run1>100'
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)

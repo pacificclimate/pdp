@@ -55,6 +55,33 @@ function BC3005_map_options() {
     return options;
 }
 
+// hydro station portal serves two datasets, each of which uses the BC Albers
+// projection, but they have different extents.
+function BC3005_map_options_stn(archive_portal) {
+    var bounds = getBC3005Bounds_stn(archive_portal),
+        options = {
+            restrictedExtent: bounds,
+            displayProjection: getProjection(4326),
+            projection: getProjection(3005),
+            units: 'Meter'
+        };
+	return options;
+}
+
+
+function getBC3005Bounds_stn(archive_portal) {
+	if(archive_portal) {
+		// archive portal's dataset cover watersheds in BC only
+		return new OpenLayers.Bounds(611014.125, 251336.4375, 2070975.0625, 1737664.5625);
+	}
+	else {
+		// new dataset includes entire Columbia watershed south to NV, USA
+		return new OpenLayers.Bounds(511014.125, -250000, 2170975.0625, 1500000.5625);
+	}
+}
+
+
+
 function BC3005_map_options_vic(archive_portal) {
     var bounds = getBC3005Bounds_vic(archive_portal),
         options = {
@@ -336,6 +363,7 @@ condExport(module, {
     BC3005_map_options: BC3005_map_options,
     BC3005_map_options_vic: BC3005_map_options_vic,
     BC3005_map_options_obs: BC3005_map_options_obs,
+    BC3005_map_options_stn: BC3005_map_options_stn,
     na4326_map_options: na4326_map_options,
     world4326_map_options: world4326_map_options,
     getGSBaseLayer: getGSBaseLayer,

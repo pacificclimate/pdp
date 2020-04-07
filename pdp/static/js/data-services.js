@@ -89,9 +89,14 @@
         });
     }
 
-
-    function getRoutedFlowMetadata() {
-        return $.ajax(pdp.app_root + "/csv/routed_flow_metadatav4.csv");
+	// returns a list of station locations and names from a CSV file.
+	// there are two such lists, one for the current CMIP5 hydro station
+	// data, and the other for the archive CMIP3 data 
+    function getRoutedFlowMetadata(isArchivePortal) {
+    	const resource = isArchivePortal ? 
+    						"routed_flow_metadatav4" :
+    						"hydro_stn_cmip5_metadata";
+        return $.ajax(pdp.app_root + "/csv/" + resource + ".csv");
     }
 
 

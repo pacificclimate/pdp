@@ -14,7 +14,7 @@ function init_hydro_stn_map() {
         highlightCtrl, selectCtrl;
 
     // Map Config
-    options = BC3005_map_options();
+    options = BC3005_map_options_stn(isArchivePortal());
     options.tileManager = null;
 
     // Map Controls
@@ -102,7 +102,6 @@ function init_hydro_stn_map() {
         ]
     );
     map.zoomToMaxExtent();
-    map.zoomToExtent(getBC3005Bounds(), true);
 
     map.getStnLayer = function () {
         return map.getLayersByName("Stations")[0];

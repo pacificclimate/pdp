@@ -1,3 +1,17 @@
+'''This portal serves routed streamflow data for the Peace, Fraser, and
+Columbia watersheds. The data is CSV files; users select a station and
+receives a single CSV file containing all timestamps for all runs
+(model / scenario) available for that station. It serves every file in
+a directory specified by the resource yaml.
+
+Metadata about these files, such as station locations and name,
+is not served by this portal; the front end retrieves it from
+a separate CSV.
+
+This portal is very similar to the hydro_stn_archive portal, which serves
+a similar but older collection of CSVs from a different directory. The two
+portals share a frontend, hydro_stn_app.'''
+
 from pkg_resources import resource_filename
 
 from werkzeug import DispatcherMiddleware
@@ -10,7 +24,7 @@ from pdp.portals import updateConfig
 
 __all__ = ['url_base', 'mk_frontend', 'mk_backend']
 
-url_base = '/hydro_stn'
+url_base = '/hydro_stn_cmip5'
 
 
 class HydroStationDataServer(DapServer):
@@ -31,7 +45,7 @@ class HydroStationDataServer(DapServer):
 
 def mk_backend(config):
     data_server = HydroStationDataServer(
-            resource_filename('pdp', 'portals/hydro_stn.yaml'),
+            resource_filename('pdp', 'resources/hydro_stn_cmip5.yaml'),
             config['data_root'].rstrip('/') + '/'
     )
     return data_server
