@@ -393,6 +393,7 @@ def test_input_polygon_download_zipfile(pcic_data_portal, polygon):
     assert z.testzip() is None
 
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_climatology_bounds(pcic_data_portal):
     url = '/data/bc_prism/tmin_monClim_PRISM_historical_run1_197101-200012'\
@@ -430,6 +431,7 @@ def test_climatology_bounds(pcic_data_portal):
     os.remove(f.name)
 
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('url', [
     # has NODATA values
@@ -447,6 +449,7 @@ def test_aaigrid_response(pcic_data_portal, url):
     assert resp.content_type == 'application/zip'
 
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('layers', [0, 1, 100, 38000])
 def test_aaigrid_response_layers(pcic_data_portal, layers):
@@ -484,6 +487,7 @@ def test_menu_json(pcic_data_portal, portal, ensemble):
     assert len(data) > 0
 
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_hydro_stn_data_catalog(pcic_data_portal):
     url = '/data/hydro_stn_archive/catalog.json'
@@ -496,6 +500,7 @@ def test_hydro_stn_data_catalog(pcic_data_portal):
     assert len(data) > 0
 
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_hydro_stn_data_csv_csv(pcic_data_portal):
     url = '/data/hydro_stn_archive/BCHSCA_Campbell.csv.csv'
@@ -517,6 +522,7 @@ def test_hydro_stn_data_csv_csv(pcic_data_portal):
     assert False, "Data line for 1950/1/1 does not exist"
 
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_hydro_stn_data_csv_selection_projection(pcic_data_portal):
     url = '/data/hydro_stn_archive/BCHSCA_Campbell.csv.csv?'\
@@ -540,6 +546,7 @@ ccsm3_A2run1
 137.407532''')
 
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_hydro_model_archive_catalog(pcic_data_portal):
     url = '/hydro_model_archive/catalog/'
@@ -553,6 +560,7 @@ def test_hydro_model_archive_catalog(pcic_data_portal):
     assert len(data) > 0
 
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('url', [
     '{}HadCM_A1B_run1_19500101-20991231.nc.nc?sm[0:1][0:1][0:1]&',
@@ -568,6 +576,7 @@ def test_hydro_model_archive_5var(pcic_data_portal, url):
     assert resp.content_type == 'application/x-netcdf'
 
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('url', [
     '{}HadCM_A1B_run1_19500101-21001231.nc.nc?pr[0:1][0:1][0:1]&',
@@ -582,6 +591,7 @@ def test_hydro_model_archive_pr_tasmin_tasmax_wind(pcic_data_portal, url):
     assert resp.content_type == 'application/x-netcdf'
 
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize(('projection', 'length'), [
     ('[][][]', 13),
@@ -613,6 +623,7 @@ def test_empty_hyperslabs(pcic_data_portal, projection, length):
     os.remove(f.name)
 
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize("file,expected_mean",
                          [('tasmax_day_BCCAQv2+ANUSPLIN300_IPSL-CM5A-MR_'

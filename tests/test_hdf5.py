@@ -11,6 +11,7 @@ def test_can_instantiate_raster_pydap(raster_pydap):
     assert isinstance(raster_pydap, object)
 
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_hdf5_to_netcdf(pcic_data_portal):
     req = Request.blank(
@@ -32,6 +33,7 @@ def test_hdf5_to_netcdf(pcic_data_portal):
     os.remove(f.name)
 
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_prism_response(pcic_data_portal):
     req = Request.blank(
@@ -42,6 +44,7 @@ def test_prism_response(pcic_data_portal):
     assert resp.content_type == 'text/html'
 
 
+@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_dds_response(pcic_data_portal):
     req = Request.blank(
