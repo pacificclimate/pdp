@@ -29,6 +29,7 @@ def test_static(url):
     assert resp.status == '200 OK'
 
 
+@pytest.mark.slow
 @pytest.mark.crmpdb
 @pytest.mark.parametrize('url', [
     '/js/crmp_map.js', '/css/main.css', '/images/banner.png', '/docs/',
@@ -157,6 +158,7 @@ def test_nc_response(pcic_data_portal):
     os.remove(f.name)
 
 
+@pytest.mark.slow
 @pytest.mark.crmpdb
 def test_nc_response_with_null_values(pcic_data_portal):
     req = Request.blank('/data/pcds/lister/raw/BCH/AKI.rsql.nc')
@@ -165,6 +167,7 @@ def test_nc_response_with_null_values(pcic_data_portal):
     assert resp.content_type == 'application/x-netcdf'
 
 
+@pytest.mark.slow
 @pytest.mark.crmpdb
 def test_clip_to_date_one(pcic_data_portal):
     base_url = '/data/pcds/agg/?'
@@ -316,6 +319,7 @@ def test_legend_caching(pcic_data_portal):
     assert resp.status.startswith('200')
 
 
+@pytest.mark.slow
 @pytest.mark.crmpdb
 @pytest.mark.parametrize('polygon', ['single station polygon',
                                      'multiple station polygon',
@@ -431,6 +435,7 @@ def test_climatology_bounds(pcic_data_portal):
     os.remove(f.name)
 
 
+@pytest.mark.slow
 @pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('url', [
@@ -449,6 +454,7 @@ def test_aaigrid_response(pcic_data_portal, url):
     assert resp.content_type == 'application/zip'
 
 
+@pytest.mark.slow
 @pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('layers', [0, 1, 100, 38000])
@@ -487,6 +493,7 @@ def test_menu_json(pcic_data_portal, portal, ensemble):
     assert len(data) > 0
 
 
+@pytest.mark.slow
 @pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_hydro_stn_data_catalog(pcic_data_portal):
@@ -500,6 +507,7 @@ def test_hydro_stn_data_catalog(pcic_data_portal):
     assert len(data) > 0
 
 
+@pytest.mark.slow
 @pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_hydro_stn_data_csv_csv(pcic_data_portal):
@@ -522,6 +530,7 @@ def test_hydro_stn_data_csv_csv(pcic_data_portal):
     assert False, "Data line for 1950/1/1 does not exist"
 
 
+@pytest.mark.slow
 @pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_hydro_stn_data_csv_selection_projection(pcic_data_portal):
@@ -591,6 +600,7 @@ def test_hydro_model_archive_pr_tasmin_tasmax_wind(pcic_data_portal, url):
     assert resp.content_type == 'application/x-netcdf'
 
 
+@pytest.mark.slow
 @pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize(('projection', 'length'), [
@@ -623,6 +633,7 @@ def test_empty_hyperslabs(pcic_data_portal, projection, length):
     os.remove(f.name)
 
 
+@pytest.mark.slow
 @pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize("file,expected_mean",
