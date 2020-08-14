@@ -11,6 +11,7 @@ def test_can_instantiate_raster_pydap(raster_pydap):
     assert isinstance(raster_pydap, object)
 
 
+@pytest.mark.slow
 @pytest.mark.bulk_data
 def test_hdf5_to_netcdf(pcic_data_portal):
     req = Request.blank(
