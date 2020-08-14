@@ -10,7 +10,7 @@ node {
         def pyImage = 'pcic/geospatial-python'
         def requirements = ['requirements.txt', 'test_requirements.txt',
                             'deploy_requirements.txt']
-        def pytestArgs = '-m crmpdb -v --tb=short tests'
+        def pytestArgs = '-m "bulk_data or crmpdb" -v --tb=short tests'
         def options = [pythonVersion: 2, aptPackages: ['git'], buildDocs: true,
                        containerData: 'pdp']
 

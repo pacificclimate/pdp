@@ -30,7 +30,7 @@ jobs:
     - name: Test with pytest (full)
       if: github.ref == 'refs/heads/master'
       run: |
-        py.test -m "not crmpdb" -v --tb=short
+        py.test -m "not bulk_data and not crmpdb" -v --tb=short
     - name: Test with pytest (fast)
       run: |
-        py.test -m "not crmpdb and not slow" -v --tb=short
+        py.test -m "not bulk_data and not crmpdb and not slow" -v --tb=short
