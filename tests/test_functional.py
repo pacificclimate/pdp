@@ -494,7 +494,6 @@ def test_menu_json(pcic_data_portal, portal, ensemble):
 
 
 @pytest.mark.slow
-@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_hydro_stn_data_catalog(pcic_data_portal):
     url = '/data/hydro_stn_archive/catalog.json'
@@ -508,7 +507,6 @@ def test_hydro_stn_data_catalog(pcic_data_portal):
 
 
 @pytest.mark.slow
-@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_hydro_stn_data_csv_csv(pcic_data_portal):
     url = '/data/hydro_stn_archive/BCHSCA_Campbell.csv.csv'
@@ -531,7 +529,6 @@ def test_hydro_stn_data_csv_csv(pcic_data_portal):
 
 
 @pytest.mark.slow
-@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_hydro_stn_data_csv_selection_projection(pcic_data_portal):
     url = '/data/hydro_stn_archive/BCHSCA_Campbell.csv.csv?'\
@@ -555,7 +552,6 @@ ccsm3_A2run1
 137.407532''')
 
 
-@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_hydro_model_archive_catalog(pcic_data_portal):
     url = '/hydro_model_archive/catalog/'
@@ -569,7 +565,6 @@ def test_hydro_model_archive_catalog(pcic_data_portal):
     assert len(data) > 0
 
 
-@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('url', [
     '{}HadCM_A1B_run1_19500101-20991231.nc.nc?sm[0:1][0:1][0:1]&',
@@ -585,7 +580,6 @@ def test_hydro_model_archive_5var(pcic_data_portal, url):
     assert resp.content_type == 'application/x-netcdf'
 
 
-@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('url', [
     '{}HadCM_A1B_run1_19500101-21001231.nc.nc?pr[0:1][0:1][0:1]&',
@@ -601,7 +595,6 @@ def test_hydro_model_archive_pr_tasmin_tasmax_wind(pcic_data_portal, url):
 
 
 @pytest.mark.slow
-@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize(('projection', 'length'), [
     ('[][][]', 13),
@@ -634,7 +627,6 @@ def test_empty_hyperslabs(pcic_data_portal, projection, length):
 
 
 @pytest.mark.slow
-@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize("file,expected_mean",
                          [('tasmax_day_BCCAQv2+ANUSPLIN300_IPSL-CM5A-MR_'
