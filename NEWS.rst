@@ -1,5 +1,11 @@
 News / Release Notes
 ====================
+2.10.1
+------
+*Release Date: 29-Sept-2020*
+
+* Adds CRD and UNBC_CAM networks to the PCDS frontend
+
 2.10.0
 ------
 *Release Date: 07-Apr-2020*
