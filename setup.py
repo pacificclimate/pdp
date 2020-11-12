@@ -34,7 +34,13 @@ def recursive_list(pkg_dir, basedir):
 
 
 def get_commitish():
-    repo = Repo(os.getcwd())
+    # .git is not passed into the dockerfile so when it is built in actions we
+    # won't be able to use this command.
+    try:
+        repo = Repo(os.getcwd())
+    except:
+        return ""
+
     sha = repo.head.object.hexsha
     try:
         branch = repo.active_branch.name
