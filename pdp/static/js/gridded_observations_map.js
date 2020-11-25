@@ -93,11 +93,11 @@ function init_obs_map() {
               newParams["LOGSCALE"] = true;
               min = 1;
               max = data.max;
-              newParams["STYLES"] = "boxfill/blueheat";
+              newParams["STYLES"] = "default/blueheat";
             }
             else {
               newParams["LOGSCALE"] = "false";
-              newParams["STYLES"] = "boxfill/default";
+              newParams["STYLES"] = "default/default";
               min = data.min;
               max = data.max;
             }

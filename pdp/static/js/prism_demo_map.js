@@ -30,7 +30,7 @@ function init_prism_map() {
         layers: defaults.dataset + "/" + defaults.variable,
         transparent: 'true',
         time: '1985-06-30',
-        styles: 'boxfill/occam_inv',
+        styles: 'default/occam_inv',
         logscale: true,
         numcolorbands: 254,
         version: '1.1.1',
@@ -74,10 +74,10 @@ function init_prism_map() {
 
         if (varname === 'pr') {
             this.params.LOGSCALE = true;
-            this.params.STYLES = 'boxfill/occam_inv';
+            this.params.STYLES = 'default/occam_inv';
         } else {
             this.params.LOGSCALE = false;
-            this.params.STYLES = 'boxfill/ferret';
+            this.params.STYLES = 'default/ferret';
         }
 
         if (varname === 'pr' && isClimatology) {
