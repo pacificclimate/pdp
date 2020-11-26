@@ -53,5 +53,5 @@ in their usual places in the `<LAYER>` element.
 
 The xml includes a long list of available palettes; all but the default one
 specified in the portal's map initial code are skippable and do not need
-to be mocked (`boxfill/ferret`for most variables; `boxfill/blueheat` for some
-precipitation datasets).
+to be mocked (`default/ferret`for most variables; `default/blueheat` for some
+precipitation datasets, `default/occam` for some others).
