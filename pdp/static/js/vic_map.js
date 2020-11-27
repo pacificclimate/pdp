@@ -41,7 +41,7 @@ function init_vic_map(archive_portal) {
         layers: init.dataset + "/" + init.variable,
         transparent: 'true',
         // styles: '',
-        numcolorbands: 254,
+        numcolorbands: 249,
         version: '1.1.1',
         srs: 'EPSG:3005',
         TIME: init.time

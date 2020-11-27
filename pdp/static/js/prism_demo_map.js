@@ -32,7 +32,7 @@ function init_prism_map() {
         time: '1985-06-30',
         styles: 'default/occam_inv',
         logscale: true,
-        numcolorbands: 254,
+        numcolorbands: 249,
         version: '1.1.1',
         srs: 'EPSG:3005'
     };

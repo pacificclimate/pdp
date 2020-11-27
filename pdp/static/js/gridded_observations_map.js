@@ -29,7 +29,7 @@ function init_obs_map() {
     params = {
         layers: defaults.dataset + "/" + defaults.variable,
         transparent: 'true',
-        numcolorbands: 254,
+        numcolorbands: 249,
         version: '1.1.1',
         srs: "EPSG:4326",
         TIME: "1997-03-17T00:00:00Z",

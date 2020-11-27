@@ -35,7 +35,7 @@
             transparent: "true",
             styles: "default/ferret",
             time: initialMap.timestamp,
-            numcolorbands: 254,
+            numcolorbands: 249,
             version: "1.1.1",
             srs: "EPSG:4326",
             colorscalerange: "-50,11",

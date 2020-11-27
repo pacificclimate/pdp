@@ -16,7 +16,7 @@ function init_raster_map() {
         params = {
             LAYERS: layer_name,
             transparent: "true",
-            numcolorbands: 254,
+            numcolorbands: 249,
             version: "1.1.1",
             SRS: "EPSG:4326",
             service: "WMS",

@@ -358,7 +358,7 @@ Colorbar.prototype = {
         return pdp.ncwms_url + "?REQUEST=GetLegendGraphic&COLORBARONLY=true&WIDTH=1" +
             "&HEIGHT=300" +
             "&PALETTE=" + palette +
-            "&NUMCOLORBANDS=254";
+            "&NUMCOLORBANDS=249";
     },
 
     metadata_url: function (lyr_id) {
