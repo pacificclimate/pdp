@@ -97,7 +97,7 @@ function init_obs_map() {
             }
             else {
               newParams["LOGSCALE"] = "false";
-              newParams["STYLES"] = "default/default";
+              newParams["STYLES"] = "default/x-Rainbow";
               min = data.min;
               max = data.max;
             }
