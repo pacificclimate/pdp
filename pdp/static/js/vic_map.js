@@ -40,7 +40,7 @@ function init_vic_map(archive_portal) {
     params = {
         layers: init.dataset + "/" + init.variable,
         transparent: 'true',
-        // styles: '',
+        styles: 'default/x-Rainbow',
         numcolorbands: 249,
         version: '1.1.1',
         srs: 'EPSG:3005',
