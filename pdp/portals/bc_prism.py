@@ -42,7 +42,7 @@ class PrismEnsembleLister(EnsembleMemberLister):
     def list_stuff(self, ensemble):
         for dfv in ensemble.data_file_variables:
             df = dfv.file
-            if dfv.is_multi_year_mean:
+            if dfv.multi_year_mean:
                 timeset = df.timeset
                 middle_year = timeset.start_date.year
                 descriptors = (
