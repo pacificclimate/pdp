@@ -46,15 +46,21 @@ class PrismEnsembleLister(EnsembleMemberLister):
             if timeset.multi_year_mean:
                 middle_year = timeset.start_date.year
                 descriptors = (
-                    "{}-{}".format(middle_year - 15, middle_year + 15),
+                    "Climatologies {}-{}".format(middle_year - 15, middle_year + 15),
                     resolution_name(timeset.time_resolution)
                 )
             else:
-                descriptors = ("Monthly Timeseries",)
-            yield \
-                (dfv.netcdf_variable_name,) \
-                + descriptors \
+                descriptors = (
+                    "Timeseries",
+                    resolution_name(timeset.time_resolution)
+                )
+            stuff = (
+                (dfv.netcdf_variable_name,)
+                + descriptors
                 + (df.unique_id.replace('+', '-'),)
+            )
+            # print "PrismEnsembleLister: yielding {}".format(stuff)
+            yield stuff
 
 
 def mk_frontend(config):
