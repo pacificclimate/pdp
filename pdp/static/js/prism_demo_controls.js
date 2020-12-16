@@ -9,12 +9,11 @@ function getPRISMControls(ensemble_name) {
     div = pdp.createDiv('', 'control');
     form = pdp.createForm(undefined, undefined, undefined);
     fieldset = pdp.createFieldset("filterset", "Dataset Selection");
-    // varMapping = { 'tmin': "Minimum Temperature",
-    //                'tmax': "Maximum Temperature",
-    //                'pr': "Precipitation"
-    //              };
-    // fieldset.appendChild(getRasterAccordionMenu(ensemble_name, varMapping));
-    fieldset.appendChild(getRasterAccordionMenu(ensemble_name));
+    varMapping = { 'tmin': "Minimum Temperature",
+                   'tmax': "Maximum Temperature",
+                   'pr': "Precipitation"
+                 };
+    fieldset.appendChild(getRasterAccordionMenu(ensemble_name, varMapping));
     form.appendChild(fieldset);
     div.appendChild(form);
     return div;
