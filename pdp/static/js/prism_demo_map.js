@@ -22,7 +22,7 @@ function init_prism_map() {
     map = new OpenLayers.Map('pdp-map', options);
 
     defaults = {
-        dataset: "pr_monClim_PRISM_historical_run1_197101-200012",
+        dataset: "pr_mon_PRISM_historical_19700101-20001231_bc",
         variable: "pr"
     };
 
