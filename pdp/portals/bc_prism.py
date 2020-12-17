@@ -19,45 +19,49 @@ def resolution_name(time_resolution):
 
 
 class PrismEnsembleLister(EnsembleMemberLister):
-    # def describe_time_set(self, unique_id):
-    #     # Holy shit, are you kidding me? They are extracting metadata from
-    #     # the unique_id, not from the database metadata. This needs to change.
-    #     monthly = unique_id.find("mon") != -1
-    #     climatology = unique_id.find("Clim") != -1
-    #     date_finder = re.match(r'.*_(\d+)-(\d+).*', unique_id)
-    #
-    #     return "{} {} {}-{}".format("Monthly " if monthly else "",
-    #                                 "Climatological Averages " if climatology
-    #                                 else "Timeseries ",
-    #                                 date_finder.group(1)[0:4],
-    #                                 date_finder.group(2)[0:4])
-
-    # Otherwise, however, this looks OK.
-
-    # `list_stuff` is what the endpoint calls; see pdp_util.ensemble_members
-    # Somewhere along the line, its results are turned into a nested dict,
-    # with the key levels, from shallowest to deepest, corresponding to the
-    # yielded tuple elements from 0 through the second-last. The last element
-    # is the value of the deepest key.
+    
     def list_stuff(self, ensemble):
+        """
+        Yield a sequence of tuples describing the files in the named ensemble.
+
+        :param ensemble: Ensemble name
+        :yield: sequence of same-length tuples
+
+        Called by web service endpoint; see pdp_util.ensemble_members.
+
+        Results (a sequence of tuples) are turned into a nested dict,
+        with the key levels, from shallowest to deepest, corresponding to each
+        tuple element from 0 through the second-last. The last element
+        is the value of the deepest key.
+        Existing code in pdp_util (unnecessarily) imposes the constraint that
+        all tuples must be of the same length. Therefore the tuples generated
+        for the two cases here (climatology, time series) must be the same
+        length.
+        
+        """
         for dfv in ensemble.data_file_variables:
             df = dfv.file
             timeset = df.timeset
             if timeset.multi_year_mean:
-                middle_year = timeset.start_date.year
                 descriptors = (
-                    "Climatologies {}-{}".format(middle_year - 15, middle_year + 15),
-                    "{} mean".format(resolution_name(timeset.time_resolution))
+                    "Climatological averages {}-{}".format(
+                        timeset.start_date.year, timeset.end_date.year
+                    ),
+                    "{} means".format(resolution_name(timeset.time_resolution))
                 )
             else:
                 descriptors = (
-                    "Timeseries",
+                    "Timeseries {}-{}".format(
+                        timeset.start_date.year, timeset.end_date.year
+                    ),
                     resolution_name(timeset.time_resolution)
                 )
             stuff = (
                 descriptors
-                + (dfv.netcdf_variable_name,)
-                + (df.unique_id.replace('+', '-'),)
+                + (
+                    dfv.netcdf_variable_name,
+                    df.unique_id.replace('+', '-')
+                )
             )
             # print "PrismEnsembleLister: yielding {}".format(stuff)
             yield stuff
