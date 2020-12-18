@@ -86,7 +86,7 @@ function init_prism_map() {
         const startYear = Number(match[2]);
         const endYear = Number(match[3]);
 
-        var isClimatology = endYear - startYear > 50;
+        const isClimatology = endYear - startYear <= 30;
 
         // Set palette and logscale depending on variable
         if (varname === 'pr') {
