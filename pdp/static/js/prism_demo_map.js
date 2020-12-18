@@ -69,9 +69,26 @@ function init_prism_map() {
     }
 
     function ncwms_params(layer_name) {
-        var varname = layer_name.split('/')[1];
-        var isClimatology = layer_name.split('/')[0].indexOf("Clim") !== -1;
+        // Extract dataset unique id and variable name from layer name.
+        const layer_name_parts = layer_name.split('/');
+        const uniqueId = layer_name_parts[0];
+        const varname = layer_name_parts[1];
 
+        // Extract metadata from the unique id. This is ugly and fragile,
+        // but since PDP doesn't really have a data model, this is how this
+        // information is available to us here.
+        const metadataRegex = /.*_(mon|yr)_.*_(\d{4})\d*-(\d{4})\d*/g;
+        const match = metadataRegex.exec(uniqueId)
+        if (!match) {
+            return this.params;
+        }
+        const timescale = match[1]
+        const startYear = Number(match[2]);
+        const endYear = Number(match[3]);
+
+        var isClimatology = endYear - startYear > 50;
+
+        // Set palette and logscale depending on variable
         if (varname === 'pr') {
             this.params.LOGSCALE = true;
             this.params.STYLES = 'default/occam-inv';
@@ -80,31 +97,56 @@ function init_prism_map() {
             this.params.STYLES = 'default/ferret';
         }
 
+        // Set data range depending on dataset
         if (varname === 'pr' && isClimatology) {
             this.params.COLORSCALERANGE = '200,12500';
         } else if (varname === 'pr') {
             this.params.COLORSCALERANGE = '1,2000';
-        } else if (varname == 'tmax') {
+        } else if (varname === 'tmax') {
             this.params.COLORSCALERANGE = '-10,20';
-        } else if (varname == 'tmin' ) {
+        } else if (varname === 'tmin' ) {
             this.params.COLORSCALERANGE = '-15,10';
         }
 
-        var uniqueID = layer_name.split('/')[0].split('_');
-        const uniqueIdTimeRegex = /(\d{4})\d*-(\d{4})\d*/g;
-        const timeMatch = uniqueIdTimeRegex.exec(uniqueID)
-        if (timeMatch) {
-            const startYear = Number(timeMatch[1]);
-            const endYear = Number(timeMatch[2]);
-            const cases = [
-                { startYear: 1970, endYear: 2000, time: "1985-06-30" },
-                { startYear: 1981, endYear: 2010, time: "1996-06-15" },
-                { startYear: 1950, endYear: 2007, time: "1980-04-30" },
-            ];
-            for (const c of cases) {
-                if (c.startYear === startYear && c.endYear === endYear) {
-                    this.params.TIME = c.time;
+        // Select an example time point to display depending on the dataset.
+        // Note: Again fragile, because we have no easily accessed source of
+        // information about the dataset here that would let us determine
+        // this value robustly.
+        const cases = [
+            {
+                // Climo datasets 1970-2000
+                startYear: 1970,
+                endYear: 2000,
+                timescales: {
+                    mon: "1985-06-30",
+                    yr: "1985-06-30",
                 }
+            },
+            {
+                // Climo datasets 1981-2010
+                startYear: 1981,
+                endYear: 2010,
+                timescales: {
+                    mon: "1996-06-15",
+                    yr: "1996-06-30",
+                }
+            },
+            {
+                // Timeseries datasets 1950-2007
+                startYear: 1950,
+                endYear: 2007,
+                timescales: {
+                    mon: "1980-04-30"
+                }
+            },
+        ];
+        for (const c of cases) {
+            if (
+              c.startYear === startYear &&
+              c.endYear === endYear &&
+              c.timescales[timescale]
+            ) {
+                this.params.TIME = c.timescales[timescale];
             }
         }
 
