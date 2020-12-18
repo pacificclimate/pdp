@@ -74,7 +74,7 @@ function init_prism_map() {
 
         if (varname === 'pr') {
             this.params.LOGSCALE = true;
-            this.params.STYLES = 'default/occam_inv';
+            this.params.STYLES = 'default/occam-inv';
         } else {
             this.params.LOGSCALE = false;
             this.params.STYLES = 'default/ferret';
@@ -91,14 +91,23 @@ function init_prism_map() {
         }
 
         var uniqueID = layer_name.split('/')[0].split('_');
-        var timeRange = uniqueID.find(function(e) {return e.indexOf('-')!=-1;});
-        if (timeRange === '197101-200012') {
-            this.params.TIME = '1985-06-30';
-        } else if (timeRange === '198101-201012') {
-            this.params.TIME = '1996-06-30';
-        } else if (timeRange === '19500131-20071231') {
-            this.params.TIME = '1980-04-30';
+        const uniqueIdTimeRegex = /(\d{4})\d*-(\d{4})\d*/g;
+        const timeMatch = uniqueIdTimeRegex.exec(uniqueID)
+        if (timeMatch) {
+            const startYear = Number(timeMatch[1]);
+            const endYear = Number(timeMatch[2]);
+            const cases = [
+                { startYear: 1970, endYear: 2000, time: "1985-06-30" },
+                { startYear: 1981, endYear: 2010, time: "1996-06-15" },
+                { startYear: 1950, endYear: 2007, time: "1980-04-30" },
+            ];
+            for (const c of cases) {
+                if (c.startYear === startYear && c.endYear === endYear) {
+                    this.params.TIME = c.time;
+                }
+            }
         }
+
         return this.params
     }
 
