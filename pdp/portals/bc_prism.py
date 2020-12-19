@@ -68,11 +68,19 @@ class PrismEnsembleLister(EnsembleMemberLister):
 
 
 def mk_frontend(config):
-    return make_raster_frontend(config, ensemble_name, url_base,
-                                title, PrismEnsembleLister,
-                                ['js/prism_demo_map.js',
-                                 'js/prism_demo_controls.js',
-                                 'js/prism_demo_app.js'])
+    return make_raster_frontend(
+        config,
+        ensemble_name,
+        url_base,
+        title,
+        PrismEnsembleLister,
+        [
+            'js/prism_demo_map.js',
+            'js/prism_demo_controls.js',
+            'js/prism_demo_app.js',
+            'js/prism_demo_config.js',
+        ]
+    )
 
 
 def mk_backend(config):
