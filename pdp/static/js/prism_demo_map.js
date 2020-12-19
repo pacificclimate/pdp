@@ -84,67 +84,26 @@ function init_prism_map(config) {
 
         const isClimatology = endYear - startYear <= 30;
 
-        // Set palette and logscale depending on variable
-        if (varname === 'pr') {
-            this.params.LOGSCALE = true;
-            this.params.STYLES = 'default/occam-inv';
-        } else {
-            this.params.LOGSCALE = false;
-            this.params.STYLES = 'default/ferret';
-        }
-
-        // Set data range depending on dataset
-        if (varname === 'pr' && isClimatology) {
-            this.params.COLORSCALERANGE = '200,12500';
-        } else if (varname === 'pr') {
-            this.params.COLORSCALERANGE = '1,2000';
-        } else if (varname === 'tmax') {
-            this.params.COLORSCALERANGE = '-10,20';
-        } else if (varname === 'tmin' ) {
-            this.params.COLORSCALERANGE = '-15,10';
-        }
-
-        // Select an example time point to display depending on the dataset.
-        // Note: Again fragile, because we have no easily accessed source of
-        // information about the dataset here that would let us determine
-        // this value robustly.
-        const cases = [
-            {
-                // Climo datasets 1970-2000
-                startYear: 1970,
-                endYear: 2000,
-                timescales: {
-                    mon: "1985-06-30",
-                    yr: "1985-06-30",
-                }
-            },
-            {
-                // Climo datasets 1981-2010
-                startYear: 1981,
-                endYear: 2010,
-                timescales: {
-                    mon: "1996-06-15",
-                    yr: "1996-06-30",
-                }
-            },
-            {
-                // Timeseries datasets 1950-2007
-                startYear: 1950,
-                endYear: 2007,
-                timescales: {
-                    mon: "1980-04-30"
-                }
-            },
+        const wmsParamsForVar = config.wmsParams[
+            varname in config.wmsParams ? varname : "_default"
         ];
-        for (const c of cases) {
-            if (
-              c.startYear === startYear &&
-              c.endYear === endYear &&
-              c.timescales[timescale]
-            ) {
-                this.params.TIME = c.timescales[timescale];
-            }
+
+        for (name of ["LOGSCALE", "STYLES"]) {
+            this.params[name] = wmsParamsForVar[name];
         }
+
+        const datasetType = isClimatology ? "climatology" : "timeseries";
+        this.params.COLORSCALERANGE =
+          wmsParamsForVar.COLORSCALERANGE[
+            datasetType in wmsParamsForVar.COLORSCALERANGE ?
+              datasetType : "_default"
+          ];
+
+        const dateRange = `${startYear}-${endYear}`;
+        const times = wmsParamsForVar.times[
+          dateRange in wmsParamsForVar.times ? dateRange : "_default"
+        ];
+        this.params.TIME = times[timescale];
 
         return this.params
     }
