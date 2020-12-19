@@ -3,9 +3,10 @@
 
 "use strict";
 
-function init_prism_map() {
+function init_prism_map(config) {
     var selectionLayer, options, mapControls, selLayerName, panelControls,
-        map, defaults, params, datalayerName, cb, ncwms;
+      map, params, datalayerName, cb, ncwms;
+    console.log("init_prism_map", config)
 
     // Map Config
     options = BC3005_map_options();
@@ -21,16 +22,11 @@ function init_prism_map() {
     options.controls = mapControls;
     map = new OpenLayers.Map('pdp-map', options);
 
-    defaults = {
-        dataset: "pr_mon_PRISM_historical_19700101-20001231_bc",
-        variable: "pr"
-    };
-
     params = {
-        layers: defaults.dataset + "/" + defaults.variable,
+        layers: config.defaults.dataset + "/" + config.defaults.variable,
         transparent: 'true',
         time: '1985-06-30',
-        styles: 'default/occam_inv',
+        styles: 'default/occam-inv',
         logscale: true,
         numcolorbands: 249,
         version: '1.1.1',
@@ -185,7 +181,9 @@ function init_prism_map() {
     });
 
     ncwms.events.register('change', ncwms, set_map_title);
-    ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
+    ncwms.events.triggerEvent(
+      'change', config.defaults.dataset + "/" + config.defaults.variable
+    );
 
     // Expose ncwms as a global
     (function (globals) {
