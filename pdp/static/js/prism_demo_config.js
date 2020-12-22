@@ -44,7 +44,7 @@
           times: datasetTimes,
         },
         tmax: {
-          LOGSCALE: true,
+          LOGSCALE: false,
           STYLES: "default/ferret",
           COLORSCALERANGE: {
             _default: '-10,20',
@@ -52,7 +52,7 @@
           times: datasetTimes,
         },
         tmin: {
-          LOGSCALE: true,
+          LOGSCALE: false,
           STYLES: "default/ferret",
           COLORSCALERANGE: {
             _default: '-15,10',
