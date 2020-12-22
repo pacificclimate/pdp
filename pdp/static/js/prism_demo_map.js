@@ -88,7 +88,7 @@ function init_prism_map(config) {
             varname in config.wmsParams ? varname : "_default"
         ];
 
-        for (name of ["LOGSCALE", "STYLES"]) {
+        for (const name of ["LOGSCALE", "STYLES"]) {
             this.params[name] = wmsParamsForVar[name];
         }
 

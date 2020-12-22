@@ -32,6 +32,7 @@ require('./globals-helpers').importGlobals([
     { module: 'js/prism_demo_map.js', spread: true },
     { module: 'js/prism_demo_controls.js', spread: true },
     { module: 'js/prism_demo_app.js', name: 'prism_demo_app' },
+    { module: 'js/prism_demo_config.js', name: 'prism_demo_config' },
 
 ], '../..');
 
