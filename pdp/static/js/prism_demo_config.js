@@ -1,12 +1,29 @@
-// Configuration file for JS portion of BC PRISM app.
+// Configuration file BC PRISM client app.
+//
+// This file is in the standard form for a client app component, and exports its
+// content to the global object using `condExport`.
+//
+// This file contains values processed by `prism_demo_app.js` and its
+// subsidiaries.
+//
+// This file should contain a minimum of computation. Since it is a JS file,
+// it can perform arbitrary computation, but such work is, generally speaking,
+// the job of the client app proper, not of the configuration file. The idea is
+// to make this file's contents as declarative and JSON-like as possible.
+
 
 (function() {
   "use strict";
 
+  // Time values for layers shown. A two-level dictionary, with top-level
+  // keys indicating the time span of the datasets it applies to, and
+  // second-level keys indicating the averaging period of the dataset.
   // Common to all datasets (variables)
   const datasetTimes = {
-    // By dataset year span
+    // By dataset year span; key is formed from start and end year, separated
+    // by a dash.
     "1970-2000": {
+      // By averaging period. Options are
       mon: "1985-06-30",
       yr: "1985-06-30",
     },
@@ -24,6 +41,7 @@
   };
 
   const prism_demo_config = {
+    // Map configuration.
     map: {
       // Default dataset shown on startup
       defaults: {
@@ -32,17 +50,20 @@
       },
 
       // WMS parameters controlling appearance of map tiles
-      // By variable name
       wmsParams: {
+        // By variable name
         pr: {
+          // Directly specified ncWMS request parameters
           LOGSCALE: true,
           STYLES: "default/occam-inv",
           COLORSCALERANGE: {
             climatology: '200,12500',
             timeseries: '1,2000',
           },
+          // Values for selecting time value to display from a dataset.
           times: datasetTimes,
         },
+
         tmax: {
           LOGSCALE: false,
           STYLES: "default/ferret",
@@ -51,6 +72,7 @@
           },
           times: datasetTimes,
         },
+
         tmin: {
           LOGSCALE: false,
           STYLES: "default/ferret",
