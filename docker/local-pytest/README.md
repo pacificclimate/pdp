@@ -1,4 +1,4 @@
-# this package docker local (py)test environment
+# Docker local (py)test environment
 
 ## What
 
