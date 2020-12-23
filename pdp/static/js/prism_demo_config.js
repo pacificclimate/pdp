@@ -14,6 +14,11 @@
 
 (function() {
   "use strict";
+  // General notes: The configuration object exported is a nested dictionary.
+  // In many cases the values for several or all of the expected keys in any
+  // given sub-dictionary are the same. In this case, and to cover any
+  // unexpected cases (keys), a default or fallback value can be provided with
+  // key `_default`.
 
   // Time values for layers shown. A two-level dictionary, with top-level
   // keys indicating the time span of the datasets it applies to, and
@@ -23,7 +28,7 @@
     // By dataset year span; key is formed from start and end year, separated
     // by a dash.
     "1970-2000": {
-      // By averaging period. Options are
+      // By averaging period. Expected keys at the moment are "mon" and "yr".
       mon: "1985-06-30",
       yr: "1985-06-30",
     },
@@ -57,8 +62,15 @@
           LOGSCALE: true,
           STYLES: "default/occam-inv",
           COLORSCALERANGE: {
-            climatology: '200,12500',
-            timeseries: '1,2000',
+            // By dataset type
+            climatology: {
+              // By averaging period
+              mon: '1,2000',
+              yr: '200,12500',
+            },
+            timeseries: {
+              mon: '1,2000',
+            },
           },
           // Values for selecting time value to display from a dataset.
           times: datasetTimes,
@@ -68,7 +80,9 @@
           LOGSCALE: false,
           STYLES: "default/ferret",
           COLORSCALERANGE: {
-            _default: '-10,20',
+            _default: {
+              _default: '-10,20'
+            },
           },
           times: datasetTimes,
         },
@@ -77,7 +91,9 @@
           LOGSCALE: false,
           STYLES: "default/ferret",
           COLORSCALERANGE: {
-            _default: '-15,10',
+            _default: {
+              _default: '-15,10'
+            },
           },
           times: datasetTimes,
         },

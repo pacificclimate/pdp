@@ -65,6 +65,12 @@ function init_prism_map(config) {
     }
 
     function ncwms_params(layer_name) {
+        // TODO: Place this utility function elsewhere. Note: Could use
+        //  lodash.get for this, but it would be more complicated.
+        function getWithDefault(obj, key, defKey="_default") {
+            return obj[key in obj ? key : defKey];
+        }
+
         // Extract dataset unique id and variable name from layer name.
         const layer_name_parts = layer_name.split('/');
         const uniqueId = layer_name_parts[0];
@@ -84,28 +90,22 @@ function init_prism_map(config) {
 
         const isClimatology = endYear - startYear <= 30;
 
-        const wmsParamsForVar = config.wmsParams[
-            varname in config.wmsParams ? varname : "_default"
-        ];
+        const wmsParamsForVar = getWithDefault(config.wmsParams, varname);
 
         for (const name of ["LOGSCALE", "STYLES"]) {
             this.params[name] = wmsParamsForVar[name];
         }
 
         const datasetType = isClimatology ? "climatology" : "timeseries";
-        this.params.COLORSCALERANGE =
-          wmsParamsForVar.COLORSCALERANGE[
-            datasetType in wmsParamsForVar.COLORSCALERANGE ?
-              datasetType : "_default"
-          ];
+        const ranges =
+          getWithDefault(wmsParamsForVar.COLORSCALERANGE, datasetType);
+        this.params.COLORSCALERANGE = getWithDefault(ranges, timescale);
 
         const dateRange = `${startYear}-${endYear}`;
-        const times = wmsParamsForVar.times[
-          dateRange in wmsParamsForVar.times ? dateRange : "_default"
-        ];
-        this.params.TIME = times[timescale];
+        const times = getWithDefault(wmsParamsForVar.times, dateRange);
+        this.params.TIME = getWithDefault(times, timescale);
 
-        return this.params
+        return this.params;
     }
 
     map.addLayers(
