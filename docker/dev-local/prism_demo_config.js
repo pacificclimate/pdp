@@ -1,5 +1,10 @@
 // Configuration file BC PRISM client app.
 //
+// IMPORTANT: This file is for demonstrating how the base configuration file
+// at `pdp/static/js/prism_demo_config.js` can be overridden at deployment time
+// by mounting a different file (this one). PLEASE ENSURE THAT THIS FILE AND
+// THE BASE CONFIG FILE ARE KEPT UP TO DATE.
+//
 // This file is in the standard form for a client app component, and exports its
 // content to the global object using `condExport`.
 //
