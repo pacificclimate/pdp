@@ -6,7 +6,6 @@
 function init_prism_map(config) {
     var selectionLayer, options, mapControls, selLayerName, panelControls,
       map, params, datalayerName, cb, ncwms;
-    console.log("init_prism_map", config)
 
     // Map Config
     options = BC3005_map_options();
