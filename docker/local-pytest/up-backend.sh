@@ -1,8 +1,8 @@
 docker run -it \
   -e "APP_ROOT=http://0.0.0.0:30555" \
   -e "DATA_ROOT=http://0.0.0.0:30556" \
-  -e "DSN=postgresql://httpd_meta:gh0_3Basl3Mn@db3.pcic.uvic.ca:5432/pcic_meta" \
-  -e "PCDS_DSN=postgresql://httpd:gh0_3Basl3Mn@db3.pcic.uvic.ca:5432/crmp" \
+  -e "DSN=postgresql://httpd_meta@db3.pcic.uvic.ca:5432/pcic_meta" \
+  -e "PCDS_DSN=postgresql://httpd@db3.pcic.uvic.ca:5432/crmp" \
   -e "GEOSERVER_URL=https://tools.pacificclimate.org/geoserver/" \
   -e "NCWMS_URL=http://docker-dev01.pcic.uvic.ca:30523/dynamic/x" \
   -e "TILECACHE_URL=https://a.tile.pacificclimate.org/tilecache/tilecache.py https://b.tile.pacificclimate.org/tilecache/tilecache.py https://c.tile.pacificclimate.org/tilecache/tilecache.py" \
