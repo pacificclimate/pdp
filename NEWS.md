@@ -1,11 +1,5 @@
 # News / Release Notes
 
-## 3.0.1
-
-*Release Date: 05-Jan-2021*
-
-- Install Sphinx before PyPI build
-
 ## 3.0.0
 
 *Release Date: 05-Jan-2021*
