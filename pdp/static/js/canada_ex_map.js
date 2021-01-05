@@ -33,9 +33,9 @@
         params = {
             layers: initialMap.dataset + "/" + initialMap.variable,
             transparent: "true",
-            styles: "boxfill/ferret",
+            styles: "default/ferret",
             time: initialMap.timestamp,
-            numcolorbands: 254,
+            numcolorbands: 249,
             version: "1.1.1",
             srs: "EPSG:4326",
             colorscalerange: "-50,11",
@@ -61,12 +61,12 @@
             var varname = layer_name.split('/')[1];
             if (varname === 'pr') {
                 this.params.LOGSCALE = true;
-                this.params.STYLES = 'boxfill/blueheat';
+                this.params.STYLES = 'default/blueheat';
                 this.params.BELOWMINCOLOR = 'transparent';
                 this.params.COLORSCALERANGE = '1.0,30.0';
             } else {
                 this.params.LOGSCALE = false;
-                this.params.STYLES = 'boxfill/ferret';
+                this.params.STYLES = 'default/ferret';
                 this.params.COLORSCALERANGE = '-50,15';
             }
         }

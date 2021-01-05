@@ -8,7 +8,7 @@
         var map, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog,
             dlLink, mdLink, capabilities_request, ncwms_capabilities;
 
-        map = init_prism_map();
+        map = init_prism_map(prism_demo_config.map);
 
         document.getElementById("pdp-controls")
             .appendChild(getPRISMControls(pdp.ensemble_name));

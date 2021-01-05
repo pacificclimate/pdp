@@ -1,0 +1,41 @@
+version: '2.3'
+services:
+  frontend:
+    image: pdp:latest
+    container_name: pdp_frontend-dev
+    ports:
+      - "30555:8000"  # frontend
+    env_file:
+      - fe_deployment.env
+    volumes:
+      - type: bind
+        source: ./prism_demo_config.js
+        target: /root/pdp/pdp/static/js/prism_demo_config.js
+
+  backend:
+    image: pdp:latest
+    container_name: pdp_backend-dev
+    env_file:
+      - be_deployment.env
+    ports:
+      - "30556:8000"  # backend
+    volumes:
+      - /storage/data/climate/downscale:/storage/data/climate/downscale:ro
+      - /storage/data/climate/hydrology:/storage/data/climate/hydrology:ro
+      - /storage/data/climate/observations:/storage/data/climate/observations:ro
+      - /storage/data/climate/PRISM:/storage/data/climate/PRISM:ro
+      - /storage/data/projects/dataportal:/storage/data/projects/dataportal:ro
+      - /storage/data/projects/hydrology:/storage/data/projects/hydrology:ro
+      - /storage/data/projects/PRISM:/storage/data/projects/PRISM:ro
+
+  pgbouncer:
+    image: edoburu/pgbouncer
+    container_name: pgbouncer-dev
+    volumes:
+    - ./pgbounce_users.txt:/etc/pgbouncer/userlist.txt:ro
+    - ./pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
+
+networks:
+  default:
+    external:
+      name: pcicbr0

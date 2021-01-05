@@ -3,9 +3,9 @@
 
 "use strict";
 
-function init_prism_map() {
+function init_prism_map(config) {
     var selectionLayer, options, mapControls, selLayerName, panelControls,
-        map, defaults, params, datalayerName, cb, ncwms;
+      map, params, datalayerName, cb, ncwms;
 
     // Map Config
     options = BC3005_map_options();
@@ -21,18 +21,13 @@ function init_prism_map() {
     options.controls = mapControls;
     map = new OpenLayers.Map('pdp-map', options);
 
-    defaults = {
-        dataset: "pr_monClim_PRISM_historical_run1_197101-200012",
-        variable: "pr"
-    };
-
     params = {
-        layers: defaults.dataset + "/" + defaults.variable,
+        layers: config.defaults.dataset + "/" + config.defaults.variable,
         transparent: 'true',
         time: '1985-06-30',
-        styles: 'boxfill/occam_inv',
+        styles: 'default/occam-inv',
         logscale: true,
-        numcolorbands: 254,
+        numcolorbands: 249,
         version: '1.1.1',
         srs: 'EPSG:3005'
     };
@@ -69,37 +64,48 @@ function init_prism_map() {
     }
 
     function ncwms_params(layer_name) {
-        var varname = layer_name.split('/')[1];
-        var isClimatology = layer_name.split('/')[0].indexOf("Clim") !== -1;
-
-        if (varname === 'pr') {
-            this.params.LOGSCALE = true;
-            this.params.STYLES = 'boxfill/occam_inv';
-        } else {
-            this.params.LOGSCALE = false;
-            this.params.STYLES = 'boxfill/ferret';
+        // TODO: Place this utility function elsewhere. Note: Could use
+        //  lodash.get for this, but it would be more complicated.
+        function getWithDefault(obj, key, defKey="_default") {
+            return obj[key in obj ? key : defKey];
         }
 
-        if (varname === 'pr' && isClimatology) {
-            this.params.COLORSCALERANGE = '200,12500';
-        } else if (varname === 'pr') {
-            this.params.COLORSCALERANGE = '1,2000';
-        } else if (varname == 'tmax') {
-            this.params.COLORSCALERANGE = '-10,20';
-        } else if (varname == 'tmin' ) {
-            this.params.COLORSCALERANGE = '-15,10';
+        // Extract dataset unique id and variable name from layer name.
+        const layer_name_parts = layer_name.split('/');
+        const uniqueId = layer_name_parts[0];
+        const varname = layer_name_parts[1];
+
+        // Extract metadata from the unique id. It would be far preferable
+        // to derive this information from the contents of the modelmeta
+        // database, but that would require more far-reaching changes.
+        // See https://github.com/pacificclimate/pdp/issues/193
+        const metadataRegex = /.*_(mon|yr)_.*_(\d{4})\d*-(\d{4})\d*/g;
+        const match = metadataRegex.exec(uniqueId)
+        if (!match) {
+            return this.params;
+        }
+        const timescale = match[1]
+        const startYear = Number(match[2]);
+        const endYear = Number(match[3]);
+
+        const isClimatology = endYear - startYear <= 30;
+
+        const wmsParamsForVar = getWithDefault(config.wmsParams, varname);
+
+        for (const name of ["LOGSCALE", "STYLES"]) {
+            this.params[name] = wmsParamsForVar[name];
         }
 
-        var uniqueID = layer_name.split('/')[0].split('_');
-        var timeRange = uniqueID.find(function(e) {return e.indexOf('-')!=-1;});
-        if (timeRange === '197101-200012') {
-            this.params.TIME = '1985-06-30';
-        } else if (timeRange === '198101-201012') {
-            this.params.TIME = '1996-06-30';
-        } else if (timeRange === '19500131-20071231') {
-            this.params.TIME = '1980-04-30';
-        }
-        return this.params
+        const datasetType = isClimatology ? "climatology" : "timeseries";
+        const ranges =
+          getWithDefault(wmsParamsForVar.COLORSCALERANGE, datasetType);
+        this.params.COLORSCALERANGE = getWithDefault(ranges, timescale);
+
+        const dateRange = `${startYear}-${endYear}`;
+        const times = getWithDefault(wmsParamsForVar.times, dateRange);
+        this.params.TIME = getWithDefault(times, timescale);
+
+        return this.params;
     }
 
     map.addLayers(
@@ -134,7 +140,9 @@ function init_prism_map() {
     });
 
     ncwms.events.register('change', ncwms, set_map_title);
-    ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
+    ncwms.events.triggerEvent(
+      'change', config.defaults.dataset + "/" + config.defaults.variable
+    );
 
     // Expose ncwms as a global
     (function (globals) {

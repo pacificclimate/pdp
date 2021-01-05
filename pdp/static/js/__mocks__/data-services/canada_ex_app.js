@@ -181,9 +181,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    \n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/alg</Name>\n' +
-    '                        <Title>boxfill/alg</Title>\n' +
-    '                        <Abstract>boxfill style, using the alg palette </Abstract>\n' +
+    '                      <Name>default/alg</Name>\n' +
+    '                        <Title>default/alg</Title>\n' +
+    '                        <Abstract>default style, using the alg palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=alg"/>\n' +
@@ -191,9 +191,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/greyscale</Name>\n' +
-    '                        <Title>boxfill/greyscale</Title>\n' +
-    '                        <Abstract>boxfill style, using the greyscale palette </Abstract>\n' +
+    '                      <Name>default/greyscale</Name>\n' +
+    '                        <Title>default/greyscale</Title>\n' +
+    '                        <Abstract>default style, using the greyscale palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=greyscale"/>\n' +
@@ -201,9 +201,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/ncview</Name>\n' +
-    '                        <Title>boxfill/ncview</Title>\n' +
-    '                        <Abstract>boxfill style, using the ncview palette </Abstract>\n' +
+    '                      <Name>default/ncview</Name>\n' +
+    '                        <Title>default/ncview</Title>\n' +
+    '                        <Abstract>default style, using the ncview palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=ncview"/>\n' +
@@ -211,9 +211,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/occam</Name>\n' +
-    '                        <Title>boxfill/occam</Title>\n' +
-    '                        <Abstract>boxfill style, using the occam palette </Abstract>\n' +
+    '                      <Name>default/occam</Name>\n' +
+    '                        <Title>default/occam</Title>\n' +
+    '                        <Abstract>default style, using the occam palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=occam"/>\n' +
@@ -221,9 +221,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/yellow_red</Name>\n' +
-    '                        <Title>boxfill/yellow_red</Title>\n' +
-    '                        <Abstract>boxfill style, using the yellow_red palette </Abstract>\n' +
+    '                      <Name>default/yellow_red</Name>\n' +
+    '                        <Title>default/yellow_red</Title>\n' +
+    '                        <Abstract>default style, using the yellow_red palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=yellow_red"/>\n' +
@@ -231,9 +231,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/blue7_red3</Name>\n' +
-    '                        <Title>boxfill/blue7_red3</Title>\n' +
-    '                        <Abstract>boxfill style, using the blue7_red3 palette </Abstract>\n' +
+    '                      <Name>default/blue7_red3</Name>\n' +
+    '                        <Title>default/blue7_red3</Title>\n' +
+    '                        <Abstract>default style, using the blue7_red3 palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=blue7_red3"/>\n' +
@@ -241,9 +241,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/red_yellow</Name>\n' +
-    '                        <Title>boxfill/red_yellow</Title>\n' +
-    '                        <Abstract>boxfill style, using the red_yellow palette </Abstract>\n' +
+    '                      <Name>default/red_yellow</Name>\n' +
+    '                        <Title>default/red_yellow</Title>\n' +
+    '                        <Abstract>default style, using the red_yellow palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=red_yellow"/>\n' +
@@ -251,9 +251,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/lightblue_darkblue_log</Name>\n' +
-    '                        <Title>boxfill/lightblue_darkblue_log</Title>\n' +
-    '                        <Abstract>boxfill style, using the lightblue_darkblue_log palette </Abstract>\n' +
+    '                      <Name>default/lightblue_darkblue_log</Name>\n' +
+    '                        <Title>default/lightblue_darkblue_log</Title>\n' +
+    '                        <Abstract>default style, using the lightblue_darkblue_log palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=lightblue_darkblue_log"/>\n' +
@@ -261,9 +261,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/occam_inv</Name>\n' +
-    '                        <Title>boxfill/occam_inv</Title>\n' +
-    '                        <Abstract>boxfill style, using the occam_inv palette </Abstract>\n' +
+    '                      <Name>default/occam_inv</Name>\n' +
+    '                        <Title>default/occam_inv</Title>\n' +
+    '                        <Abstract>default style, using the occam_inv palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=occam_inv"/>\n' +
@@ -271,9 +271,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/sst_36</Name>\n' +
-    '                        <Title>boxfill/sst_36</Title>\n' +
-    '                        <Abstract>boxfill style, using the sst_36 palette </Abstract>\n' +
+    '                      <Name>default/sst_36</Name>\n' +
+    '                        <Title>default/sst_36</Title>\n' +
+    '                        <Abstract>default style, using the sst_36 palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=sst_36"/>\n' +
@@ -281,9 +281,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/ferret</Name>\n' +
-    '                        <Title>boxfill/ferret</Title>\n' +
-    '                        <Abstract>boxfill style, using the ferret palette </Abstract>\n' +
+    '                      <Name>default/ferret</Name>\n' +
+    '                        <Title>default/ferret</Title>\n' +
+    '                        <Abstract>default style, using the ferret palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=ferret"/>\n' +
@@ -291,9 +291,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/occam_pastel-30</Name>\n' +
-    '                        <Title>boxfill/occam_pastel-30</Title>\n' +
-    '                        <Abstract>boxfill style, using the occam_pastel-30 palette </Abstract>\n' +
+    '                      <Name>default/occam_pastel-30</Name>\n' +
+    '                        <Title>default/occam_pastel-30</Title>\n' +
+    '                        <Abstract>default style, using the occam_pastel-30 palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=occam_pastel-30"/>\n' +
@@ -301,9 +301,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/redblue</Name>\n' +
-    '                        <Title>boxfill/redblue</Title>\n' +
-    '                        <Abstract>boxfill style, using the redblue palette </Abstract>\n' +
+    '                      <Name>default/redblue</Name>\n' +
+    '                        <Title>default/redblue</Title>\n' +
+    '                        <Abstract>default style, using the redblue palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=redblue"/>\n' +
@@ -311,9 +311,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/brown_green</Name>\n' +
-    '                        <Title>boxfill/brown_green</Title>\n' +
-    '                        <Abstract>boxfill style, using the brown_green palette </Abstract>\n' +
+    '                      <Name>default/brown_green</Name>\n' +
+    '                        <Title>default/brown_green</Title>\n' +
+    '                        <Abstract>default style, using the brown_green palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=brown_green"/>\n' +
@@ -321,9 +321,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/blueheat</Name>\n' +
-    '                        <Title>boxfill/blueheat</Title>\n' +
-    '                        <Abstract>boxfill style, using the blueheat palette </Abstract>\n' +
+    '                      <Name>default/blueheat</Name>\n' +
+    '                        <Title>default/blueheat</Title>\n' +
+    '                        <Abstract>default style, using the blueheat palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=blueheat"/>\n' +
@@ -331,9 +331,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/blue4_red6</Name>\n' +
-    '                        <Title>boxfill/blue4_red6</Title>\n' +
-    '                        <Abstract>boxfill style, using the blue4_red6 palette </Abstract>\n' +
+    '                      <Name>default/blue4_red6</Name>\n' +
+    '                        <Title>default/blue4_red6</Title>\n' +
+    '                        <Abstract>default style, using the blue4_red6 palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=blue4_red6"/>\n' +
@@ -341,9 +341,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/alg2</Name>\n' +
-    '                        <Title>boxfill/alg2</Title>\n' +
-    '                        <Abstract>boxfill style, using the alg2 palette </Abstract>\n' +
+    '                      <Name>default/alg2</Name>\n' +
+    '                        <Title>default/alg2</Title>\n' +
+    '                        <Abstract>default style, using the alg2 palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=alg2"/>\n' +
@@ -351,9 +351,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/lightblue_darkblue_log_nc</Name>\n' +
-    '                        <Title>boxfill/lightblue_darkblue_log_nc</Title>\n' +
-    '                        <Abstract>boxfill style, using the lightblue_darkblue_log_nc palette </Abstract>\n' +
+    '                      <Name>default/lightblue_darkblue_log_nc</Name>\n' +
+    '                        <Title>default/lightblue_darkblue_log_nc</Title>\n' +
+    '                        <Abstract>default style, using the lightblue_darkblue_log_nc palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=lightblue_darkblue_log_nc"/>\n' +
@@ -361,9 +361,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/brown_blue</Name>\n' +
-    '                        <Title>boxfill/brown_blue</Title>\n' +
-    '                        <Abstract>boxfill style, using the brown_blue palette </Abstract>\n' +
+    '                      <Name>default/brown_blue</Name>\n' +
+    '                        <Title>default/brown_blue</Title>\n' +
+    '                        <Abstract>default style, using the brown_blue palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=brown_blue"/>\n' +
@@ -371,9 +371,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/blue6_red4</Name>\n' +
-    '                        <Title>boxfill/blue6_red4</Title>\n' +
-    '                        <Abstract>boxfill style, using the blue6_red4 palette </Abstract>\n' +
+    '                      <Name>default/blue6_red4</Name>\n' +
+    '                        <Title>default/blue6_red4</Title>\n' +
+    '                        <Abstract>default style, using the blue6_red4 palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=blue6_red4"/>\n' +
@@ -381,9 +381,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/blue_brown</Name>\n' +
-    '                        <Title>boxfill/blue_brown</Title>\n' +
-    '                        <Abstract>boxfill style, using the blue_brown palette </Abstract>\n' +
+    '                      <Name>default/blue_brown</Name>\n' +
+    '                        <Title>default/blue_brown</Title>\n' +
+    '                        <Abstract>default style, using the blue_brown palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=blue_brown"/>\n' +
@@ -391,9 +391,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/blue_darkred</Name>\n' +
-    '                        <Title>boxfill/blue_darkred</Title>\n' +
-    '                        <Abstract>boxfill style, using the blue_darkred palette </Abstract>\n' +
+    '                      <Name>default/blue_darkred</Name>\n' +
+    '                        <Title>default/blue_darkred</Title>\n' +
+    '                        <Abstract>default style, using the blue_darkred palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=blue_darkred"/>\n' +
@@ -401,9 +401,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/lightblue_darkblue</Name>\n' +
-    '                        <Title>boxfill/lightblue_darkblue</Title>\n' +
-    '                        <Abstract>boxfill style, using the lightblue_darkblue palette </Abstract>\n' +
+    '                      <Name>default/lightblue_darkblue</Name>\n' +
+    '                        <Title>default/lightblue_darkblue</Title>\n' +
+    '                        <Abstract>default style, using the lightblue_darkblue palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=lightblue_darkblue"/>\n' +
@@ -411,9 +411,9 @@ var ncwmsLayerCapablilitiesXml = '<?xml version="1.0" encoding="UTF-8" standalon
     '                    </Style>\n' +
     '                    \n' +
     '                    <Style>\n' +
-    '                      <Name>boxfill/rainbow</Name>\n' +
-    '                        <Title>boxfill/rainbow</Title>\n' +
-    '                        <Abstract>boxfill style, using the rainbow palette </Abstract>\n' +
+    '                      <Name>default/rainbow</Name>\n' +
+    '                        <Title>default/rainbow</Title>\n' +
+    '                        <Abstract>default style, using the rainbow palette </Abstract>\n' +
     '                        <LegendURL width="110" height="264"> \n' +
     '                            <Format>image/png</Format> \n' +
     '                            <OnlineResource xlink:type="simple" xlink:href="http://pizza.pcic.uvic.ca:8080/ncWMS-PCIC/wms?REQUEST=GetLegendGraphic&amp;LAYER=tasmax_day_BCCAQv2_CanESM2_historical-rcp26_r1i1p1_19500101-21001231_Canada/tasmax&amp;PALETTE=rainbow"/>\n' +

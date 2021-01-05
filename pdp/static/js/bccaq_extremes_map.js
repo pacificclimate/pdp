@@ -16,7 +16,7 @@ function init_raster_map() {
         params = {
             LAYERS: layer_name,
             transparent: "true",
-            numcolorbands: 254,
+            numcolorbands: 249,
             version: "1.1.1",
             SRS: "EPSG:4326",
             service: "WMS",
@@ -38,10 +38,10 @@ function init_raster_map() {
             prec_range = (colorscale_min <= 0 ? 1 : colorscale_min) + ", " + colorscale_max;
         }
 
-        percent_data = { COLORSCALERANGE: c_range, STYLES: 'boxfill/ferret', LOGSCALE: false };
-        number_days_data = { COLORSCALERANGE: c_range, STYLES: 'boxfill/ferret', LOGSCALE: false};
-        temp_data = { COLORSCALERANGE: c_range, STYLES: 'boxfill/ferret', LOGSCALE: false };
-        prec_data = { COLORSCALERANGE: prec_range, STYLES: 'boxfill/occam_inv', LOGSCALE: true };
+        percent_data = { COLORSCALERANGE: c_range, STYLES: 'default/ferret', LOGSCALE: false };
+        number_days_data = { COLORSCALERANGE: c_range, STYLES: 'default/ferret', LOGSCALE: false};
+        temp_data = { COLORSCALERANGE: c_range, STYLES: 'default/ferret', LOGSCALE: false };
+        prec_data = { COLORSCALERANGE: prec_range, STYLES: 'default/occam_inv', LOGSCALE: true };
 
         var_data = {
             r1mmETCCDI: number_days_data,

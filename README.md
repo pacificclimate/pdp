@@ -109,14 +109,25 @@ pyenv/bin/python setup.py install
 
 ## Configuration
 
-Configuration of the PDP is accomplished through a set of environment variables. A sample environment file is stored in `pdp/config.env`. This environment file can be sourced in before you run the pdp, included in a Docker deployment or used in any other flexible way.
+Configuration of the PDP is accomplished through two mechanisms:
+- For server-side configuration and very simple client-side
+  configuration (such as the URL of the ncWMS service), 
+  a set of environment variables.
+- For more complex client-side app configuration, 
+  configuration code in JavaScript files, at most one file per portal.
+
+### Environment variables
+
+A sample environment file is stored in `pdp/config.env`. 
+This environment file can be sourced in before you run the pdp, included in a 
+Docker deployment or used in any other flexible way.
 
 ```bash
 source pdp/config.env
 export $(grep -v '^#' pdp/config.env | cut -d= -f1)
 ```
 
-### Config Items
+#### Config Items
 
 ###### `app_root`
 
@@ -157,6 +168,31 @@ Enable or disable Google Analytics reporting
 ###### `analytics`
 
 Google Analytics ID
+
+### JavaScript configuration code
+
+Some portals are configured by hard-coded values in the client
+app JavaScript.
+Other portals are configured a separate JS configuration file that exports
+a configuration object processed by the client app.
+
+A separate configuration file can easily be superseded by mounting a volume 
+to its file path that contains different configuration content. In the Docker
+container, such files have internal (target) file paths of the form
+`/root/pdp/pdp/static/js/<portal>_config.js`; for example,
+`/root/pdp/pdp/static/js/prism_demo_config.js`. 
+Note the doubled `pdp` subdirectories.
+
+Developers are **strongly encouraged** to keep the JS configuration files in
+this repo up to date with the most recently deployed configurations. When
+a configuration is changed for deployment, the repo copy of the configuration
+file should also be changed appropriately. A new release need not be made
+right away (that is of course the point of separate configuration),
+but eventually updates will make their way into releases, and we will also
+have a typical or standard configurations that are easily accessible.
+
+At present, the following JS portal configuration files exist:
+- PRISM: `pdp/static/js/prism_demo_config.js`
 
 ## Tests
 
