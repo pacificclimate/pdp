@@ -75,9 +75,10 @@ function init_prism_map(config) {
         const uniqueId = layer_name_parts[0];
         const varname = layer_name_parts[1];
 
-        // Extract metadata from the unique id. This is ugly and fragile,
-        // but since PDP doesn't really have a data model, this is how this
-        // information is available to us here.
+        // Extract metadata from the unique id. It would be far preferable
+        // to derive this information from the contents of the modelmeta
+        // database, but that would require more far-reaching changes.
+        // See https://github.com/pacificclimate/pdp/issues/193
         const metadataRegex = /.*_(mon|yr)_.*_(\d{4})\d*-(\d{4})\d*/g;
         const match = metadataRegex.exec(uniqueId)
         if (!match) {
