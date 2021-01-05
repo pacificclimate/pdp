@@ -1,5 +1,12 @@
 # News / Release Notes
 
+## 3.0.2
+
+*Release Date: 05-Jan-2021*
+
+Because you shouldn't delete and then recreate a tag on a different commit!
+This release should create an unambiguous PyPI package.
+
 ## 3.0.1
 
 *Release Date: 05-Jan-2021*
