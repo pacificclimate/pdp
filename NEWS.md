@@ -1,5 +1,11 @@
 # News / Release Notes
 
+## 3.0.3
+
+*Release Date: 07-Jan-2021*
+
+
+
 ## 3.0.2
 
 *Release Date: 05-Jan-2021*
