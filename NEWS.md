@@ -4,7 +4,7 @@
 
 *Release Date: 07-Jan-2021*
 
-
+- [Set `COLORSCALERANGE` where absent](https://github.com/pacificclimate/pdp/pull/196)
 
 ## 3.0.2
 
