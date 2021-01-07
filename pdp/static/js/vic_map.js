@@ -92,7 +92,9 @@ function init_vic_map(archive_portal) {
     ncwms.events.registerPriority('change', ncwms, function (layer_id) {
         dataServices.getMetadata(layer_id).done(function (data) {
             ncwms.mergeNewParams({
-                COLORSCALERANGE: `${data.min},${data.max}`
+                COLORSCALERANGE: `${data.min},${data.max}`,
+                BELOWMINCOLOR: '0x000000',
+                ABOVEMAXCOLOR: '0xFFFFFF',
             });
             ncwms.redraw(); // this does a layer redraw
             cb.force_update(data.min, data.max, data.units); // must be called AFTER ncwms params updated
