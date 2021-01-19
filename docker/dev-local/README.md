@@ -24,6 +24,8 @@ and requires a public commit before you may be ready to commit.
 1. Change your code.
 1. Locally build a new Docker image.
    -  (from the project root) `docker build -t pdp .`.
+1. Update `be_deployment.env` and `fe_deployment.env`, with database passwords (obtainable from Team Password Manager)
+1. Update `pgbounce_users.txt` with md5sums (obtainable from Team Password Manager)
 1. Run the new image: 
    - (from this directory)
        - `docker-compose down` (if you have an older one already running)
@@ -43,3 +45,9 @@ When you like the results, commit to the repo.
 1. JS configuration files need only be mounted to the *frontend* service. 
    An example one is included in this directory, and mounted. It overrides
    the default one in the project.
+
+## Troubleshooting
+
+- If you are getting a client_login_timeout() error message connecting to the database
+or error messages while building the local Dcker image, your VPN may be interfering docker's
+networking. Try OpenConnect instead of AnyConnect, if applicable.
