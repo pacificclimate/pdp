@@ -139,7 +139,6 @@ function getRasterNativeProj(capabilities, layer_name) {
     // For reasons beyond mortal ken, ncWMS now returns CRS:84 instead of
     // EPSG:4326 for many of our datasets. CRS:84 is not recognized by proj4js.
     const value = srs.value === "CRS:84" ? "EPSG:4326" : srs.value;
-    console.log('### getRasterNativeProj', {value})
     return new OpenLayers.Projection(value);
 }
 
@@ -152,10 +151,9 @@ function getRasterBbox(capabilities, layer_name) {
     );
     // Since the dataset <Name> is now the filepath, which does not necessarily
     // match `layer_name`, we can't find it that way. Instead we make the
-    // somewhat fragile but currently valid assumption that the first (and
-    // only) such layer is the one we want.
+    // possibly fragile but currently valid assumption that every layer has
+    // listed the same spatial extent, and so we can use the first one.
     const bbox = bboxes[0];
-    console.log('### getRasterBbox', {bboxes})
     real_bounds.extend(
       new OpenLayers.LonLat(
         parseFloat(bbox.attributes.getNamedItem('minx').value),
@@ -168,7 +166,6 @@ function getRasterBbox(capabilities, layer_name) {
         parseFloat(bbox.attributes.getNamedItem('maxy').value)
       )
     );
-    console.log('### getRasterBbox', {real_bounds})
     return real_bounds;
 }
 
