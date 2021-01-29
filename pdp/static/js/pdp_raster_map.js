@@ -126,18 +126,49 @@ function intersection(b1, b2) {
 
 function getRasterNativeProj(capabilities, layer_name) {
     // Return the dataset native projection as an OL.Projection object
-    var bbox = capabilities.find('Layer > Name:contains("' + layer_name + '")').parent().find('BoundingBox')[0],
-        srs = bbox.attributes.getNamedItem('SRS');
-    return new OpenLayers.Projection(srs.value);
+    const bboxes = capabilities.find(
+      'Capability > Layer > Layer > Layer > BoundingBox'
+    );
+    // Since the dataset <Name> is now the filepath, which does not necessarily
+    // match `layer_name`, we can't find it that way. Instead we make the
+    // somewhat fragile but currently valid assumption that the first (and
+    // only) such layer is the one we want.
+    const bbox = bboxes[0];
+    console.log('### getRasterNativeProj', {bboxes})
+    const srs = bbox.attributes.getNamedItem('SRS');
+    // For reasons beyond mortal ken, ncWMS now returns CRS:84 instead of
+    // EPSG:4326 for many of our datasets. CRS:84 is not recognized by proj4js.
+    const value = srs.value === "CRS:84" ? "EPSG:4326" : srs.value;
+    console.log('### getRasterNativeProj', {value})
+    return new OpenLayers.Projection(value);
 }
 
 function getRasterBbox(capabilities, layer_name) {
     // The WMS layer doesn't seem to have the bbox of the _data_ available, which I would like to have
     // Pull the geographic bounding box out of the appropriate element
-    var bbox = capabilities.find('Layer > Name:contains("' + layer_name + '")').parent().find('LatLonBoundingBox')[0],
-        real_bounds = new OpenLayers.Bounds();
-    real_bounds.extend(new OpenLayers.LonLat(parseFloat(bbox.attributes.getNamedItem('minx').value), parseFloat(bbox.attributes.getNamedItem('miny').value)));
-    real_bounds.extend(new OpenLayers.LonLat(parseFloat(bbox.attributes.getNamedItem('maxx').value), parseFloat(bbox.attributes.getNamedItem('maxy').value)));
+    const real_bounds = new OpenLayers.Bounds();
+    const bboxes = capabilities.find(
+      'Capability > Layer > Layer > Layer > LatLonBoundingBox'
+    );
+    // Since the dataset <Name> is now the filepath, which does not necessarily
+    // match `layer_name`, we can't find it that way. Instead we make the
+    // somewhat fragile but currently valid assumption that the first (and
+    // only) such layer is the one we want.
+    const bbox = bboxes[0];
+    console.log('### getRasterBbox', {bboxes})
+    real_bounds.extend(
+      new OpenLayers.LonLat(
+        parseFloat(bbox.attributes.getNamedItem('minx').value),
+        parseFloat(bbox.attributes.getNamedItem('miny').value)
+      )
+    );
+    real_bounds.extend(
+      new OpenLayers.LonLat(
+        parseFloat(bbox.attributes.getNamedItem('maxx').value),
+        parseFloat(bbox.attributes.getNamedItem('maxy').value)
+      )
+    );
+    console.log('### getRasterBbox', {real_bounds})
     return real_bounds;
 }
 
