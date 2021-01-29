@@ -210,7 +210,7 @@ function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension, callback
             SRS: map.getProjectionObject().projCode,
             INFO_FORMAT: "text/xml"
         };
-        $.ajax({url: pdp.ncwms_url,
+        $.ajax({url: 'https://services.pacificclimate.org/ncWMS-PCIC/wms',
                 data: params})
             .fail(handle_ie8_xml)
             .always(responder);

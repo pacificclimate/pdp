@@ -126,7 +126,7 @@ function getOLClickHandler(map) {
         $('#plot-window').empty();
         $('#plot-window').html("<h2>Please wait... data loading.</h2>");
 
-        $.ajax({url: pdp.ncwms_url,
+        $.ajax({url: 'https://services.pacificclimate.org/ncWMS-PCIC/wms',
                 data: params})
             .fail(handle_ie8_xml)
             .always(responder);
