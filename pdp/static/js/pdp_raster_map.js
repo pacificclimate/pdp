@@ -210,12 +210,17 @@ function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension, callback
             SRS: map.getProjectionObject().projCode,
             INFO_FORMAT: "text/xml"
         };
-        $.ajax({url: 'https://services.pacificclimate.org/ncWMS-PCIC/wms',
-                data: params})
-            .fail(handle_ie8_xml)
-            .always(responder);
-            //.fail(function(){alert("Something has gone wrong with the download");});
-    }
+        // Note fallback to "old" ncWMS (ncWMS-PCIC).
+        // This is temporary, until a substitute for its index values
+        // is provided.
+        $.ajax({
+            url: pdp.old_ncwms_url,
+            data: params
+        })
+        .fail(handle_ie8_xml)
+        .always(responder);
+        //.fail(function(){alert("Something has gone wrong with the download");});
+}
 
     ul = new OpenLayers.LonLat(bnds.left, bnds.top).transform(extent_proj, map.getProjectionObject());
     lr = new OpenLayers.LonLat(bnds.right, bnds.bottom).transform(extent_proj, map.getProjectionObject());

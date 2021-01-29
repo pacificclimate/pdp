@@ -17,6 +17,16 @@ from pdp.portals import updateConfig
 
 
 def get_config_from_environment():
+    """
+    Extract configuration properties from environment variables.
+
+    In order to add a new environment variable to the configuration, do two
+    things:
+    1. Add an item here.
+    2. If that variable needs to be carried into the JavaScript apps, modify
+       `pdp/templates/map.html` to add the new property to the global variable
+       `pdp`.
+    """
     defaults = {
         'app_root': 'http://tools.pacificclimate.org/dataportal',
         'data_root': 'http://tools.pacificclimate.org/dataportal/data',
@@ -27,6 +37,7 @@ def get_config_from_environment():
         'js_min': 'False',
         'geoserver_url': 'http://tools.pacificclimate.org/geoserver/',
         'ncwms_url': 'http://tools.pacificclimate.org/ncWMS-PCIC/wms',
+        'old_ncwms_url': 'https://services.pacificclimate.org/ncWMS-PCIC/',
         'tilecache_url':
             'http://a.tiles.pacificclimate.org/tilecache/tilecache.py'
             ' http://b.tiles.pacificclimate.org/tilecache/tilecache.py'
