@@ -126,10 +126,15 @@ function getOLClickHandler(map) {
         $('#plot-window').empty();
         $('#plot-window').html("<h2>Please wait... data loading.</h2>");
 
-        $.ajax({url: pdp.ncwms_url,
-                data: params})
-            .fail(handle_ie8_xml)
-            .always(responder);
+        $.ajax({
+            // Note fallback to "old" ncWMS (ncWMS-PCIC).
+            // This is temporary, until a substitute for its <time> value
+            // is provided.
+            url: pdp.old_ncwms_url,
+            data: params
+        })
+        .fail(handle_ie8_xml)
+        .always(responder);
         //.fail(function(){alert("Something has gone wrong with the download");});
     };
 
