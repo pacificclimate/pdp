@@ -1,5 +1,11 @@
 # News / Release Notes
 
+## 3.0.4
+
+*Release Date: 29-Jan-2021*
+
+- [Temporary fix for broken spatial selection](https://github.com/pacificclimate/pdp/pull/199)
+
 ## 3.0.3
 
 *Release Date: 07-Jan-2021*

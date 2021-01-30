@@ -12,6 +12,9 @@ except ImportError:
     warn("Could not import sphinx. You won't be able to build the docs")
 
 
+__version__ = '3.0.4'
+
+
 class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
@@ -44,7 +47,6 @@ def get_commitish():
     return "{}.{}".format(safe_branch, repo.git.rev_parse(sha, short=6))
 
 
-__version__ = '3.0.3'
 __revision__ = get_commitish()
 
 setup(
