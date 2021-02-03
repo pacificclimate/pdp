@@ -90,7 +90,8 @@ def get_config():
             'js/pdp_filters.js',
             'js/pdp_map.js',
             'js/pdp_raster_map.js',
-            'js/pdp_vector_map.js'
+            'js/pdp_vector_map.js',
+            'js/utils.js',
         ], debug=(not env_config['js_min'])),
         'templates': resource_filename('pdp', 'templates'),
         'version': parse_version("version"),
