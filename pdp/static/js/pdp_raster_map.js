@@ -151,8 +151,8 @@ function getRasterBbox(capabilities, layer_name) {
     );
     // Since the dataset <Name> is now the filepath, which does not necessarily
     // match `layer_name`, we can't find it that way. Instead we make the
-    // possibly fragile but currently valid assumption that every layer has
-    // listed the same spatial extent, and so we can use the first one.
+    // possibly fragile but currently valid assumption that every layer listed
+    // has the same spatial extent, and so we can always use the first one.
     const bbox = bboxes[0];
     real_bounds.extend(
       new OpenLayers.LonLat(
@@ -169,62 +169,25 @@ function getRasterBbox(capabilities, layer_name) {
     return real_bounds;
 }
 
-function rasterBBoxToIndicies(map, layer, bnds, extent_proj, extension, callback) {
-    var ul, lr, ul_px, lr_px,
-        indexBounds = new OpenLayers.Bounds();
+function rasterBboxToIndices(map, layer, catalog, bounds, callback) {
+    // Compute raster indices in a map layer `layer` of a bounding box `bounds`.
+    // The indices are returned as an `OpenLayer.Bounds` object. (Which is a
+    // little odd, since such objects are supposed to contain map coordinate
+    // values. Oh well.)
+    // The layer catalog `catalog` is required to determine the URL for data
+    // needed for the computation.
+    // Since this function makes an asynchronous request for data, the
+    // result is communicated via a callback function.
+    const nearestIndex = utils.nearestIndex;
 
-    function responder(data, status, response) {
-        var xmldoc, iIndex, jIndex, parser;
-        if (response.responseXML) {
-            xmldoc = response.responseXML;
-        } else {
-            parser = new DOMParser();
-            xmldoc = parser.parseFromString(response.responseText, 'text/xml');
-        }
-        iIndex = parseInt($(xmldoc).find("iIndex").text(), 10);
-        jIndex = parseInt($(xmldoc).find("jIndex").text(), 10);
-        // FIXME: This should be handled with a jquery $.when(req1, req2); this will simplify the code quite a bit
-        if (!isNaN(indexBounds.toGeometry().getVertices()[0].x)) {
-            indexBounds.extend(new OpenLayers.LonLat(iIndex, jIndex)); // not _really_ at lonlat... actually raster space
-            callback(indexBounds);
-        } else { // first response... wait for the second
-            indexBounds.extend(new OpenLayers.LonLat(iIndex, jIndex)); // not _really_ at lonlat... actually raster space
-        }
-    }
-
-    function requestIndex(x, y) {
-        var params = {
-            REQUEST: "GetFeatureInfo",
-            BBOX: map.getExtent().toBBOX(),
-            SERVICE: "WMS",
-            VERSION: "1.1.1",
-            X: x,
-            Y: y,
-            QUERY_LAYERS: layer.params.LAYERS,
-            LAYERS: layer.params.LAYERS,
-            WIDTH: map.size.w,
-            HEIGHT: map.size.h,
-            SRS: map.getProjectionObject().projCode,
-            INFO_FORMAT: "text/xml"
-        };
-        // Note fallback to "old" ncWMS (ncWMS-PCIC).
-        // This is temporary, until a substitute for its index values
-        // is provided.
-        $.ajax({
-            url: pdp.old_ncwms_url,
-            data: params
-        })
-        .fail(handle_ie8_xml)
-        .always(responder);
-        //.fail(function(){alert("Something has gone wrong with the download");});
-}
-
-    ul = new OpenLayers.LonLat(bnds.left, bnds.top).transform(extent_proj, map.getProjectionObject());
-    lr = new OpenLayers.LonLat(bnds.right, bnds.bottom).transform(extent_proj, map.getProjectionObject());
-    ul_px = map.getPixelFromLonLat(ul);
-    lr_px = map.getPixelFromLonLat(lr);
-    requestIndex(ul_px.x, ul_px.y);
-    requestIndex(lr_px.x, lr_px.y);
+    dataServices.getLatLonValues(layer, catalog).done(function(dimensions) {
+        const left = nearestIndex(dimensions.lon, bounds.left);
+        const right = nearestIndex(dimensions.lon, bounds.right);
+        const top = nearestIndex(dimensions.lat, bounds.top);
+        const bottom = nearestIndex(dimensions.lat, bounds.bottom);
+        const indices = new OpenLayers.Bounds(left, bottom, right, top);
+        callback(indices);
+    });
 }
 
 condExport(module,  {
@@ -237,5 +200,5 @@ condExport(module,  {
     intersection: intersection,
     getRasterNativeProj: getRasterNativeProj,
     getRasterBbox: getRasterBbox,
-    rasterBBoxToIndicies: rasterBBoxToIndicies
+    rasterBboxToIndices: rasterBboxToIndices
 });

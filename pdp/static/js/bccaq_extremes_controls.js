@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, d3, pdp, map, ncwms, DOMParser, handle_ie8_xml, getRasterNativeProj, ncwmsCapabilities, getRasterBbox, rasterBBoxToIndicies, intersection*/
+/*global $, jQuery, OpenLayers, d3, pdp, map, ncwms, DOMParser, handle_ie8_xml, getRasterNativeProj, ncwmsCapabilities, getRasterBbox, rasterBboxToIndices, intersection*/
 
 "use strict";
 

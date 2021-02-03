@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, createRasterFormatOptions, createDownloadLink, getRasterNativeProj, ncwmsCapabilities, getRasterBbox, rasterBBoxToIndicies, intersection, getTimeSelected*/
+/*global $, jQuery, createRasterFormatOptions, createDownloadLink, getRasterNativeProj, ncwmsCapabilities, getRasterBbox, rasterBboxToIndices, intersection, getTimeSelected*/
 "use strict";
 
 // globals
@@ -576,9 +576,9 @@ RasterDownloadLink.prototype = {
             that.setXYRange(bnds);
             that.trigger();
         }
-        rasterBBoxToIndicies(this.layer.map, this.layer,
-                             selection_bnds,
-                             raster_proj, undefined, callback);
+        rasterBboxToIndices(
+            this.layer.map, this.layer, this.catalog, selection_bnds, callback
+        );
     },
     onTimeChange: function () {
         var startDate = processDateRangeInput(
