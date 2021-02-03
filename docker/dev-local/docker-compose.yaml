@@ -1,25 +1,42 @@
-version: '2.3'
+version: '3.2'
 services:
+  dev-image:
+    # This service only builds the image common to both frontend and backend.
+    build:
+      context: ../..
+      dockerfile: ./docker/dev-local/Dockerfile
+    image: pdp-dev-local
+
   frontend:
-    image: pdp:latest
+    image: pdp-dev-local
     container_name: pdp_frontend-dev
-    ports:
-      - "30555:8000"  # frontend
+    stdin_open: true
+    tty: true
+#    ports:
+#      - "30445:8000"  # frontend
     env_file:
       - fe_deployment.env
     volumes:
+      - type: bind
+        source: ../..
+        target: /root/pdp
       - type: bind
         source: ./prism_demo_config.js
         target: /root/pdp/pdp/static/js/prism_demo_config.js
 
   backend:
-    image: pdp:latest
+    image: pdp-dev-local
     container_name: pdp_backend-dev
+    stdin_open: true
+    tty: true
     env_file:
       - be_deployment.env
-    ports:
-      - "30556:8000"  # backend
+#    ports:
+#      - "30446:8000"  # backend
     volumes:
+      - type: bind
+        source: ../..
+        target: /root/pdp
       - /storage/data/climate/downscale:/storage/data/climate/downscale:ro
       - /storage/data/climate/hydrology:/storage/data/climate/hydrology:ro
       - /storage/data/climate/observations:/storage/data/climate/observations:ro
@@ -34,6 +51,17 @@ services:
     volumes:
     - ./pgbounce_users.txt:/etc/pgbouncer/userlist.txt:ro
     - ./pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
+
+  proxy:
+    image: nginx
+    container_name: pdp-dev-proxy
+    ports:
+      - "5000:80"
+    volumes:
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
 
 networks:
   default:
