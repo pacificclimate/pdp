@@ -100,6 +100,42 @@
     }
 
 
+    function layerDataUrl(ncwmsLayer, catalog) {
+        // Return OpENDAP data URL given an ncWMS layer and layer catalog.
+        // TODO: Use this fn wherever the URL is computed in code.
+        const datasetName = ncwmsLayer.params.LAYERS.split('/')[0];
+        return catalog[datasetName];
+    }
+
+
+    function getLatLonValues(ncwmsLayer, catalog) {
+        // Get the latitude and longitude values associated with an ncWMS layer
+        // These values are retrieved using the OpENDAP data service that also
+        // serves the actual data downloads. In order to form the URL for this
+        // service, we need the layer catalog, passed in as `catalog`.
+
+        function convertResponse(data) {
+            // Convert text response to a JS object.
+            // Response comes as pairs of lines, each terminated by a newline.
+            // First line in pair contains name of variable. Second contains
+            // values, enclosed in brackets and separated by ', ' (i.e., a JSON
+            // array).
+            const lines = data.split("\n");
+            const result = {};
+            for (let i = 0; i < lines.length - 1; i += 2) {
+                result[lines[i]] = JSON.parse(lines[i + 1]);
+            }
+            return result;
+        }
+
+        return $.ajax({
+            url: `${layerDataUrl(ncwmsLayer, catalog)}.ascii?lat,lon`,
+            dataType: 'text',
+            dataFilter: convertResponse,
+        });
+    }
+
+
     condExport(module, {
         getCatalog: getCatalog,
         getMetadata: getMetadata,
@@ -110,5 +146,7 @@
         getStationCount: getStationCount,
         getRecordLength: getRecordLength,
         getRoutedFlowMetadata: getRoutedFlowMetadata,
+        getLatLonValues: getLatLonValues,
+        layerDataUrl: layerDataUrl,
     }, 'dataServices');
 })(jQuery);
