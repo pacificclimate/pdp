@@ -17,6 +17,14 @@ services:
     env_file:
       - fe_deployment.env
     volumes:
+      # This is to enable installing local versions of other packages from
+      # your own filesystem. You'll need to update this. Source and target
+      # could probably be made environment variables. Or it could be
+      # a relative source path and an impersonal target path such as
+      # `/local-packages`.
+      - type: bind
+        source: /home/rglover/code
+        target: /home/rglover/code
       - type: bind
         source: ../..
         target: /root/pdp
@@ -34,6 +42,14 @@ services:
 #    ports:
 #      - "30446:8000"  # backend
     volumes:
+      # This is to enable installing local versions of other packages from
+      # your own filesystem. You'll need to update this. Source and target
+      # could probably be made environment variables. Or it could be
+      # a relative source path and an impersonal target path such as
+      # `/local-packages`.
+      - type: bind
+        source: /home/rglover/code
+        target: /home/rglover/code
       - type: bind
         source: ../..
         target: /root/pdp

@@ -1,4 +1,4 @@
-# Local development Docker deployment
+# Local development Docker infrastructure
 
 ## What
 
@@ -34,13 +34,18 @@ and requires a public commit before you may be ready to commit.
    ```
    This allows the reverse proxy automatically set up by the docker-compose
    to refer to the domain `pdp.localhost`. Note that the frontend container is 
-   configured with `APP_ROOT` and `DATA_ROOT` using to this domain.
+   configured with `APP_ROOT` and `DATA_ROOT` using this domain.
 
 #### 1. Build the dev local image
 
-The image need only be (re)built when the project is first cloned or when 
-any of the `*requirements.txt` files change. The built image contains all
-of the dependencies specified in those files (but not the PDP codebase).
+The image need only be (re)built when:
+
+1. the project is first cloned, or
+1. any of the `*requirements.txt` files change, or
+1. `entrypoint.sh` changes.
+
+The built image contains all dependencies specified in those files 
+(but not the PDP codebase).
 It forms the basis for installing and running your local codebase.
 
 To build the image:
@@ -102,7 +107,20 @@ If you change Python code, you will have to stop and restart the appropriate
 server (frontend or backend; you have to decide which depending on the code
 you changed). 
 
-To restart the backend:
+If you're not sure or can't be bothered to determine it,
+you can stop and restart both backend and frontend:
+
+
+```
+docker-compose -f docker/dev-local/docker-compose.yaml down
+docker-compose -f docker/dev-local/docker-compose.yaml up -d
+docker exec -d pdp_backend-dev \
+  gunicorn --reload --config docker/gunicorn.conf --log-config docker/logging.conf pdp.wsgi:backend
+docker exec -d pdp_frontend-dev \
+  gunicorn --reload --config docker/gunicorn.conf --log-config docker/logging.conf pdp.wsgi:frontend
+```
+
+To restart the backend only:
 
 ```
 docker stop pdp_backend-dev
@@ -112,7 +130,7 @@ docker exec -d pdp_backend-dev \
   gunicorn --config docker/gunicorn.conf --log-config docker/logging.conf pdp.wsgi:backend
 ```
 
-To restart the frontend:
+To restart the frontend only:
 
 ```
 docker stop pdp_frontend-dev
