@@ -184,8 +184,8 @@ def test_clip_to_date_one(pcic_data_portal):
     t = TemporaryFile()
     t.write(resp.body)
     z = ZipFile(t, 'r')
-    assert 'RTA/pondosy.csv' in z.namelist()
-    f = z.open("RTA/pondosy.csv")
+    assert 'RTA/1B08P.csv' in z.namelist()
+    f = z.open("RTA/1B08P.csv")
     [f.readline() for _ in range(10)]
     # Read through the file and ensure the no data outside of the date
     # range was returned
