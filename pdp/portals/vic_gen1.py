@@ -8,7 +8,7 @@ pdp.portals.vic_gen2 module. The two datasets are displayed by the same
 portal code, vic_app.js, and map code, vic_map.js.
 '''
 
-from pdp.portals import make_raster_frontend, data_server
+from pdp.portals.raster import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
 
 

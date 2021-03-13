@@ -3,7 +3,7 @@ serve ClimDEX data computed on the Canada-wide BCCAQ downscaled
 dataset.
 '''
 
-from pdp.portals import make_raster_frontend, data_server
+from pdp.portals.raster import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
 
 

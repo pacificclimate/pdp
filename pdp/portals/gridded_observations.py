@@ -1,7 +1,7 @@
 '''The pdp.portals.gridded_observations module configures a raster portal
  which serves gridded climate data used by the VIC model.'''
 
-from pdp.portals import make_raster_frontend, data_server
+from pdp.portals.raster import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
 
 

@@ -8,7 +8,7 @@ from werkzeug import DispatcherMiddleware
 
 from pdp_util.map import MapApp
 from pdp.minify import wrap_mini
-from pdp.portals import updateConfig
+from pdp import updateConfig
 
 from pdp_util import session_scope
 from pdp_util.counts import CountStationsApp, CountRecordLengthApp

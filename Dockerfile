@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     git && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip
+RUN pip install --upgrade pip==18.1 wheel
 
 WORKDIR /root/pdp
 ADD *requirements.txt /root/pdp/
@@ -53,5 +53,5 @@ EXPOSE 8000
 # E.g. docker run -e GUNICORN_WORKERS=10 -e GUNICORN_PORT=8000 -e GUNICORN_BIND=0.0.0.0:8000 ...
 
 # APP_MODULE should be set to either pdp.wsgi:frontend or pdp.wsgi:backend
-# E.g. docker run -e APP_MODULE=pdp.wsgi:frontend
+# E.g. docker run -e APP_MODULE=pdp.wsgi.frontend:app
 CMD gunicorn --config docker/gunicorn.conf --log-config docker/logging.conf $APP_MODULE

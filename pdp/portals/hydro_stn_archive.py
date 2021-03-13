@@ -19,7 +19,7 @@ from pdp_util.map import MapApp
 from pydap.wsgi.app import DapServer
 
 from pdp.minify import wrap_mini
-from pdp.portals import updateConfig
+from pdp import updateConfig
 
 __all__ = ['url_base', 'mk_frontend', 'mk_backend']
 

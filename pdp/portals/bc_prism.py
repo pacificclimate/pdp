@@ -2,7 +2,7 @@
 the 1971-2000 and 1981-2010 climatologies and monthly climate data for
 800 meter resolution PRISM dataset for BC
 '''
-from pdp.portals import make_raster_frontend, data_server
+from pdp.portals.raster import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
 
 
