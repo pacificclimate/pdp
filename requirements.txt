@@ -23,7 +23,7 @@ ply==3.10
 psycopg2==2.7.3.2
 pydap.handlers.csv==0.3
 pydap.handlers.pcic==0.0.11
-pydap.handlers.sql==0.10
+git+https://github.com/pacificclimate/pydap.handlers.sql.git@i2-type-peek-2
 pydap.responses.html==0.3
 pystache==0.5.4
 python-dateutil==2.6.1
