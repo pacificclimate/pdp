@@ -27,7 +27,7 @@
             if (dlLink.ext === 'aig') {
                 dlLink.url_template = '{dl_url}.{ext}?{varname}[][{yrange}][{xrange}]&';
             } else {
-                dlLink.url_template = '{dl_url}.{ext}?climatology_bounds,{varname}[][{yrange}][{xrange}]&';
+                dlLink.url_template = '{dl_url}.{ext}?climatology_bnds,{varname}[][{yrange}][{xrange}]&';
             }
             dlLink.trigger();
         }
