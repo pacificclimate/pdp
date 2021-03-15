@@ -19,4 +19,4 @@ docker run -it \
   -e "APP_MODULE=pdp.wsgi:backend" \
   -v $(pwd):/codebase \
   --name pdp-local-pytest_backend \
-  pdp-local-pytest
+  pcic/pdp-local-pytest
