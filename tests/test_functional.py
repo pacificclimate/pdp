@@ -415,9 +415,9 @@ def test_climatology_bounds(pcic_data_portal):
 
     nc = netCDF4.Dataset(f.name)
 
-    assert 'climatology_bounds' in nc.variables
+    assert 'climatology_bnds' in nc.variables
 
-    assert_almost_equal(nc.variables['climatology_bounds'][:],
+    assert_almost_equal(nc.variables['climatology_bnds'][:],
                         np.array([[0.,  10988.],
                                   [31.,  11017.],
                                   [59.,  11048.],
@@ -429,8 +429,7 @@ def test_climatology_bounds(pcic_data_portal):
                                   [243.,  11231.],
                                   [273.,  11262.],
                                   [304.,  11292.],
-                                  [334.,  11323.],
-                                  [0.,  11323.]], dtype=np.float32))
+                                  [334.,  11323.]], dtype=np.float32))
     nc.close()
     os.remove(f.name)
 
