@@ -36,7 +36,7 @@ def test_hdf5_to_netcdf(pcic_data_portal):
 @pytest.mark.bulk_data
 def test_prism_response(pcic_data_portal):
     req = Request.blank(
-        '/data/bc_prism/tmin_monClim_PRISM_historical_run1_197101-200012'
+        '/data/bc_prism/pr_mClimMean_PRISM_historical_19710101-20001231'
         '.nc.html')
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'

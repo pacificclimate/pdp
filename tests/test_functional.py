@@ -400,8 +400,8 @@ def test_input_polygon_download_zipfile(pcic_data_portal, polygon):
 @pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_climatology_bounds(pcic_data_portal):
-    url = '/data/bc_prism/tmin_monClim_PRISM_historical_run1_197101-200012'\
-          '.nc.nc?climatology_bounds&'
+    url = '/data/bc_prism/pr_mClimMean_PRISM_historical_19710101-20001231'\
+          '.nc.nc?climatology_bnds&'
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
 
@@ -415,9 +415,9 @@ def test_climatology_bounds(pcic_data_portal):
 
     nc = netCDF4.Dataset(f.name)
 
-    assert 'climatology_bounds' in nc.variables
+    assert 'climatology_bnds' in nc.variables
 
-    assert_almost_equal(nc.variables['climatology_bounds'][:],
+    assert_almost_equal(nc.variables['climatology_bnds'][:],
                         np.array([[0.,  10988.],
                                   [31.,  11017.],
                                   [59.,  11048.],
@@ -429,8 +429,7 @@ def test_climatology_bounds(pcic_data_portal):
                                   [243.,  11231.],
                                   [273.,  11262.],
                                   [304.,  11292.],
-                                  [334.,  11323.],
-                                  [0.,  11323.]], dtype=np.float32))
+                                  [334.,  11323.]], dtype=np.float32))
     nc.close()
     os.remove(f.name)
 
@@ -597,16 +596,16 @@ def test_hydro_model_archive_pr_tasmin_tasmax_wind(pcic_data_portal, url):
 @pytest.mark.slow
 @pytest.mark.bulk_data
 @pytest.mark.parametrize(('projection', 'length'), [
-    ('[][][]', 13),
+    ('[][][]', 12),
     ('[1][][]', 1),  # single index
     ('[0:2:10][][]', 6),  # start, step, last
     ('[5:10][][]', 6),  # start, last
-    ('[4:][][]', 9),  # start to the end
-    ('[4:2:][][]', 5)  # start, step
+    ('[4:][][]', 8),  # start to the end
+    ('[4:2:][][]', 4)  # start, step
 ])
 def test_empty_hyperslabs(pcic_data_portal, projection, length):
     varname = 'pr'
-    url = '/data/bc_prism/pr_monClim_PRISM_historical_run1_197101-200012'\
+    url = '/data/bc_prism/pr_mClimMean_PRISM_historical_19710101-20001231'\
           '.nc.nc?{}{}'.format(varname, projection)
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
