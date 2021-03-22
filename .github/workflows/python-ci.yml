@@ -5,7 +5,7 @@ on: push
 jobs:
   test:
 
-    runs-on: ubuntu-18.04
+    runs-on: self-hosted
     strategy:
       matrix:
         python-version: [2.7]
@@ -23,15 +23,10 @@ jobs:
         C_INCLUDE_PATH: /usr/include/gdal
       run: |
         sudo apt-get update
-        sudo apt-get install libhdf5-dev libnetcdf-dev libgdal-dev
+        sudo apt-get install -y gcc libhdf5-dev libnetcdf-dev libgdal-dev
         pip install -U pip pytest
         pip install -r requirements.txt -r test_requirements.txt
-        pip install sphinx
         pip install .
-    - name: Test with pytest (full)
-      if: github.ref == 'refs/heads/master'
+    - name: Test with pytest
       run: |
-        py.test -m "not bulk_data and not crmpdb" -v --tb=short
-    - name: Test with pytest (fast)
-      run: |
-        py.test -m "not bulk_data and not crmpdb and not slow" -v --tb=short
+        py.test -v --tb=short
