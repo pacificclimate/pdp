@@ -1,3 +1,7 @@
+[![Docker Publishing](https://github.com/pacificclimate/pdp/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/pacificclimate/pdp/actions/workflows/docker-publish.yml)
+[![Node CI](https://github.com/pacificclimate/pdp/actions/workflows/node-ci.yml/badge.svg)](https://github.com/pacificclimate/pdp/actions/workflows/node-ci.yml)
+[![Python CI](https://github.com/pacificclimate/pdp/actions/workflows/python-ci.yml/badge.svg)](https://github.com/pacificclimate/pdp/actions/workflows/python-ci.yml)
+
 # pdp - PCIC Data Portal
 
 The PCIC Data Portal contains the frontend code required for the [PCIC Data Portal](http://www.pacificclimate.org/data) as well as WSGI callables to deploy the entire application within a WSGI container.
@@ -36,7 +40,7 @@ export C_INCLUDE_PATH=/usr/include/gdal
 
 The test framework for the PDP frontend runs in [Node.js](https://nodejs.org/en/).
 
-There are several different valid ways to install Node.js on a Ubuntu system. 
+There are several different valid ways to install Node.js on a Ubuntu system.
 
 We reccomend using [nvm](https://github.com/creationix/nvm) to manage your node/npm install.
 It is a little more laborious (not a lot), and provides a lot more flexibility than the
@@ -65,21 +69,21 @@ as follows:
 
 ```bash
 npm install
-``` 
+```
 
-Notes: 
+Notes:
 
-* The JS tests are written using test framework called [Jest](https://jestjs.io/) 
-which provides many useful features, including a simulation of the DOM in JS 
-that enables tests of code that manipulate the DOM. 
+* The JS tests are written using test framework called [Jest](https://jestjs.io/)
+which provides many useful features, including a simulation of the DOM in JS
+that enables tests of code that manipulate the DOM.
 
 * DOM simulation is provided by a package called `jsdom`, which ships with Jest.
-However, the version that currently ships lacks a couple of features that we need, 
-so we install `jest-environment-jsdom-fourteen`, which upgrades the version of 
+However, the version that currently ships lacks a couple of features that we need,
+so we install `jest-environment-jsdom-fourteen`, which upgrades the version of
 `jsdom`. This may become unnecessary with later versions of Jest.
 
-* Since little of the JS code is written with unit testing in mind, 
-we exploit `jsdom` heavily in the tests. Essentially, these tests use 
+* Since little of the JS code is written with unit testing in mind,
+we exploit `jsdom` heavily in the tests. Essentially, these tests use
 jQuery queries to find out what is going on in the DOM as the app does its thing.
 
 
@@ -111,15 +115,15 @@ pyenv/bin/python setup.py install
 
 Configuration of the PDP is accomplished through two mechanisms:
 - For server-side configuration and very simple client-side
-  configuration (such as the URL of the ncWMS service), 
+  configuration (such as the URL of the ncWMS service),
   a set of environment variables.
-- For more complex client-side app configuration, 
+- For more complex client-side app configuration,
   configuration code in JavaScript files, at most one file per portal.
 
 ### Environment variables
 
-A sample environment file is stored in `pdp/config.env`. 
-This environment file can be sourced in before you run the pdp, included in a 
+A sample environment file is stored in `pdp/config.env`.
+This environment file can be sourced in before you run the pdp, included in a
 Docker deployment or used in any other flexible way.
 
 ```bash
@@ -176,11 +180,11 @@ app JavaScript.
 Other portals are configured a separate JS configuration file that exports
 a configuration object processed by the client app.
 
-A separate configuration file can easily be superseded by mounting a volume 
+A separate configuration file can easily be superseded by mounting a volume
 to its file path that contains different configuration content. In the Docker
 container, such files have internal (target) file paths of the form
 `/root/pdp/pdp/static/js/<portal>_config.js`; for example,
-`/root/pdp/pdp/static/js/prism_demo_config.js`. 
+`/root/pdp/pdp/static/js/prism_demo_config.js`.
 Note the doubled `pdp` subdirectories.
 
 Developers are **strongly encouraged** to keep the JS configuration files in
@@ -220,7 +224,7 @@ npm run test
 
 Provided you installed everything with `tox`, you should be able to run a development server as follows:
 
-First set up the environment variables that do not default to usable values. 
+First set up the environment variables that do not default to usable values.
 Obtain the user ID's and passwords necessary for the two databases from PCIC IT.
 We typically use port 8000 but any port will do.
 
@@ -348,7 +352,7 @@ many of the features of the ES6 `class` syntactic sugar. This is currently done 
 in module `classes`.
 
 - Objects that can be instantiated with these constructors are mutable, but few if any mutation methods are
-provided. This is because mutation makes code hard to reason about 
+provided. This is because mutation makes code hard to reason about
 (it removes [referential transparency](https://nrinaudo.github.io/scala-best-practices/definitions/referential_transparency.html)).
 Instead of mutation, prefer to create a new object containing the new value, rather than mutating an old object.
 
@@ -366,25 +370,25 @@ Previous code that attempted to do so contained errors traceable to the incompat
 
 To address this situation, we have defined a module `calendars` containing the following items:
 
-- Class `Calendar`, which represents the general notion of a calendar, 
-and subclasses `GregorianCalendar`, `Fixed365DayCalendar`, `Fixed360DayCalendar`, which represent specific, 
+- Class `Calendar`, which represents the general notion of a calendar,
+and subclasses `GregorianCalendar`, `Fixed365DayCalendar`, `Fixed360DayCalendar`, which represent specific,
 different calendar types.
    - Rightly or wrongly, `Calendar`s are used as instances (so far we have only discussed things that could be
-   equally well be supplied by a fixed object, or singleton). 
-   - Each `Calendar` instance has an epoch year, which defines the epoch or origin date for computations the calendar 
-   can perform. Dates before Jan 1 of the epoch year are not valid. This is stupid, a result of lazy implementation, 
+   equally well be supplied by a fixed object, or singleton).
+   - Each `Calendar` instance has an epoch year, which defines the epoch or origin date for computations the calendar
+   can perform. Dates before Jan 1 of the epoch year are not valid. This is stupid, a result of lazy implementation,
    but it is true for now. Default epoch year is 1800.
-   - `Calendar` has abstract methods `isLeapYear()`,  `daysPerMonth()`, `daysPerYear()` that concrete subclasses 
+   - `Calendar` has abstract methods `isLeapYear()`,  `daysPerMonth()`, `daysPerYear()` that concrete subclasses
    define in order to specify different particular calendars.
-   - `Calendar` provides a number of service methods for validating datetimes and for computing essential 
+   - `Calendar` provides a number of service methods for validating datetimes and for computing essential
    quantities, such as the number of milliseconds since epoch. These are fundamental to datetime computations within
    any given calendar system.
-   
+
 Most users of this module will not need to define their own `Calendar` subclasses, nor their own instances of
 those subclasses (specifying `epochYear`), since the provided standard instances are designed to meet known use cases
 in PDP. However, the option is there for unforeseen applications.
 
-- The standard (and default) `epochYear` is 1800. 
+- The standard (and default) `epochYear` is 1800.
 - The `calendars` module offers pre-instantiated standard calendars of each type, indexed by the standard CF identifiers
 for each type:
    - `calendars['standard']`,`calendars['gregorian']`
@@ -394,41 +398,41 @@ for each type:
 ### Datetimes (in specific calendars)
 
 The following classes exploit `Calendar` objects to represent datetimes in specific calendrical systems.
-   
-- Class `SimpleDatetime` that bundles together the `year`, `month`, `day`, etc. components of a datetime, 
+
+- Class `SimpleDatetime` that bundles together the `year`, `month`, `day`, etc. components of a datetime,
 _without reference to any specific calendar_.
 
 - Class `CalendarDatetime` composes a `Calendar` with a `SimpleDatetime`, to represent a datetime in a particular
 calendar. (Note: We [prefer composition over inheritance](https://en.wikipedia.org/wiki/Composition_over_inheritance).)
    - At the moment, it offers only conversion methods (e.g., `toISOString()`) and factories (e.g., `fromMsSinceEpoch()`).
-   - This would be the class in which to place calendar-aware datetime arithmetic methods (e.g., `addDays()`), 
+   - This would be the class in which to place calendar-aware datetime arithmetic methods (e.g., `addDays()`),
    but we have no use for this in present applications so the class lacks such methods.
 
 ### CF time systems
-   
-In CF standards compliant datasets, datetimes are represented by index values (values of the time dimension) 
-in a time system defined by units, start datetime, and calendar. 
 
-- Units are fixed intervals of time labelled by terms such as 'day', 'hour', 'minute'. 
+In CF standards compliant datasets, datetimes are represented by index values (values of the time dimension)
+in a time system defined by units, start datetime, and calendar.
+
+- Units are fixed intervals of time labelled by terms such as 'day', 'hour', 'minute'.
 - A start datetime is a specification of year, month, day, etc., in a specified calendar system.
-- The calendar is specified an identifier chosen from a fixed CF vocabulary that includes 'standard', 'gregorian', 
+- The calendar is specified an identifier chosen from a fixed CF vocabulary that includes 'standard', 'gregorian',
 '365_day', 'noleap', and '360_day', with the obvious meanings.
 - A time index _t_ specifies a time point defined as _t_ time units after the start datetime, in the specified calendar.
 
 The following classes represent time systems and datetimes within such a system:
-   
+
 - Class `CfTimeSystem`, which represents a CF time system, as above.
   - Constructed with arguments `units` and `startDate`; the latter is a `CalendarDatetime`, which carries both
   the calendar and the datetime. This is one of the places where method signature is hard to remember, and
   could perhaps be improved.
-  
-- Class `CfDatetime`, which [composes](https://en.wikipedia.org/wiki/Composition_over_inheritance) a 
+
+- Class `CfDatetime`, which [composes](https://en.wikipedia.org/wiki/Composition_over_inheritance) a
 `CfTimeSystem` and a real-valued index to represent a specific time within a CF time system.
-   - Like `CalendarDatetime` (to which it is a parallel), `CfDatetime` offers only conversion methods 
+   - Like `CalendarDatetime` (to which it is a parallel), `CfDatetime` offers only conversion methods
    (e.g., `toISOString()`, `toCalendarDatetime`) and factories (e.g., `fromLooseFormat()`).
    - Like `CalendarDatetime`, this is the class in which time arithmetic methods would be placed, but none are
    currently needed, so none exist.
-   
+
 ### Usage
 
 Playing at classes is all very well, till somebody loses their mind. How is this intended to be used?
@@ -473,7 +477,7 @@ console.log(cfDatetime.toLooseString(true)); // -> 1952/01/01
 ```
 
 ```javascript
-// Some possibly useful time points in the above time system. 
+// Some possibly useful time points in the above time system.
 // Note these are `CfDatetime`s, not CalendarDatetime`s.
 const start = cfTimeSystem.firstCfDatetime();
 console.log(start.index);  // -> 0
