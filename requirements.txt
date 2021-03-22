@@ -40,7 +40,7 @@ gitpython==2.1.15
 
 # GDAL python packages is pushing passed version2, however most
 # systems don't have version v1.11 available for install
-GDAL==2.2
+GDAL==3.0.4
 
 XlsxWriter==1.0.2
 coards==1.0.5
