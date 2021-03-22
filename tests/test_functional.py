@@ -29,7 +29,7 @@ def test_static(url):
     assert resp.status == '200 OK'
 
 
-@pytest.mark.slow
+@pytest.mark.local_only
 @pytest.mark.crmpdb
 @pytest.mark.parametrize('url', [
     '/js/crmp_map.js', '/css/main.css', '/images/banner.png', '/docs/',
