@@ -16,7 +16,7 @@ argparse==1.4.0
 ga-wsgi-client==0.1
 itsdangerous==0.24
 modelmeta==0.0.5
-numpy  # Allow pip or system install for travis
+numpy
 pdp-util==1.0.0
 pydap-pdp==3.2.6
 ply==3.10
@@ -35,13 +35,7 @@ slimit==0.8.1
 static==1.1.1
 wsgiref==0.1.2
 gitpython==2.1.15
-
-# Data Format Requirements
-
-# GDAL python packages is pushing passed version2, however most
-# systems don't have version v1.11 available for install
 GDAL==2.2
-
 XlsxWriter==1.0.2
 coards==1.0.5
 h5py==2.7.1
