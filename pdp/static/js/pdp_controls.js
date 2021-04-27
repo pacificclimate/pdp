@@ -493,8 +493,22 @@ RasterDownloadLink.prototype = {
                 return;
             }
         }
-        this.xrange = raster_index_bounds.left + ':' + raster_index_bounds.right;
-        this.yrange = raster_index_bounds.bottom + ':' + raster_index_bounds.top;
+        // We must handle cases where lat or lon dimension is in ascending
+        // or descending order of values. Hence min/max.
+        const xmin = Math.min(
+          raster_index_bounds.left, raster_index_bounds.right
+        );
+        const xmax = Math.max(
+          raster_index_bounds.left, raster_index_bounds.right
+        );
+        const ymin = Math.min(
+          raster_index_bounds.bottom, raster_index_bounds.top
+        );
+        const ymax = Math.max(
+          raster_index_bounds.bottom, raster_index_bounds.top
+        );
+        this.xrange = `${xmin}:${xmax}`;
+        this.yrange = `${ymin}:${ymax}`;
     },
 
     // Take the URL template and substitute each of the desired state variables
@@ -518,8 +532,11 @@ RasterDownloadLink.prototype = {
                 ext: this.ext,
                 varname: this.varname,
                 trange: this.trange,
-                xrange: bounds.left + ':' + bounds.right,
-                yrange: bounds.bottom + ':' + bounds.top
+                // This is a single cell, so left === right and top == bottom,
+                // so don't have to use both. Bonus: we don't have to account
+                // for ascending vs. descending lat, lon dimensions here.
+                xrange: `${bounds.left}:${bounds.left}`,
+                yrange: `${bounds.bottom}:${bounds.bottom}`
             };
 
             var url = this.url_template;
