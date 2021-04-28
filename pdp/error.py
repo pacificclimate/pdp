@@ -29,9 +29,9 @@ class ErrorMiddleware(object):
                                 ("Retry-After", "3600")  # one hour
                                 ]
             start_response(status, response_headers, sys.exc_info())
-            logger.error("SQLAlchemyError: {}".format(e.message))
+            logger.error("SQLAlchemyError: {}".format(e))
             yield 'There was an unexpected problem accessing the database\n'
-            yield e.message
+            yield e
 
         except EnvironmentError as e:
             # except IOError as e:
@@ -48,9 +48,9 @@ class ErrorMiddleware(object):
                          "  strerr: {}\n"
                          "  filename {}\n"
                          "{}".format(
-                             e.errno, e.strerror, e.filename, e.message))
+                             e.errno, e.strerror, e.filename, e))
             yield 'We had an unexpected problem accessing on-disk resources\n'
-            yield e.message
+            yield e
 
         except Exception as e:
             status = "500 Internal Server Error"
@@ -59,7 +59,7 @@ class ErrorMiddleware(object):
             logger.error("500 Internal Server Error: {}\n{}".format(
                 e.args, traceback.format_exc()))
             yield 'There was an unhandleable problem with the application\n'
-            yield e.message
+            yield e
 
         else:
 

@@ -43,6 +43,6 @@ XlsxWriter==1.0.2
 coards==1.0.5
 h5py==2.7.1
 pupynere-pdp==2.0.1
-pydap.responses.aaigrid==0.7
+#pydap.responses.aaigrid==0.7
 xlwt==1.3.0
 netCDF4==1.5.5.1

@@ -64,7 +64,7 @@ def test_stream_error():
 
     assert resp.status_code == 500
     for x in resp.app_iter:
-        print x
+        print(x)
 
 
 def test_500():

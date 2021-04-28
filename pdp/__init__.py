@@ -106,7 +106,7 @@ def parse_version(type_):
 
 
 def _parse_version(full_version, type_):
-    regex = ur"^((?:\w+\.?)+)\+?(.*)\.(\w{6})$"
+    regex = r"^((?:\w+\.?)+)\+?(.*)\.(\w{6})$"
     matches = re.match(regex, full_version)
     if matches:
         version, branch, sha = matches.groups()
