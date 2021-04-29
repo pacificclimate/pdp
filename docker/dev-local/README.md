@@ -87,7 +87,7 @@ In this case we execute the command (`gunicorn`) that runs the server.
 
 Note that the server started must match the container name.
 
-#### 4. Point your browser at `pdp.localhost:5000/portal/<name>/map`
+#### 4. Point your browser at `pdp.localhost:5000/portal/<name>/map/`
 
 This should load the named PDP portal.
 
