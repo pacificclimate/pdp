@@ -46,7 +46,8 @@ def test_operational_error():
     resp = req.get_response(app, catch_exc_info=True)
     assert resp.status_code == 503
     assert 'Retry-After' in resp.headers
-    assert 'accessing the database' in resp.body
+    body = ''.join([str(x) for x in resp.app_iter])
+    assert 'accessing the database' in body
 
 
 def test_io_error():
@@ -63,8 +64,9 @@ def test_stream_error():
     resp = req.get_response(app, catch_exc_info=True)
 
     assert resp.status_code == 500
-    for x in resp.app_iter:
-        print(x)
+    body = ''.join([str(x) for x in resp.app_iter])
+    assert "There was a serious problem while generating the streamed response" \
+        in body
 
 
 def test_500():
@@ -73,8 +75,10 @@ def test_500():
     resp = req.get_response(app, catch_exc_info=True)
 
     assert resp.status_code == 500
+    x = [x for x in resp.app_iter]
+    body = ''.join([str(x) for x in resp.app_iter])
     assert "There was an unhandleable problem with the application" \
-        in resp.body
+        in body
 
 
 if __name__ == '__main__':
