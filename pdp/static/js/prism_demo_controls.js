@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, pdp, init_prism_map, intersection, getRasterAccordionMenu, ncwmsCapabilities, getRasterNativeProj, getRasterBbox, rasterBBoxToIndicies*/
+/*global $, jQuery, pdp, init_prism_map, intersection, getRasterAccordionMenu, ncwmsCapabilities, getRasterNativeProj, getRasterBbox, rasterBboxToIndices*/
 
 "use strict";
 

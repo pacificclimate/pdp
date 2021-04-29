@@ -84,17 +84,21 @@ The GitHub Action docker-publish automatically builds the image.
 Pull it from Dockerhub:
 
 ```
-docker pull pcic/pdp-local-pytest
+docker pull pcic/pdp-local-pytest:<tag>
 ```
+
+If you are working on a branch, then `<tag>` will be your branch name.
 
 ## Run image (container)
 
-Run it from the project root directory:
+1. Update `docker/local-pytest/up-backend.sh` with the <tag> if necessary.
 
-```
-py3clean .
-./docker/local-pytest/up-backend.sh
-```
+1. Run it from the project root directory.
+
+    ```
+    py3clean .
+    ./docker/local-pytest/up-backend.sh
+    ```
 
 When the container starts, it installs the local codebase as described above.
 After that, you are in interactive mode, in a bash shell, so you can issue 
