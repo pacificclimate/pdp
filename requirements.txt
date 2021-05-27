@@ -17,7 +17,7 @@ ga-wsgi-client==0.1
 itsdangerous==0.24
 modelmeta==0.0.5
 numpy  # Allow pip or system install for travis
-pdp-util==1.1.0
+pdp-util==1.2.0
 pydap-pdp==3.2.6
 ply==3.10
 psycopg2==2.7.3.2
