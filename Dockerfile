@@ -5,7 +5,7 @@
 FROM ubuntu:18.04
 MAINTAINER James Hiebert <hiebert@uvic.ca>
 
-RUN apt-get update &&
+RUN apt-get update && \
     apt-get install -y \
         python-dev \
         python-pip \
@@ -29,7 +29,7 @@ ENV PIP_INDEX_URL https://pypi.pacificclimate.org/simple
 # Install dependencies (separate RUN
 # statement for GDAL is required)
 RUN pip install --no-binary :all: numpy Cython==0.22 gdal==2.2
-RUN pip install --no-binary
+RUN pip install --no-binary \
     h5py \
     -r requirements.txt \
     -r test_requirements.txt \
