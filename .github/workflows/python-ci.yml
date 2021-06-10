@@ -21,6 +21,7 @@ jobs:
         PIP_INDEX_URL: https://pypi.pacificclimate.org/simple
         CPLUS_INCLUDE_PATH: /usr/include/gdal
         C_INCLUDE_PATH: /usr/include/gdal
+        DSN_PCIC_META_TEST: ${{ secrets.DSN_PCIC_META_TEST }}
       run: |
         sudo apt-get update
         sudo apt-get install -y gcc libhdf5-dev libnetcdf-dev libgdal-dev
@@ -31,4 +32,4 @@ jobs:
         pip install .
     - name: Test with pytest
       run: |
-        py.test -m "not local_only" -v --tb=short
+        DSN=$DSN_PCIC_META_TEST py.test -m "not local_only" -v --tb=short
