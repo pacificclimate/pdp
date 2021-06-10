@@ -22,6 +22,7 @@ jobs:
         CPLUS_INCLUDE_PATH: /usr/include/gdal
         C_INCLUDE_PATH: /usr/include/gdal
         DSN_PCIC_META_TEST: ${{ secrets.DSN_PCIC_META_TEST }}
+        NOT_SECRET: ${{ secrets.NOT_SECRET }}
       run: |
         sudo apt-get update
         sudo apt-get install -y gcc libhdf5-dev libnetcdf-dev libgdal-dev
@@ -32,4 +33,5 @@ jobs:
         pip install .
     - name: Test with pytest
       run: |
+        X=$NOT_SECRET eval 'echo $X'
         DSN=$DSN_PCIC_META_TEST py.test -m "not local_only" -v --tb=short
