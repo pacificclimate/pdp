@@ -12,9 +12,9 @@ RUN apt-get update && \
         libgdal-dev \
         libnetcdf-dev \
         git && \
-        rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*
 
-RUN pip install -U pip
+RUN pip install -U pip setuptools wheel
 
 # IMPORTANT: You must mount local codebase to this directory
 WORKDIR /codebase
@@ -27,8 +27,7 @@ ENV C_INCLUDE_PATH /usr/include/gdal
 ENV PIP_INDEX_URL https://pypi.pacificclimate.org/simple
 
 # Install dependencies (separate RUN statement for GDAL is required)
-RUN pip install pip==18.1
-RUN pip install --no-binary :all: numpy Cython==0.22
+RUN pip install --no-binary :all: numpy Cython==0.22 gdal==2.2
 RUN pip install --no-binary \
     h5py \
     -r requirements.txt \
