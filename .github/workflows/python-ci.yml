@@ -33,5 +33,4 @@ jobs:
         pip install .
     - name: Test with pytest
       run: |
-        X=$NOT_SECRET eval 'echo $X'
-        DSN=$DSN_PCIC_META_TEST py.test -m "not local_only" -v --tb=short
+        DSN=$DSN_PCIC_META_TEST NOT_ANOTHER_SECRET=$NOT_SECRET py.test -m "not local_only" -v --tb=short tests/test_secret.py
