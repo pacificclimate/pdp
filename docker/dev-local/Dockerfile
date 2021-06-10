@@ -2,14 +2,15 @@
 
 FROM ubuntu:18.04
 
-RUN apt-get update && apt-get install -y \
-    python-dev \
-    python-pip \
-    build-essential \
-    libhdf5-dev \
-    libgdal-dev \
-    libnetcdf-dev \
-    git && \
+RUN apt-get update && \
+    apt-get install -y \
+        python-dev \
+        python-pip \
+        build-essential \
+        libhdf5-dev \
+        libgdal-dev \
+        libnetcdf-dev \
+        git && \
     rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip setuptools wheel
@@ -25,7 +26,8 @@ ENV PIP_INDEX_URL https://pypi.pacificclimate.org/simple
 
 # Install dependencies (separate RUN statement for GDAL is required)
 RUN pip install --no-binary :all: numpy Cython==0.22 gdal==2.2
-RUN pip install --no-binary h5py \
+RUN pip install --no-binary
+    h5py \
     -r requirements.txt \
     -r test_requirements.txt \
     -r deploy_requirements.txt
