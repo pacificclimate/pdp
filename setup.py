@@ -64,7 +64,7 @@ setup(
                       'beaker',
                       'genshi',
                       'static',
-                      'pdp-util >=0.2.2',
+                      'pdp-util ~=1.2',
                       'pydap.handlers.hdf5 >=0.5',
                       'pydap.responses.netcdf >=0.5',
                       'pydap.responses.xls',
