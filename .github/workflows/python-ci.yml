@@ -31,7 +31,6 @@ jobs:
         pip install .
     - name: Test with pytest
       env:
-        NOT_SECRET: ${{ secrets.NOT_SECRET }}
-        DSN_PCIC_META_TEST: ${{ secrets.DSN_PCIC_META_TEST }}
+        DSN: ${{ secrets.DSN_PCIC_META_TEST }}
       run: |
-        DSN=$DSN_PCIC_META_TEST NOT_ANOTHER_SECRET=$NOT_SECRET py.test -m "not local_only" -v --tb=short tests/test_secret.py
+        py.test -m "not local_only" -v --tb=short
