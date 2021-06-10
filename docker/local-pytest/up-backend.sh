@@ -18,5 +18,6 @@ docker run -it \
   -e "GUNICORN_TIMEOUT=86400" \
   -e "APP_MODULE=pdp.wsgi:backend" \
   -v $(pwd):/codebase \
+  -v /storage/data:/storage/data:ro \
   --name pdp-local-pytest_backend \
   pdp-local-pytest
