@@ -28,9 +28,10 @@ jobs:
         pip install numpy
         pip install sphinx gdal==3.0.4
         pip install $(sed '/GDAL==2.2/d' requirements.txt) -r test_requirements.txt
-        pip freeze
+        sed '/GDAL==2.2/d' requirements.txt
         pip install .
-        pip freeze
+        pip uninstall -y pdp-util
+        pip install git+https://github.com/pacificclimate/pdp_util.git@py2-fix-dfv-queries#egg=pdp_util
     - name: Test with pytest
       env:
         DSN: ${{ secrets.DSN_PCIC_META_TEST }}
