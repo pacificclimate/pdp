@@ -18,7 +18,7 @@ ga-wsgi-client==0.1
 itsdangerous==0.24
 modelmeta==0.3.0
 numpy
-git+https://github.com/pacificclimate/pdp_util.git@py2-fix-dfv-queries#egg=pdp_util
+pdp-util==1.2.1
 pydap-pdp==3.2.6
 ply==3.10
 psycopg2==2.7.3.2
