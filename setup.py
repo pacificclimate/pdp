@@ -40,6 +40,13 @@ def recursive_list(pkg_dir, basedir):
 
 
 def get_commitish():
+    # The statement `Repo(...)` below raises `InvalidGitRepositoryError`
+    # when building in the Python CI workflow, specifically on the step
+    # `pip install .` (of course; that step runs this file). According to
+    # https://github.com/gitpython-developers/GitPython/issues/255,
+    # adding `search_parent_directories=True` should fix it, but it doesn't.
+    # Instead, we just bail out and return "unknown" in this case. That allows
+    # the test environment to build.
     try:
         repo = Repo(os.getcwd(), search_parent_directories=True)
     except InvalidGitRepositoryError:
