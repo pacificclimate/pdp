@@ -5,6 +5,7 @@ import re
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 from git import Repo
+from git.exc import InvalidGitRepositoryError
 
 try:
     from sphinx.setup_command import BuildDoc
@@ -39,7 +40,10 @@ def recursive_list(pkg_dir, basedir):
 
 
 def get_commitish():
-    repo = Repo(os.getcwd(), search_parent_directories=True)
+    try:
+        repo = Repo(os.getcwd(), search_parent_directories=True)
+    except InvalidGitRepositoryError:
+        return "unknown"
     sha = repo.head.object.hexsha
     try:
         branch = repo.active_branch.name
