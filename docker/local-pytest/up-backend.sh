@@ -20,4 +20,4 @@ docker run -it \
   -v $(pwd):/codebase \
   -v /storage/data:/storage/data:ro \
   --name pdp-local-pytest_backend \
-  pdp-local-pytest
+  pcic/pdp-local-pytest
