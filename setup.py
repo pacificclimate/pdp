@@ -39,7 +39,7 @@ def recursive_list(pkg_dir, basedir):
 
 
 def get_commitish():
-    repo = Repo(os.getcwd())
+    repo = Repo(os.getcwd(), search_parent_directories=True)
     sha = repo.head.object.hexsha
     try:
         branch = repo.active_branch.name
