@@ -637,7 +637,7 @@ MetadataDownloadLink.prototype = {
         reg = new RegExp(pdp.data_root + '/(.*)/(.*)');
         matches = reg.exec(url);
         //matches[1] is portal url base, matches[2] is dataset, make catalog URL.
-        url = pdp.app_root + "/" + matches[1] + "/catalog/" + matches[2];
+        url = pdp.data_root + "/" + matches[1] + "/catalog/" + matches[2];
         this.dl_url = url;
         this.trigger();
     }
