@@ -3,7 +3,7 @@
 ############################################
 
 FROM ubuntu:18.04
-MAINTAINER James Hiebert <hiebert@uvic.ca>
+LABEL Maintainer="James Hiebert <hiebert@uvic.ca>"
 
 RUN apt-get update && \
     apt-get install -y \
