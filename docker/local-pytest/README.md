@@ -1,5 +1,30 @@
 # Docker local (py)test environment
 
+## TL;DR: Brief instructions
+
+For greater detail, see section Instructions below.
+
+1. Pull the image 
+
+   `docker pull pcic/pdp-local-pytest:<tag>`
+   
+   where `<tag>` either `latest` or your branch name, the latter only if
+   you modified the Dockerfile in `local-pytest`. You may only rarely need
+   to pull a new copy of the image.
+   
+1. Run the container: `./docker/local-pytest/up-backend.sh`. The container will
+   start, install your local version of the project, and give you a bash
+   command line prompt.
+    
+1. Run your tests, etc.: In the running container, enter commands at the prompt,
+   e.g., `py.test ...`.
+   
+1. Stop the container: When you no longer wish the container to be running,
+   enter `ctrl+D` or `exit` at the container command line prompt. 
+   
+   If you detached from the image, you can enter 
+   `./docker/local-pytest/down-backend.sh` to stop and remove the container.
+
 ## What
 
 The files in this directory allow you to build and run a test environment
@@ -21,7 +46,7 @@ container for the test run.
 1. So let's just build that environment once, run it interactively, 
 run our tests from inside there, and wow zippy. Debugging now feasible.
 
-## How
+## Mechanism
 
 1. The image is built with all the contents necessary to install and run the
 package and its tests. 
@@ -55,6 +80,49 @@ We don't, however mount the codebase read-only because we might want
 some effects of the test runs to be written to our external filesystem 
 (e.g., redirected output).
 
+## Instructions
+
+### Pull image
+
+The GitHub Action docker-publish automatically builds the image.
+Pull it from Dockerhub:
+
+```
+docker pull pcic/pdp-local-pytest:<tag>
+```
+
+If you are working on a branch, then `<tag>` will be your branch name.
+
+### Run image (container)
+
+1. Update `docker/local-pytest/up-backend.sh` with the <tag> if necessary.
+
+1. Run it from the project root directory.
+
+    ```
+    py3clean .
+    ./docker/local-pytest/up-backend.sh
+    ```
+
+When the container starts, it installs the local codebase as described above.
+After that, you are in interactive mode, in a bash shell, so you can issue 
+commands, such as `py.test ....` as normal.
+
+Leave the container running for as long as you want. You can do multiple
+rounds of modification and testing using a single container, without
+restarting (which was the justification for creating it).
+
+### Build image (manual)
+
+Since this image is built automatically by the GitHub Action docker-publish,
+you should not need to do this. However, just in case:
+
+From the _project root directory_ (important Docker context location):
+
+```
+docker build -t pcic/pdp-local-pytest -f docker/local-pytest/Dockerfile .
+```
+
 ## Notes and caveats
 
 1. Writing to a mounted volume from inside a docker container involves some
@@ -78,43 +146,3 @@ tricky permissions logic that I don't fully understand yet. Known:
 leaves problematic pycache junk behind in the host filesystem. 
 This can be cleaned up by running `py3clean`.
 
-## Pull image
-
-The GitHub Action docker-publish automatically builds the image.
-Pull it from Dockerhub:
-
-```
-docker pull pcic/pdp-local-pytest:<tag>
-```
-
-If you are working on a branch, then `<tag>` will be your branch name.
-
-## Run image (container)
-
-1. Update `docker/local-pytest/up-backend.sh` with the <tag> if necessary.
-
-1. Run it from the project root directory.
-
-    ```
-    py3clean .
-    ./docker/local-pytest/up-backend.sh
-    ```
-
-When the container starts, it installs the local codebase as described above.
-After that, you are in interactive mode, in a bash shell, so you can issue 
-commands, such as `py.test ....` as normal.
-
-Leave the container running for as long as you want. You can do multiple
-rounds of modification and testing using a single container, without
-restarting (which was the justification for creating it).
-
-## Build image (manual)
-
-Since this image is built automatically by the GitHub Action docker-publish,
-you should not need to do this. However, just in case:
-
-From the _project root directory_ (important Docker context location):
-
-```
-docker build -t pcic/pdp-local-pytest -f docker/local-pytest/Dockerfile .
-```
