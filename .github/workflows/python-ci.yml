@@ -23,12 +23,14 @@ jobs:
         C_INCLUDE_PATH: /usr/include/gdal
       run: |
         sudo apt-get update
-        sudo apt-get install -y gcc libhdf5-dev libnetcdf-dev libgdal-dev
-        pip install -U pip pytest
-        pip install numpy
-        pip install sphinx gdal==3.0.4
-        pip install $(sed '/GDAL==2.2/d' requirements.txt) -r test_requirements.txt
+        sudo apt-get install -y gcc libhdf5-dev libnetcdf-dev libgdal-dev python-dev python-pip build-essential git
+        pip install -U pip pytest setuptools wheel
+        pip install --no-binary :all: numpy Cython==0.22 gdal==2.2
+        pip install --no-binary h5py -r requirements.txt -r test_requirements.txt
+        pip install sphinx
         pip install .
     - name: Test with pytest
+      env:
+        DSN: ${{ secrets.DSN_PCIC_META_TEST }}
       run: |
         py.test -m "not local_only" -v --tb=short

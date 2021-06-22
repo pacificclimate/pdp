@@ -24,8 +24,8 @@ and requires a public commit before you may be ready to commit.
 #### 0. Advance prep
 
 1. Update `docker/dev-local/fe_deployment.env` and 
-   `docker/dev-local/be_deployment.env` with correct passwords for the `
-    pcic_meta` and `crmp` databases.
+   `docker/dev-local/be_deployment.env` with correct passwords for the 
+   `pcic_meta` and `crmp` databases.
 1. Update  `docker/dev-local/pgbounce_users.txt` with correct md5 sums.
 1. Edit your `/etc/hosts` and add `pdp.localhost` to the line starting
    with `127.0.0.1`. The result will look like 
