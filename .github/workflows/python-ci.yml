@@ -5,7 +5,8 @@ on: push
 jobs:
   test:
 
-    runs-on: self-hosted
+    runs-on: ubuntu-18.04
+    
     strategy:
       matrix:
         python-version: [2.7]
