@@ -6,7 +6,7 @@ jobs:
   test:
 
     runs-on: ubuntu-18.04
-    
+
     strategy:
       matrix:
         python-version: [2.7]
@@ -34,4 +34,4 @@ jobs:
       env:
         DSN: ${{ secrets.DSN_PCIC_META_TEST }}
       run: |
-        py.test -m "not local_only" -v --tb=short
+        py.test -m "not local_only or crmpdb or bulk_data" -v --tb=short
