@@ -54,7 +54,7 @@ pydap.responses.xlsx==0.1
 pystache==0.5.4
 python-dateutil==2.6.1
 pytz==2017.3
-pyxdg==0.26
+pyxdg==0.27
 PyYAML==4.2b4
 requests==2.21.0
 SecretStorage==2.3.1
