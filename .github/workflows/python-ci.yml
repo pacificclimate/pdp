@@ -5,7 +5,8 @@ on: push
 jobs:
   test:
 
-    runs-on: self-hosted
+    runs-on: ubuntu-18.04
+
     strategy:
       matrix:
         python-version: [2.7]
@@ -30,7 +31,5 @@ jobs:
         pip install sphinx
         pip install .
     - name: Test with pytest
-      env:
-        DSN: ${{ secrets.DSN_PCIC_META_TEST }}
       run: |
-        py.test -m "not local_only" -v --tb=short
+        py.test -m "not bulk_data and not crmpdb" -v --tb=short
