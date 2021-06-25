@@ -4,10 +4,8 @@ FROM pcic/pdp-prod-base
 
 ENV PIP_INDEX_URL https://pypi.pacificclimate.org/simple
 
-# You must mount local codebase to this directory
-RUN mkdir ${USER_DIR}/codebase
-WORKDIR ${USER_DIR}/codebase
-RUN ls -la
+# You must mount the local codebase to this directory
+WORKDIR /codebase
 
 # Install the local codebase when the container starts.
 ENTRYPOINT ./docker/local-pytest/entrypoint.sh
