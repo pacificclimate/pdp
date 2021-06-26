@@ -19,12 +19,6 @@ local-up:
 	py3clean .
 	./docker/local-pytest/up-backend.sh
 
-pytests:
-	py3clean .
-	./docker/local-pytest/up-backend-daemon.sh
-	docker exec -d pdp-local-pytest_backend pytest -vv
-	docker logs --follow pdp-local-pytest_backend
-
 local-down:
 	./docker/local-pytest/down-backend.sh
 
