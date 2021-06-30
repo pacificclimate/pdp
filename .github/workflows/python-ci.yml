@@ -6,7 +6,9 @@ jobs:
   test:
 
     runs-on: ubuntu-18.04
-    container: pcic/pdp-base-minimal
+    container:
+      image: pcic/pdp-base-minimal
+      options: --user root
     strategy:
       matrix:
         python-version: [2.7]
