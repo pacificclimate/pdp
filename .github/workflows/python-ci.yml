@@ -23,6 +23,9 @@ jobs:
       env:
         PIP_INDEX_URL: https://pypi.pacificclimate.org/simple
       run: |
+        echo ${USERNAME}
+        su - ${USERNAME}
+        id
         pip install -r requirements.txt -r test_requirements.txt
         pip install sphinx
         pip install .
