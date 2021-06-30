@@ -3,32 +3,48 @@ name: Python CI
 on: push
 
 jobs:
-  test:
-
+  build-image:
     runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Publish to Registry
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.pcicdevops_at_dockerhub_username }}
+          password: ${{ secrets.pcicdevops_at_dockerhub_password }}
+          dockerfile: ./docker/ci/Dockerfile
+          repository: pcic/pdp-ci
+          tag_with_ref: true
+
+  run-tests:
+    runs-on: ubuntu-18.04
+    needs: build-image
     container:
-      image: pcic/pdp-base-minimal
-      options: --user root
+      # Built in step above
+      image: pcic/pdp-ci
     strategy:
       matrix:
         python-version: [2.7]
 
     steps:
     - uses: actions/checkout@v2
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      env:
-        PIP_INDEX_URL: https://pypi.pacificclimate.org/simple
-      run: |
-        echo ${USERNAME}
-        su - ${USERNAME}
-        id
-        pip install -r requirements.txt -r test_requirements.txt
-        pip install sphinx
-        pip install .
+
+# Done in image build
+#    - name: Install dependencies
+#      env:
+#        PIP_INDEX_URL: https://pypi.pacificclimate.org/simple
+#      run: |
+#        pip install -r requirements.txt -r test_requirements.txt
+#        pip install sphinx
+#        pip install .
+
     - name: Test with pytest
       env:
         DSN: ${{ secrets.DSN_PCIC_META_TEST }}
