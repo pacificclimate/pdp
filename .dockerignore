@@ -1,0 +1,21 @@
+# Git
+.git
+.github
+.gitignore
+
+# Build
+.pytest_cache
+
+# Config and Docs
+docs/
+.dockerignore
+Dockerfile
+
+# Tests
+tests/
+
+# Ignore files
+*.json
+*.yml
+*.in
+*.ini
