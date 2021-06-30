@@ -16,7 +16,6 @@ jobs:
           password: ${{ secrets.pcicdevops_at_dockerhub_password }}
           dockerfile: ./docker/ci/Dockerfile
           repository: pcic/pdp-ci
-          tag_with_ref: true
 
   run-tests:
     runs-on: ubuntu-18.04
