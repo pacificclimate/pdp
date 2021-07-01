@@ -16,13 +16,14 @@ jobs:
           password: ${{ secrets.pcicdevops_at_dockerhub_password }}
           dockerfile: ./docker/ci/Dockerfile
           repository: pcic/pdp-ci
+          tags: latest
 
   run-tests:
     runs-on: ubuntu-18.04
     needs: build-image
     container:
       # Built in step above
-      image: pcic/pdp-ci
+      image: pcic/pdp-ci:latest
     strategy:
       matrix:
         python-version: [2.7]
