@@ -24,29 +24,10 @@ jobs:
     container:
       # Built in step above
       image: pcic/pdp-ci:latest
-    strategy:
-      matrix:
-        python-version: [2.7]
 
     steps:
-#    - uses: actions/checkout@v2
-
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-
-# Done in image build
-#    - name: Install dependencies
-#      env:
-#        PIP_INDEX_URL: https://pypi.pacificclimate.org/simple
-#      run: |
-#        pip install -r requirements.txt -r test_requirements.txt
-#        pip install sphinx
-#        pip install .
-
     - name: Test with pytest
       env:
         DSN: ${{ secrets.DSN_PCIC_META_TEST }}
       run: |
-        py.test -m "not local_only" -v --tb=short
+        python -m pytest -m "not local_only" -v --tb=short
