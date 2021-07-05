@@ -12,6 +12,9 @@ options:
 	@echo "    dev-restart-frontend --- Restart dev-local frontend only"
 	@echo "    dev-stop --------------- Stop all dev-local containers"
 
+container-status:
+	docker ps -a | grep -i 'pcic/pdp-local-pytest\|pdp_frontend-dev\|pdp_backend-dev'
+
 local-build:
 	docker build -t pcic/pdp-local-pytest -f docker/local-pytest/Dockerfile .
 
