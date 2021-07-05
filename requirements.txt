@@ -60,8 +60,8 @@ pystache==0.5.4
 python-dateutil==2.6.1
 python-editor==1.0.4
 pytz==2017.3
+PyYAML==5.4
 pyxdg==0.26
-PyYAML==4.2b4
 requests==2.21.0
 SecretStorage==2.3.1
 simplejson==3.12.0
