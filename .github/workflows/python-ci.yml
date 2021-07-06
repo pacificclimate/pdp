@@ -33,10 +33,12 @@ jobs:
         echo id: $(id)
         echo pwd: $(pwd)
         ls -la
-        echo path: $PATH
+        echo 'PATH=' $PATH
         python --version
         which python
         cd ${USER_DIR}
+        echo 'PYTHONPATH=' $PYTHONPATH
+        python -c 'import sys; print "\n".join(sys.path)'
         echo "after install"
         pip freeze
         pydoc modules
