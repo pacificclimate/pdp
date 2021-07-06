@@ -35,10 +35,15 @@ jobs:
         ls -la
         echo path: $PATH
         python --version
+        which python
+        echo "before install"
+        pip freeze
+        pydoc modules
+        cd ${USER_DIR}
         python -m pip install -r requirements.txt -r test_requirements.txt
         python -m pip install sphinx
         python -m pip install .
-        which python
+        echo "after install"
         pip freeze
         pydoc modules
         python -m pytest -m "not local_only" -v --tb=short
