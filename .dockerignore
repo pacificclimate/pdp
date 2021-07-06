@@ -11,9 +11,6 @@ docs/
 .dockerignore
 Dockerfile
 
-# Tests
-tests/
-
 # Ignore files
 *.json
 *.yml
