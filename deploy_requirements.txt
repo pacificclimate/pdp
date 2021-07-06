@@ -6,7 +6,7 @@ greenlet==1.1.0
 gunicorn==19.8.1
 imagesize==1.2.0
 packaging==20.9
-Pygments==2.7.4
+Pygments==2.5.2
 pyparsing==2.4.7
 snowballstemmer==2.1.0
 Sphinx==1.8.5
