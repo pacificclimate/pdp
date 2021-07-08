@@ -97,8 +97,8 @@ This CSV format is a plain text / ASCII format that attempts to maintain the str
 
 Layout of the data is time-major, longitude-minor; that is, time is the slowest varying dimension, while longitude is the fastest varying dimension (latitude is in the middle). Consider this example: ::
 
-    james@basalt ~ $ wget --output-document=/tmp/sample.csv 'https://data.pacificclimate.org/data/downscaled_gcms/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.csv?tasmax[0:9][100:101][250:253]&'
-    --2014-04-23 15:01:53--  https://data.pacificclimate.org/data/downscaled_gcms/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.csv?tasmax[0:9][100:101][250:253]&
+    james@basalt ~ $ wget --output-document=/tmp/sample.csv 'https://data.pacificclimate.org/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.csv?tasmax[0:9][100:101][250:253]&'
+    --2014-04-23 15:01:53--  https://data.pacificclimate.org/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231.nc.csv?tasmax[0:9][100:101][250:253]&
     Resolving data.pacificclimate.org... 142.104.230.35
     Connecting to data.pacificclimate.org|142.104.230.35|:80... connected.
     HTTP request sent, awaiting response... 200 OK
@@ -195,7 +195,7 @@ The JSON output gives you a mapping between the dataset's unique ID and the base
 You can retrieve the catalog with your favorite programming languages as well. For example in R, you could do something like this: ::
 
   > library(rjson)
-  > json_file <- 'https://data.pacificclimate.org/portal/downscaled_gcms/catalog/catalog.json'
+  > json_file <- 'https://data.pacificclimate.org/portal/downscaled_gcms_archive/catalog/catalog.json'
   > json_data <- fromJSON(paste(readLines(json_file), collapse=""))
 
   > names(json_data)
@@ -204,7 +204,7 @@ You can retrieve the catalog with your favorite programming languages as well. F
   ...
 
   > json_data[[1]]
-  [1] "https://data.pacificclimate.org/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+GFDL-ESM2G_historical+rcp45_r1i1p1_19500101-21001231.nc"
+  [1] "https://data.pacificclimate.org/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+GFDL-ESM2G_historical+rcp45_r1i1p1_19500101-21001231.nc"
 
 At present, there are seven pages for which one can retrieve catalogs: ``bc_prism``, ``downscaled_gcms``, ``downscaled_gcms_archive``, ``downscaled_gcm_extremes``, ``gridded_observations``, ``hydro_model_archive``, and ``hydro_model_out``.
 
@@ -214,9 +214,9 @@ Metadata and Data
 ^^^^^^^^^^^^^^^^^
 All of our multidimensional raster data is made available via `Open-source Project for a Network Data Access Protocol (OPeNDAP) <http://opendap.org/>`_, the specification of which can be found `here <http://www.opendap.org/pdf/ESE-RFC-004v1.2.pdf>`_. Requests are serviced by our deployment of the `Pydap server <http://www.pydap.org/>`_ which PCIC has heavily modified and rewritten to be able to stream large data requests.
 
-The *structure* and *attributes* of a dataset can be retrieved using OPeNDAP by making a `DDS or DAS <http://www.opendap.org/api/pguide-html/pguide_6.html>`_ request respectively. For example, to determine how my timesteps are available from one of the BCSD datasets, one can make a DDS request against that dataset as such: ::
+The *structure* and *attributes* of a dataset can be retrieved using OPeNDAP by making a `DDS or DAS <http://www.opendap.org/api/pguide-html/pguide_6.html>`_ request respectively. For example, to determine how many timesteps are available from one of the BCSD datasets, one can make a DDS request against that dataset as such: ::
 
-  james@basalt ~ $  wget --output-document=- https://data.pacificclimate.org/portal/downscaled_gcms/catalog/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.h5.dds 2> /dev/null
+  james@basalt ~ $  wget --output-document=- https://data.pacificclimate.org/portal/downscaled_gcms_archive/catalog/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.nc.dds 2> /dev/null
   Dataset {
       Float64 lat[lat = 510];
       Float64 lon[lon = 1068];
@@ -249,7 +249,7 @@ The *structure* and *attributes* of a dataset can be retrieved using OPeNDAP by 
 
 You can see the the response clearly describes all variable which are available from the dataset as well as their dimensionality and dimension lengths. To get attribute information for the dataset, you can make a DAS request as such: ::
 
-  james@basalt ~ $ wget --output-document=- https://data.pacificclimate.org/portal/downscaled_gcms/catalog/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.h5.das 2> /dev/null
+  james@basalt ~ $ wget --output-document=- https://data.pacificclimate.org/portal/downscaled_gcms_archive/catalog/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.nc.das 2> /dev/null
   Attributes {
       NC_GLOBAL {
 	  String comment "Spatial dissagregation based on tasmin/tasmax; quantile mapping extrapolation based on delta-method";
@@ -359,7 +359,7 @@ Downloading the actual data values themselves is also done with a DAP request. T
 
 To construct a proper DAP selection, please refer to the `DAP specification <http://www.opendap.org/pdf/ESE-RFC-004v1.2.pdf>`_. For example, if you wanted to download the first two timesteps and an 11 by 11 spatial region of the BCSD downscaling data you could make a request as follows: ::
 
-  james@basalt ~ $ wget --output-document=- https://data.pacificclimate.org/data/downscaled_gcms/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.nc.csv?tasmin[0:1][200:210][200:210] 2> /dev/null
+  james@basalt ~ $ wget --output-document=- https://data.pacificclimate.org/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_BCSD+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.nc.csv?tasmin[0:1][200:210][200:210] 2> /dev/null
   tasmin.tasmin
   [[-1499, -1490, -1468, -1474, -1440, -1395, -1377, -1363, -1386, -1360, -1335], [-1447, -1404, -1401, -1395, -1381, -1389, -1355, -1363, -1367, -1328, -1302], [-1499, -1490, -1500, -1441, -1346, -1354, -1332, -1314, -1309, -1292, -1285], [-1505, -1469, -1475, -1426, -1370, -1366, -1344, -1345, -1307, -1292, -1286], [-1429, -1433, -1395, -1366, -1367, -1348, -1329, -1314, -1299, -1294, -1284], [-1452, -1418, -1397, -1393, -1366, -1338, -1327, -1297, -1289, -1285, -1288], [-1393, -1401, -1378, -1371, -1349, -1345, -1311, -1293, -1280, -1287, -1312], [-1422, -1357, -1347, -1337, -1323, -1319, -1297, -1281, -1276, -1312, -1314], [-1421, -1388, -1374, -1361, -1340, -1324, -1293, -1277, -1272, -1299, -1295], [-1395, -1384, -1365, -1346, -1331, -1311, -1287, -1274, -1277, -1277, -1282], [-1398, -1376, -1355, -1335, -1320, -1297, -1277, -1286, -1289, -1283, -1271]]
   [[-2126, -2116, -2087, -2101, -2051, -1976, -1950, -1930, -1980, -1940, -1899], [-2044, -1971, -1974, -1970, -1950, -1975, -1916, -1940, -1954, -1884, -1833], [-2137, -2128, -2150, -2060, -1885, -1914, -1875, -1843, -1840, -1805, -1796], [-2151, -2100, -2116, -2042, -1947, -1947, -1913, -1923, -1846, -1813, -1808], [-2030, -2045, -1986, -1937, -1950, -1918, -1888, -1865, -1835, -1830, -1811], [-2075, -2025, -1994, -1996, -1954, -1906, -1895, -1830, -1818, -1814, -1829], [-1975, -2000, -1965, -1961, -1927, -1930, -1867, -1829, -1800, -1828, -1894], [-2033, -1911, -1901, -1894, -1872, -1878, -1839, -1808, -1797, -1895, -1903], [-2034, -1985, -1970, -1954, -1922, -1899, -1838, -1804, -1794, -1873, -1868], [-1993, -1981, -1955, -1926, -1906, -1874, -1829, -1804, -1818, -1821, -1838], [-2000, -1968, -1935, -1901, -1883, -1840, -1805, -1845, -1858, -1845, -1812]]
@@ -376,7 +376,7 @@ For users that are interested in downloading multiple variables for a single dat
 
 To determine whether your dataset of interest contains multiple variables, check by reading the `Dataset Descriptor Structure (DDS) <http://docs.opendap.org/index.php/UserGuideOPeNDAPMessages>`_. You can get this by making a request to the dataset of interest with the ".dds" suffix appended to the end. E.g. the following DDS request shows that the dataset in question contains 3 independent variables (pr, tasmax, tasmin) and 3 axis variables (lon ,lat, time). All of those are requestable in a single request. ::
 
-  james@basalt:~$ curl 'https://data.pacificclimate.org/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.nc.dds'
+  james@basalt:~$ curl 'https://data.pacificclimate.org/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.nc.dds'
   Dataset {
   Float64 lon[lon = 1068];
     Float64 lat[lat = 510];
@@ -413,7 +413,7 @@ the query params. That format looks like this: ::
   [dataset_url].[response_extension]?[variable_name_0][subset_spec],[variable_name_1][subset_spec],...
 
 So if the base dataset that you want to download is
-https://data.pacificclimate.org/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.nc,
+https://data.pacificclimate.org/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.nc,
 and you want to download the NetCDF response, so your extension will
 be '.nc'.
 
@@ -422,7 +422,7 @@ square somewhere in the middle ([250:299][500:549]).
 
 Putting that all together, it will look something like this: ::
 
-  https://data.pacificclimate.org/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.nc.nc?tasmax[0:99][250:299][500:549],tasmin[0:99][250:299][500:549],pr[0:99][250:299][500:549]
+  https://data.pacificclimate.org/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.nc.nc?tasmax[0:99][250:299][500:549],tasmin[0:99][250:299][500:549],pr[0:99][250:299][500:549]
 
 It's not quite as easy as clicking a few buttons on the web page, but
 depending on your use case, you can evaluate whether it's worth your
