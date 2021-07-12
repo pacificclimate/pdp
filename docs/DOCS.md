@@ -1,37 +1,37 @@
-# Table of Contents
-- 1.0 [Dependencies](#10-dependencies)
-   - 1.1 [Python](#11-python)
-   - 1.2 [Node.js (test framework only)](#12-nodejs-test-framework-only)
-- 2.0 [Installation](#20-installation)
-   - 2.1 [Development](#21-development)
-      - 2.1.1 [Server](#211-server)
-      - 2.1.2 [JS tests](#212-js-tests)
-   - 2.2 [Production](#22-production)
-- 3.0 [Configuration](#30-configuration)
-   - 3.1 [Environment variables](#31-environment-variables)
-      - 3.1.1 [Config Items](#311-config-items)
-   - 3.2 [JavaScript configuration code](#32-javascript-configuration-code)
-- 4.0 [Tests](#40-tests)
-   - 4.1 [Python](#41-python)
-   - 4.2 [Node.js (tests of JS code)](#42-nodejs-tests-of-js-code)
-- 5.0 [Deploying](#50-deploying)
-   - 5.1 [Development](#51-development)
-   - 5.2 [Production](#52-production)
-      - 5.2.1 [Gunicorn](#521-gunicorn)
-      - 5.2.2 [Supervisord](#522-supervisord)
-- 6.0 [Module `calendars`](#60-module-calendars)
-   - 6.1 [Introductory notes](#61-introductory-notes)
-   - 6.2 [Calendars](#62-calendars)
-   - 6.3 [Datetimes (in specific calendars)](#63-datetimes-in-specific-calendars)
-   - 6.4 [CF time systems](#64-cf-time-systems)
-   - 6.5 [Usage](#65-usage)
-      - 6.5.1 [`CalendarDatetime`: Datetimes in various calendars](#651-calendardatetime-datetimes-in-various-calendars)
-      - 6.5.2 [`CfTimeSystem`: CF time systems](#652-cftimesystem-cf-time-systems)
-      - 6.5.3 [`CfDatetime`: CF time points](#653-cfdatetime-cf-time-points)
+## Table of Contents
+- [1.0 Dependencies](#10-dependencies)
+  - [1.1 Python](#11-python)
+  - [1.2 Node.js (test framework only)](#12-nodejs-test-framework-only)
+- [2.0 Installation](#20-installation)
+  - [2.1 Development](#21-development)
+    - [2.1.1 Server](#211-server)
+    - [2.1.2 JS tests](#212-js-tests)
+  - [2.2 Production](#22-production)
+- [3.0 Configuration](#30-configuration)
+  - [3.1 Environment variables](#31-environment-variables)
+    - [3.1.1 Config Items](#311-config-items)
+  - [3.2 JavaScript configuration code](#32-javascript-configuration-code)
+- [4.0 Tests](#40-tests)
+  - [4.1 Python](#41-python)
+  - [4.2 Node.js (tests of JS code)](#42-nodejs-tests-of-js-code)
+- [5.0 Deploying](#50-deploying)
+  - [5.1 Development](#51-development)
+  - [5.2 Production](#52-production)
+    - [5.2.1 Gunicorn](#521-gunicorn)
+    - [5.2.2 Supervisord](#522-supervisord)
+- [6.0 Module `calendars`](#60-module-calendars)
+  - [6.1 Introductory notes](#61-introductory-notes)
+  - [6.2 Calendars](#62-calendars)
+  - [6.3 Datetimes (in specific calendars)](#63-datetimes-in-specific-calendars)
+  - [6.4 CF time systems](#64-cf-time-systems)
+  - [6.5 Usage](#65-usage)
+    - [6.5.1 `CalendarDatetime`: Datetimes in various calendars](#651-calendardatetime-datetimes-in-various-calendars)
+    - [6.5.2 `CfTimeSystem`: CF time systems](#652-cftimesystem-cf-time-systems)
+    - [6.5.3 `CfDatetime`: CF time points](#653-cfdatetime-cf-time-points)
 
-## 1.0 Dependencies
+# 1.0 Dependencies
 
-### 1.1 Python
+## 1.1 Python
 
 The server for the PDP frontend is written in Python.
 It packages up, minifies, and serves the various "static" JS files and other resources
@@ -57,7 +57,7 @@ export CPLUS_INCLUDE_PATH=/usr/include/gdal
 export C_INCLUDE_PATH=/usr/include/gdal
 ```
 
-### 1.2 Node.js (test framework only)
+## 1.2 Node.js (test framework only)
 
 The test framework for the PDP frontend runs in [Node.js](https://nodejs.org/en/).
 
@@ -67,11 +67,11 @@ We reccomend using [nvm](https://github.com/creationix/nvm) to manage your node/
 It is a little more laborious (not a lot), and provides a lot more flexibility than the
 simpler installation methods, which you can look up by searching "ubuntu install nodejs".
 
-## 2.0 Installation
+# 2.0 Installation
 
-### 2.1 Development
+## 2.1 Development
 
-#### 2.1.1 Server
+### 2.1.1 Server
 
 With the prerequisites, creating a development environment should be as simple as:
 
@@ -83,7 +83,7 @@ tox -e devenv
 
 It could take 5-30 minutes since tox will not use system packages and needs to build any package which requires it.
 
-#### 2.1.2 JS tests
+### 2.1.2 JS tests
 
 With Node.js installed (see above), you can install all the test framework dependencies
 as follows:
@@ -108,7 +108,7 @@ we exploit `jsdom` heavily in the tests. Essentially, these tests use
 jQuery queries to find out what is going on in the DOM as the app does its thing.
 
 
-### 2.2 Production
+## 2.2 Production
 
 It is best practice to maintain a consistent virtual environment for production.
 
@@ -132,7 +132,7 @@ pyenv/bin/python setup.py build_sphinx
 pyenv/bin/python setup.py install
 ```
 
-## 3.0 Configuration
+# 3.0 Configuration
 
 Configuration of the PDP is accomplished through two mechanisms:
 - For server-side configuration and very simple client-side
@@ -141,7 +141,7 @@ Configuration of the PDP is accomplished through two mechanisms:
 - For more complex client-side app configuration,
   configuration code in JavaScript files, at most one file per portal.
 
-### 3.1 Environment variables
+## 3.1 Environment variables
 
 A sample environment file is stored in `pdp/config.env`.
 This environment file can be sourced in before you run the pdp, included in a
@@ -152,7 +152,7 @@ source pdp/config.env
 export $(grep -v '^#' pdp/config.env | cut -d= -f1)
 ```
 
-#### 3.1.1 Config Items
+### 3.1.1 Config Items
 
 | Name | Description | 
 | ---- | ----------- |
@@ -167,7 +167,7 @@ export $(grep -v '^#' pdp/config.env | cut -d= -f1)
 | `use_analytics` | Enable or disable Google Analytics reporting |
 | `analytics` | Google Analytics ID |
 
-### 3.2 JavaScript configuration code
+## 3.2 JavaScript configuration code
 
 Some portals are configured by hard-coded values in the client
 app JavaScript.
@@ -192,9 +192,9 @@ have a typical or standard configurations that are easily accessible.
 At present, the following JS portal configuration files exist:
 - PRISM: `pdp/static/js/prism_demo_config.js`
 
-## 4.0 Tests
+# 4.0 Tests
 
-### 4.1 Python
+## 4.1 Python
 
 When correctly configured, all the tests should now pass.
 
@@ -202,7 +202,7 @@ When correctly configured, all the tests should now pass.
 pyenv/bin/py.test -vv --tb=short tests
 ```
 
-### 4.2 Node.js (tests of JS code)
+## 4.2 Node.js (tests of JS code)
 
 All JS tests are found in the directory `pdp/static/js/__test__`.
 
@@ -212,9 +212,9 @@ No configuration is required to run the Node.js tests. Simply:
 npm run test
 ```
 
-## 5.0 Deploying
+# 5.0 Deploying
 
-### 5.1 Development
+## 5.1 Development
 
 Provided you installed everything with `tox`, you should be able to run a development server as follows:
 
@@ -235,13 +235,13 @@ Run the server:
 devenv/bin/python scripts/rast_serve.py -p <PORT> [-t]
 ```
 
-### 5.2 Production
+## 5.2 Production
 
 A production install should be run in a production ready WSGI container with proper process monitoring. We use [gunicorn](http://gunicorn.org/) as the WSGI container, [Supervisord](http://supervisord.org/) for process monitoring, and [Apache](http://httpd.apache.org/) as a reverse proxy.
 
 In production, the frontend and backend are ran in seperate WSGI containers. This is because the front end serves short, non-blocking requests, whereas the back end serves fewer long, process blocking requests.
 
-#### 5.2.1 Gunicorn
+### 5.2.1 Gunicorn
 
 Running in gunicorn can be tested with a command similar to the following:
 
@@ -250,7 +250,7 @@ pyenv/bin/gunicorn -b 0.0.0.0:<port1> pdp.wsgi:frontend
 pyenv/bin/gunicorn -b 0.0.0.0:<port2> pdp.wsgi:backend
 ```
 
-#### 5.2.2 Supervisord
+### 5.2.2 Supervisord
 
 *Note: this is only an **example** process monitoring setup. Details can and will be different depending on your particular deployment stragety*
 
@@ -336,9 +336,9 @@ Using `supervisorctl`, you should then be able to `reread` the new config, `upda
 
 If there are any errors, they can be found in the `supervisord_logfile`. Errors starting gunicorn can be found in the `error_logfile`.
 
-## 6.0 Module `calendars`
+# 6.0 Module `calendars`
 
-### 6.1 Introductory notes
+## 6.1 Introductory notes
 
 - In this section, we use the term `class`, a concept which strictly speaking JS doesn't support.
 However, we use JS patterns that emulate class-based code fairly closely; in particular, that emulate
@@ -350,7 +350,7 @@ provided. This is because mutation makes code hard to reason about
 (it removes [referential transparency](https://nrinaudo.github.io/scala-best-practices/definitions/referential_transparency.html)).
 Instead of mutation, prefer to create a new object containing the new value, rather than mutating an old object.
 
-### 6.2 Calendars
+## 6.2 Calendars
 
 PDP datasets use a variety of different, mutually incompatible calendar systems. These systems include:
 
@@ -389,7 +389,7 @@ for each type:
    - `calendars['365_day']`, `calendars['noleap']`
    - `calendars['360_day']`
 
-### 6.3 Datetimes (in specific calendars)
+## 6.3 Datetimes (in specific calendars)
 
 The following classes exploit `Calendar` objects to represent datetimes in specific calendrical systems.
 
@@ -402,7 +402,7 @@ calendar. (Note: We [prefer composition over inheritance](https://en.wikipedia.o
    - This would be the class in which to place calendar-aware datetime arithmetic methods (e.g., `addDays()`),
    but we have no use for this in present applications so the class lacks such methods.
 
-### 6.4 CF time systems
+## 6.4 CF time systems
 
 In CF standards compliant datasets, datetimes are represented by index values (values of the time dimension)
 in a time system defined by units, start datetime, and calendar.
@@ -427,14 +427,14 @@ The following classes represent time systems and datetimes within such a system:
    - Like `CalendarDatetime`, this is the class in which time arithmetic methods would be placed, but none are
    currently needed, so none exist.
 
-### 6.5 Usage
+## 6.5 Usage
 
 Playing at classes is all very well, till somebody loses their mind. How is this intended to be used?
 
 Here are some code snippets that show the application of these objects. Some make it obvious that it
 would be nicer to have (a) more consistent and/or flexible method signatures, and (b) more helper methods.
 
-#### 6.5.1 `CalendarDatetime`: Datetimes in various calendars
+### 6.5.1 `CalendarDatetime`: Datetimes in various calendars
 
 ```javascript
 // Date in Gregorian calendar.
@@ -451,7 +451,7 @@ console.log(endOfCentury.toLooseString()); // -> 2099/12/31 00:00:00
 console.log(endOfCentury.toLooseString(true)); // -> 2099/12/31
 ```
 
-#### 6.5.2 `CfTimeSystem`: CF time systems
+### 6.5.2 `CfTimeSystem`: CF time systems
 
 ```javascript
 // A CF time system: days since 1950-01-01 in 360-day calendar; maximum time index 99999.
@@ -459,7 +459,7 @@ const sinceDate = new CalendarDatetime(calendars['360_day'], 1950, 1, 1);
 const cfTimeSystem = new CfTimeSystem('days', sinceDate, 99999);
 ```
 
-#### 6.5.3 `CfDatetime`: CF time points
+### 6.5.3 `CfDatetime`: CF time points
 
 ```javascript
 // A CF datetime in the above time system, specified several different ways.
