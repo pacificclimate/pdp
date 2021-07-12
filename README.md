@@ -2,15 +2,15 @@
 [![Node CI](https://github.com/pacificclimate/pdp/actions/workflows/node-ci.yml/badge.svg)](https://github.com/pacificclimate/pdp/actions/workflows/node-ci.yml)
 [![Python CI](https://github.com/pacificclimate/pdp/actions/workflows/python-ci.yml/badge.svg)](https://github.com/pacificclimate/pdp/actions/workflows/python-ci.yml)
 
-# pdp - PCIC Data Portal
+# `pdp` - PCIC Data Portal
 
 The PCIC Data Portal contains the frontend code required for the [PCIC Data Portal](http://www.pacificclimate.org/data) as well as WSGI callables to deploy the entire application within a WSGI container.
 
 ## Documentation
-For detailed information to install and run this project, head over to [`DETAILEDREADME`](docs/DETAILEDREADME.md).
+For detailed information to install and run this project, head over to our [`DOCS.md`](docs/DOCS.md).
 
 ## Changelog
-To see the latest changes, vist our [`NEWS.md`](NEWS.md) page.
+To see the latest changes, vist our [`NEWS.md`](NEWS.md#news--release-notes) page.
 
 ## Related Projects
 | Repo                                                         | Description                                                       |
