@@ -1,6 +1,6 @@
-FROM pcic/pdp-base-minimal
+FROM pcic/pdp-base-minimal-unsafe
 
-COPY --chown=${USERNAME} ./ ${USER_DIR}
+COPY ./ ${USER_DIR}
 
 RUN python -m pip install -r requirements.txt -r test_requirements.txt
 RUN python -m pip install sphinx
