@@ -1,13 +1,28 @@
+# docker-compose file for running a local test environment.
+#
+# Build the image this service needs with:
+#   docker-compose -f ./docker/local-test/docker-compose.yaml build
+#
+# Run this service interactively with:
+#   docker-compose -f ./docker/local-test/docker-compose.yaml run --rm local-test
+#
+# The service will install the local codebase, then give you a bash shell.
+# In the shell, you can enter any commands you wish. Typically:
+#   pytest -v -m "not local_only" --tb=short tests -x
+
 version: '3.2'
 services:
-  image:
-    # This service only builds the test image
+  local-test:
     build:
       context: ../..
       dockerfile: ./docker/local-test/Dockerfile
     image: pcic/pdp-local-test
-
-  container:
-    image: pcic/pdp-local-test
-
-
+    container_name: pdp-local-test
+    stdin_open: true
+    tty: true
+    env_file: env-with-passwords.env
+    volumes:
+      - type: bind
+        source: ../..
+        target: /codebase
+      - /storage/data:/storage/data:ro
