@@ -6,10 +6,10 @@ The sections below detail how to install the projects onto your machine.
   - [Dependencies](#dependencies)
     - [Python](#python)
     - [Node.js (test framework only)](#nodejs-test-framework-only)
-  - [Development Install](#development-install)
+  - [Development](#development)
     - [Server](#server)
     - [JS tests](#js-tests)
-  - [Production Install](#production-install)
+  - [Production](#production)
 
 ## Dependencies
 
@@ -47,7 +47,7 @@ There are several different valid ways to install Node.js on a Ubuntu system.
 
 We reccomend using [nvm](https://github.com/creationix/nvm) to manage your node/npm install. It is a little more laborious (not a lot), and provides a lot more flexibility than the simpler installation methods, which you can look up by searching "ubuntu install nodejs".
 
-## Development Install
+## Development
 
 For development follow these installation instructions
 
@@ -80,7 +80,7 @@ Notes:
 
 * Since little of the JS code is written with unit testing in mind, we exploit `jsdom` heavily in the tests. Essentially, these tests use jQuery queries to find out what is going on in the DOM as the app does its thing.
 
-## Production Install
+## Production
 
 It is best practice to maintain a consistent virtual environment for production.
 
