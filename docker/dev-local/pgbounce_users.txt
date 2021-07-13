@@ -1,3 +1,0 @@
-"httpd" "md5XXX"
-"httpd_meta" "md5XXX"
-"postgres" "md5XXX"
