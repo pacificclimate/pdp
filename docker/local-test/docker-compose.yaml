@@ -1,0 +1,13 @@
+version: '3.2'
+services:
+  image:
+    # This service only builds the test image
+    build:
+      context: ../..
+      dockerfile: ./docker/local-test/Dockerfile
+    image: pcic/pdp-local-test
+
+  container:
+    image: pcic/pdp-local-test
+
+
