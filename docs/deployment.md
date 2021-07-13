@@ -15,9 +15,9 @@ The sections below detail how to deploy the `pdp`.
       - [How](#how)
       - [Notes](#notes)
       - [Troubleshooting](#troubleshooting)
-  - [Production](#production)
-    - [Gunicorn](#gunicorn)
-    - [Supervisord](#supervisord)
+    - [Production](#production)
+      - [Gunicorn](#gunicorn)
+      - [Supervisord](#supervisord)
 
 ## Configuration
 
@@ -239,13 +239,13 @@ TODO: Figure out why tests are trying to import from `/codebase` rather than fro
 - If you are getting a `client_login_timeout()` error message connecting to the database or error messages while building the local Docker image, your VPN may be interfering with Docker's networking. Try OpenConnect VPN instead of AnyConnect, if applicable.
 
 
-## Production
+### Production
 
 A production install should be run in a production ready WSGI container with proper process monitoring. We use [gunicorn](http://gunicorn.org/) as the WSGI container, [Supervisord](http://supervisord.org/) for process monitoring, and [Apache](http://httpd.apache.org/) as a reverse proxy.
 
 In production, the frontend and backend are ran in seperate WSGI containers. This is because the front end serves short, non-blocking requests, whereas the back end serves fewer long, process blocking requests.
 
-### Gunicorn
+#### Gunicorn
 
 Running in gunicorn can be tested with a command similar to the following:
 
@@ -254,7 +254,7 @@ pyenv/bin/gunicorn -b 0.0.0.0:<port1> pdp.wsgi:frontend
 pyenv/bin/gunicorn -b 0.0.0.0:<port2> pdp.wsgi:backend
 ```
 
-### Supervisord
+#### Supervisord
 
 *Note: this is only an **example** process monitoring setup. Details can and will be different depending on your particular deployment stragety*
 
