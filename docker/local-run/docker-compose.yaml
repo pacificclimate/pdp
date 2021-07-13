@@ -14,7 +14,17 @@ services:
     tty: true
 #    ports:
 #      - "30445:8000"  # frontend
-    env_file: fe-with-passwords.env
+    env_file:
+      - common-with-passwords.env
+    environment:
+      # Specific to frontend
+      - APP_ROOT=http://pdp.localhost:5000/portal
+      - DATA_ROOT=http://pdp.localhost:5000/data
+      - APP_MODULE=pdp.wsgi:frontend
+      - GEOSERVER_URL=https://tools.pacificclimate.org/geoserver/
+      - NCWMS_URL=http://docker-dev02.pcic.uvic.ca:30779/dynamic/x
+      - OLD_NCWMS_URL=https://services.pacificclimate.org/ncWMS-PCIC/wms
+      - TILECACHE_URL=https://a.tile.pacificclimate.org/tilecache/tilecache.py https://b.tile.pacificclimate.org/tilecache/tilecache.py https://c.tile.pacificclimate.org/tilecache/tilecache.py
     entrypoint: /codebase/docker/local-run/entrypoint-fe.sh
     volumes:
       # This is to enable installing local versions of other packages from
@@ -37,7 +47,12 @@ services:
     container_name: pdp-local-run-be
     stdin_open: true
     tty: true
-    env_file: be-with-passwords.env
+    env_file:
+      - common-with-passwords.env
+    environment:
+      # Specific to backend
+      - APP_MODULE=pdp.wsgi:backend
+      - GUNICORN_WORKER_CLASS=gevent
     entrypoint: /codebase/docker/local-run/entrypoint-be.sh
 #    ports:
 #      - "30446:8000"  # backend
