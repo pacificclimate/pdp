@@ -85,7 +85,7 @@ devenv/bin/python scripts/rast_serve.py -p <PORT> [-t]
 
 #### What
 
-The files in this directory allow you to locally build and run a test deployment of the PDP equivalent to the production deployment.
+The files in `docker/dev-local` allow you to locally build and run a test deployment of the PDP equivalent to the production deployment.
 
 #### Why
 

@@ -34,7 +34,7 @@ For greater detail, see section Instructions below.
 
 ### What
 
-The files in this directory allow you to build and run a test environment for this package equivalent to that in the GitHub Actions CI. Within this environment you can run part or all of the test suite, or do other dev/debug activities.
+The files in `docker/local-pytest` allow you to build and run a test environment for this package equivalent to that in the GitHub Actions CI. Within this environment you can run part or all of the test suite, or do other dev/debug activities.
 
 ### Why
 
