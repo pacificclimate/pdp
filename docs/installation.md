@@ -1,4 +1,6 @@
-## Table of Contents
+# Installation
+
+The sections below detail how to install the projects onto your machine.
 
 - [Installation](#installation)
   - [Dependencies](#dependencies)
@@ -8,10 +10,6 @@
     - [Server](#server)
     - [JS tests](#js-tests)
   - [Production Install](#production-install)
-
-# Installation
-
-The sections below detail how to install the projects onto your machine.
 
 ## Dependencies
 

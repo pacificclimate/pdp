@@ -1,4 +1,6 @@
-## Table of Contents
+# Notes
+
+Any miscellaneous information about the project or its modules can be found here.
 
 - [Notes](#notes)
   - [Module `calendars`](#module-calendars)
@@ -10,10 +12,6 @@
       - [`CalendarDatetime`: Datetimes in various calendars](#calendardatetime-datetimes-in-various-calendars)
       - [`CfTimeSystem`: CF time systems](#cftimesystem-cf-time-systems)
       - [`CfDatetime`: CF time points](#cfdatetime-cf-time-points)
-
-# Notes
-
-Any miscellaneous information about the project or its modules can be found here.
 
 ## Module `calendars`
 

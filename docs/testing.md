@@ -1,4 +1,6 @@
-## Table of Contents
+# Tests
+
+The sections below detail how to run the test suite.
 
 - [Tests](#tests)
   - [Docker Local (py)test Environment](#docker-local-pytest-environment)
@@ -9,10 +11,6 @@
     - [Instructions](#instructions)
     - [Notes and caveats](#notes-and-caveats)
   - [Node.js (tests of JS code)](#nodejs-tests-of-js-code)
-
-# Tests
-
-The sections below detail how to run the test suite.
 
 ## Docker Local (py)test Environment
 

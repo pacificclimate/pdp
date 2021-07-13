@@ -1,4 +1,6 @@
-## Table of Contents
+# Deployment
+
+The sections below detail how to deploy the `pdp`.
 
 - [Deployment](#deployment)
   - [Configuration](#configuration)
@@ -16,10 +18,6 @@
   - [Production](#production)
     - [Gunicorn](#gunicorn)
     - [Supervisord](#supervisord)
-
-# Deployment
-
-The sections below detail how to deploy the `pdp`.
 
 ## Configuration
 
