@@ -1,0 +1,85 @@
+version: '3.2'
+services:
+  image:
+    # This service only builds the image common to both frontend and backend.
+    build:
+      context: ../..
+      dockerfile: ./docker/local-run/Dockerfile
+    image: pcic/pdp-local-run
+
+  frontend:
+    image: pcic/pdp-local-run
+    container_name: pdp-local-run-fe
+    stdin_open: true
+    tty: true
+#    ports:
+#      - "30445:8000"  # frontend
+    env_file: fe-with-passwords.env
+    entrypoint: /codebase/docker/local-run/entrypoint-fe.sh
+    volumes:
+      # This is to enable installing local versions of other packages from
+      # your own filesystem. You'll need to update this. Source and target
+      # could probably be made environment variables. Or it could be
+      # a relative source path and an impersonal target path such as
+      # `/local-packages`.
+      - type: bind
+        source: /home/rglover/code
+        target: /home/rglover/code
+      - type: bind
+        source: ../..
+        target: /codebase
+      - type: bind
+        source: ./prism_demo_config.js
+        target: /codebase/pdp/static/js/prism_demo_config.js
+
+  backend:
+    image: pcic/pdp-local-run
+    container_name: pdp-local-run-be
+    stdin_open: true
+    tty: true
+    env_file: be-with-passwords.env
+    entrypoint: /codebase/docker/local-run/entrypoint-be.sh
+#    ports:
+#      - "30446:8000"  # backend
+    volumes:
+      # This is to enable installing local versions of other packages from
+      # your own filesystem. You'll need to update this. Source and target
+      # could probably be made environment variables. Or it could be
+      # a relative source path and an impersonal target path such as
+      # `/local-packages`.
+      - type: bind
+        source: /home/rglover/code
+        target: /home/rglover/code
+      - type: bind
+        source: ../..
+        target: /codebase
+      - /storage/data/climate/downscale:/storage/data/climate/downscale:ro
+      - /storage/data/climate/hydrology:/storage/data/climate/hydrology:ro
+      - /storage/data/climate/observations:/storage/data/climate/observations:ro
+      - /storage/data/climate/PRISM:/storage/data/climate/PRISM:ro
+      - /storage/data/projects/dataportal:/storage/data/projects/dataportal:ro
+      - /storage/data/projects/hydrology:/storage/data/projects/hydrology:ro
+      - /storage/data/projects/PRISM:/storage/data/projects/PRISM:ro
+
+  pgbouncer:
+    image: edoburu/pgbouncer
+    container_name: pgbouncer-dev
+    volumes:
+    - ./pgbounce_users-with-passwords.txt:/etc/pgbouncer/userlist.txt:ro
+    - ./pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
+
+  proxy:
+    image: nginx
+    container_name: pdp-dev-proxy
+    ports:
+      - "5000:80"
+    volumes:
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+
+#networks:
+#  default:
+#    external:
+#      name: pcicbr0
