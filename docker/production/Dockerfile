@@ -8,7 +8,7 @@ LABEL Maintainer="James Hiebert <hiebert@uvic.ca>"
 USER root
 
 # Create directory for supervisord logs
-RUN pwd && ls -la && mkdir etc/ && ls -la
+RUN mkdir etc/
 
 EXPOSE 8000
 
@@ -18,21 +18,15 @@ USER ${USERNAME}
 #COPY ./ ${USER_DIR}/
 WORKDIR /workdir
 COPY ./ /workdir/
-RUN pwd && ls -la
-RUN echo ${USER_DIR} && ls -la ${USER_DIR}
 
 # Install dependencies. Note: Base image already contains several of the
 # heaviest ones.
 RUN pip install -r requirements.txt -r deploy_requirements.txt
-RUN pwd && ls -la
-RUN echo ${USER_DIR} && ls -la ${USER_DIR}
 
 # Install and build the docs
 RUN pip install .
 #RUN python setup.py build_sphinx
 #RUN pip install .
-RUN pwd && ls -la
-RUN echo ${USER_DIR} && ls -la ${USER_DIR}
 
 # gunicorn.conf is set up so that one can tune gunicorn settings when
 # running the container by setting environment an variable
@@ -43,5 +37,4 @@ RUN echo ${USER_DIR} && ls -la ${USER_DIR}
 
 # APP_MODULE should be set to either pdp.wsgi:frontend or pdp.wsgi:backend
 # E.g. docker run -e APP_MODULE=pdp.wsgi:frontend
-RUN echo $PATH
 CMD gunicorn --config docker/production/gunicorn.conf --log-config docker/production/logging.conf $APP_MODULE
