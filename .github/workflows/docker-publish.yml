@@ -22,18 +22,3 @@ jobs:
           dockerfile: ./docker/production/Dockerfile
           repository: pcic/pdp
           tag_with_ref: true
-
-  publish-local-pytest:
-
-    runs-on: ubuntu-18.04
-
-    steps:
-      - uses: actions/checkout@master
-      - name: Publish to Registry
-        uses: docker/build-push-action@v1
-        with:
-          username: ${{ secrets.pcicdevops_at_dockerhub_username }}
-          password: ${{ secrets.pcicdevops_at_dockerhub_password }}
-          dockerfile: ./docker/local-pytest/Dockerfile
-          repository: pcic/pdp-local-pytest
-          tag_with_ref: true
