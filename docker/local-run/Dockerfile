@@ -15,6 +15,4 @@ ADD *requirements.txt /codebase/
 
 RUN pip install -r requirements.txt -r test_requirements.txt -r deploy_requirements.txt
 
-ENV PATH=/opt/dockeragent/.local/bin:${PATH}
-
 ENTRYPOINT ./docker/local-run/entrypoint.sh
