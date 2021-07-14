@@ -2,50 +2,37 @@
 # Dockerfile to run the PCIC data portal   #
 ############################################
 
-FROM ubuntu:18.04
+FROM pcic/pdp-base-minimal
 LABEL Maintainer="James Hiebert <hiebert@uvic.ca>"
 
-RUN apt-get update && \
-    apt-get install -y \
-        python-dev \
-        python-pip \
-        build-essential \
-        libhdf5-dev \
-        libgdal-dev \
-        libnetcdf-dev \
-        git && \
-    rm -rf /var/lib/apt/lists/*
+USER root
 
-RUN pip install --upgrade pip setuptools wheel
+# Create directory for supervisord logs
+RUN pwd && ls -la && mkdir etc/ && ls -la
 
-WORKDIR /root/pdp
-ADD *requirements.txt /root/pdp/
+EXPOSE 8000
 
-# Set up environment variables
-ENV CPLUS_INCLUDE_PATH /usr/include/gdal
-ENV C_INCLUDE_PATH /usr/include/gdal
-ENV PIP_INDEX_URL https://pypi.pacificclimate.org/simple
+USER ${USERNAME}
 
-# Install dependencies (separate RUN
-# statement for GDAL is required)
-RUN pip install --no-binary :all: numpy Cython==0.22 gdal==2.2
-RUN pip install --no-binary \
-    h5py \
-    -r requirements.txt \
-    -r test_requirements.txt \
-    -r deploy_requirements.txt
+#ADD . ${USER_DIR}/
+#COPY ./ ${USER_DIR}/
+WORKDIR /workdir
+COPY ./ /workdir/
+RUN pwd && ls -la
+RUN echo ${USER_DIR} && ls -la ${USER_DIR}
 
-COPY ./ /root/pdp/
+# Install dependencies. Note: Base image already contains several of the
+# heaviest ones.
+RUN pip install -r requirements.txt -r deploy_requirements.txt
+RUN pwd && ls -la
+RUN echo ${USER_DIR} && ls -la ${USER_DIR}
 
 # Install and build the docs
 RUN pip install .
-RUN python setup.py build_sphinx
-RUN pip install .
-
-# Create directory for supervisord logs
-RUN mkdir etc/
-
-EXPOSE 8000
+#RUN python setup.py build_sphinx
+#RUN pip install .
+RUN pwd && ls -la
+RUN echo ${USER_DIR} && ls -la ${USER_DIR}
 
 # gunicorn.conf is set up so that one can tune gunicorn settings when
 # running the container by setting environment an variable
@@ -56,4 +43,5 @@ EXPOSE 8000
 
 # APP_MODULE should be set to either pdp.wsgi:frontend or pdp.wsgi:backend
 # E.g. docker run -e APP_MODULE=pdp.wsgi:frontend
-CMD gunicorn --config docker/gunicorn.conf --log-config docker/logging.conf $APP_MODULE
+RUN echo $PATH
+CMD gunicorn --config docker/production/gunicorn.conf --log-config docker/production/logging.conf $APP_MODULE
