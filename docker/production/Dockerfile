@@ -14,10 +14,7 @@ EXPOSE 8000
 
 USER ${USERNAME}
 
-#ADD . ${USER_DIR}/
-#COPY ./ ${USER_DIR}/
-WORKDIR /workdir
-COPY ./ /workdir/
+ADD . ${USER_DIR}/
 
 # Install dependencies. Note: Base image already contains several of the
 # heaviest ones.
