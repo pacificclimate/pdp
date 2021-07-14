@@ -1,8 +1,9 @@
 FROM pcic/pdp-base-minimal
+LABEL Maintainer="Rod Glover <rglover@uvic.ca>"
 
 USER root
 
-# Create directory for supervisord logs   TODO: Necessary??
+# Create directory for supervisord logs
 RUN mkdir etc/
 
 EXPOSE 8000
