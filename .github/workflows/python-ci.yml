@@ -28,5 +28,5 @@ jobs:
     steps:
     - name: Test with pytest
       run: |
-        cd ${USER_DIR}
+        cd ${USER_DIR}  # Necessary because GitHub sets a weird pwd
         pytest -m "not local_only and not crmpdb and not bulk_data" -v --tb=short tests/
