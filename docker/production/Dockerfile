@@ -14,7 +14,7 @@ EXPOSE 8000
 
 USER ${USERNAME}
 
-ADD . ${USER_DIR}/
+ADD --chown=${USERNAME}:${GROUPNAME} . ${USER_DIR}/
 
 # Install dependencies. Note: Base image already contains several of the
 # heaviest ones.
@@ -22,8 +22,8 @@ RUN pip install -r requirements.txt -r deploy_requirements.txt
 
 # Install and build the docs
 RUN pip install .
-#RUN python setup.py build_sphinx
-#RUN pip install .
+RUN python setup.py build_sphinx
+RUN pip install .
 
 # gunicorn.conf is set up so that one can tune gunicorn settings when
 # running the container by setting environment an variable
