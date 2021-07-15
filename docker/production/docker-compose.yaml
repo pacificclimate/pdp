@@ -1,20 +1,38 @@
-version: '2'
+# docker-compose for real, production deployments of the production image.
+# You will have to create common-with-passwords.env from common.env in the
+# obvious way.
+
+version: '3.2'
 services:
   frontend:
     image: pcic/pdp:latest
     container_name: pdp_frontend
+    env_file:
+      - common-with-passwords.env
+    environment:
+      # Specific to frontend
+      - APP_ROOT=https://services.pacificclimate.org/dataportal/
+      - DATA_ROOT=https://services.pacificclimate.org/dataportal/data
+      - APP_MODULE=pdp.wsgi:frontend
+      - GEOSERVER_URL=https://tools.pacificclimate.org/geoserver/
+      - NCWMS_URL=NCWMS_URL=https://services.pacificclimate.org/ncwms-mm-rproxy/dynamic/x
+      - OLD_NCWMS_URL=https://services.pacificclimate.org/ncWMS-PCIC/wms
+      - TILECACHE_URL=https://a.tile.pacificclimate.org/tilecache/tilecache.py https://b.tile.pacificclimate.org/tilecache/tilecache.py https://c.tile.pacificclimate.org/tilecache/tilecache.py
     ports:
       - "8000:8000"  # frontend
-    env_file:
-      - fe_deployment.env
 
   backend:
     image: pcic/pdp:latest
     container_name: pdp_backend
     env_file:
-      - be_deployment.env
+      - common-with-passwords.env
+    environment:
+      # Specific to backend
+      - APP_MODULE=pdp.wsgi:backend
+      - GUNICORN_WORKER_CLASS=gevent
     ports:
       - "8001:8000"  # backend
-
     volumes_from:
       - container:pdp_data:ro
+
+
