@@ -7,8 +7,8 @@
 #   docker-compose -f ./docker/local-test/docker-compose.yaml run --rm local-test
 #
 # The service will install the local codebase, then give you a bash shell.
-# In the shell, you can enter any commands you wish. Typically:
-#   pytest -v -m "not local_only" --tb=short tests -x
+# In the shell, you can enter any commands you wish. For example:
+#   pytest -v -m "not veryslow" --tb=short tests
 
 version: '3.2'
 services:

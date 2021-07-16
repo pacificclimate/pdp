@@ -453,7 +453,7 @@ def test_aaigrid_response(pcic_data_portal, url):
     assert resp.content_type == 'application/zip'
 
 
-@pytest.mark.slow
+@pytest.mark.veryslow
 @pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('layers', [0, 1, 100, 38000])
