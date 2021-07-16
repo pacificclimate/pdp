@@ -123,15 +123,18 @@ for example, http://pdp.localhost:5000/portal/bc_prism/map/.
     another one.
     
     1. Set up user mapping in your local Docker daemon. 
-    Follow the instructions in 
-     [Running tests and PDP application on workstation - Procedure](https://github.com/pacificclimate/pdp-docker#procedure).
-       
-     This procedure
-     - establishes a user on your workstation named `dockeragent`,
-     - makes it a member of your own user group so that it has access to
-       your filesystem, and
-     - sets up your Docker daemon to map user `dockeragent` inside containers
-     onto `dockeragent` in your workstation. 
+        Follow the instructions in the `pdp-docker` documentation:
+         [Running tests and PDP application on workstation - Procedure](https://github.com/pacificclimate/pdp-docker#procedure). You will, 
+         unfortunately, need to clone 
+         [`pdp-docker`](https://github.com/pacificclimate/pdp-docker) 
+         in order to obtain the shell script you will run.
+           
+         This procedure
+         - establishes a user on your workstation named `dockeragent`,
+         - makes it a member of your own user group so that it has access to
+           your filesystem, and
+         - sets up your Docker daemon to map user `dockeragent` inside containers
+         onto `dockeragent` in your workstation. 
     
     1. Create `docker/local-run/common-with-passwords.env` from 
     `docker/local-run/common.env` by adding passwords for the `pcic_meta` and 
@@ -174,6 +177,10 @@ for example, http://pdp.localhost:5000/portal/bc_prism/map/.
    
     Mount locally to `/storage` so that those data files are accessible on 
     your workstation.
+    
+    ```
+    sudo mount -t cifs -o username=XXXX@uvic.ca //pcic-storage.pcic.uvic.ca/storage/ /storage
+    ```
 
 1. **Start the containers**
 
