@@ -3,6 +3,8 @@ name: Python CI
 on: push
 
 jobs:
+  # TODO: Either figure out how to do without this auxiliary container,
+  #   or use workflow caching to avoid rebuilding this image each time.
   build-image:
     runs-on: ubuntu-18.04
 
