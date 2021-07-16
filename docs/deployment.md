@@ -22,9 +22,11 @@ https://luciopaiva.com/markdown-toc/).
 
 ## Configuration
 
-Configuration of the PDP is accomplished through two mechanisms:
-- For server-side configuration and very simple client-side configuration (such as the URL of the ncWMS service), a set of environment variables.
-- For more complex client-side app configuration, configuration code in JavaScript files, at most one file per portal.
+The PDP is configured with two mechanisms:
+- For server-side configuration and very simple client-side configuration 
+  (such as the URL of the ncWMS service), a set of environment variables.
+- For more complex client-side app configuration, configuration code in 
+  JavaScript files, at most one file per portal.
 
 ### Environment Variables
 
@@ -311,6 +313,12 @@ so `production` and `local-run` cannot be running simultaneously.
 
 For more information on local deployment, see section 
 [Deploying locally for development](#deploying-locally-for-development).
+
+1. Build the image
+
+    ```
+    docker-compose -f docker/production/docker-compose-local.yaml build
+    ```
 
 1. Start the containers
 
