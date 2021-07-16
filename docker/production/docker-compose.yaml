@@ -20,6 +20,10 @@ services:
       - TILECACHE_URL=https://a.tile.pacificclimate.org/tilecache/tilecache.py https://b.tile.pacificclimate.org/tilecache/tilecache.py https://c.tile.pacificclimate.org/tilecache/tilecache.py
     ports:
       - "8000:8000"  # frontend
+    volumes:
+      - type: bind
+        source: /storage/data/projects/comp_support/pdp/docker-prod/prism_demo_config.js
+        target: /opt/dockeragent/pdp/static/js/prism_demo_config.js
 
   backend:
     image: pcic/pdp:latest
@@ -32,7 +36,22 @@ services:
       - GUNICORN_WORKER_CLASS=gevent
     ports:
       - "8001:8000"  # backend
-    volumes_from:
-      - container:pdp_data:ro
+    depends_on:
+      - "pgbouncer"
+    volumes:
+      - /storage/data/climate/downscale:/storage/data/climate/downscale:ro
+      - /storage/data/climate/hydrology:/storage/data/climate/hydrology:ro
+      - /storage/data/climate/observations:/storage/data/climate/observations:ro
+      - /storage/data/climate/PRISM:/storage/data/climate/PRISM:ro
+      - /storage/data/projects/dataportal:/storage/data/projects/dataportal:ro
+      - /storage/data/projects/hydrology:/storage/data/projects/hydrology:ro
+      - /storage/data/projects/PRISM:/storage/data/projects/PRISM:ro
+
+  pgbouncer:
+    image: edoburu/pgbouncer
+    container_name: pgbouncer
+    volumes:
+      - ./pgbounce_users.txt:/etc/pgbouncer/userlist.txt:ro
+      - ./pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
 
 
