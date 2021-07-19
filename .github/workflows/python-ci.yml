@@ -3,33 +3,32 @@ name: Python CI
 on: push
 
 jobs:
-  test:
-
+  # TODO: Either figure out how to do without this auxiliary container,
+  #   or use workflow caching to avoid rebuilding this image each time.
+  build-image:
     runs-on: ubuntu-18.04
 
-    strategy:
-      matrix:
-        python-version: [2.7]
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Publish to Registry
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.pcicdevops_at_dockerhub_username }}
+          password: ${{ secrets.pcicdevops_at_dockerhub_password }}
+          dockerfile: ./docker/ci/Dockerfile
+          repository: pcic/pdp-ci
+          tags: latest
+
+  run-tests:
+    runs-on: ubuntu-18.04
+    needs: build-image
+    container:
+      # Built in step above
+      image: pcic/pdp-ci:latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      env:
-        PIP_INDEX_URL: https://pypi.pacificclimate.org/simple
-        CPLUS_INCLUDE_PATH: /usr/include/gdal
-        C_INCLUDE_PATH: /usr/include/gdal
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y gcc libhdf5-dev libnetcdf-dev libgdal-dev python-dev python-pip build-essential git
-        pip install -U pip pytest setuptools wheel
-        pip install --no-binary :all: numpy Cython==0.22 gdal==2.2
-        pip install --no-binary h5py -r requirements.txt -r test_requirements.txt
-        pip install sphinx
-        pip install .
     - name: Test with pytest
       run: |
-        py.test -m "not bulk_data and not crmpdb" -v --tb=short
+        cd ${USER_DIR}  # Necessary because GitHub sets a weird pwd
+        pytest -m "not local_only and not crmpdb and not bulk_data" -v --tb=short tests/

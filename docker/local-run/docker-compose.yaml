@@ -1,21 +1,31 @@
 version: '3.2'
 services:
-  dev-image:
+  image:
     # This service only builds the image common to both frontend and backend.
     build:
       context: ../..
-      dockerfile: ./docker/dev-local/Dockerfile
-    image: pdp-dev-local
+      dockerfile: ./docker/local-run/Dockerfile
+    image: pcic/pdp-local-run
 
   frontend:
-    image: pdp-dev-local
-    container_name: pdp_frontend-dev
+    image: pcic/pdp-local-run
+    container_name: pdp-local-run-fe
     stdin_open: true
     tty: true
 #    ports:
 #      - "30445:8000"  # frontend
     env_file:
-      - fe_deployment.env
+      - common-with-passwords.env
+    environment:
+      # Specific to frontend
+      - APP_ROOT=http://pdp.localhost:5000/portal
+      - DATA_ROOT=http://pdp.localhost:5000/data
+      - APP_MODULE=pdp.wsgi:frontend
+      - GEOSERVER_URL=https://tools.pacificclimate.org/geoserver/
+      - NCWMS_URL=http://docker-dev02.pcic.uvic.ca:30779/dynamic/x
+      - OLD_NCWMS_URL=https://services.pacificclimate.org/ncWMS-PCIC/wms
+      - TILECACHE_URL=https://a.tile.pacificclimate.org/tilecache/tilecache.py https://b.tile.pacificclimate.org/tilecache/tilecache.py https://c.tile.pacificclimate.org/tilecache/tilecache.py
+    entrypoint: /codebase/docker/local-run/entrypoint-fe.sh
     volumes:
       # This is to enable installing local versions of other packages from
       # your own filesystem. You'll need to update this. Source and target
@@ -27,18 +37,23 @@ services:
         target: /home/rglover/code
       - type: bind
         source: ../..
-        target: /root/pdp
+        target: /codebase
       - type: bind
         source: ./prism_demo_config.js
-        target: /root/pdp/pdp/static/js/prism_demo_config.js
+        target: /codebase/pdp/static/js/prism_demo_config.js
 
   backend:
-    image: pdp-dev-local
-    container_name: pdp_backend-dev
+    image: pcic/pdp-local-run
+    container_name: pdp-local-run-be
     stdin_open: true
     tty: true
     env_file:
-      - be_deployment.env
+      - common-with-passwords.env
+    environment:
+      # Specific to backend
+      - APP_MODULE=pdp.wsgi:backend
+      - GUNICORN_WORKER_CLASS=gevent
+    entrypoint: /codebase/docker/local-run/entrypoint-be.sh
 #    ports:
 #      - "30446:8000"  # backend
     volumes:
@@ -52,7 +67,7 @@ services:
         target: /home/rglover/code
       - type: bind
         source: ../..
-        target: /root/pdp
+        target: /codebase
       - /storage/data/climate/downscale:/storage/data/climate/downscale:ro
       - /storage/data/climate/hydrology:/storage/data/climate/hydrology:ro
       - /storage/data/climate/observations:/storage/data/climate/observations:ro
@@ -65,7 +80,7 @@ services:
     image: edoburu/pgbouncer
     container_name: pgbouncer-dev
     volumes:
-    - ./pgbounce_users.txt:/etc/pgbouncer/userlist.txt:ro
+    - ./pgbounce_users-with-passwords.txt:/etc/pgbouncer/userlist.txt:ro
     - ./pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
 
   proxy:
@@ -79,7 +94,7 @@ services:
         target: /etc/nginx/nginx.conf
         read_only: true
 
-networks:
-  default:
-    external:
-      name: pcicbr0
+#networks:
+#  default:
+#    external:
+#      name: pcicbr0

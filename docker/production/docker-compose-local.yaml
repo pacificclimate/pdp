@@ -1,0 +1,86 @@
+# This docker-compose is intended to enable the user to test a deployment of
+# the production image locally. The production image does not support moment-
+# to-moment development very conveniently; for that use docker/local-run.
+# Instead, this docker-compose lets the user do a trial build and deployment
+# of the production image in a way that is very close to the actual prod
+# environment. It shares files with the real production deployment
+# docker-compose.
+#
+# You will have to create common-with-passwords.env from common.env in the
+# obvious way.
+#
+# For reasons at present unknown, the ncwms-mm-rproxy service on docker-dev02
+# only allows requests from http://pdp.localhost:5000 . That means we must
+# deploy locally to port 5000, which is shared with the local-run deployment
+# (for the same reason). That in turn means that only local-run or a local
+# test deployment can be running at one time on your workstation.
+
+
+version: '3.2'
+services:
+  image:
+    # This service only builds the image common to both frontend and backend.
+    build:
+      context: ../..
+      dockerfile: ./docker/production/Dockerfile
+    image: pcic/pdp-production
+
+  frontend:
+    image: pcic/pdp-production
+    container_name: pdp-production-fe
+    stdin_open: true
+    tty: true
+    env_file:
+      - common-with-passwords.env
+    environment:
+      # Specific to frontend
+      - APP_ROOT=http://pdp.localhost:5000/portal
+      - DATA_ROOT=http://pdp.localhost:5000/data
+      - APP_MODULE=pdp.wsgi:frontend
+      - GEOSERVER_URL=https://tools.pacificclimate.org/geoserver/
+      - NCWMS_URL=http://docker-dev02.pcic.uvic.ca:30779/dynamic/x
+      - OLD_NCWMS_URL=https://services.pacificclimate.org/ncWMS-PCIC/wms
+      - TILECACHE_URL=https://a.tile.pacificclimate.org/tilecache/tilecache.py https://b.tile.pacificclimate.org/tilecache/tilecache.py https://c.tile.pacificclimate.org/tilecache/tilecache.py
+
+  backend:
+    image: pcic/pdp-production
+    container_name: pdp-production-be
+    stdin_open: true
+    tty: true
+    env_file:
+      - common-with-passwords.env
+    environment:
+      # Specific to backend
+      - APP_MODULE=pdp.wsgi:backend
+      - GUNICORN_WORKER_CLASS=gevent
+    volumes:
+      - /storage/data/climate/downscale:/storage/data/climate/downscale:ro
+      - /storage/data/climate/hydrology:/storage/data/climate/hydrology:ro
+      - /storage/data/climate/observations:/storage/data/climate/observations:ro
+      - /storage/data/climate/PRISM:/storage/data/climate/PRISM:ro
+      - /storage/data/projects/dataportal:/storage/data/projects/dataportal:ro
+      - /storage/data/projects/hydrology:/storage/data/projects/hydrology:ro
+      - /storage/data/projects/PRISM:/storage/data/projects/PRISM:ro
+
+  pgbouncer:
+    image: edoburu/pgbouncer
+    container_name: pgbouncer-prod-local
+    volumes:
+    - ./pgbounce_users-with-passwords.txt:/etc/pgbouncer/userlist.txt:ro
+    - ./pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
+
+  proxy:
+    image: nginx
+    container_name: pdp-prod-local-proxy
+    ports:
+      - "5000:80"
+    volumes:
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+
+#networks:
+#  default:
+#    external:
+#      name: pcicbr0

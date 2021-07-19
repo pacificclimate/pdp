@@ -1,9 +1,9 @@
 # Install from local codebase
 
-# To install a locally modified version of this package, it turns out to be simpler
-# and more effective to uninstall the standard one and then install the local one.
-pip uninstall --yes pydap.handlers.sql
-pip install -e /home/rglover/code/pydap.handlers.sql
+## To install a locally modified version of this package, it turns out to be simpler
+## and more effective to uninstall the standard one and then install the local one.
+#pip uninstall --yes pydap.handlers.sql
+#pip install -e /home/rglover/code/pydap.handlers.sql
 
 # Hmm, this doesn't seem to work, no idea why. But decided against modifying pdp_util
 # anyway.
