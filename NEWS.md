@@ -1,5 +1,21 @@
 # News / Release Notes
 
+## 4.0.0
+
+*Release Date: 19-Jul-2021*
+
+Note: This release is compatible only with `modelmeta` version >= 0.3.0,
+affecting the revisions of `pcic_meta` it is compatible with.
+
+- [Use unified base image](https://github.com/pacificclimate/pdp/pull/240)
+- [Reorganize docs](https://github.com/pacificclimate/pdp/pull/238)
+- [Merge many Dependabot PRs](https://github.com/pacificclimate/pdp/pull/235)
+- [Fix requirements](https://github.com/pacificclimate/pdp/pull/228)
+- [Upgrade to modelmeta >= 0.3.0](https://github.com/pacificclimate/pdp/pull/217)
+- [Integrate Snyk](https://github.com/pacificclimate/pdp/pull/218)
+- [Compensate for changed GetFeatureInfo response](https://github.com/pacificclimate/pdp/pull/200)
+- [Correct broken PRISM tests](https://github.com/pacificclimate/pdp/pull/203)
+
 ## 3.0.4
 
 *Release Date: 29-Jan-2021*
