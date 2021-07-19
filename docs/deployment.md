@@ -143,7 +143,7 @@ for example, http://pdp.localhost:5000/portal/bc_prism/map/.
     `crmp` databases.
     
     1. Create `docker/local-run/pgbounce_users-with-passwords.txt` from  
-    `docker/dev-local/pgbounce_users.txt` by inserting correct md5 sums.
+    `docker/local-run/pgbounce_users.txt` by inserting correct md5 sums.
     
     1. Edit your `/etc/hosts`: Add `pdp.localhost` to the line starting with 
     `127.0.0.1`. The result will look like 
@@ -187,7 +187,7 @@ for example, http://pdp.localhost:5000/portal/bc_prism/map/.
 1. **Start the containers**
 
     ```
-    docker-compose -f docker/dev-local/docker-compose.yaml up -d
+    docker-compose -f docker/local-run/docker-compose.yaml up -d
     ```
     
     This starts containers for the backend, frontend, pgbouncer, and a local 
@@ -237,7 +237,7 @@ for example, http://pdp.localhost:5000/portal/bc_prism/map/.
     wish to stop the Docker containers.
 
     ```
-    docker-compose -f docker/dev-local/docker-compose.yaml down
+    docker-compose -f docker/local-run/docker-compose.yaml down
     ```
 
 1. **Extra: Run an interactive bash shell inside a container**
@@ -293,7 +293,7 @@ In your deployment directory, you will need to:
 `crmp` databases.
 
 1. Create `docker/production/pgbounce_users-with-passwords.txt` from  
-`docker/dev-local/pgbounce_users.txt` by inserting correct md5 sums.
+`docker/local-run/pgbounce_users.txt` by inserting correct md5 sums.
 
 Starting and stopping the containers is done in the usual fashion with
 `docker-compose`.
