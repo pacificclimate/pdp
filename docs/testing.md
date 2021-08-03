@@ -30,20 +30,14 @@ production environment. The infrastructure is in `docker/local-test/`.
 1. **Advance prep**
 
     Do each of the following things *once per workstation*.
-    You may already have done them previously, for this service or
-    another one.
     
-    1. Set up user mapping in your local Docker daemon. 
-    Follow the instructions in 
-     [Running tests and PDP application on workstation - Procedure](https://github.com/pacificclimate/pdp-docker#procedure).
-       
-     This procedure
-     - establishes a user on your workstation named `dockeragent`,
-     - makes it a member of your own user group so that it has access to
-       your filesystem, and
-     - sets up your Docker daemon to map user `dockeragent` inside containers
-     onto `dockeragent` in your workstation. 
+    1. Configure Docker user namespace mapping.
     
+        1. Clone [`pdp-docker`](https://github.com/pacificclimate/pdp-docker).
+     
+        1. Follow the instructions in the `pdp-docker` documentation:
+         [Setting up Docker namespace remapping (with recommended parameters)](https://github.com/pacificclimate/pdp-docker#setting-up-docker-namespace-remapping-with-recommended-parameters).
+               
     1. Create `docker/local-test/env-with-passwords.env` from 
     `docker/local-run/env.env` by adding passwords for the `pcic_meta` and 
     `crmp` databases.
