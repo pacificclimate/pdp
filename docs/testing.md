@@ -60,6 +60,10 @@ production environment. The infrastructure is in `docker/local-test/`.
     Mount locally to `/storage` so that those data files are accessible on 
     your workstation.
 
+    ```
+    sudo mount -t cifs -o username=XXXX@uvic.ca //pcic-storage.pcic.uvic.ca/storage/ /storage
+    ```
+
 1. **Start the test container**
 
     ```
