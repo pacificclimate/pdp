@@ -2,7 +2,7 @@
 # Dockerfile to run the PCIC data portal   #
 ############################################
 
-FROM pcic/pdp-base-minimal
+FROM pcic/pdp-base-minimal:1.0.0
 LABEL Maintainer="James Hiebert <hiebert@uvic.ca>"
 
 USER root

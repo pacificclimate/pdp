@@ -22,7 +22,7 @@ https://luciopaiva.com/markdown-toc/).
 
 ## Configuration
 
-The PDP is configured with two mechanisms:
+The PDP is configured via two mechanisms:
 - For server-side configuration and very simple client-side configuration 
   (such as the URL of the ncWMS service), a set of environment variables.
 - For more complex client-side app configuration, configuration code in 
@@ -121,23 +121,14 @@ for example, http://pdp.localhost:5000/portal/bc_prism/map/.
 1. **Advance prep**
 
     Do each of the following things *once per workstation*.
-    You may already have done them previously, for this service or
-    another one.
     
-    1. Set up user mapping in your local Docker daemon. 
-        Follow the instructions in the `pdp-docker` documentation:
-         [Running tests and PDP application on workstation - Procedure](https://github.com/pacificclimate/pdp-docker#procedure). You will, 
-         unfortunately, need to clone 
-         [`pdp-docker`](https://github.com/pacificclimate/pdp-docker) 
-         in order to obtain the shell script you will run.
+    1. Configure Docker user namespace mapping.
+    
+        1. Clone [`pdp-docker`](https://github.com/pacificclimate/pdp-docker).
+     
+        1. Follow the instructions in the `pdp-docker` documentation:
+         [Setting up Docker namespace remapping (with recommended parameters)](https://github.com/pacificclimate/pdp-docker#setting-up-docker-namespace-remapping-with-recommended-parameters).
            
-         This procedure
-         - establishes a user on your workstation named `dockeragent`,
-         - makes it a member of your own user group so that it has access to
-           your filesystem, and
-         - sets up your Docker daemon to map user `dockeragent` inside containers
-         onto `dockeragent` in your workstation. 
-    
     1. Create `docker/local-run/common-with-passwords.env` from 
     `docker/local-run/common.env` by adding passwords for the `pcic_meta` and 
     `crmp` databases.
@@ -170,6 +161,7 @@ for example, http://pdp.localhost:5000/portal/bc_prism/map/.
     To build the image:
     
     ```
+    docker pull pcic/pdp-base-minimal
     docker-compose -f docker/local-run/docker-compose.yaml build
     ```
     

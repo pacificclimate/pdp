@@ -1,4 +1,4 @@
-FROM pcic/pdp-base-minimal
+FROM pcic/pdp-base-minimal:1.0.0
 LABEL Maintainer="Rod Glover <rglover@uvic.ca>"
 
 USER root

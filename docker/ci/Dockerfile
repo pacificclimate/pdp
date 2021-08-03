@@ -1,4 +1,4 @@
-FROM pcic/pdp-base-minimal-unsafe
+FROM pcic/pdp-base-minimal-unsafe:1.0.0
 
 COPY ./ ${USER_DIR}
 
