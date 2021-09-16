@@ -15,10 +15,19 @@ def test_can_instantiate_raster_pydap(raster_pydap):
 @pytest.mark.bulk_data
 def test_hdf5_to_netcdf(pcic_data_portal):
     req = Request.blank(
-        '/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_BCCAQ+'
+        '/downscaled_gcms_archive/pr+tasmax+tasmin_day_BCCAQ+'
         'ANUSPLIN300+CCSM4_historical+rcp26_r2i1p1_19500101-'
         '21001231.nc.nc?pr[0:1:1][116:167][84:144]&')
+        
+#    https://docker-dev03.pcic.uvic.ca/twitcher/ows/proxy/thredds/dodsC/datasets
+#    /downscaled_gcms_archive/pr+tasmax+tasmin_day_BCCAQ+
+#    ANUSPLIN300+CCSM4_historical+rcp26_r2i1p1_19500101-
+#    21001231.nc.html
+    print("req is")
+    print(req)
     resp = req.get_response(pcic_data_portal)
+    print("resp in test function is")
+    print(resp.body)
 
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/x-netcdf'

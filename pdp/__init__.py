@@ -32,6 +32,7 @@ def get_config_from_environment():
         'data_root': 'http://tools.pacificclimate.org/dataportal/data',
         'title': '',
         'ensemble_name': '',
+        'thredds_root': 'http://docker-dev03.pcic.uvic.ca:30333/data',
         'dsn': 'postgresql://user:pass@host/database',
         'pcds_dsn': 'postgresql://user:pass@host/database',
         'js_min': 'False',
@@ -107,7 +108,7 @@ def parse_version(type_):
 
 
 def _parse_version(full_version, type_):
-    regex = ur"^((?:\w+\.?)+)\+?(.*)\.(\w{6})$"
+    regex = r"^((?:\w+\.?)+)\+?(.*)\.(\w{6})$"
     matches = re.match(regex, full_version)
     if matches:
         version, branch, sha = matches.groups()

@@ -29,9 +29,9 @@ class ErrorMiddleware(object):
                                 ("Retry-After", "3600")  # one hour
                                 ]
             start_response(status, response_headers, sys.exc_info())
-            logger.error("SQLAlchemyError: {}".format(e.message))
-            yield 'There was an unexpected problem accessing the database\n'
-            yield e.message
+            logger.error("SQLAlchemyError: {}".format(e.args[0]))
+            yield b'There was an unexpected problem accessing the database\n'
+            yield e.args[0].encode()
 
         except EnvironmentError as e:
             # except IOError as e:
@@ -48,9 +48,9 @@ class ErrorMiddleware(object):
                          "  strerr: {}\n"
                          "  filename {}\n"
                          "{}".format(
-                             e.errno, e.strerror, e.filename, e.message))
+                             e.errno, e.strerror, e.filename, e.args[0]))
             yield 'We had an unexpected problem accessing on-disk resources\n'
-            yield e.message
+            yield e.args[0]
 
         except Exception as e:
             status = "500 Internal Server Error"
@@ -58,11 +58,15 @@ class ErrorMiddleware(object):
             start_response(status, response_headers, sys.exc_info())
             logger.error("500 Internal Server Error: {}\n{}".format(
                 e.args, traceback.format_exc()))
-            yield 'There was an unhandleable problem with the application\n'
-            yield e.message
+            yield b'There was an unhandleable problem with the application\n'
+            yield e.args[0]
 
         else:
-
+            print("start_response is")
+            print(start_response)
+            print("response_iter is")
+            print(response_iter)
+            print(type(response_iter))
             # Catch error that happen while generating a streamed response
             try:
                 for block in response_iter:
@@ -72,8 +76,8 @@ class ErrorMiddleware(object):
                 status = "500 Internal Server Error"
                 response_headers = [("content-type", "text/plain")]
                 start_response(status, response_headers, sys.exc_info())
-                yield "There was a serious problem while generating the "\
-                    "streamed response\n{}\n".format(e.args)
+                yield b"There was a serious problem while generating the "\
+                    b"streamed response\n{}\n".format(e.args)
                 yield traceback.format_exc()
                 msg = "Exception raised during streamed response: {}\n{}"\
                       .format(e.args, traceback.format_exc())

@@ -11,6 +11,7 @@ pyparsing==2.4.7
 snowballstemmer==2.1.0
 Sphinx==1.8.5
 sphinxcontrib-websupport==1.1.2
-typing==3.10.0.0
+# typing==3.10.0.0 removed for version nonexistence
+typing
 zope.event==4.5.0
 zope.interface==5.4.0

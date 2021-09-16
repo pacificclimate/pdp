@@ -29,6 +29,7 @@ def raster_conf(dsn, global_config, ensemble_name, data_base=None):
             sesh, "Download Data", 0.1, 0, ensemble_name,
             root_url=root_url
         )
+    conf["thredds_root"] = global_config["thredds_root"]
     return conf
 
 
