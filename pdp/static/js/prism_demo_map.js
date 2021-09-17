@@ -112,7 +112,7 @@ function init_prism_map(config) {
         [
             ncwms,
             selectionLayer,
-            getBC3005OsmBaseLayer(pdp.tilecache_url, 'BC OpenStreetMap', 'bc_osm')
+            getBC3005BCLiteBaseLayer(pdp.tilecache_url, 'BC OSM Lite'),
         ]
     );
 
