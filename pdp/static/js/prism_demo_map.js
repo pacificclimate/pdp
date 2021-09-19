@@ -112,7 +112,7 @@ function init_prism_map(config) {
         [
             ncwms,
             selectionLayer,
-            getBC3005BCLiteBaseLayer(pdp.tilecache_url, 'BC OSM Lite'),
+            getBC3005BCLiteBaseLayer(pdp.bc_basemap_url, 'BC OSM Lite'),
         ]
     );
 

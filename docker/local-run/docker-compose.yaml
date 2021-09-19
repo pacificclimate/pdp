@@ -25,6 +25,7 @@ services:
       - NCWMS_URL=http://docker-dev02.pcic.uvic.ca:30779/dynamic/x
       - OLD_NCWMS_URL=https://services.pacificclimate.org/ncWMS-PCIC/wms
       - TILECACHE_URL=https://a.tile.pacificclimate.org/tilecache/tilecache.py https://b.tile.pacificclimate.org/tilecache/tilecache.py https://c.tile.pacificclimate.org/tilecache/tilecache.py
+      - BC_BASEMAP_URL=http://142.104.230.53:30790/osm-bc-lite-test/$${z}/$${x}/$${y}.png
     entrypoint: /codebase/docker/local-run/entrypoint-fe.sh
     volumes:
       # This is to enable installing local versions of other packages from
