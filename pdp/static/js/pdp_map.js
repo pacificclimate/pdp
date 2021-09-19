@@ -385,6 +385,7 @@ condExport(module, {
     getNaBaseLayer: getNaBaseLayer,
     getTileBaseLayer: getTileBaseLayer,
     getBC3005OsmBaseLayer: getBC3005OsmBaseLayer,
+    getBC3005BCLiteBaseLayer: getBC3005BCLiteBaseLayer,
     getBasicControls: getBasicControls,
     getEditingToolbar: getEditingToolbar,
     getHandNav: getHandNav,
