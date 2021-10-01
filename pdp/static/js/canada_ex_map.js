@@ -2,9 +2,14 @@
 /*global $, jQuery, OpenLayers, pdp, map, na4326_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getNaBaseLayer, getOpacitySlider, Colorbar*/
 
 /*
- * This map displays both version 1 and version 2 of the BCCAQ / BCSD
- * data. The only difference is default dataset and timestamps, which
- * are passed in from the top level app.
+ * This map displays all-Canada pr, tasmin, and tasmax datasets.
+ * It is used by:
+ *    * The BCSD and BCCAQv1 datasets (canada_ex_app.js)
+ *    * The BCCAQv2 CMIP5 datasets (canada_ex_app.js)
+ *    * The BCCAQv2 CMIP6 datasets (cmip6_bccaq2_app.js)
+ * Each seperate app passes in a default dataset and timestamp
+ * to initialize the map, but they have the same pallettes,
+ * numerical and spatial extents.
  */
 (function () {
 
