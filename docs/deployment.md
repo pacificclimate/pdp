@@ -37,6 +37,14 @@ specifically in
 - [`common.env`](docker/production/common.env): defines environment
   variables common to frontend and backend. Used by `docker-compose.yaml`.
 
+Note: Environment variables accessed by JavaScript are injected via
+the Python templating engine Jinja2, which substitutes variables using
+exactly the same syntax as JavaScript template strings, namely `${...}`.
+In order to pass environment variables with *content* of the form
+`${...}` through to JavaScript, the `$` must be escaped as `$$`, thus
+`$${...}`. This appears in the env var `BC_BASEMAP_URL`.
+
+
 ### Config Items
 
 These items are available 
@@ -56,6 +64,7 @@ They are loaded from the environment variables of the same name, upper cased.
 | `ncwms_url` | Raster portal ncWMS 2.x -- modelmeta translator URL. |
 | `old_ncwms_url` | Raster portal pure ncWMS 1.x URL. Used to fill in missing services from ncWMS 2.x. |
 | `tilecache_url` | Tileserver URLs (space separated list) for base maps |
+| `bc_basemap_url` | Tile server URLs  (space separated list) for BC base maps
 | `use_analytics` | Enable or disable Google Analytics reporting |
 | `analytics` | Google Analytics ID |
 

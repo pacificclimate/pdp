@@ -66,12 +66,13 @@ production environment. The infrastructure is in `docker/local-test/`.
 
 1. **Start the test container**
 
-    ```
-    docker-compose -f ./docker/local-test/docker-compose.yaml run --rm local-test 
-    ```
+   ```
+   docker-compose -f ./docker/local-test/docker-compose.yaml run --rm local-test 
+   ```
     
-    This starts the container, installs the local codebase, gives you a 
-    bash shell. You should see a standard bash prompt.
+   This starts the container, installs the local codebase (which may 
+   take over a minute), and gives 
+   you a bash shell. You should see a standard bash prompt.
 
 1. **Change code and run tests**
 
@@ -82,8 +83,8 @@ production environment. The infrastructure is in `docker/local-test/`.
     pytest -v -m "not local_only" --tb=short tests -x
     ```
     
-    *Do not stop the container until you have finished all changes and
-    testing you wish to make for a given session.* 
+    **Do not stop the container until you have finished all changes and
+    testing you wish to make for a given session.** 
     It is far more time efficient run tests inside the same container 
     (avoiding startup time) than to restart the container for each test.
     
