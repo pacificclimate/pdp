@@ -37,6 +37,14 @@ specifically in
 - [`common.env`](docker/production/common.env): defines environment
   variables common to frontend and backend. Used by `docker-compose.yaml`.
 
+Note: Environment variables accessed by JavaScript are injected via
+the Python templating engine Jinja2, which substitutes variables using
+exactly the same syntax as JavaScript template strings, namely `${...}`.
+In order to pass environment variables with *content* of the form
+`${...}` through to JavaScript, the `$` must be escaped as `$$`, thus
+`$${...}`. This appears in the env var `BC_BASEMAP_URL`.
+
+
 ### Config Items
 
 These items are available 
