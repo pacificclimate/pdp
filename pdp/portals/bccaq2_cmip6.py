@@ -5,6 +5,7 @@ different frontend controllers (cmip6_bccaq2_app.js).
 '''
 from pdp.portals import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
+import re
 
 
 __all__ = ['url_base', 'mk_frontend', 'mk_backend']
@@ -17,12 +18,27 @@ title = 'Statistically Downscaled GCM Scenarios - CMIP6'
 
 class CMIP6EnsembleLister(EnsembleMemberLister):
     def list_stuff(self, ensemble):
+        def format_scenario(scenario):
+            '''takes a scenario of the form "historical,ssp126" and
+            formats it to be "Historical, SSP1-2.6" or similar. 
+            unmatchable scenario strings are returned unchanged.'''
+            parsed = re.match(r"^historical,ssp(\d)(\d)(\d)$", scenario)
+            if parsed:
+                return "Historical, SSP{}-{}.{}".format(parsed.group(1), 
+                                                parsed.group(2),
+                                                parsed.group(3))
+            else:
+                return scenario
+        
         for dfv in ensemble.data_file_variables:
-            yield dfv.file.run.emission.short_name,\
+            yield format_scenario(dfv.file.run.emission.short_name),\
                 dfv.file.run.model.short_name,\
                 dfv.file.run.name,\
                 dfv.netcdf_variable_name,\
                 dfv.file.unique_id.replace('+', '-')
+
+
+    
 
 
 def mk_frontend(config):
