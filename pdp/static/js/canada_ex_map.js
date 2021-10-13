@@ -68,7 +68,7 @@
             if (varname === 'pr') {
                 this.params.LOGSCALE = true;
                 this.params.STYLES = 'default/blueheat';
-                this.params.BELOWMINCOLOR = 'transparent';
+                this.params.BELOWMINCOLOR = 'extend';
                 this.params.COLORSCALERANGE = '1.0,30.0';
             } else {
                 this.params.LOGSCALE = false;

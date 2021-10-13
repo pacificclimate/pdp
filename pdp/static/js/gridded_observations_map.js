@@ -94,7 +94,7 @@ function init_obs_map() {
               min = 1;
               max = data.max;
               newParams["STYLES"] = "default/blueheat";
-              newParams["BELOWMINCOLOR"] = 'transparent';
+              newParams["BELOWMINCOLOR"] = 'extend';
             }
             else {
               newParams["LOGSCALE"] = "false";
