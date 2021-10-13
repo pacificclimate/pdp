@@ -103,10 +103,12 @@
         function set_map_title(layer_name) {
             // 'this' must be bound to the ncwms layer object
             var d = new Date(this.params.TIME), date;
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                                "July", "August", "September", "October", "November", "December"]
             if (layer_name.match(/_yr_/)) { // is yearly
                 date = d.getFullYear();
             } else {
-                date = d.getFullYear() + '/' + (d.getMonth() + 1);
+                date = monthNames[d.getMonth()] + " " + d.getFullYear();
             }
             $('#map-title').html(layer_name + '<br />' + date);
 
