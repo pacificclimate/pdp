@@ -7,6 +7,7 @@
  *    * The BCSD and BCCAQv1 datasets (canada_ex_app.js)
  *    * The BCCAQv2 CMIP5 datasets (canada_ex_app.js)
  *    * The BCCAQv2 CMIP6 datasets (cmip6_bccaq2_app.js)
+ *    * The BCCAQv2 CanESM5 datasets (canesm5_app.js)
  * Each seperate app passes in a default dataset and timestamp
  * to initialize the map, but they have the same pallettes,
  * numerical and spatial extents.
