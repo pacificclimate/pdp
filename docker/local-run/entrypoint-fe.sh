@@ -12,6 +12,6 @@
 #pip install -e /home/rglover/code/pdp_util
 
 # *Always* do this. It's the whole point of this Docker setup.
-pip install -e .
+pip3 install -e .
 
 gunicorn --config docker/local-run/gunicorn.conf --log-config docker/local-run/logging.conf pdp.wsgi:frontend
