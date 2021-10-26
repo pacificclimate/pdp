@@ -1,4 +1,4 @@
-FROM pdp-python3
+FROM pdp-base-minimal:pdp-python3
 LABEL Maintainer="Rod Glover <rglover@uvic.ca>"
 
 USER root

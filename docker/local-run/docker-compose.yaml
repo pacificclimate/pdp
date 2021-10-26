@@ -5,10 +5,10 @@ services:
     build:
       context: ../..
       dockerfile: ./docker/local-run/Dockerfile
-    image: pcic/pdp-base-minimal:pdp-python3
+    image: pcic/pdp-local-run
 
   frontend:
-    image: pcic/pdp-base-minimal:pdp-python3
+    image: pcic/pdp-local-run
     container_name: pdp-local-run-fe
     stdin_open: true
     tty: true
@@ -43,7 +43,7 @@ services:
         target: /codebase/pdp/static/js/prism_demo_config.js
 
   backend:
-    image: pcic/pdp-base-minimal:pdp-python3
+    image: pcic/pdp-local-run
     container_name: pdp-local-run-be
     stdin_open: true
     tty: true
