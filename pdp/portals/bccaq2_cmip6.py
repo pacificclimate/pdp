@@ -13,7 +13,7 @@ __all__ = ['url_base', 'mk_frontend', 'mk_backend']
 
 ensemble_name = 'bccaq2_cmip6'
 url_base = '/downscaled_cmip6'
-title = 'Statistically Downscaled GCM Scenarios - CMIP6'
+title = 'Canadian Downscaled Climate Scenarios - Univariate (CMIP6): CanDCS-U6'
 
 
 class CMIP6EnsembleLister(EnsembleMemberLister):
