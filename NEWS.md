@@ -1,5 +1,13 @@
 # News / Release Notes
 
+## 4.1.0
+
+*Release Date: 19-Nov-2021*
+
+- [Create new portals to serve the downscaled CMIP6 data](https://github.com/pacificclimate/pdp/pull/253)
+- [Update map tiles](https://github.com/pacificclimate/pdp/pull/249)
+- [Update docker and test tools](https://github.com/pacificclimate/pdp/pull/243)
+
 ## 4.0.0
 
 *Release Date: 19-Jul-2021*
