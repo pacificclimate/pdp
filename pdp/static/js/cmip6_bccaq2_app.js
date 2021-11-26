@@ -22,7 +22,7 @@ RasterDownloadLink, MetadataDownloadLink*/
 
         map = init_raster_map({
             variable: "tasmin",
-            dataset: "tasmin_day_BCCAQv2_CanESM5_historical-ssp126_r1iippff_19500101-21001231_Canada",
+            dataset: "tasmin_day_BCCAQv2_CanESM5_historical-ssp126_r1i1p2f1_19500101-21001231_Canada",
             timestamp: "2000-01-01"
         });
         
