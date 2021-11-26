@@ -1,5 +1,11 @@
 # News / Release Notes
 
+## 4.1.1
+
+*Release Date: 26-Nov-2021*
+
+- [Fix minor bugs in previous release: accidental mdash, wrong dataset name](https://github.com/pacificclimate/pdp/pull/261)
+
 ## 4.1.0
 
 *Release Date: 19-Nov-2021*
