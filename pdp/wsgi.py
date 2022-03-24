@@ -1,6 +1,6 @@
 '''Exposes globally defined WSGI apps as module variables
 '''
-from werkzeug.wsgi import DispatcherMiddleware
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 from pdp import get_config
 from pdp.main import initialize_frontend, initialize_backend

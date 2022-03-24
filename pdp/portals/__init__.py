@@ -1,4 +1,4 @@
-from werkzeug import DispatcherMiddleware
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 from pdp_util import session_scope
 from pdp_util.raster import db_raster_configurator, RasterServer, RasterCatalog

@@ -4,7 +4,7 @@ Set portal.
 
 from pkg_resources import resource_filename
 
-from werkzeug import DispatcherMiddleware
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 from pdp_util.map import MapApp
 from pdp.minify import wrap_mini

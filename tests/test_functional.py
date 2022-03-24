@@ -51,11 +51,11 @@ def test_no_404s(pcic_data_portal, url):
 @pytest.mark.crmpdb
 @pytest.mark.parametrize(('url', 'title', 'body_strings'), [
     ('/data/pcds/lister/', 'PCDS Data',
-     ["Climatological calculations", "raw/"]),
+     [b"Climatological calculations", b"raw/"]),
     ('/data/pcds/lister/raw/', "Participating CRMP Networks",
-     ["FLNRO-WMB/", "Environment Canada (Canadian Daily Climate Data 2007)"]),
+     [b"FLNRO-WMB/", b"Environment Canada (Canadian Daily Climate Data 2007)"]),
     ('/data/pcds/lister/raw/AGRI/',
-     "Stations for network AGRI", ["de107/", "Deep Creek"]),
+     "Stations for network AGRI", [b"de107/", b"Deep Creek"]),
 ])
 def test_climo_index(
         pcic_data_portal, url, title, body_strings):

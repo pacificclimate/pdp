@@ -14,7 +14,7 @@ portals share a frontend, hydro_stn_app.'''
 
 from pkg_resources import resource_filename
 
-from werkzeug import DispatcherMiddleware
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 from pdp_util.map import MapApp
 from pydap.wsgi.app import DapServer
