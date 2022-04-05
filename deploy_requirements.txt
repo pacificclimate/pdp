@@ -3,7 +3,7 @@ Babel==2.9.1
 docutils==0.17.1
 gevent==21.1.2
 greenlet==1.1.0
-gunicorn==19.8.1
+gunicorn==19.9.0
 imagesize==1.2.0
 packaging==20.9
 Pygments==2.5.2
