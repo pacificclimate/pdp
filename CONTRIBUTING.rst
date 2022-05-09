@@ -134,12 +134,6 @@ pdp/config.env
 |
 | ``NCWMS_URL``
 | Raster portal ncWMS URL of the form ``<docker_host>:<port>/ncWMS/``. The host/port must match ``APP_ROOT``.
-|
-| ``USE_ANALYTICS``
-| Enable or disable Google Analytics reporting (default is ``true``).
-|
-| ``ANALYTICS``
-| Google Analytics ID.
 
 
 docker basics

@@ -43,8 +43,6 @@ def get_config_from_environment():
             'http://a.tiles.pacificclimate.org/tilecache/tilecache.py'
             ' http://b.tiles.pacificclimate.org/tilecache/tilecache.py'
             ' http://c.tiles.pacificclimate.org/tilecache/tilecache.py',
-        'use_analytics': 'True',
-        'analytics': 'UA-20166041-3'  # change for production
     }
     config = {
         key: os.environ.get(key.upper(), default)
@@ -52,7 +50,6 @@ def get_config_from_environment():
     }
     # evaluate a few config items that need to be objects (not strings)
     config['js_min'] = (config['js_min'] == 'True')
-    config['use_analytics'] = (config['use_analytics'] == 'True')
     if config['tilecache_url']:
         config['tilecache_url'] = config['tilecache_url'].split()
     return config

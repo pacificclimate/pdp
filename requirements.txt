@@ -12,7 +12,6 @@ cryptography==3.3.2
 enum34==1.1.6
 Flask==1.0.2
 funcsigs==1.0.2
-ga-wsgi-client==0.1
 GDAL==3.0.4
 Genshi==0.7.5
 GeoAlchemy==0.7.3

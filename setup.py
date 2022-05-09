@@ -81,7 +81,6 @@ setup(
         "pdp-util >=1.2.1",
         "modelmeta >=0.3.0",
         "pydap_extras >= 0.2.1",
-        "ga-wsgi-client",
         "slimit",
         "netCDF4<1.5.6",
     ],
