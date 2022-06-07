@@ -460,8 +460,8 @@ def test_aaigrid_response(pcic_data_portal, url):
     (0, 'aig'),
     (1, 'aig'),
     (100, 'aig'),
-    (pytest.param(38000, marks=pytest.mark.veryslow)], 'aig'),
-    (pytest.param(38000, marks=pytest.mark.veryslow)], 'xlsx')
+    (pytest.param(38000, marks=pytest.mark.veryslow), 'aig'),
+    (pytest.param(38000, marks=pytest.mark.veryslow), 'xlsx')
 ))
 def test_aaigrid_response_layers(pcic_data_portal, layers):
     url = '/data/hydro_model_archive/pr+tasmin+tasmax+wind_day_HadCM_A1B_'\
