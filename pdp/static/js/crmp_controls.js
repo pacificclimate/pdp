@@ -94,7 +94,7 @@ function createNetworkOptions(map) {
         FRBC: 'Forest Renewal British Columbia',
         MoTIe: 'Ministry of Transportation and Infrastructure (electronic)',
         MoTIm: 'Ministry of Transportation and Infrastructure (manual)',
-        MVAN: 'Metro Vancouver',
+        MVan: 'Metro Vancouver',
         RTA: 'RioTintoAlcan',
         UNBC_CAM: 'UNBC Cariboo Alpine Mesonet'
     };
