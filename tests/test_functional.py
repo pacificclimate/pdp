@@ -456,17 +456,17 @@ def test_aaigrid_response(pcic_data_portal, url):
 @pytest.mark.slow
 @pytest.mark.crmpdb
 @pytest.mark.bulk_data
-@pytest.mark.parametrize(('layers', 'format'), (
+@pytest.mark.parametrize(('layers', 'format_'), (
     (0, 'aig'),
     (1, 'aig'),
     (100, 'aig'),
     (pytest.param(38000, marks=pytest.mark.veryslow), 'aig'),
     (pytest.param(38000, marks=pytest.mark.veryslow), 'xlsx')
 ))
-def test_aaigrid_response_layers(pcic_data_portal, layers):
+def test_aaigrid_response_layers(pcic_data_portal, layers, format_):
     url = '/data/hydro_model_archive/pr+tasmin+tasmax+wind_day_HadCM_A1B_'\
           'run1_19500101-21001231.nc.{}?pr[0:{}][119:120]'\
-          '[242:243]&'.format(format, layers)
+          '[242:243]&'.format(format_, layers)
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
 
