@@ -7,6 +7,9 @@ LABEL Maintainer="James Hiebert <hiebert@uvic.ca>"
 
 USER root
 
+# TODO: Move into pdp-base-minimal?
+RUN apt-get update && apt-get install -yq wget
+
 # Create directory for supervisord logs
 RUN mkdir etc/
 
@@ -21,8 +24,11 @@ ADD --chown=${USERNAME}:${GROUPNAME} . ${USER_DIR}/
 RUN pip install -r requirements.txt -r deploy_requirements.txt
 
 # Install and build the docs
+# Must pre-install to provide dependencies and version number
+# for build_spinx
 RUN pip install .
 RUN python setup.py build_sphinx
+RUN pip install .
 
 # gunicorn.conf is set up so that one can tune gunicorn settings when
 # running the container by setting environment an variable
