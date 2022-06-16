@@ -5,7 +5,7 @@ using the custom setup.py command ``build_sphinx``.
 
 The helper functions support fetching additional documentation files from
 other project repos (namely, frontends that are not part of this repo)
-via HTTP requests. A typical example is the Met Data Portal.
+via HTTP requests to GitHub. A typical example is the Met Data Portal.
 
 The documentation is built with Sphinx. This module is not Sphinx-specific,
 although what it does is made necessary by how Sphinx works.
@@ -41,9 +41,16 @@ def fetch_manifest(base_url, file_name="manifest.yaml"):
     :return: nested lists/dicts
     """
     url = "{}/{}".format(base_url, file_name)
-    response = urllib2.urlopen(url)
-    manifest = yaml.load(response)
-    response.close()
+    try:
+        response = urllib2.urlopen(url)
+        manifest = yaml.load(response)
+        response.close()
+    except urllib2.URLError:
+        warn(
+            "User docs: Manifest file not retrieved from {}. "
+            "Returning empty manifest".format(url)
+        )
+        manifest = []
     return manifest
 
 
@@ -128,8 +135,13 @@ def download_manifest_item(base_url, manifest_item, target_dir):
     item_path = "/".join(manifest_item)
     url = "{base_url}/{rest}".format(base_url=base_url, rest=item_path)
     target = "{target_dir}/{rest}".format(target_dir=target_dir, rest=item_path)
-    cmd = ["wget", url, "-O", target]
-    subprocess.call(cmd)
+    cmd = ["wget", "-nv", url, "-O", target]
+    rc = subprocess.call(cmd)
+    if rc != 0:
+        warn(
+            "User doc: File at {} not downloaded; skipping. "
+            "Check the manifest.".format(url)
+        )
 
 
 def download_external_docs_from_github(
@@ -151,9 +163,8 @@ def download_external_docs_from_github(
     for name, arg in (("project", project), ("target_dir", target_dir)):
         if arg is None:
             warn(
-                "User-doc: {name} not specified for an external document set; skipping".format(
-                    name=name
-                )
+                "User docs: {name} not specified for an external document set; "
+                "skipping".format(name=name)
             )
             return
     base_url = "{github}/{org}/{project}/raw/{branch}/{doc_root}".format(
