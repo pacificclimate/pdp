@@ -62,36 +62,30 @@ def fetch_manifest(base_url, file_name="manifest.yaml"):
     return manifest
 
 
-def flatten_manifest(manifest):
+def flatten_manifest(manifest, path=()):
     """
-    Convert recursive manifest structure to flat list of tuples that specify
-    the path to each object (relative to document directory). This makes it
-    convenient to iterate over each file to be downloaded.
-
-    Note: This could be done slightly more elegantly as a generator, but
-    the result would immediately be converted to a list.
+    Generator that converts recursive manifest structure to a sequence of
+    tuples that specify the path to each object (relative to document
+    directory). This makes it convenient to iterate over each file to be
+    downloaded.
 
     Each tuple contains a sequence of file path components. For example,
 
         ("images", "abc.png")
 
     :param manifest: Manifest (see above)
-    :return: list of tuples containing paths to files
+    :yield: sequence of tuples containing paths to files
     """
-    result = []
-
-    def helper(m, path=()):
-        if isinstance(m, (tuple, list)):
-            for item in m:
-                helper(item, path)
-        elif isinstance(m, dict):
-            for key, item in m.items():
-                helper(item, path + (key,))
-        else:  # it's a string
-            result.append(path + (m,))
-
-    helper(manifest)
-    return result
+    if isinstance(manifest, (tuple, list)):
+        for item in manifest:
+            for p in flatten_manifest(item, path):
+                yield p
+    elif isinstance(manifest, dict):
+        for key, item in manifest.items():
+            for p in flatten_manifest(item, path + (key,)):
+                yield p
+    else:  # it's a string
+        yield path + (manifest,)
 
 
 def unique_paths(flattened_manifest):
@@ -183,7 +177,7 @@ def download_external_docs_from_github(
         doc_root=doc_root,
     )
     manifest = fetch_manifest(base_url)
-    flattened_manifest = flatten_manifest(manifest)
+    flattened_manifest = list(flatten_manifest(manifest))
     prep_for_download(flattened_manifest, target_dir)
     for item in flattened_manifest:
         download_manifest_item(base_url, item, target_dir)
