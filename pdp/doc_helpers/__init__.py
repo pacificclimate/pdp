@@ -30,6 +30,7 @@ import subprocess
 from warnings import warn
 import urllib2
 import yaml
+import yaml.scanner
 
 
 def fetch_manifest(base_url, file_name="manifest.yaml"):
@@ -43,11 +44,18 @@ def fetch_manifest(base_url, file_name="manifest.yaml"):
     url = "{}/{}".format(base_url, file_name)
     try:
         response = urllib2.urlopen(url)
-        manifest = yaml.load(response)
+        try:
+            manifest = yaml.load(response)
+        except yaml.scanner.ScannerError:
+            warn(
+                "User docs: Error parsing manifest file from {}. "
+                "Returning empty manifest".format(url)
+            )
+            manifest = []
         response.close()
     except urllib2.URLError:
         warn(
-            "User docs: Manifest file not retrieved from {}. "
+            "User docs: Error fetching manifest file from {}. "
             "Returning empty manifest".format(url)
         )
         manifest = []
