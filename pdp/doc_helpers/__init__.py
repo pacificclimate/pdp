@@ -12,36 +12,18 @@ although what it does is made necessary by how Sphinx works.
 
 The big picture is that each contributing external repo contains a manifest
 of files to download, and the files themselves. These files are downloaded
-from GitHub and saved to the Sphinx document source directory. (The setup.py
-is free to save them wherever it wishes, but typically it saves them in
-a uniquely-named subdirectory so that multiple external sources can't interfere
-with each other.)
+from GitHub and saved to the Sphinx document source directory.
 
 Manifest and content files must be in a single directory, usually one
 dedicated to documentation.
 
 The manifest is a YAML file that lists files hierarchically, mirroring the
-structure of the source documentation directory.
+structure of the source documentation directory. Files within a directory
+are represented by a list of file names; a (sub)directory is represented
+by a list item that is a dictionary whose key is the directory name and
+whose value is likewise a list of files or directories, recursively.
 
-For example, suppose an external repo contains a documentation directory
-``user-doc`` as follows::
-
-    user-doc/
-    |-- manifest.yaml
-    |-- root.rst
-    |-- images/
-        |-- abc.png
-        |-- def.png
-
-The file ``manifest.yaml`` should contain::
-
-    - root.rst
-    - images:
-        - abc.png
-        - def.png
-
-The resulting download will have exactly the same hierarchical directory
-and file organization.
+For more details, see the README on this subject.
 """
 from __future__ import print_function
 import subprocess
@@ -52,7 +34,7 @@ import yaml
 
 def fetch_manifest(base_url, file_name="manifest.yaml"):
     """
-    Fetch a manifest file and convert it to a Python object nested lists/dicts
+    Fetch a manifest file and convert it to a Python object.
 
     :param base_url: URL of external document directory.
     :param file_name: Name of manifest file.
@@ -70,6 +52,9 @@ def flatten_manifest(manifest):
     Convert recursive manifest structure to flat list of tuples that specify
     the path to each object (relative to document directory). This makes it
     convenient to iterate over each file to be downloaded.
+
+    Note: This could be done slightly more elegantly as a generator, but
+    the result would immediately be converted to a list.
 
     Each tuple contains a sequence of file path components. For example,
 
@@ -108,7 +93,7 @@ def prep_for_download(flattened_manifest, target_dir):
     """
     Prepare for download to target directory from flattened manifest.
     This basically means removing the target directory and recreating with
-    the subdirectories sepcified in the manifest. (But not, of course the
+    the subdirectories specified in the manifest. (But not, of course the
     files.)
 
     :param flattened_manifest:
@@ -132,7 +117,7 @@ def prep_for_download(flattened_manifest, target_dir):
 
 def download_manifest_item(base_url, manifest_item, target_dir):
     """
-    Download (using curl) a file specified by a flattened manifest item,
+    Download a file specified by a flattened manifest item,
     storing it under the specified target directory (it may be in a subdir).
 
     :param base_url: URL of directory containing files to download.
@@ -155,7 +140,7 @@ def download_external_docs_from_github(
     target_dir=None,
 ):
     """
-    Fetch the manifest and download all the files it names. From GitHub.
+    Fetch the manifest and download all the files it names from GitHub.
 
     :param org: GitHub org.
     :param project: GitHub project under org.

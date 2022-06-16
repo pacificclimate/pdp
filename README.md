@@ -10,6 +10,7 @@ The PCIC Data Portal contains the frontend code required for the [PCIC Data Port
 - [Installation](docs/installation.md)
 - [Deployment](docs/deployment.md)
 - [Testing](docs/testing.md)
+- [Separate-project portals and user documentation](docs/sep-proj-user-doc.md)
 - [Notes](docs/notes.md)
 
 ## Changelog
