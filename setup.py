@@ -80,11 +80,11 @@ class ExtendedBuildDoc(BuildDoc):
         # Download external documentation.
         # When an external portal is added, add its documentation download here.
         ####
-        download_external_docs_from_github(
-            project="station-data-portal",
-            branch="master",
-            target_dir=target_dir("mdp"),
-        )
+        # download_external_docs_from_github(
+        #     project="station-data-portal",
+        #     branch="master",
+        #     target_dir=target_dir("mdp"),
+        # )
 
         # Build the documentation
         BuildDoc.run(self)
