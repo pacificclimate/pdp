@@ -9,7 +9,7 @@ The main goal of the PCIC Data Portal boils down to one simple idea: *give users
 .. toctree::
    :maxdepth: 2
 
-   mdp/root
+   pcds
    raster
    faq
 
