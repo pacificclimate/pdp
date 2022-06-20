@@ -88,40 +88,15 @@ def flatten_manifest(manifest, path=()):
         yield path + (manifest,)
 
 
-def unique_paths(flattened_manifest):
-    """
-
-    :param flattened_manifest: A flattened manifest (see above)
-    :return: set of (unique) file paths (joined with "/") named in flattened
-        manifest
-    """
-    return {"/".join(item[:-1]) for item in flattened_manifest}
-
-
-def prep_for_download(flattened_manifest, target_dir):
+def prep_for_downloads(target_dir):
     """
     Prepare for download to target directory from flattened manifest.
-    This basically means removing the target directory and recreating with
-    the subdirectories specified in the manifest. (But not, of course the
-    files.)
+    This basically means removing the target directory.
 
-    :param flattened_manifest:
     :param target_dir:
     :return:
     """
-    ups = unique_paths(flattened_manifest)
     subprocess.call(["rm", "-rf", target_dir])
-    for path in ups:
-        if path:
-            subprocess.call(
-                [
-                    "mkdir",
-                    "-p",
-                    "{target_dir}/{path}".format(
-                        target_dir=target_dir, path=path
-                    ),
-                ]
-            )
 
 
 def download_manifest_item(base_url, manifest_item, target_dir):
@@ -134,7 +109,22 @@ def download_manifest_item(base_url, manifest_item, target_dir):
     :param target_dir: Path specifying top-level target directory in which
         to store file.
     """
-    item_path = "/".join(manifest_item)
+    # Make target directory
+    item_dir = "/".join(manifest_item[:-1])
+    subprocess.call(
+        [
+            "mkdir",
+            "-p",
+            "{target_dir}/{item_dir}".format(
+                target_dir=target_dir, item_dir=item_dir
+            ),
+        ]
+    )
+    # Download file to target directory
+
+    item_path = "{item_dir}/{item_file}".format(
+        item_dir=item_dir, item_file=manifest_item[-1]
+    )
     url = "{base_url}/{rest}".format(base_url=base_url, rest=item_path)
     target = "{target_dir}/{rest}".format(target_dir=target_dir, rest=item_path)
     cmd = ["wget", "-nv", url, "-O", target]
@@ -176,8 +166,7 @@ def download_external_docs_from_github(
         branch=branch,
         doc_root=doc_root,
     )
+    prep_for_downloads(target_dir)
     manifest = fetch_manifest(base_url)
-    flattened_manifest = list(flatten_manifest(manifest))
-    prep_for_download(flattened_manifest, target_dir)
-    for item in flattened_manifest:
+    for item in flatten_manifest(manifest):
         download_manifest_item(base_url, item, target_dir)
