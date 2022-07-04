@@ -72,9 +72,7 @@ class ExtendedBuildDoc(BuildDoc):
             return
 
         def target_dir(subdir):
-            return "{source_dir}/{subdir}".format(
-                source_dir=self.source_dir, subdir=subdir
-            )
+            return os.path.join(self.source_dir, subdir)
 
         #####
         # Download external documentation.

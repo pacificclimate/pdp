@@ -26,6 +26,7 @@ whose value is likewise a list of files or directories, recursively.
 For more details, see the README on this subject.
 """
 from __future__ import print_function
+import os.path
 import subprocess
 from warnings import warn
 import urllib2
@@ -110,23 +111,21 @@ def download_manifest_item(base_url, manifest_item, target_dir):
         to store file.
     """
     # Make target directory
-    item_dir = "/".join(manifest_item[:-1])
     subprocess.call(
         [
             "mkdir",
             "-p",
-            "{target_dir}/{item_dir}".format(
-                target_dir=target_dir, item_dir=item_dir
-            ),
+            os.path.join(target_dir, *manifest_item[:-1]),
         ]
     )
-    # Download file to target directory
 
-    item_path = "{item_dir}/{item_file}".format(
-        item_dir=item_dir, item_file=manifest_item[-1]
+    # Download file to target directory
+    item_path = os.path.join(*manifest_item)
+    # (os.path.join does not work on urls)
+    url = "{base_url}/{item_path}".format(
+        base_url=base_url, item_path=item_path
     )
-    url = "{base_url}/{rest}".format(base_url=base_url, rest=item_path)
-    target = "{target_dir}/{rest}".format(target_dir=target_dir, rest=item_path)
+    target = os.path.join(target_dir, item_path)
     cmd = ["wget", "-nv", url, "-O", target]
     rc = subprocess.call(cmd)
     if rc != 0:
