@@ -140,7 +140,7 @@ def download_external_docs_from_github(
     org="pacificclimate",
     project=None,
     branch="master",
-    doc_root="user-doc",
+    doc_root="docs/user",
     target_dir=None,
 ):
     """
