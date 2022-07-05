@@ -195,6 +195,21 @@ function getBC3005OsmBaseLayer(wmsurl, displayname, layername) {
     );
 }
 
+function getBC3005BCLiteBaseLayer(url, displayname) {
+  return new OpenLayers.Layer.XYZ(
+    displayname,
+    url,
+    {
+      projection: getProjection(3005),
+      units: 'Meter',
+      maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508),
+      maxResolution: 156543.03125,
+      numZoomLevels: 14,
+      attribution: '© OpenStreetMap contributors'
+    }
+  );
+}
+
 function getBasicControls() {
     return [
         new OpenLayers.Control.LayerSwitcher({'ascending': false}),
@@ -370,6 +385,7 @@ condExport(module, {
     getNaBaseLayer: getNaBaseLayer,
     getTileBaseLayer: getTileBaseLayer,
     getBC3005OsmBaseLayer: getBC3005OsmBaseLayer,
+    getBC3005BCLiteBaseLayer: getBC3005BCLiteBaseLayer,
     getBasicControls: getBasicControls,
     getEditingToolbar: getEditingToolbar,
     getHandNav: getHandNav,

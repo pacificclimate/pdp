@@ -66,7 +66,7 @@ function init_vic_map(archive_portal) {
         [
             ncwms,
             selectionLayer,
-            getBC3005OsmBaseLayer(pdp.tilecache_url, 'BC OpenStreeMap', 'bc_osm')
+            getBC3005BCLiteBaseLayer(pdp.bc_basemap_url, 'BC OSM Lite'),
         ]
     );
 

@@ -2,9 +2,15 @@
 /*global $, jQuery, OpenLayers, pdp, map, na4326_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getNaBaseLayer, getOpacitySlider, Colorbar*/
 
 /*
- * This map displays both version 1 and version 2 of the BCCAQ / BCSD
- * data. The only difference is default dataset and timestamps, which
- * are passed in from the top level app.
+ * This map displays all-Canada pr, tasmin, and tasmax datasets.
+ * It is used by:
+ *    * The BCSD and BCCAQv1 datasets (canada_ex_app.js)
+ *    * The BCCAQv2 CMIP5 datasets (canada_ex_app.js)
+ *    * The BCCAQv2 CMIP6 datasets (cmip6_bccaq2_app.js)
+ *    * The BCCAQv2 CanESM5 datasets (canesm5_app.js)
+ * Each seperate app passes in a default dataset and timestamp
+ * to initialize the map, but they have the same pallettes,
+ * numerical and spatial extents.
  */
 (function () {
 
@@ -62,7 +68,7 @@
             if (varname === 'pr') {
                 this.params.LOGSCALE = true;
                 this.params.STYLES = 'default/blueheat';
-                this.params.BELOWMINCOLOR = 'transparent';
+                this.params.BELOWMINCOLOR = 'extend';
                 this.params.COLORSCALERANGE = '1.0,30.0';
             } else {
                 this.params.LOGSCALE = false;
@@ -97,10 +103,12 @@
         function set_map_title(layer_name) {
             // 'this' must be bound to the ncwms layer object
             var d = new Date(this.params.TIME), date;
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                                "July", "August", "September", "October", "November", "December"]
             if (layer_name.match(/_yr_/)) { // is yearly
                 date = d.getFullYear();
             } else {
-                date = d.getFullYear() + '/' + (d.getMonth() + 1);
+                date = monthNames[d.getMonth()] + " " + d.getFullYear();
             }
             $('#map-title').html(layer_name + '<br />' + date);
 

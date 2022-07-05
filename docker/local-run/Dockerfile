@@ -3,6 +3,8 @@ LABEL Maintainer="Rod Glover <rglover@uvic.ca>"
 
 USER root
 
+# TODO: Move into pdp-base-minimal?
+RUN apt-get update && apt-get install -yq wget
 # Create directory for supervisord logs
 RUN mkdir etc/
 

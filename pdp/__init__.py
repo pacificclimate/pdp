@@ -44,6 +44,7 @@ def get_config_from_environment():
             'http://a.tiles.pacificclimate.org/tilecache/tilecache.py'
             ' http://b.tiles.pacificclimate.org/tilecache/tilecache.py'
             ' http://c.tiles.pacificclimate.org/tilecache/tilecache.py',
+        'bc_basemap_url': 'http://142.104.230.53:30790/osm-bc-lite-test/$${z}/$${x}/$${y}.png',
     }
     config = {
         key: os.environ.get(key.upper(), default)

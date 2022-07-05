@@ -12,7 +12,7 @@ __all__ = ['url_base', 'mk_frontend', 'mk_backend']
 
 ensemble_name = 'bccaq_version_2'
 url_base = '/downscaled_gcms'
-title = 'Statistically Downscaled GCM Scenarios - BCCAQv2'
+title = 'Canadian Downscaled Climate Scenarios - Univariate (CMIP5): CanDCS-U5'
 
 
 class BCCAQ2EnsembleLister(EnsembleMemberLister):

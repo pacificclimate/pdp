@@ -11,7 +11,8 @@ function initializeGlobals() {
         tilecache_url: [
             'tilecache_url'
         ],
-        ensemble_name: 'ensemble_name'
+        'bc_basemap_url': 'bc_basemap_url',
+        ensemble_name: 'ensemble_name',
     };
 }
 

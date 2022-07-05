@@ -7,10 +7,11 @@
 The PCIC Data Portal contains the frontend code required for the [PCIC Data Portal](http://www.pacificclimate.org/data) as well as WSGI callables to deploy the entire application within a WSGI container.
 
 ## Documentation
-- [Installation](docs/installation.md#installation)
-- [Deployment](docs/deployment.md#deployment)
-- [Testing](docs/testing.md#tests)
-- [Notes](docs/notes.md#notes)
+- [Installation](docs/installation.md)
+- [Deployment](docs/deployment.md)
+- [Testing](docs/testing.md)
+- [External portals and user documentation](docs/sep-proj-user-doc.md)
+- [Notes](docs/notes.md)
 
 ## Changelog
 To see the latest changes, vist our [`NEWS.md`](NEWS.md#news--release-notes) page.
