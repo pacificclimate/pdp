@@ -30,6 +30,7 @@ def raster_conf(dsn, global_config, ensemble_name, data_base=None):
             root_url=root_url
         )
     conf["thredds_root"] = global_config["thredds_root"]
+    conf["orca_root"] = global_config["orca_root"]
     return conf
 
 
