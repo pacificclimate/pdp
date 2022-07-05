@@ -1,3 +1,29 @@
+"""
+This is not your grannie's setup, mainly because of how we build documentation.
+
+Documentation is built by Sphinx. Some of that documentation is in this repo,
+and some is copied in from other repos (namely, PDP frontends in separate
+projects). This is handled by the code in class ``ExtendedBuildDoc``, which
+extends the Sphinx supplied command class ``BuildDoc``.
+
+Also worth noting is the installation sequence that must be followed in order to
+build documentation successfully. We must do the following double-install::
+
+    pip install .
+    python setup.py build_sphinx
+    pip install .
+
+The first installation accomplishes two things:
+
+* make project version number available to Sphinx
+* install dependencies required by ``ExtendedBuildDoc``
+
+The second installation makes the docs available.
+
+These things could possibly be accomplished without a double installation,
+but it's what we've got, and it works. Your grannie is not proud of this.
+"""
+
 import os
 import sys
 from warnings import warn
@@ -6,6 +32,7 @@ from setuptools import setup
 from setuptools.command.test import test as TestCommand
 from git import Repo
 from git.exc import InvalidGitRepositoryError
+
 
 try:
     from sphinx.setup_command import BuildDoc
@@ -28,6 +55,37 @@ class PyTest(TestCommand):
 
         errno = pytest.main(self.test_args)
         sys.exit(errno)
+
+
+class ExtendedBuildDoc(BuildDoc):
+    def run(self):
+        # Import here because deps cannot be ready first time setup.py is run.
+        # See note in docstring re. double installation.
+        try:
+            from pdp.doc_helpers import download_external_docs_from_github
+        except ImportError:
+            warn(
+                "Could not import doc_helpers. "
+                "You may have missed the pre-installation step. "
+                "Documents NOT BUILT."
+            )
+            return
+
+        def target_dir(subdir):
+            return os.path.join(self.source_dir, subdir)
+
+        #####
+        # Download external documentation.
+        # When an external portal is added, add its documentation download here.
+        ####
+        # download_external_docs_from_github(
+        #     project="station-data-portal",
+        #     branch="master",
+        #     target_dir=target_dir("mdp"),
+        # )
+
+        # Build the documentation
+        BuildDoc.run(self)
 
 
 def recursive_list(pkg_dir, basedir):
@@ -108,12 +166,12 @@ setup(
         + recursive_list("pdp/", "pdp/static")
         + recursive_list("pdp/", "pdp/docs/html")
     },
-    cmdclass={"test": PyTest, "build_sphinx": BuildDoc},
+    cmdclass={"test": PyTest, "build_sphinx": ExtendedBuildDoc},
     command_options={"build_sphinx": {"build_dir": ("setup.py", "pdp/docs")}},
     zip_safe=False,
     classifiers="""Development Status :: 5 - Production/Stable
 Environment :: Console
-nvironment :: Web Environment
+Environment :: Web Environment
 Framework :: Flask
 Natural Language :: English
 Intended Audience :: Developers
