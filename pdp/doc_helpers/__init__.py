@@ -29,7 +29,7 @@ from __future__ import print_function
 import os.path
 import subprocess
 from warnings import warn
-import urllib2
+import urllib2   # TODO: Py2to3 implications
 import yaml
 import yaml.scanner
 
