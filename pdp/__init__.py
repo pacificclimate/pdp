@@ -33,7 +33,7 @@ def get_config_from_environment():
         'title': '',
         'ensemble_name': '',
         'thredds_root': 'http://pdp.localhost:5000/thredds',
-        'orca_root': 'http://docker-dev03.pcic.uvic.ca:30333/data',
+        'orca_root': 'http://pdp.localhost:5000/orca',
         'dsn': 'postgresql://user:pass@host/database',
         'pcds_dsn': 'postgresql://user:pass@host/database',
         'js_min': 'False',
