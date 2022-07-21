@@ -7,6 +7,21 @@
     function crmp_app() {
         var map, filtChange, downloadForm;
 
+        const deprecationNotice = $(`
+            <div style="text-align: center">
+                <span style="font-weight: bold; color: orangered">
+                    Deprecation Notice</span>: 
+                This portal has been superseded by the 
+                <a href="https://pacificclimate.org/data/met-data-portal-pcds">
+                    Met Data Portal - PCDS</a>,
+                and will be discontinued on Nov 30, 2022.
+                For more information see the
+                <a href="https://pacificclimate.org/data/bc-station-data">
+                    BC Station Data page</a>.
+            </div>
+        `)
+        $('#header').append(deprecationNotice);
+
         window.map = map = init_crmp_map();
 
         filtChange = pdp.curry(CRMPFilterChange, map);
