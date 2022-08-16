@@ -40,7 +40,7 @@ except ImportError:
     warn("Could not import sphinx. You won't be able to build the docs")
 
 
-__version__ = "4.1.1"
+__version__ = "4.2.0"
 
 
 class PyTest(TestCommand):

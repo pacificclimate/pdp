@@ -1,5 +1,17 @@
 # News / Release Notes
 
+## 4.2.0
+
+*Release Date: 16-Aug-2022*
+
+This release marks the start of the deprecation period for the BC Station Data - PCDS data portal. It is being replaced by the Meteorological Data Portal - PCDS, which has also been deployed.
+
+Changes:
+- [Add MDP documentation](https://github.com/pacificclimate/pdp/pull/275)
+- [Add deprecation notice to PCDS portal](https://github.com/pacificclimate/pdp/pull/274)
+- [Add ability to import external documentation](https://github.com/pacificclimate/pdp/pull/269)
+- [Fix MVan name typo](https://github.com/pacificclimate/pdp/issues/266)
+
 ## 4.1.1
 
 *Release Date: 26-Nov-2021*
