@@ -40,7 +40,7 @@ except ImportError:
     warn("Could not import sphinx. You won't be able to build the docs")
 
 
-__version__ = "4.1.1"
+__version__ = "4.2.0"
 
 
 class PyTest(TestCommand):
@@ -78,11 +78,11 @@ class ExtendedBuildDoc(BuildDoc):
         # Download external documentation.
         # When an external portal is added, add its documentation download here.
         ####
-        # download_external_docs_from_github(
-        #     project="station-data-portal",
-        #     branch="master",
-        #     target_dir=target_dir("mdp"),
-        # )
+        download_external_docs_from_github(
+            project="station-data-portal",
+            branch="master",
+            target_dir=target_dir("mdp"),
+        )
 
         # Build the documentation
         BuildDoc.run(self)

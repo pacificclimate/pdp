@@ -10,6 +10,7 @@ The main goal of the PCIC Data Portal boils down to one simple idea: *give users
    :maxdepth: 2
 
    pcds
+   mdp/root
    raster
    faq
 
