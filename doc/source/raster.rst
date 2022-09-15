@@ -206,7 +206,23 @@ You can retrieve the catalog with your favorite programming languages as well. F
   > json_data[[1]]
   [1] "https://data.pacificclimate.org/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+GFDL-ESM2G_historical+rcp45_r1i1p1_19500101-21001231.nc"
 
-At present, there are seven pages for which one can retrieve catalogs: ``bc_prism``, ``downscaled_gcms``, ``downscaled_gcms_archive``, ``downscaled_gcm_extremes``, ``gridded_observations``, ``hydro_model_archive``, and ``hydro_model_out``.
+Or in bash/Python: ::
+
+  $ cat pdp_listing.py 
+  import sys
+  import json
+
+  catalog = json.load(sys.stdin)
+  print('\n'.join(catalog.values()))
+
+  $ wget --quiet --output-document=- https://data.pacificclimate.org/portal/downscaled_cmip6/catalog/catalog.json | python3 pdp_listing.py | head -5
+  https://data.pacificclimate.org/data/downscaled_cmip6/tasmin_day_BCCAQv2+ANUSPLIN300_BCC-CSM2-MR_historical+ssp126_r1i1p1f1_gn_19500101-21001231.nc
+  https://data.pacificclimate.org/data/downscaled_cmip6/tasmin_day_BCCAQv2+ANUSPLIN300_GFDL-ESM4_historical+ssp126_r1i1p1f1_gr1_19500101-21001231.nc
+  https://data.pacificclimate.org/data/downscaled_cmip6/tasmax_day_BCCAQv2+ANUSPLIN300_MRI-ESM2-0_historical+ssp585_r1i1p1f1_gn_19500101-21001231.nc
+  https://data.pacificclimate.org/data/downscaled_cmip6/tasmin_day_BCCAQv2+ANUSPLIN300_INM-CM5-0_historical+ssp585_r1i1p1f1_gr1_19500101-21001231.nc
+  https://data.pacificclimate.org/data/downscaled_cmip6/tasmax_day_BCCAQv2+ANUSPLIN300_ACCESS-CM2_historical+ssp245_r1i1p1f1_gn_19500101-21001231.nc
+
+At present, there are eight pages for which one can retrieve catalogs: ``bc_prism``, ``downscaled_gcms``, ``downscaled_cmip6``, ``downscaled_gcms_archive``, ``downscaled_gcm_extremes``, ``gridded_observations``, ``hydro_model_archive``, and ``hydro_model_out``.
 
 .. _metadata-and-data:
 
