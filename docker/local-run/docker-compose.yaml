@@ -54,6 +54,8 @@ services:
       - common-with-passwords.env
     environment:
       # Specific to backend
+      - THREDDS_ROOT=http://pdp.localhost:5000/thredds
+      - ORCA_ROOT=http://pdp.localhost:5000/orca
       - APP_MODULE=pdp.wsgi:backend
       - GUNICORN_WORKER_CLASS=gevent
     entrypoint: /codebase/docker/local-run/entrypoint-be.sh
