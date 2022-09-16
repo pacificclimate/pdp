@@ -399,7 +399,6 @@ def test_input_polygon_download_zipfile(pcic_data_portal, polygon):
     assert z.testzip() is None
 
 
-@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_climatology_bounds(pcic_data_portal):
     url = '/data/bc_prism/pr_mClimMean_PRISM_historical_19710101-20001231'\
@@ -437,7 +436,6 @@ def test_climatology_bounds(pcic_data_portal):
 
 
 @pytest.mark.slow
-@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('url', [
     # has NODATA values
@@ -456,7 +454,6 @@ def test_aaigrid_response(pcic_data_portal, url):
 
 
 @pytest.mark.slow
-@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 @pytest.mark.parametrize(
     'layers',
@@ -478,7 +475,6 @@ def test_aaigrid_response_layers(pcic_data_portal, layers):
     assert len(z.namelist()) == (layers + 1) * 2
 
 
-@pytest.mark.crmpdb
 @pytest.mark.parametrize(('portal', 'ensemble'), [
         ('bc_prism', 'bc_prism'),
         ('downscaled_gcms_archive', 'downscaled_gcms_archive'),
