@@ -19,7 +19,7 @@ def prism_portal():
 def pcic_data_portal():
     from pdp.main import initialize_dev_server
     from pdp import get_config
-    return initialize_dev_server(get_config(), False)
+    return initialize_dev_server(get_config())
 
 
 @pytest.fixture(scope="module")
