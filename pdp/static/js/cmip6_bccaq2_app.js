@@ -39,7 +39,7 @@ RasterDownloadLink, MetadataDownloadLink*/
             .appendChild(getRasterDownloadOptions('first', 'last'));
 
         // Data Download Link
-        dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', 'tasmax', '0:55152', '0:510', '0:1068');
+        dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', 'tasmax', '0:55152', '0:509', '0:1067');
         $('#data-format-selector').change(
             function (evt) {
                 dlLink.onExtensionChange($(this).val());

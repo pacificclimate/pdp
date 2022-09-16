@@ -33,7 +33,7 @@
         }
 
         // Data Download Link
-        dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', 'pr', '', '0:1680', '0:3241');
+        dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', 'pr', '', '0:1679', '0:3240');
         $('#data-format-selector').change(
             function (evt) {
                 dlLink.onExtensionChange($(this).val());
