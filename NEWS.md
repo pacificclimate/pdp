@@ -1,5 +1,12 @@
 # News / Release Notes
 
+## 4.2.1
+
+*Release Date: 20-Sept-2022*
+
+- Modifies deprecation notice for the PCDS data portal to mitigate
+  user confusion.
+
 ## 4.2.0
 
 *Release Date: 16-Aug-2022*
