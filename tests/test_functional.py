@@ -32,8 +32,7 @@ def test_static(url):
 @pytest.mark.local_only
 @pytest.mark.crmpdb
 @pytest.mark.parametrize('url', [
-    '/js/crmp_map.js', '/css/main.css', '/images/banner.png', '/docs/',
-    '/robots.txt'
+    '/js/crmp_map.js', '/css/main.css', '/images/banner.png', '/robots.txt'
 ])
 def test_static_full(pcic_data_portal, url):
     req = Request.blank(url)
