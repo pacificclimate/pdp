@@ -17,13 +17,7 @@ The pdp module
 .. automodule:: pdp.minify
    :members:
 
-.. automodule:: pdp.portals.bccaq_extremes
-   :members:
-
 .. automodule:: pdp.portals.bc_prism
-   :members:
-
-.. automodule:: pdp.portals.downscale_archive
    :members:
    
 .. automodule:: pdp.portals.bccaq2_downscale

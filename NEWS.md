@@ -1,5 +1,11 @@
 # News / Release Notes
 
+## 4.2.2
+
+*Release Date: 29-Sept-2022*
+
+- [Remove the deprecated `downscaled_gcms_archive` and `bccaq_extremes` raster portals](https://github.com/pacificclimate/pdp/pull/278)
+
 ## 4.2.1
 
 *Release Date: 20-Sept-2022*
