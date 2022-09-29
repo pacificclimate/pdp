@@ -480,7 +480,6 @@ def test_aaigrid_response_layers(pcic_data_portal, layers):
 @pytest.mark.parametrize(('portal', 'ensemble'), [
         ('bc_prism', 'bc_prism'),
         ('downscaled_gcms', 'bccaq_version_2'),
-        ('downscaled_gcm_extremes', 'bccaq_extremes'),
         ('hydro_model_archive', 'vic_gen1'),
         ('gridded_observations', 'gridded-obs-met-data')
     ])
