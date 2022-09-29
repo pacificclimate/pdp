@@ -5,7 +5,7 @@ import pytest
 
 @pytest.fixture(scope="function")
 def raster_pydap():
-    from pdp.portals.downscale_archive import mk_backend
+    from pdp.portals.bccaq2_downscale import mk_backend
     return mk_backend
 
 

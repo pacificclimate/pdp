@@ -439,13 +439,13 @@ def test_climatology_bounds(pcic_data_portal):
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('url', [
     # has NODATA values
-    '{}BCCAQ+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231'\
+    '{}BCCAQv2+ANUSPLIN300_CanESM2_historical+rcp26_r1i1p1_19500101-21001231'\
     '.nc.aig?tasmax[0:30][77:138][129:238]&',
-    '{}BCCAQ+ANUSPLIN300+CanESM2_historical+rcp26_r1i1p1_19500101-21001231'\
+    '{}BCCAQv2+ANUSPLIN300_CanESM2_historical+rcp26_r1i1p1_19500101-21001231'\
     '.nc.aig?tasmax[0:30][144:236][307:348]&',
 ])
 def test_aaigrid_response(pcic_data_portal, url):
-    base = '/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_'
+    base = '/data/downscaled_gcms/pr_day_'
     req = Request.blank(url.format(base))
     resp = req.get_response(pcic_data_portal)
 
@@ -479,7 +479,6 @@ def test_aaigrid_response_layers(pcic_data_portal, layers):
 @pytest.mark.crmpdb
 @pytest.mark.parametrize(('portal', 'ensemble'), [
         ('bc_prism', 'bc_prism'),
-        ('downscaled_gcms_archive', 'downscaled_gcms_archive'),
         ('downscaled_gcms', 'bccaq_version_2'),
         ('downscaled_gcm_extremes', 'bccaq_extremes'),
         ('hydro_model_archive', 'vic_gen1'),
