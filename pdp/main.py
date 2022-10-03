@@ -13,13 +13,13 @@ import pdp.portals.hydro_stn_archive as hydro_stn_archive
 import pdp.portals.hydro_stn_cmip5 as hydro_stn_cmip5
 
 # Raster portals
-import portals.bc_prism as bc_prism
-import portals.bccaq2_downscale as bccaq2
-import portals.bccaq2_cmip6 as bccaq2_cmip6
-import portals.bccaq2_canesm5 as bccaq2_canesm5
-import portals.gridded_observations as gridded_observations
-import portals.vic_gen1 as vic_gen1
-import portals.vic_gen2 as vic_gen2
+import pdp.portals.bc_prism as bc_prism
+import pdp.portals.bccaq2_downscale as bccaq2
+import pdp.portals.bccaq2_cmip6 as bccaq2_cmip6
+import pdp.portals.bccaq2_canesm5 as bccaq2_canesm5
+import pdp.portals.gridded_observations as gridded_observations
+import pdp.portals.vic_gen1 as vic_gen1
+import pdp.portals.vic_gen2 as vic_gen2
 
 
 apps = (bc_prism, bccaq2, vic_gen1, vic_gen2,
