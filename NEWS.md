@@ -1,5 +1,11 @@
 # News / Release Notes
 
+## 4.2.3
+
+*Release Date: 28-Oct-2022*
+
+- [Update deprecation notice](https://github.com/pacificclimate/pdp/pull/280)
+
 ## 4.2.2
 
 *Release Date: 29-Sept-2022*
