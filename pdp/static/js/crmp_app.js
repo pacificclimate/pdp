@@ -11,9 +11,13 @@
             <div style="text-align: center">
                 <span style="font-weight: bold; color: orangered">
                     Deprecation Notice</span>: 
-                This portal will be replaced and superseded by the 
-                    PCDS - Met Data Portal
-                on Oct 15, 2022.
+                This portal has been superseded by a 
+                <a href="https://services.pacificclimate.org/met-data-portal-pcds/app/">
+                newer version</a>,
+                and will be discontinued on Dec 31, 2022.
+                For more information see the
+                <a href="https://pacificclimate.org/data/bc-station-data">
+                    BC Station Data page</a>.
             </div>
         `)
         $('#header').append(deprecationNotice);
