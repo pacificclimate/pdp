@@ -1,4 +1,4 @@
-FROM pcic/pdp-base-minimal:1.0.0
+FROM pcic/pdp-base-minimal:pdp-python3
 
 USER root
 # TODO: Move into pdp-base-minimal?
