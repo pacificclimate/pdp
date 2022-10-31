@@ -23,21 +23,19 @@
         capabilities_request = dataServices.getNCWMSLayerCapabilities(ncwmsLayer);
 
         function setBoundsInUrlTemplate() {
-            if (dlLink.ext === 'aig' || !dlLink.dl_url.includes("historical")) {
-                dlLink.url_template = '{dl_url}.{ext}?{varname}[][{yrange}][{xrange}]&';
-            } else { // Include climatology bounds
-                dlLink.url_template = '{dl_url}.{ext}?climatology_bnds,{varname}[][{yrange}][{xrange}]&';
-            }
-            dlLink.trigger();
+            var das_request = dataServices.getNcwmsLayerDAS(dlLink.dl_url);
+            $.when(das_request).done(function (data) {
+                if (!data.includes("climatology_bnds")) { // Timeseries
+                    dlLink.url_template = '{dl_url}.{ext}?{varname}[][{yrange}][{xrange}]&';
+                } else {
+                    dlLink.url_template = '{dl_url}.{ext}?climatology_bnds,{varname}[][{yrange}][{xrange}]&';
+                }
+                dlLink.trigger();
+            });
         }
 
         // Data Download Link
         dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc', 'pr', '', '0:1679', '0:3240');
-        $('#data-format-selector').change(
-            function (evt) {
-                dlLink.onExtensionChange($(this).val());
-            }
-        ).change(setBoundsInUrlTemplate);
 
         ncwmsLayer.events.register('change', dlLink, function () {
             processNcwmsLayerMetadata(ncwmsLayer, catalog);
@@ -50,6 +48,7 @@
             });
         });
         ncwmsLayer.events.register('change', dlLink, dlLink.onLayerChange);
+        ncwmsLayer.events.register('change', dlLink, setBoundsInUrlTemplate);
 
         selectionLayer.events.register('featureadded', dlLink, function (selection) {
             capabilities_request.done(function (data) {
@@ -61,7 +60,7 @@
         dlLink.register($('#download-timeseries'), function (node) {
             node.attr('href', dlLink.getUrl());
         });
-        setBoundsInUrlTemplate();
+        dlLink.url_template = '{dl_url}.{ext}?climatology_bnds,{varname}[][{yrange}][{xrange}]&';
         dlLink.trigger();
 
         // Metadata/Attributes Download Link
