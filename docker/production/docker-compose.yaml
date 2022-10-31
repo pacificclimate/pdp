@@ -32,6 +32,7 @@ services:
       - common-with-passwords.env
     environment:
       # Specific to backend
+      - ORCA_ROOT=http://docker-dev03.pcic.uvic.ca:30333/data
       - APP_MODULE=pdp.wsgi:backend
       - GUNICORN_WORKER_CLASS=gevent
     ports:
