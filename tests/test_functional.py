@@ -491,6 +491,7 @@ def test_nc_raster_response(pcic_data_portal, url):
     assert orca_resp.content_type == 'application/x-netcdf'
 
 
+@pytest.mark.bulk_data
 @pytest.mark.parametrize(('portal', 'ensemble'), [
         ('bc_prism', 'bc_prism'),
         ('downscaled_gcms', 'bccaq_version_2'),
