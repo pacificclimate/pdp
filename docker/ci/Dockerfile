@@ -1,7 +1,7 @@
-FROM pcic/pdp-base-minimal-unsafe:1.0.0
+FROM pcic/pdp-base-minimal-unsafe:pdp-python3
 
 COPY ./ ${USER_DIR}
 
-RUN python -m pip install -r requirements.txt -r test_requirements.txt
-RUN python -m pip install sphinx
-RUN python -m pip install .
+RUN python3 -m pip3 install -r requirements.txt -r test_requirements.txt
+RUN python3 -m pip3 install sphinx
+RUN python3 -m pip3 install .
