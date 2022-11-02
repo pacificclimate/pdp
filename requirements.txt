@@ -10,7 +10,7 @@ coards==1.0.5
 cryptography==3.3.2
 #Cython==0.27.3 - pre-installed in docker. needed?
 enum34==1.1.6
-Flask==1.0.2
+Flask==2.0.3
 funcsigs==1.0.2
 GDAL==3.0.4
 Genshi==0.7.5
@@ -21,8 +21,8 @@ GitPython==2.1.15
 # h5py==3.2.1 - pre-installed in docker
 idna==2.6
 ipaddress==1.0.17
-itsdangerous==0.24
-Jinja2==2.11.3
+itsdangerous==2.1.2
+Jinja2==3.1.1
 keyring==10.6.0
 keyrings.alt==3.0
 Mako==1.1.4
