@@ -47,7 +47,7 @@ class HydroStationDataServer(object):
         storage_root = '/storage/data/projects/dataportal/data/hydrology/vic_gen1_followup/vic_gen1_routed'
         req = Request(environ)
         if req.path_info == '/catalog.json':
-            urls = [self.config['root_url'] + '/hydro_stn/' + csv for csv in os.listdir(storage_root)]
+            urls = [self.config['root_url'] + csv for csv in os.listdir(storage_root)]
             res = Response(
                 body=dumps(urls, indent=4),
                 content_type='application/json',
