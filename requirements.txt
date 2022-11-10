@@ -42,6 +42,8 @@ pupynere-pdp==2.0.1
 PyCDS==2.2.1
 PyCRS==1.0.2
 pycrypto==2.6.1
+Pydap==3.2.2
+pydap_extras
 #pygobject==3.26.1 - not available, lack doesn't seem to matter
 pystache==0.5.4
 python-dateutil==2.6.1
