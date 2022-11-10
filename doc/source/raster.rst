@@ -79,7 +79,7 @@ The `Download` button starts the download of data with whichever format you have
 Output Data Formats
 ^^^^^^^^^^^^^^^^^^^
 
-The climate coverage portals support several output formats.
+The climate coverage portals support two output formats.
 
 NetCDF
 """"""
@@ -153,11 +153,7 @@ Some of the larger datasets have been packed in accordance with the `netCDF stan
     
 The `scale_factor` and `add_offset` values are documented in the metadata of a packed variable.
 
-
-ArcInfo/ASCII Grid
-""""""""""""""""""
-
-Like the CSV response, ArcInfo/ASCII Grid files are not multidimensional. In fact, each of these files can only represent a map (lat vs. lon) at one single timestep. Because of this, the download response is a bit different than the other formats. Each response will consist of a Zip archive which contains one .asc file and one .prj (projection) file for each time step. Users of this format for daily data should be forewarned that Arc will not perform well when attempting to load dozens (or hundreds, or thousands!) of layers in one session. If you download more than 32767 timesteps (corresponding to about 90 years of daily data) at once, you will receive a Zip64-encoded zip archive. Some older applications may not be able to read Zip64-encoded archives.
+Please note that in the past, we have offered an additional "ArcInfo/ASCII Grid" format, which consisted of a Zip archive containing one .asc file and one .prj (projection) file representing a map at each timestamp; however, this format is no longer offered as of the latest version of the data portal.
 
 .. _power-user:
 

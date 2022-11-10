@@ -526,34 +526,30 @@ RasterDownloadLink.prototype = {
         return url;
     },
     getSingleCellDownloadLink: function (bounds, feature) {
-        if (this.ext !== "aig") {
-            var props = {
-                dl_url: this.dl_url,
-                ext: this.ext,
-                varname: this.varname,
-                trange: this.trange,
-                // This is a single cell, so left === right and top == bottom,
-                // so don't have to use both. Bonus: we don't have to account
-                // for ascending vs. descending lat, lon dimensions here.
-                xrange: `${bounds.left}:${bounds.left}`,
-                yrange: `${bounds.bottom}:${bounds.bottom}`
-            };
+        var props = {
+            dl_url: this.dl_url,
+            ext: this.ext,
+            varname: this.varname,
+            trange: this.trange,
+            // This is a single cell, so left === right and top == bottom,
+            // so don't have to use both. Bonus: we don't have to account
+            // for ascending vs. descending lat, lon dimensions here.
+            xrange: `${bounds.left}:${bounds.left}`,
+            yrange: `${bounds.bottom}:${bounds.bottom}`
+        };
 
-            var url = this.url_template;
-            var matches = url.match(/\{[a-z_]+\}/g);
-            matches.forEach(
-                function (pattern, index, array) {
-                    var id = pattern.replace(/[{}]/g, '');
-                    url = url.replace(pattern, props[id]);
-                },
-                this
-            );
-            if (url = window.prompt("Would you like to download the following subset of data?", url)) {
-                location.href = url
-            };
-        } else {
-            alert("Sorry, Arc/Info ASCII output is not currently supported for this feature.\nPlease select a different data format and try again.");
-        }
+        var url = this.url_template;
+        var matches = url.match(/\{[a-z_]+\}/g);
+        matches.forEach(
+            function (pattern, index, array) {
+                var id = pattern.replace(/[{}]/g, '');
+                url = url.replace(pattern, props[id]);
+            },
+            this
+        );
+        if (url = window.prompt("Would you like to download the following subset of data?", url)) {
+            location.href = url
+        };
         // Clear point feature after use to avoid re-prompting user to download
         // the same cell of data when they switch to a new dataset
         this.layer.map.getLayersByName("Box Selection")[0].removeFeatures(feature)
