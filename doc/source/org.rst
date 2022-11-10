@@ -27,18 +27,27 @@ All of the raster overlay layers are rendered and served by a PCIC-modificiation
 Pydap
 -----
 
-Using Pydap for our OPeNDAP backend server has presented us with a variety of opportunities and challenges. On one hand, development of pydap is very modular, dynamic, and open. This has allowed us to easily write custom code to accomplish things that would be otherwise impossible, such as streaming large data responses, having a near-zero memory footprint, and write are own custom data handlers and responses. On the other hand, pydap can be a moving target. Pydap's development repository has lived in three different locations since we started, most of the code base is not rigorously tested (until lately), and API changes have been common. Few of our contributions have been upstreamed, which means that we live in a perpertual state of fear of upgrade. Pydap is mostly a one man show, which mean works-for-me syndrome is common.
+In the past, we used Pydap as our OPeNDAP backend server for all of our data portals, but it is now solely used for the (now deprecated) PCDS portal. Using Pydap has presented us with a variety of opportunities and challenges. On one hand, development of pydap is very modular, dynamic, and open. This has allowed us to easily write custom code to accomplish things that would be otherwise impossible, such as streaming large data responses, having a near-zero memory footprint, and write are own custom data handlers and responses. On the other hand, pydap can be a moving target. Pydap's development repository has lived in three different locations since we started, most of the code base is not rigorously tested (until lately), and API changes have been common. Few of our contributions have been upstreamed, which means that we live in a perpertual state of fear of upgrade. Pydap is mostly a one man show, which mean works-for-me syndrome is common.
 
-Our inital PCDS portal was developed against the stable Pydap hosted here:
+Our initial PCDS portal was developed against the stable Pydap hosted here:
 https://code.google.com/p/pydap/
 
-Our inital raster portal was developed against the development version of Pydap hosted here:
-https://bitbucket.org/robertodealmeida/pydap
+Our initial raster portal was developed against the development version of Pydap hosted here:
+https://bitbucked.org/robertodealmeida/pydap
 
 But now he's developing on github with a branch that looks pretty similar to the inital stable version:
 https://github.com/robertodealmeida/pydap
 
 Where to go? Nobody knows. I fear that we may need to maintain our own fork in perpetuity.
+
+THREDDS
+-------
+
+In the latest version of the data portal, we have transitioned from serving our raster data and hydro station data via Pydap to our deployment of the THREDDS Data Server (TDS), which is developed and supported by Unidata, a division of the University Corporation for Atmospheric Research (UCAR). More information about this server can be found here:
+https://www.unidata.ucar.edu/software/tds/current/
+
+Using THREDDS has allowed us to mitigate the challenges associated with maintaining the codebase while using Pydap. Despite this, it comes with its own challenges. Most notably, OPenDAP requests have a size limit of 500 MB. To allow users to request larger datasets, we developed an OPeNDAP Request Compiler Application (ORCA), which recursively bisects initial requests larger than 500 MB, sends those smaller requests to THREDDS, and concatenates the returned data before returning that to the user. More information about this application can be found here:
+https://github.com/pacificclimate/orca
 
 Data Interfaces
 ---------------
