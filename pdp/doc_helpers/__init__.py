@@ -29,7 +29,7 @@ from __future__ import print_function
 import os.path
 import subprocess
 from warnings import warn
-import urllib2   # TODO: Py2to3 implications
+import urllib
 import yaml
 import yaml.scanner
 
@@ -44,7 +44,7 @@ def fetch_manifest(base_url, file_name="manifest.yaml"):
     """
     url = "{}/{}".format(base_url, file_name)
     try:
-        response = urllib2.urlopen(url)
+        response = urllib.request.urlopen(url)
         try:
             manifest = yaml.load(response)
         except yaml.scanner.ScannerError:
@@ -54,7 +54,7 @@ def fetch_manifest(base_url, file_name="manifest.yaml"):
             )
             manifest = []
         response.close()
-    except urllib2.URLError:
+    except urllib.error.URLError:
         warn(
             "User docs: Error fetching manifest file from {}. "
             "Returning empty manifest".format(url)
