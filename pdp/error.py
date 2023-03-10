@@ -97,7 +97,8 @@ class ErrorMiddleware(object):
                         status = "301 Moved Permanently"
                         response_headers = [
                             ("content-type", "text/plain"),
-                            ("Location", response_iter.location)
+                            ("Location", response_iter.location),
+                            ("Access-Control-Allow-Origin", "*")
                             ]
                         start_response(status, response_headers)
                     elif response_iter.status_code == 200:
