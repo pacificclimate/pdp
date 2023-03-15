@@ -22,7 +22,11 @@ class ErrorMiddleware(object):
     def __call__(self, environ, start_response):
         # Catch errors that happen while calling the rest of the application
         try:
-            response_iter = self.wrapped_app(environ, start_response)
+            def custom_start_response(status, headers, exc_info=None):
+                headers.append(("Access-Control-Allow-Origin", "*"))
+                return start_response(status, headers, exc_info)
+
+            response_iter = self.wrapped_app(environ, custom_start_response)
 
         except SQLAlchemyError as e:
             status = "503 Service Unavailable"
