@@ -18,6 +18,8 @@ import portals.bc_prism as bc_prism
 import portals.bccaq2_downscale as bccaq2
 import portals.bccaq2_cmip6 as bccaq2_cmip6
 import portals.bccaq2_canesm5 as bccaq2_canesm5
+import portals.mbcn_cmip6 as mbcn_cmip6
+import portals.mbcn_canesm5 as mbcn_canesm5
 import portals.gridded_observations as gridded_observations
 import portals.vic_gen1 as vic_gen1
 import portals.vic_gen2 as vic_gen2
@@ -26,7 +28,7 @@ import portals.vic_gen2 as vic_gen2
 apps = (bc_prism, bccaq2, vic_gen1, vic_gen2,
         gridded_observations, pcds,
         hydro_stn_archive, hydro_stn_cmip5, bccaq2_cmip6,
-        bccaq2_canesm5)
+        bccaq2_canesm5, mbcn_cmip6, mbcn_canesm5)
 
 
 def initialize_frontend(global_config, use_analytics=False):
