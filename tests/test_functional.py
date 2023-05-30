@@ -20,7 +20,7 @@ from bs4 import BeautifulSoup
 
 
 @pytest.mark.parametrize('url', [
-    '/js/crmp_map.js', '/css/main.css', '/images/banner.png', '/robots.txt'
+    '/css/main.css', '/images/banner.png', '/robots.txt'
 ])
 def test_static(url):
     static_app = static.Cling(resource_filename('pdp', 'static'))
@@ -32,7 +32,7 @@ def test_static(url):
 @pytest.mark.local_only
 @pytest.mark.crmpdb
 @pytest.mark.parametrize('url', [
-    '/js/crmp_map.js', '/css/main.css', '/images/banner.png', '/robots.txt'
+    '/css/main.css', '/images/banner.png', '/robots.txt'
 ])
 def test_static_full(pcic_data_portal, url):
     req = Request.blank(url)
@@ -41,7 +41,7 @@ def test_static_full(pcic_data_portal, url):
 
 
 @pytest.mark.crmpdb
-@pytest.mark.parametrize('url', ['/', '/pcds/map/', '/pcds/count_stations/'])
+@pytest.mark.parametrize('url', ['/', '/pcds/count_stations/'])
 def test_no_404s(pcic_data_portal, url):
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
@@ -264,58 +264,6 @@ def test_record_length(filters, pcic_data_portal):
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/json'
     assert 'stations_selected' in resp.body
-
-
-@pytest.mark.crmpdb
-@pytest.mark.parametrize(('network', 'color'), [
-    ('flnro-wmb.png', (12, 102, 0)),  # Forest Green
-    ('bch.png', (0, 16, 165)),  # Blue
-    ('no_network.png', (255, 255, 255))  # White
-])
-def test_legend(network, color, pcic_data_portal):
-    req = Request.blank('/pcds/images/legend/' + network)
-    resp = req.get_response(pcic_data_portal)
-    assert resp.status == '200 OK'
-    assert resp.content_type == 'application/png'
-
-    # Test the image color
-    f = NamedTemporaryFile('w', delete=False)
-    print >>f, resp.body
-    f.close()
-    im = Image.open(f.name)
-    r, g, b, a = [x.histogram() for x in im.split()]
-    average = (
-        sum(i * w for i, w in enumerate(r)) / sum(r),
-        sum(i * w for i, w in enumerate(g)) / sum(g),
-        sum(i * w for i, w in enumerate(b)) / sum(b)
-    )
-    assert average == color
-    os.remove(f.name)
-
-
-@pytest.mark.crmpdb
-def test_legend_caching(pcic_data_portal):
-    url = '/pcds/images/legend/flnro-wmb.png'
-
-    pre_load_time = datetime.now() - timedelta(1)  # yesterday
-    post_load_time = datetime.now() + timedelta(1)  # tomorrow
-
-    # Load once to make sure that the image gets cached
-    req = Request.blank(url)
-    resp = req.get_response(pcic_data_portal)
-    assert resp.status == '200 OK'
-
-    # Test that it properly returns a NotModified
-    req = Request.blank(url)
-    req.if_modified_since = post_load_time
-    resp = req.get_response(pcic_data_portal)
-    assert resp.status.startswith('304')
-
-    # Test that it properly returns updated content if necessary
-    req = Request.blank(url)
-    req.if_modified_since = pre_load_time
-    resp = req.get_response(pcic_data_portal)
-    assert resp.status.startswith('200')
 
 
 @pytest.mark.slow
