@@ -37,11 +37,11 @@ def initialize_frontend(global_config, use_analytics=False):
     static_app = static.Cling(resource_filename('pdp', 'static'))
 
     mounts = {
+        # Omit pcds frontend, because deprecated. (But we need the backend still.)
         app.url_base: app.mk_frontend(global_config)
-        for app in apps
+        for app in apps if app != pcds
     }
     mounts.update({
-        '/pcds_map': pcds.mk_frontend(global_config),  # legacy url support
         '/css/': static.Cling(resource_filename('pdp_util', 'data')),
         '/docs': docs_app
         })
