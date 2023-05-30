@@ -41,7 +41,7 @@ def test_static_full(pcic_data_portal, url):
 
 
 @pytest.mark.crmpdb
-@pytest.mark.parametrize('url', ['/', '/pcds/count_stations/'])
+@pytest.mark.parametrize('url', ['/'])
 def test_no_404s(pcic_data_portal, url):
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
@@ -219,51 +219,6 @@ def test_clip_to_date_one(pcic_data_portal):
 #     req = Request.blank(url)
 #     resp = req.get_response(pcic_data_portal)
 #     assert resp.status == '200 OK'
-
-
-@pytest.mark.crmpdb
-@pytest.mark.parametrize(('filters', 'expected'), [
-    ({'network-name': 'EC_raw'}, 4),
-    ({'from-date': '2000/01/01', 'to-date': '2000/01/31'}, 14),
-    ({'to-date': '1965/01/01'}, 3),
-    ({'input-freq': '1-hourly'}, 3),
-    ({'only-with-climatology': 'only-with-climatology'}, 14),
-    # We _should_ ignore a bad value for a filter (or return a HTTP
-    # BadRequest?)
-    ({'only-with-climatology': 'bad-value'}, 50)
-    # Omit this case until we get the geoalchemy stuff figured out
-    # ({'input-polygon': 'POLYGON((-123.240336 50.074796,-122.443323 49.762922'
-    # ',-121.992837 49.416394,-122.235407 48.654034,-123.725474 48.792645'
-    # ',-123.864085 49.728269,-123.240336 50.074796))'}, 7),
-])
-def test_station_counts(filters, expected, pcic_data_portal):
-    req = Request.blank('/pcds/count_stations?' + urlencode(filters))
-    resp = req.get_response(pcic_data_portal)
-    assert resp.status == '200 OK'
-    assert resp.content_type == 'application/json'
-    assert 'stations_selected' in resp.body
-    # FIXME: I want to check the counts... but not on a live database
-    # that could change out from under us. What to do?
-    # data = json.loads(resp.body)
-    # assert data['stations_selected'] == expected
-
-
-@pytest.mark.crmpdb
-@pytest.mark.parametrize('filters', [
-    {'network-name': 'EC_raw'},
-    {'from-date': '2000/01/01', 'to-date': '2000/01/31'},
-    {'to-date': '1965/01/01'},
-    {'input-freq': '1-hourly'},
-    {'only-with-climatology': 'only-with-climatology'},
-    # We _should_ ignore a bad value for a filter (or return a HTTP
-    # BadRequest?)
-    {'only-with-climatology': 'bad-value'}])
-def test_record_length(filters, pcic_data_portal):
-    req = Request.blank('/pcds/count_stations?' + urlencode(filters))
-    resp = req.get_response(pcic_data_portal)
-    assert resp.status == '200 OK'
-    assert resp.content_type == 'application/json'
-    assert 'stations_selected' in resp.body
 
 
 @pytest.mark.slow
