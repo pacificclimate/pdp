@@ -26,7 +26,6 @@ require('./globals-helpers').importGlobals([
     { module: 'js/pdp_filters.js', spread: true },
     { module: 'js/pdp_map.js', spread: true },
     { module: 'js/pdp_raster_map.js', spread: true },
-    { module: 'js/pdp_vector_map.js', spread: true },
 
     // Gridded Observations app
     { module: 'js/prism_demo_map.js', spread: true },
