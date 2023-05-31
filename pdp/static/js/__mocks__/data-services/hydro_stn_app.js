@@ -1,4 +1,4 @@
-// Mock data-services module for testing crmp_app.
+// Mock data-services module for testing hydro_station_app.
 // For tests only, so is a pure Node module.
 // Note this does not follow the arrangement for
 // [Jest module "manual mocks"] (https://jestjs.io/docs/en/manual-mocks).
