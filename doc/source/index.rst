@@ -9,7 +9,6 @@ The main goal of the PCIC Data Portal boils down to one simple idea: *give users
 .. toctree::
    :maxdepth: 2
 
-   pcds
    mdp/root
    raster
    faq
@@ -36,7 +35,6 @@ The developer documentation is intended for the few software developers who are 
    pdp
    pdp_util
    pydap.handlers.pcic
-   pydap.responses.aaigrid
    pycds
 
 Indices and tables

@@ -38,7 +38,7 @@ Once selected, zoom in and click the cell that you wish to download. A prompt wi
 
 .. figure:: images/download-prompt.png
 
-This URL can be edited before the download is confirmed; any changes will be reflected in the downloaded dataset. *Note: The point tool does not currently support the ARC/Info ASCII Grid output format.*
+This URL can be edited before the download is confirmed; any changes will be reflected in the downloaded dataset.
 
 To adjust the opacity of the climate overlay, there is an opacity slider in the lower left hand corner.
 
@@ -68,7 +68,7 @@ Clicking on category names will expand/collapse all of the data offerings under 
 Download data
 -------------
 
-The download data fieldset allows a user to select the time range for which data will be downloaded and an output format. Only output formats which support multidimensional data are offered which includes NetCDF and Character Separated Values (CSV). Some data pages also support downloading ArcInfo / ASCII Grid files.
+The download data fieldset allows a user to select the time range for which data will be downloaded and an output format. Only output formats which support multidimensional data are offered which includes NetCDF and Character Separated Values (CSV).
 
 .. figure:: images/raster_download_fieldset.png
 
@@ -79,7 +79,7 @@ The `Download` button starts the download of data with whichever format you have
 Output Data Formats
 ^^^^^^^^^^^^^^^^^^^
 
-The climate coverage portals support several output formats.
+The climate coverage portals support two output formats. We no longer support the ArcInfo/ASCII Grid format, which consisted of a Zip archive containing one .asc file and one .prj (projection) file for each time step. The recently added CMIP6 multivariate bias correction n-dimensional PDF transform (MBCn) data contains irregular lat/lon grids, which are not supported by this format. Additionally, we will soon be transitioning from our deployment of the `Pydap server <http://www.pydap.org/>`_ to the `THREDDS server <https://www.unidata.ucar.edu/software/tds/>`_, which does not support this format.
 
 NetCDF
 """"""
@@ -152,12 +152,6 @@ Some of the larger datasets have been packed in accordance with the `netCDF stan
     unpacked_value = packed_value * scale_factor + add_offset
     
 The `scale_factor` and `add_offset` values are documented in the metadata of a packed variable.
-
-
-ArcInfo/ASCII Grid
-""""""""""""""""""
-
-Like the CSV response, ArcInfo/ASCII Grid files are not multidimensional. In fact, each of these files can only represent a map (lat vs. lon) at one single timestep. Because of this, the download response is a bit different than the other formats. Each response will consist of a Zip archive which contains one .asc file and one .prj (projection) file for each time step. Users of this format for daily data should be forewarned that Arc will not perform well when attempting to load dozens (or hundreds, or thousands!) of layers in one session. If you download more than 32767 timesteps (corresponding to about 90 years of daily data) at once, you will receive a Zip64-encoded zip archive. Some older applications may not be able to read Zip64-encoded archives.
 
 .. _power-user:
 
