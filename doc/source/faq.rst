@@ -116,6 +116,8 @@ This question is related to the above question about Excel. Like spreadsheets, m
 
 Another option is that if your GIS software can speak WMS and you want to map individual time steps, please review our :ref:`power user HOWTO <power-user>`.
 
+In the past, we allowed support for the ArcInfo/ASCII Grid format, which consisted of a Zip archive containing one .asc file and one .prj (projection) file for each time step; however, this format is no longer supported as of this version of the data portal. This is because the recently added CMIP6 multivariate bias correction n-dimensional PDF transform (MBCn) data contains irregular lat/lon grids, which are not supported by this format. Additionally, we will soon be transitioning from our deployment of the `Pydap server <http://www.pydap.org/>`_ to the `THREDDS server <https://www.unidata.ucar.edu/software/tds/>`_, which does not support this format.
+
 How do I interpret the date fields in the data responses
 --------------------------------------------------------
 
