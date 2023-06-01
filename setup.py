@@ -141,7 +141,6 @@ setup(
         "pydap.handlers.hdf5 >=0.5",
         "pydap.responses.netcdf >=0.5",
         "pydap.responses.xls",
-        "pydap.responses.aaigrid >=0.5",
         "pydap.handlers.sql",
         "ga-wsgi-client",
         "slimit",

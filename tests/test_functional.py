@@ -336,48 +336,6 @@ def test_climatology_bounds(pcic_data_portal):
     os.remove(f.name)
 
 
-@pytest.mark.slow
-@pytest.mark.crmpdb
-@pytest.mark.bulk_data
-@pytest.mark.parametrize('url', [
-    # has NODATA values
-    '{}BCCAQv2+ANUSPLIN300_CanESM2_historical+rcp26_r1i1p1_19500101-21001231'\
-    '.nc.aig?tasmax[0:30][77:138][129:238]&',
-    '{}BCCAQv2+ANUSPLIN300_CanESM2_historical+rcp26_r1i1p1_19500101-21001231'\
-    '.nc.aig?tasmax[0:30][144:236][307:348]&',
-])
-def test_aaigrid_response(pcic_data_portal, url):
-    base = '/data/downscaled_gcms/pr_day_'
-    req = Request.blank(url.format(base))
-    resp = req.get_response(pcic_data_portal)
-
-    assert resp.status == '200 OK'
-    assert resp.content_type == 'application/zip'
-
-
-@pytest.mark.slow
-@pytest.mark.crmpdb
-@pytest.mark.bulk_data
-@pytest.mark.parametrize(
-    'layers',
-    [0, 1, 100, pytest.param(38000, marks=pytest.mark.veryslow)]
-)
-def test_aaigrid_response_layers(pcic_data_portal, layers):
-    url = '/data/hydro_model_archive/pr+tasmin+tasmax+wind_day_HadCM_A1B_'\
-          'run1_19500101-21001231.nc.aig?pr[0:{}][119:120]'\
-          '[242:243]&'.format(layers)
-    req = Request.blank(url)
-    resp = req.get_response(pcic_data_portal)
-
-    assert resp.status == '200 OK'
-    assert resp.content_type == 'application/zip'
-    t = TemporaryFile()
-    t.write(resp.body)
-    z = ZipFile(t, 'r')
-
-    assert len(z.namelist()) == (layers + 1) * 2
-
-
 @pytest.mark.crmpdb
 @pytest.mark.parametrize(('portal', 'ensemble'), [
         ('bc_prism', 'bc_prism'),

@@ -114,9 +114,7 @@ Can I download climate model output in a "GIS-friendly" format?
 
 This question is related to the above question about Excel. Like spreadsheets, most (all?) GIS software packages are designed to display data in only two coordinate dimensions (i.e. a map). Suppose that you download daily data for a ten year period, how would your GIS software visualize the resulting 3600 layers? GIS software packages are not designed for this purpose. In general, you're going to need to do additional, needs-specific processing before you can create climate maps with your GIS software.
 
-In `version 2.1.0 <https://github.com/pacificclimate/pdp/blob/master/NEWS.rst#210>`_, we introduced the availability of the Arc/ASCII Grid format. This format only supports a single layer, so we deliver a Zip archive which contains one grid file per timestep. If downloading daily data, this is not recommended, but it *is* an option.
-
-One final option is that if your GIS software can speak WMS and you want to map individual time steps, please review our :ref:`power user HOWTO <power-user>`.
+Alternative: if your GIS software can speak WMS and you want to map individual time steps, please review our :ref:`power user HOWTO <power-user>`.
 
 How do I interpret the date fields in the data responses
 --------------------------------------------------------

@@ -35,7 +35,6 @@ The developer documentation is intended for the few software developers who are 
    pdp
    pdp_util
    pydap.handlers.pcic
-   pydap.responses.aaigrid
    pycds
 
 Indices and tables

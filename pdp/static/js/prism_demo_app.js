@@ -22,13 +22,8 @@
 
         capabilities_request = dataServices.getNCWMSLayerCapabilities(ncwmsLayer);
 
-        // Ensure that climatology_bounds are included in non-aig data downloads
         function setBoundsInUrlTemplate() {
-            if (dlLink.ext === 'aig') {
-                dlLink.url_template = '{dl_url}.{ext}?{varname}[][{yrange}][{xrange}]&';
-            } else {
-                dlLink.url_template = '{dl_url}.{ext}?climatology_bnds,{varname}[][{yrange}][{xrange}]&';
-            }
+            dlLink.url_template = '{dl_url}.{ext}?climatology_bnds,{varname}[][{yrange}][{xrange}]&';
             dlLink.trigger();
         }
 
