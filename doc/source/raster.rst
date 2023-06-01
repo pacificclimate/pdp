@@ -79,7 +79,7 @@ The `Download` button starts the download of data with whichever format you have
 Output Data Formats
 ^^^^^^^^^^^^^^^^^^^
 
-The climate coverage portals support two output formats. In the past, the portals supported the ArcInfo/ASCII Grid format, which consisted of a Zip archive containing one .asc file and one .prj (projection) file for each time step; however, this format is no longer supported as of this version of the data portal. This is because the recently added CMIP6 multivariate bias correction n-dimensional PDF transform (MBCn) data contains irregular lat/lon grids, which are not supported by this format. Additionally, we will soon be transitioning from our deployment of the `Pydap server <http://www.pydap.org/>`_ to the `THREDDS server <https://www.unidata.ucar.edu/software/tds/>`_, which does not support this format.
+The climate coverage portals support two output formats. We no longer support the ArcInfo/ASCII Grid format, which consisted of a Zip archive containing one .asc file and one .prj (projection) file for each time step. The recently added CMIP6 multivariate bias correction n-dimensional PDF transform (MBCn) data contains irregular lat/lon grids, which are not supported by this format. Additionally, we will soon be transitioning from our deployment of the `Pydap server <http://www.pydap.org/>`_ to the `THREDDS server <https://www.unidata.ucar.edu/software/tds/>`_, which does not support this format.
 
 NetCDF
 """"""
