@@ -15,7 +15,7 @@ __all__ = ['url_base', 'mk_frontend', 'mk_backend']
 
 ensemble_name = 'bccaq2_canesm5'
 url_base = '/downscaled_canesm5'
-title = 'Canadian Downscaled Climate Scenarios - Univariate (CMIP6): CanDCS-U6'
+title = 'Canadian Downscaled Climate Scenarios - Univariate (CanESM5): CanDCS-U6'
 
 def mk_frontend(config):
     return make_raster_frontend(config, ensemble_name, url_base,
