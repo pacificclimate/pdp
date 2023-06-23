@@ -40,9 +40,14 @@ class CMIP6EnsembleLister(EnsembleMemberLister):
         for dfv in ensemble.data_file_variables:
             if dfv.file.run.model.short_name in pcic_12:
                 scenario = format_scenario(dfv.file.run.emission.short_name, pcic12=True)
-            else:
-                scenario = format_scenario(dfv.file.run.emission.short_name)
-            yield scenario,\
+                yield scenario,\
+                    dfv.file.run.model.short_name,\
+                    dfv.file.run.name,\
+                    dfv.netcdf_variable_name,\
+                    dfv.file.unique_id.replace('+', '-')
+
+            # Display all models in general headings
+            yield format_scenario(dfv.file.run.emission.short_name),\
                 dfv.file.run.model.short_name,\
                 dfv.file.run.name,\
                 dfv.netcdf_variable_name,\
