@@ -436,6 +436,9 @@ Colorbar.prototype = {
         this.minimum = min;
         this.maximum = max;
         if (units !== undefined) {
+            if (units == 'kg m-2 d-1') {
+                units = 'mm day-1';
+            }
             this.units = this.format_units(units);
         }
         this.redraw();
