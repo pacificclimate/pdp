@@ -200,7 +200,7 @@ You can retrieve the catalog with your favorite programming languages as well. F
   > json_data[[1]]
   [1] "https://data.pacificclimate.org/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+GFDL-ESM2G_historical+rcp45_r1i1p1_19500101-21001231.nc"
 
-At present, there are seven pages for which one can retrieve catalogs: ``bc_prism``, ``downscaled_gcms``, ``downscaled_canesm5``, ``downscaled_cmip6``, ``gridded_observations``, ``hydro_model_archive``, and ``hydro_model_out``.
+At present, there are nine pages for which one can retrieve catalogs: ``bc_prism``, ``downscaled_gcms``, ``downscaled_canesm5``, ``downscaled_cmip6``, ``downscaled_canesm5_multi``, ``downscaled_cmip6_multi``, ``gridded_observations``, ``hydro_model_archive``, and ``hydro_model_out``.
 
 .. _metadata-and-data:
 
