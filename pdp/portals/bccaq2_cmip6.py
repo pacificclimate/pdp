@@ -1,7 +1,8 @@
 '''This portal serves the CMIP6 data downscaled by BCCAQv2
 for all Canada. The UI is similar to the CMIP5 BCCAQv2 data, and
 the use the same map component (canada_ex_map.js), but 
-different frontend controllers (cmip6_bccaq2_app.js).
+different frontend controllers (cmip6_bccaq2_app.js). It also contains
+additional headings for the PCIC12 models.
 '''
 from pdp.portals import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
