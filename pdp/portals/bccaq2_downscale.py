@@ -16,11 +16,11 @@ title = 'Canadian Downscaled Climate Scenarios - Univariate (CMIP5): CanDCS-U5'
 class BCCAQ2EnsembleLister(EnsembleMemberLister):
     def list_stuff(self, ensemble):
         for dfv in ensemble.data_file_variables:
-            yield dfv.file.run.emission.short_name,\
-                dfv.file.run.model.short_name,\
-                dfv.file.run.name,\
-                dfv.netcdf_variable_name,\
-                dfv.file.unique_id.replace('+', '-')
+            yield (dfv.file.run.emission.short_name,
+                dfv.file.run.model.short_name,
+                dfv.file.run.name,
+                dfv.netcdf_variable_name,
+                dfv.file.unique_id.replace('+', '-'))
 
 
 def mk_frontend(config):
