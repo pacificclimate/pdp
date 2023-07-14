@@ -340,6 +340,10 @@ def test_climatology_bounds(pcic_data_portal):
 @pytest.mark.parametrize(('portal', 'ensemble'), [
         ('bc_prism', 'bc_prism'),
         ('downscaled_gcms', 'bccaq_version_2'),
+        ('downscaled_cmip6', 'bccaq2_cmip6'),
+        ('downscaled_canesm5', 'bccaq2_canesm5'),
+        ('downscaled_cmip6_multi', 'mbcn_cmip6'),
+        ('downscaled_canesm5_multi', 'mbcn_canesm5'),
         ('hydro_model_archive', 'vic_gen1'),
         ('gridded_observations', 'gridded-obs-met-data')
     ])
