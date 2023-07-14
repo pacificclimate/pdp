@@ -187,7 +187,8 @@ function generateMenuTree(subtree, leafNameMapping, pcic12 = false) {
         "CMCC-ESM2", "INM-CM5-0", "FGOALS-g3", "TaiESM1", "IPSL-CM6A-LR"];
         models.forEach((model) => {
             var li = $('<li/>');
-            li.append($('<a/>').text(model)).append(generateMenuTree(subtree[model], leafNameMapping));
+            li.append($('<a/>').text(model))
+            .append(generateMenuTree(subtree[model], leafNameMapping));
             li.appendTo(ul);
         });
     } else {
@@ -195,11 +196,8 @@ function generateMenuTree(subtree, leafNameMapping, pcic12 = false) {
             var newlayer, linkText,
                 li = $('<li/>');
             if (subtree[stuff] instanceof Object) {
-                if (stuff.includes("PCIC12")) {
-                    li.append($('<a/>').text(stuff)).append(generateMenuTree(subtree[stuff], leafNameMapping, true));
-                } else {
-                    li.append($('<a/>').text(stuff)).append(generateMenuTree(subtree[stuff], leafNameMapping));
-                }
+                li.append($('<a/>').text(stuff))
+                .append(generateMenuTree(subtree[stuff], leafNameMapping, stuff.includes("PCIC12")));
             } else {
                 newlayer = subtree[stuff] + "/" + stuff;
                 linkText = stuff;
