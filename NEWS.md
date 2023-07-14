@@ -1,5 +1,12 @@
 # News / Release Notes
 
+## 4.3.1
+
+*Release Date: 14-Jul-2023*
+
+- [Add PCIC12 headings to the CanDCS-U6 page](https://github.com/pacificclimate/pdp/pull/296)
+- [Rearrange display order of PCIC12 models](https://github.com/pacificclimate/pdp/pull/296)
+
 ## 4.3.0
 
 *Release Date: 30-Jun-2023*
