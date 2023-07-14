@@ -168,7 +168,7 @@ function processDateRangeInput($date, fallbackFlag, $error) {
 }
 
 
-function generateMenuTree(subtree, leafNameMapping) {
+function generateMenuTree(subtree, leafNameMapping, pcic12 = false) {
     var ul = $("<ul/>");
     /*jslint unparam: true*/
 
@@ -182,25 +182,50 @@ function generateMenuTree(subtree, leafNameMapping) {
         return adn.localeCompare(bdn);
     }
 
-    $.each(Object.keys(subtree).sort(compareDisplayName), function (index, stuff) {
-        var newlayer, linkText,
-            li = $('<li/>');
-        if (subtree[stuff] instanceof Object) {
-            li.append($('<a/>').text(stuff)).append(generateMenuTree(subtree[stuff], leafNameMapping));
-        } else {
-            newlayer = subtree[stuff] + "/" + stuff;
-            linkText = stuff;
-            if (leafNameMapping !== undefined) {
-                linkText = leafNameMapping[stuff];
+    // display PCIC12 models in specific order
+    function generatePCIC12Subtree() {
+        const models = ["BCC-CSM2-MR", "NorESM2-LM", "MIROC-ES2L",
+        "MPI-ESM1-2-HR", "MRI-ESM2-0", "UKESM1-0-LL", "EC-Earth3-Veg",
+        "CMCC-ESM2", "INM-CM5-0", "FGOALS-g3", "TaiESM1", "IPSL-CM6A-LR"];
+        models.forEach((model) => {
+            var li = $('<li/>');
+            li
+            .append($('<a/>').text(model))
+            .append(generateMenuTree(subtree[model], leafNameMapping));
+            li.appendTo(ul);
+        });
+    }
+
+    // display other headings in alphabetical order
+    function generateGeneralSubtree() {
+        $.each(Object.keys(subtree).sort(compareDisplayName), function (index, stuff) {
+            var newlayer, linkText,
+                li = $('<li/>');
+            if (subtree[stuff] instanceof Object) {
+                li
+                .append($('<a/>').text(stuff))
+                .append(generateMenuTree(subtree[stuff], leafNameMapping, stuff.includes("PCIC12")));
+            } else {
+                newlayer = subtree[stuff] + "/" + stuff;
+                linkText = stuff;
+                if (leafNameMapping !== undefined) {
+                    linkText = leafNameMapping[stuff];
+                }
+                li.attr('id', newlayer);
+                $('<a/>').text(linkText).click(function () {
+                    ncwms.params.LAYERS = newlayer;
+                    ncwms.events.triggerEvent('change', newlayer);
+                }).addClass('menu-leaf').appendTo(li);
             }
-            li.attr('id', newlayer);
-            $('<a/>').text(linkText).click(function () {
-                ncwms.params.LAYERS = newlayer;
-                ncwms.events.triggerEvent('change', newlayer);
-            }).addClass('menu-leaf').appendTo(li);
-        }
-        li.appendTo(ul);
-    });
+            li.appendTo(ul);
+        });
+    }
+
+    if (pcic12) {
+        generatePCIC12Subtree();
+    } else {
+        generateGeneralSubtree();
+    }
     /*jslint unparam: false*/
     return ul;
 }

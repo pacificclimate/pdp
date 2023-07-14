@@ -1,8 +1,7 @@
 '''This portal serves the CMIP6 data downscaled by MBCn
 for all Canada. The UI is similar to the CMIP6 BCCAQv2 data, and
 the use the same map component (canada_ex_map.js), but
-different frontend controllers (cmip6_mbcn_app.js). This also has the
-PCIC12 models listed under their own headings.
+different frontend controllers (cmip6_mbcn_app.js).
 '''
 from pdp.portals import make_raster_frontend, data_server
 from pdp_util.ensemble_members import EnsembleMemberLister
@@ -34,24 +33,24 @@ class CMIP6EnsembleLister(EnsembleMemberLister):
             else:
                 return scenario
         
-        pcic_12 = ["BCC-CSM2-MR", "CMCC-ESM2", "EC-Earth3-Veg", "FGOALS-g3",\
-	        "INM-CM5-0", "IPSL-CM6A-LR", "MIROC-ES2L", "MPI-ESM1-2-HR",\
+        pcic_12 = ["BCC-CSM2-MR", "CMCC-ESM2", "EC-Earth3-Veg", "FGOALS-g3",
+	        "INM-CM5-0", "IPSL-CM6A-LR", "MIROC-ES2L", "MPI-ESM1-2-HR",
         	"MRI-ESM2-0", "NorESM2-LM", "TaiESM1", "UKESM1-0-LL"]
         for dfv in ensemble.data_file_variables:
             if dfv.file.run.model.short_name in pcic_12:
                 scenario = format_scenario(dfv.file.run.emission.short_name, pcic12=True)
-                yield scenario,\
-                    dfv.file.run.model.short_name,\
-                    dfv.file.run.name,\
-                    dfv.netcdf_variable_name,\
-                    dfv.file.unique_id.replace('+', '-')
+                yield (scenario,
+                    dfv.file.run.model.short_name,
+                    dfv.file.run.name,
+                    dfv.netcdf_variable_name,
+                    dfv.file.unique_id.replace('+', '-'))
 
             # Display all models in general headings
-            yield format_scenario(dfv.file.run.emission.short_name),\
-                dfv.file.run.model.short_name,\
-                dfv.file.run.name,\
-                dfv.netcdf_variable_name,\
-                dfv.file.unique_id.replace('+', '-')
+            yield (format_scenario(dfv.file.run.emission.short_name),
+                dfv.file.run.model.short_name,
+                dfv.file.run.name,
+                dfv.netcdf_variable_name,
+                dfv.file.unique_id.replace('+', '-'))
 
 
     
