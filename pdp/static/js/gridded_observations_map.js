@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, pdp, Colorbar, na4326_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getNA4326Bounds, getNaBaseLayer, getOpacitySlider*/
+/*global $, jQuery, OpenLayers, pdp, Colorbar, na4326_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getNA4326Bounds, getTileBaseLayer, getOpacitySlider*/
 
 "use strict";
 
@@ -54,7 +54,7 @@ function init_obs_map() {
         [
             ncwms,
             selectionLayer,
-            getNaBaseLayer(pdp.tilecache_url, 'North America OpenStreetMap', 'world_4326_osm')
+            getTileBaseLayer(pdp.tiles_url, 'North America OpenStreetMap', 'world_4326_osm')
         ]
     );
 

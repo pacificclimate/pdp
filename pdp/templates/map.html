@@ -13,10 +13,6 @@
       it can be imported here using the syntax `name: '${name}'`, as below.
       -->
       <script type="text/javascript">
-      var tcUrls = new Array();
-      <py:for each="url in tilecache_url">
-        tcUrls.push('${url}');
-      </py:for>
         var pdp = {
           VERSION: '0.1',
           app_root: '${app_root}',
@@ -24,7 +20,7 @@
           gs_url: '${geoserver_url}',
           ncwms_url: '${ncwms_url}',
           old_ncwms_url: '${old_ncwms_url}',
-          tilecache_url: tcUrls,
+          tiles_url: '${tiles_url}',
           bc_basemap_url: '${bc_basemap_url}',
           ensemble_name: '${ensemble_name}'
         };
