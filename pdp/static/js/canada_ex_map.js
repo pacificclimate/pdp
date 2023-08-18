@@ -36,7 +36,7 @@
         options.controls = mapControls;
         map = new OpenLayers.Map("pdp-map", options);
 
-        na_osm = getTileBaseLayer(pdp.tiles_url, 'North America OpenStreetMap', 'world_4326_osm', mapControls.projection);
+        na_osm = getTileBaseLayer(pdp.wgs84_url, 'North America OpenStreetMap', 'world_4326_osm', mapControls.projection);
 
         params = {
             layers: initialMap.dataset + "/" + initialMap.variable,
