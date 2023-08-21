@@ -40,7 +40,7 @@ services:
       - GEOSERVER_URL=https://tools.pacificclimate.org/geoserver/
       - NCWMS_URL=http://docker-dev02.pcic.uvic.ca:30779/dynamic/x
       - OLD_NCWMS_URL=https://services.pacificclimate.org/ncWMS-PCIC/wms
-      - WGS84_URL=https://services.pacificclimate.org/tiles/lite-wgs84
+      - TILES_URL=https://services.pacificclimate.org/tiles
 
   backend:
     image: pcic/pdp-production
