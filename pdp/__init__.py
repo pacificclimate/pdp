@@ -38,7 +38,7 @@ def get_config_from_environment():
         'geoserver_url': 'http://tools.pacificclimate.org/geoserver/',
         'ncwms_url': 'http://tools.pacificclimate.org/ncWMS-PCIC/wms',
         'old_ncwms_url': 'https://services.pacificclimate.org/ncWMS-PCIC/',
-        'tiles_url': 'https://tools.pacificclimate.org/tiles',
+        'na_tiles_url': 'https://tools.pacificclimate.org/tiles/lite-wgs84',
         'bc_basemap_url': 'http://142.104.230.53:30790/osm-bc-lite-test/$${z}/$${x}/$${y}.png',
         'use_analytics': 'True',
         'analytics': 'UA-20166041-3'  # change for production

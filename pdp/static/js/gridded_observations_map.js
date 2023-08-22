@@ -54,7 +54,7 @@ function init_obs_map() {
         [
             ncwms,
             selectionLayer,
-            getTileBaseLayer(pdp.tiles_url, 'North America OpenStreetMap', 'lite-wgs84')
+            getTileBaseLayer(pdp.na_tiles_url, 'North America OpenStreetMap', '')
         ]
     );
 
