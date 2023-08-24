@@ -210,6 +210,20 @@ function getBC3005BCLiteBaseLayer(url, displayname) {
   );
 }
 
+function getNa4326LiteBaseLayer(url, displayname) {
+  return new OpenLayers.Layer.XYZ(
+    displayname,
+    url + "/${z}/${x}/${y}.png",
+    {
+      projection: getProjection(4326),
+      units: 'degrees',
+      maxExtent: getNA4326Bounds(),
+      numZoomLevels: 7,
+      attribution: '© OpenStreetMap contributors'
+    }
+  );
+}
+
 function getBasicControls() {
     return [
         new OpenLayers.Control.LayerSwitcher({'ascending': false}),
