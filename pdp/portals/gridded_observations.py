@@ -24,7 +24,7 @@ class GriddedObservationsEnsembleLister(EnsembleMemberLister):
 
         for dfv in sorted(ensemble.data_file_variables,
                           key=lambda dfv: dfv.netcdf_variable_name):
-            if dfv.file.run.model.short_name in dataset_names.keys(): # Avoid using datasets that have been associated with the ensemble but not yet used in dataset_names
+            if dfv.file.run.model.short_name in dataset_names.keys(): # Avoid KeyError for datasets associated with ensemble but not yet part of dataset_names
                 yield dataset_names[dfv.file.run.model.short_name],\
                     dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
