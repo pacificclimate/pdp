@@ -18,7 +18,6 @@ class GriddedObservationsEnsembleLister(EnsembleMemberLister):
     def list_stuff(self, ensemble):
         dataset_names = {
             "ANUSPLIN_CDA_v2012.1": "NRCANmet 2012",
-            "SYMAP_BC_v1": "PBCmet 2010",
             "TPS_NWNA_v1": "PNWNAmet 2015",
             "PCIC_BLEND_v1": "PCIC Blend 2021"}
 
