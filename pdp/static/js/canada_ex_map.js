@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, pdp, map, na4326_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getNa4326LiteBaseLayer, getOpacitySlider, Colorbar*/
+/*global $, jQuery, OpenLayers, pdp, map, na4326_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getNaBaseLayer, getTileBaseLayer, getNa4326LiteBaseLayer, getOpacitySlider, Colorbar*/
 
 /*
  * This map displays all-Canada pr, tasmin, and tasmax datasets.
@@ -36,7 +36,8 @@
         options.controls = mapControls;
         map = new OpenLayers.Map("pdp-map", options);
 
-        na_osm = getNa4326LiteBaseLayer(pdp.na_tiles_url, 'North America OpenStreetMap');
+        na_osm = getNaBaseLayer("http://127.0.0.1:8080/service", 'North America OpenStreetMap', 'cartoDB');
+        // na_osm = getNa4326LiteBaseLayer("https://cartodb-basemaps-a.global.ssl.fastly.net/light_all", 'North America OpenStreetMap');
 
         params = {
             layers: initialMap.dataset + "/" + initialMap.variable,
