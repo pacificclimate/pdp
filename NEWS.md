@@ -1,5 +1,11 @@
 # News / Release Notes
 
+## 4.3.2
+
+*Release Date: 22-Sep-2023*
+
+- [Add PCIC-Blend observations to the Daily Gridded Meteorlogical Datasets page](https://github.com/pacificclimate/pdp/pull/300)
+
 ## 4.3.1
 
 *Release Date: 14-Jul-2023*

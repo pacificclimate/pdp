@@ -18,13 +18,14 @@ class GriddedObservationsEnsembleLister(EnsembleMemberLister):
     def list_stuff(self, ensemble):
         dataset_names = {
             "ANUSPLIN_CDA_v2012.1": "NRCANmet 2012",
-            "SYMAP_BC_v1": "PBCmet 2010",
-            "TPS_NWNA_v1": "PNWNAmet 2015"}
+            "TPS_NWNA_v1": "PNWNAmet 2015",
+            "PCIC_BLEND_v1": "PCIC Blend 2021"}
 
         for dfv in sorted(ensemble.data_file_variables,
                           key=lambda dfv: dfv.netcdf_variable_name):
-            yield dataset_names[dfv.file.run.model.short_name],\
-                dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
+            if dfv.file.run.model.short_name in dataset_names.keys(): # Avoid KeyError for datasets associated with ensemble but not yet part of dataset_names
+                yield dataset_names[dfv.file.run.model.short_name],\
+                    dfv.netcdf_variable_name, dfv.file.unique_id.replace('+', '-')
 
 
 def mk_frontend(config):
