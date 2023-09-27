@@ -154,6 +154,7 @@ function getNaBaseLayer(wmsurl, displayname, layername, proj) {
         wmsurl,
         {
             layers: layername,
+            format: "image/png"
         },
         {
             projection: proj,
