@@ -54,7 +54,7 @@ function init_obs_map() {
         [
             ncwms,
             selectionLayer,
-            getNaBaseLayer("http://docker-dev02.pcic.uvic.ca:30386/service", 'North America OpenStreetMap', 'cartoDB')
+            getNaBaseLayer("https://services.pacificclimate.org/dev/mapproxy/service", 'North America OpenStreetMap', 'cartoDB')
         ]
     );
 

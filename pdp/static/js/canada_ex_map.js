@@ -36,7 +36,7 @@
         options.controls = mapControls;
         map = new OpenLayers.Map("pdp-map", options);
 
-        na_osm = getNaBaseLayer("http://docker-dev02.pcic.uvic.ca:30386/service", 'North America OpenStreetMap', 'cartoDB');
+        na_osm = getNaBaseLayer("https://services.pacificclimate.org/dev/mapproxy/service", 'North America OpenStreetMap', 'cartoDB');
         // na_osm = getNa4326LiteBaseLayer("https://cartodb-basemaps-a.global.ssl.fastly.net/light_all", 'North America OpenStreetMap');
 
         params = {
