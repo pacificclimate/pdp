@@ -54,7 +54,7 @@ function init_obs_map() {
         [
             ncwms,
             selectionLayer,
-            getNaBaseLayer("https://services.pacificclimate.org/dev/mapproxy/service", 'North America OpenStreetMap', 'cartoDB')
+            getNaBaseLayer(pdp.na_tiles_url, 'North America OpenStreetMap', 'osm')
         ]
     );
 

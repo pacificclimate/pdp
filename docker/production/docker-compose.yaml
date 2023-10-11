@@ -17,7 +17,7 @@ services:
       - GEOSERVER_URL=https://tools.pacificclimate.org/geoserver/
       - NCWMS_URL=NCWMS_URL=https://services.pacificclimate.org/ncwms-mm-rproxy/dynamic/x
       - OLD_NCWMS_URL=https://services.pacificclimate.org/ncWMS-PCIC/wms
-      - NA_TILES_URL=https://services.pacificclimate.org/tiles/lite-wgs84
+      - NA_TILES_URL=https://services.pacificclimate.org/mapproxy/service
     ports:
       - "8000:8000"  # frontend
     volumes:
