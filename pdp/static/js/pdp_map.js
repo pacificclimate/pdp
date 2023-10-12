@@ -154,10 +154,11 @@ function getNaBaseLayer(wmsurl, displayname, layername, proj) {
         wmsurl,
         {
             layers: layername,
-            format: "image/png"
+            transparent: "true"
         },
         {
             projection: proj,
+            isBaseLayer: true,
             maxResolution: 1.40625,
             numZoomLevels: 10,
             attribution: '© OpenStreetMap contributors'
