@@ -37,7 +37,6 @@
         map = new OpenLayers.Map("pdp-map", options);
 
         na_osm = getNaBaseLayer(pdp.na_tiles_url, 'North America OpenStreetMap', 'osm');
-        // na_osm = getNa4326LiteBaseLayer("https://cartodb-basemaps-a.global.ssl.fastly.net/light_all", 'North America OpenStreetMap');
 
         params = {
             layers: initialMap.dataset + "/" + initialMap.variable,
