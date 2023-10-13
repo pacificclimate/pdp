@@ -63,7 +63,7 @@ They are loaded from the environment variables of the same name, upper cased.
 | `geoserver_url` | PCDS Geoserver URL |
 | `ncwms_url` | Raster portal ncWMS 2.x -- modelmeta translator URL. |
 | `old_ncwms_url` | Raster portal pure ncWMS 1.x URL. Used to fill in missing services from ncWMS 2.x. |
-| `tilecache_url` | Tileserver URLs (space separated list) for base maps |
+| `na_tiles_url` | MapProxy URL for serving North America base maps |
 | `bc_basemap_url` | Tile server URLs  (space separated list) for BC base maps
 | `use_analytics` | Enable or disable Google Analytics reporting |
 | `analytics` | Google Analytics ID |
