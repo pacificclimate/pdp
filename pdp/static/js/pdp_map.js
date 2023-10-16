@@ -154,9 +154,11 @@ function getNaBaseLayer(wmsurl, displayname, layername, proj) {
         wmsurl,
         {
             layers: layername,
+            transparent: "true"
         },
         {
             projection: proj,
+            isBaseLayer: true,
             maxResolution: 1.40625,
             numZoomLevels: 10,
             attribution: '© OpenStreetMap contributors'
@@ -205,6 +207,20 @@ function getBC3005BCLiteBaseLayer(url, displayname) {
       maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508),
       maxResolution: 156543.03125,
       numZoomLevels: 14,
+      attribution: '© OpenStreetMap contributors'
+    }
+  );
+}
+
+function getNa4326LiteBaseLayer(url, displayname) {
+  return new OpenLayers.Layer.XYZ(
+    displayname,
+    url + "/${z}/${x}/${y}.png",
+    {
+      projection: getProjection(4326),
+      units: 'degrees',
+      maxExtent: getNA4326Bounds(),
+      numZoomLevels: 7,
       attribution: '© OpenStreetMap contributors'
     }
   );
@@ -386,6 +402,7 @@ condExport(module, {
     getTileBaseLayer: getTileBaseLayer,
     getBC3005OsmBaseLayer: getBC3005OsmBaseLayer,
     getBC3005BCLiteBaseLayer: getBC3005BCLiteBaseLayer,
+    getNa4326LiteBaseLayer: getNa4326LiteBaseLayer,
     getBasicControls: getBasicControls,
     getEditingToolbar: getEditingToolbar,
     getHandNav: getHandNav,

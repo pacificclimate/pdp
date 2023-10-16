@@ -38,10 +38,7 @@ def get_config_from_environment():
         'geoserver_url': 'http://tools.pacificclimate.org/geoserver/',
         'ncwms_url': 'http://tools.pacificclimate.org/ncWMS-PCIC/wms',
         'old_ncwms_url': 'https://services.pacificclimate.org/ncWMS-PCIC/',
-        'tilecache_url':
-            'http://a.tiles.pacificclimate.org/tilecache/tilecache.py'
-            ' http://b.tiles.pacificclimate.org/tilecache/tilecache.py'
-            ' http://c.tiles.pacificclimate.org/tilecache/tilecache.py',
+        'na_tiles_url': 'https://services.pacificclimate.org/mapproxy/service',
         'bc_basemap_url': 'http://142.104.230.53:30790/osm-bc-lite-test/$${z}/$${x}/$${y}.png',
         'use_analytics': 'True',
         'analytics': 'UA-20166041-3'  # change for production
@@ -53,8 +50,6 @@ def get_config_from_environment():
     # evaluate a few config items that need to be objects (not strings)
     config['js_min'] = (config['js_min'] == 'True')
     config['use_analytics'] = (config['use_analytics'] == 'True')
-    if config['tilecache_url']:
-        config['tilecache_url'] = config['tilecache_url'].split()
     return config
 
 
