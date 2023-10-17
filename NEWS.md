@@ -1,5 +1,11 @@
 # News / Release Notes
 
+## 4.4.0
+
+*Release Date: 17-Oct-2023*
+
+- [Replace Tilecache with MapProxy for serving North America basemaps in the raster and gridded observations portals](https://github.com/pacificclimate/pdp/pull/303)
+
 ## 4.3.2
 
 *Release Date: 22-Sep-2023*
