@@ -20,7 +20,7 @@ Genshi==0.7
 GeoAlchemy==0.7.3
 GeoAlchemy2==0.9.1
 gitdb2==2.0.6
-GitPython==2.1.15
+GitPython==3.1.27
 # pre-installed
 # h5py==2.7.1
 idna==2.6
@@ -40,7 +40,7 @@ olefile==0.46
 openid2rp==1.12
 Paste==2.0.3
 pdp-util==1.2.1
-Pillow==4.3.0
+Pillow==9.0.1
 ply==3.10
 psycopg2==2.7.3.2
 pupynere-pdp==1.1.6
