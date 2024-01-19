@@ -9,7 +9,7 @@ from pdp_util.ensemble_members import EnsembleMemberLister
 __all__ = ['url_base', 'mk_frontend', 'mk_backend']
 
 
-ensemble_name = 'bc_prism_monthly_and_climos'
+ensemble_name = 'bc_prism_monthly_and_climos_test'
 url_base = '/bc_prism'
 title = 'High-Resolution PRISM Data'
 
