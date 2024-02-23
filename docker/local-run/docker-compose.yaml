@@ -27,7 +27,7 @@ services:
       - NA_TILES_URL=https://services.pacificclimate.org/dev/mapproxy/service
       # In order to pass environment variables with *content* of the form
       # `${...}` through to JavaScript, the `$` must be escaped as `$$`
-      - BC_BASEMAP_URL=https://services.pacificclimate.org/dev/tiles/bc-albers-lite/$${z}/$${x}/$${y}.png
+      - BC_BASEMAP_URL=https://services.pacificclimate.org/tiles/bc-albers-lite/$${z}/$${x}/$${y}.png
     entrypoint: /codebase/docker/local-run/entrypoint-fe.sh
     volumes:
       # This is to enable installing local versions of other packages from
