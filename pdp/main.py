@@ -17,6 +17,8 @@ import pdp.portals.bc_prism as bc_prism
 import pdp.portals.bccaq2_downscale as bccaq2
 import pdp.portals.bccaq2_cmip6 as bccaq2_cmip6
 import pdp.portals.bccaq2_canesm5 as bccaq2_canesm5
+import pdp.portals.mbcn_cmip6 as mbcn_cmip6
+import pdp.portals.mbcn_canesm5 as mbcn_canesm5
 import pdp.portals.gridded_observations as gridded_observations
 import pdp.portals.vic_gen1 as vic_gen1
 import pdp.portals.vic_gen2 as vic_gen2
