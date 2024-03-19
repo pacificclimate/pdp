@@ -25,7 +25,7 @@ import pdp.portals.vic_gen2 as vic_gen2
 apps = (bc_prism, bccaq2, vic_gen1, vic_gen2,
         gridded_observations, pcds,
         hydro_stn_archive, hydro_stn_cmip5, bccaq2_cmip6,
-        bccaq2_canesm5)
+        bccaq2_canesm5, mbcn_cmip6, mbcn_canesm5)
 
 
 def initialize_frontend(global_config):
@@ -36,11 +36,11 @@ def initialize_frontend(global_config):
     static_app = static.Cling(resource_filename('pdp', 'static'))
 
     mounts = {
+        # Omit pcds frontend, because deprecated. (But we need the backend still.)
         app.url_base: app.mk_frontend(global_config)
-        for app in apps
+        for app in apps if app != pcds
     }
     mounts.update({
-        '/pcds_map': pcds.mk_frontend(global_config),  # legacy url support
         '/css/': static.Cling(resource_filename('pdp_util', 'data')),
         '/docs': docs_app
         })

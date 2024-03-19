@@ -33,17 +33,14 @@ def get_config_from_environment():
         'title': '',
         'ensemble_name': '',
         'thredds_root': 'https://docker-dev03.pcic.uvic.ca/twitcher/ows/proxy/thredds/dodsC/datasets',
-        'orca_root': 'http://docker-dev03.pcic.uvic.ca:30333/data',
+        'orca_root': 'https://services.pacificclimate.org/orca',
         'dsn': 'postgresql://user:pass@host/database',
         'pcds_dsn': 'postgresql://user:pass@host/database',
         'js_min': 'False',
         'geoserver_url': 'http://tools.pacificclimate.org/geoserver/',
         'ncwms_url': 'http://tools.pacificclimate.org/ncWMS-PCIC/wms',
         'old_ncwms_url': 'https://services.pacificclimate.org/ncWMS-PCIC/',
-        'tilecache_url':
-            'http://a.tiles.pacificclimate.org/tilecache/tilecache.py'
-            ' http://b.tiles.pacificclimate.org/tilecache/tilecache.py'
-            ' http://c.tiles.pacificclimate.org/tilecache/tilecache.py',
+        'na_tiles_url': 'https://services.pacificclimate.org/mapproxy/service',
         'bc_basemap_url': 'http://142.104.230.53:30790/osm-bc-lite-test/$${z}/$${x}/$${y}.png',
     }
     config = {
@@ -52,8 +49,6 @@ def get_config_from_environment():
     }
     # evaluate a few config items that need to be objects (not strings)
     config['js_min'] = (config['js_min'] == 'True')
-    if config['tilecache_url']:
-        config['tilecache_url'] = config['tilecache_url'].split()
     return config
 
 
@@ -90,7 +85,6 @@ def get_config():
             'js/pdp_filters.js',
             'js/pdp_map.js',
             'js/pdp_raster_map.js',
-            'js/pdp_vector_map.js',
             'js/utils.js',
         ], debug=(not env_config['js_min'])),
         'templates': resource_filename('pdp', 'templates'),

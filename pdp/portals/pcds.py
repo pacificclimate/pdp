@@ -6,18 +6,11 @@ from pkg_resources import resource_filename
 
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
-from pdp_util.map import MapApp
-from pdp.minify import wrap_mini
-from pdp.portals import updateConfig
-
-from pdp_util import session_scope
-from pdp_util.counts import CountStationsApp, CountRecordLengthApp
-from pdp_util.legend import LegendApp
 from pdp_util.agg import PcdsZipApp
 from pdp_util.pcds_dispatch import PcdsDispatcher
 
 
-__all__ = ['url_base', 'mk_frontend', 'mk_backend']
+__all__ = ['url_base', 'mk_backend']
 
 
 url_base = '/pcds'
@@ -39,36 +32,3 @@ def mk_backend(config):
         '/agg': zip_app
     })
     return app
-
-
-def mk_frontend(config):
-    dsn = config['pcds_dsn']
-    pcds_config = {
-        'title': 'BC Station Data - PCDS',
-        'js_files': wrap_mini([
-            'js/crmp_map.js',
-            'js/crmp_controls.js',
-            'js/crmp_download.js',
-            'js/crmp_filters.js',
-            'js/crmp_app.js'],
-            basename=url_base, debug=(not config['js_min'])
-        )
-    }
-
-    def session_scope_factory():
-        return session_scope(dsn)
-
-    count_stations_app = CountStationsApp(session_scope_factory)
-    record_length_app = CountRecordLengthApp(session_scope_factory,
-                                             max_stns=100)
-    legend_app = LegendApp(dsn)
-
-    pcds_map_config = updateConfig(config, pcds_config)
-    map_app = MapApp(**pcds_map_config)
-
-    return DispatcherMiddleware(map_app, {
-        '/map': map_app,
-        '/record_length': record_length_app,
-        '/count_stations': count_stations_app,
-        '/images/legend': legend_app
-    })

@@ -38,7 +38,7 @@ Once selected, zoom in and click the cell that you wish to download. A prompt wi
 
 .. figure:: images/download-prompt.png
 
-This URL can be edited before the download is confirmed; any changes will be reflected in the downloaded dataset. *Note: The point tool does not currently support the ARC/Info ASCII Grid output format.*
+This URL can be edited before the download is confirmed; any changes will be reflected in the downloaded dataset.
 
 To adjust the opacity of the climate overlay, there is an opacity slider in the lower left hand corner.
 
@@ -68,7 +68,7 @@ Clicking on category names will expand/collapse all of the data offerings under 
 Download data
 -------------
 
-The download data fieldset allows a user to select the time range for which data will be downloaded and an output format. Only output formats which support multidimensional data are offered which includes NetCDF and Character Separated Values (CSV). Some data pages also support downloading ArcInfo / ASCII Grid files.
+The download data fieldset allows a user to select the time range for which data will be downloaded and an output format. Only output formats which support multidimensional data are offered which includes NetCDF and Character Separated Values (CSV).
 
 .. figure:: images/raster_download_fieldset.png
 
@@ -79,7 +79,7 @@ The `Download` button starts the download of data with whichever format you have
 Output Data Formats
 ^^^^^^^^^^^^^^^^^^^
 
-The climate coverage portals support two output formats.
+The climate coverage portals support two output formats. We no longer support the ArcInfo/ASCII Grid format, which consisted of a Zip archive containing one .asc file and one .prj (projection) file for each time step. The recently added CMIP6 multivariate bias correction n-dimensional PDF transform (MBCn) data contains irregular lat/lon grids, which are not supported by this format. Additionally, we will soon be transitioning from our deployment of the `Pydap server <http://www.pydap.org/>`_ to the `THREDDS server <https://www.unidata.ucar.edu/software/tds/>`_, which does not support this format.
 
 NetCDF
 """"""
@@ -164,7 +164,7 @@ A user with experience in programming or scripting should be able to reasonably 
 
 Map
 ^^^
-All mapping is provided using open geospatial protocols. Base maps may be requested using `Open Source Geospatial Foundation's (OSGeo) <http://www.osgeo.org>`_ `Tile Map Service Specification <http://wiki.osgeo.org/wiki/Tile_Map_Service_Specification>`_. We deploy our basemaps via Tilecache and they can be accessed at https://a.tile.pacificclimate.org/tilecache/tilecache.py.
+All mapping is provided using open geospatial protocols. Base maps may be requested using `Open Source Geospatial Foundation's (OSGeo) <http://www.osgeo.org>`_ `Tile Map Service Specification <http://wiki.osgeo.org/wiki/Tile_Map_Service_Specification>`_. We deploy our basemaps via `MapProxy <https://mapproxy.org/>`_ and they can be accessed at https://services.pacificclimate.org/mapproxy/service.
 
 Climate raster overlays are served via the `OSGeo's Open Geospatial Consortium's (OGC) <http://www.opengeospatial.org/>`_ `Web Mapping Service (WMS) protocol <http://www.opengeospatial.org/standards/wms>`_. To obtain the climate raster overlays, one may make a valid WMS request to our deployment of `ncWMS <http://www.resc.rdg.ac.uk/trac/ncWMS/>`_ located at https://tools.pacificclimate.org/ncWMS-PCIC.
 
@@ -202,7 +202,7 @@ You can retrieve the catalog with your favorite programming languages as well. F
   > json_data[[1]]
   [1] "https://data.pacificclimate.org/data/downscaled_gcms/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+GFDL-ESM2G_historical+rcp45_r1i1p1_19500101-21001231.nc"
 
-At present, there are seven pages for which one can retrieve catalogs: ``bc_prism``, ``downscaled_gcms``, ``downscaled_canesm5``, ``downscaled_cmip6``, ``gridded_observations``, ``hydro_model_archive``, and ``hydro_model_out``.
+At present, there are nine pages for which one can retrieve catalogs: ``bc_prism``, ``downscaled_gcms``, ``downscaled_canesm5``, ``downscaled_cmip6``, ``downscaled_canesm5_multi``, ``downscaled_cmip6_multi``, ``gridded_observations``, ``hydro_model_archive``, and ``hydro_model_out``.
 
 .. _metadata-and-data:
 

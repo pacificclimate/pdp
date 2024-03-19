@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true */
-/*global $, jQuery, OpenLayers, pdp, map, na4326_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getNaBaseLayer, getOpacitySlider, Colorbar*/
+/*global $, jQuery, OpenLayers, pdp, map, na4326_map_options, getBasicControls, getBoxLayer, getEditingToolbar, getHandNav, getBoxEditor, getNaBaseLayer, getTileBaseLayer, getNa4326LiteBaseLayer, getOpacitySlider, Colorbar*/
 
 /*
  * This map displays all-Canada pr, tasmin, and tasmax datasets.
@@ -8,6 +8,8 @@
  *    * The BCCAQv2 CMIP5 datasets (canada_ex_app.js)
  *    * The BCCAQv2 CMIP6 datasets (cmip6_bccaq2_app.js)
  *    * The BCCAQv2 CanESM5 datasets (canesm5_app.js)
+ *    * The MBCn CMIP6 datasets (cmip6_mbcn_app.js)
+ *    * The MBCn CanESM5 datasets (canesm5_mbcn_app.js)
  * Each seperate app passes in a default dataset and timestamp
  * to initialize the map, but they have the same pallettes,
  * numerical and spatial extents.
@@ -34,7 +36,7 @@
         options.controls = mapControls;
         map = new OpenLayers.Map("pdp-map", options);
 
-        na_osm = getNaBaseLayer(pdp.tilecache_url, 'North America OpenStreetMap', 'world_4326_osm', mapControls.projection);
+        na_osm = getNaBaseLayer(pdp.na_tiles_url, 'North America OpenStreetMap', 'osm');
 
         params = {
             layers: initialMap.dataset + "/" + initialMap.variable,

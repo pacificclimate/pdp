@@ -8,9 +8,7 @@ function initializeGlobals() {
         data_root: 'https://data.fake.org/data',
         gs_url: 'geoserver_url',
         ncwms_url: 'ncwms_url',
-        tilecache_url: [
-            'tilecache_url'
-        ],
+        na_tiles_url: 'na_tiles_url',
         'bc_basemap_url': 'bc_basemap_url',
         ensemble_name: 'ensemble_name',
     };

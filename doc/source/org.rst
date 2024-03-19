@@ -6,22 +6,19 @@ The PCIC Data Portal consists of a number of components. The developer docs expl
 Mapping
 -------
 
-Maps are central to the user interface of the data portal. PCIC runs instances of several map server software in order to provide the necessary layers.
-
-Geoserver
-^^^^^^^^^
-
-All of the station layers for the PCDS data portal are served through Geoserver with a PostGIS store.
+Maps are central to the user interface of the data portal. PCIC runs instances of several map server software tools in order to provide the necessary layers.
 
 TileStash
 ^^^^^^^^^
 
-All of the basemaps are based on OpenStreetMap data, rendered with Mapnik and are served up by TileStash.
+All basemaps are based on OpenStreetMap data, rendered with Mapnik and are served up by TileStash.
+
+Note: This is true for portals implemented with this PDP code; it may only be approximately true of other portals implemented separately (e.g., BC Station Data, a.k.a. Met Data Portal - PCDS).
 
 ncWMS
 ^^^^^
 
-All of the raster overlay layers are rendered and served by a PCIC-modificiation of the stock ncWMS.
+All raster overlay layers are rendered and served by a PCIC-modificiation of the stock ncWMS.
 
 
 Pydap

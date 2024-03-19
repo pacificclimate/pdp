@@ -1,5 +1,34 @@
 # News / Release Notes
 
+## 4.4.0
+
+*Release Date: 17-Oct-2023*
+
+- [Replace Tilecache with MapProxy for serving North America basemaps in the raster and gridded observations portals](https://github.com/pacificclimate/pdp/pull/303)
+
+## 4.3.2
+
+*Release Date: 22-Sep-2023*
+
+- [Add PCIC-Blend observations to the Daily Gridded Meteorlogical Datasets page](https://github.com/pacificclimate/pdp/pull/300)
+
+## 4.3.1
+
+*Release Date: 14-Jul-2023*
+
+- [Add PCIC12 headings to the CanDCS-U6 page](https://github.com/pacificclimate/pdp/pull/296)
+- [Rearrange display order of PCIC12 models](https://github.com/pacificclimate/pdp/pull/296)
+
+## 4.3.0
+
+*Release Date: 30-Jun-2023*
+
+- [Remove the deprecated BC Station Data Portal (PCDS) frontend](https://github.com/pacificclimate/pdp/pull/286)
+- [Remove BC Station Data Portal (PCDS) frontend documentation](https://github.com/pacificclimate/pdp/pull/289)
+- [Remove Arc/Info ASCII Grid support](https://github.com/pacificclimate/pdp/pull/291)
+- [Add CanDCS-M6 data via the `downscaled_cmip6_multi` and `downscaled_canesm5_multi` portals](https://github.com/pacificclimate/pdp/pull/293)
+- Change precipitation units in colorbar from `kg m-2 d-1` to `mm/day`
+
 ## 4.2.3
 
 *Release Date: 28-Oct-2022*

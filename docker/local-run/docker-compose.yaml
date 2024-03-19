@@ -24,7 +24,7 @@ services:
       - GEOSERVER_URL=https://tools.pacificclimate.org/geoserver/
       - NCWMS_URL=http://docker-dev02.pcic.uvic.ca:30779/dynamic/x
       - OLD_NCWMS_URL=https://services.pacificclimate.org/ncWMS-PCIC/wms
-      - TILECACHE_URL=https://a.tile.pacificclimate.org/tilecache/tilecache.py https://b.tile.pacificclimate.org/tilecache/tilecache.py https://c.tile.pacificclimate.org/tilecache/tilecache.py
+      - NA_TILES_URL=https://services.pacificclimate.org/dev/mapproxy/service
       # In order to pass environment variables with *content* of the form
       # `${...}` through to JavaScript, the `$` must be escaped as `$$`
       - BC_BASEMAP_URL=https://services.pacificclimate.org/tiles/bc-albers-lite/$${z}/$${x}/$${y}.png
