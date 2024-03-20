@@ -36,7 +36,7 @@ function dasToCfTimeSystem(das, indexCount) {
 
 function processNcwmsLayerMetadata(ncwms_layer, catalog) {
     // transform the data_server url into the un-authed catalog based url for metadata
-    var layerUrl = catalog[getNcwmsLayerId(ncwms_layer)]; //matches[1] is portal base url, matches[2] is dataset, make catalog url // Request time variables
+    var layerUrl = catalog[getNcwmsLayerId(ncwms_layer)]; //matches[1] is portal base url, matches[2] is dataset, make url // Request time variables
     var maxTimeReq = dataServices.getNcwmsLayerDDS(layerUrl);
     var unitsSinceReq = dataServices.getNcwmsLayerDAS(layerUrl);
 

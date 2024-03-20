@@ -51,6 +51,7 @@ services:
       - common-with-passwords.env
     environment:
       # Specific to backend
+      - ORCA_ROOT=http://pdp.localhost:5000/orca
       - APP_MODULE=pdp.wsgi:backend
       - GUNICORN_WORKER_CLASS=gevent
     volumes:

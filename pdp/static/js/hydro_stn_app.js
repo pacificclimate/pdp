@@ -125,7 +125,7 @@
             url_list = $.map(fids, function (fid) {
                 return dataArray[fid].url;
             });
-            show_permalinks(url_list, 'ascii');
+            show_permalinks(url_list);
         });
         
                 // the archive and current portals link to eachother.

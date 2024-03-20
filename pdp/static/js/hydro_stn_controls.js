@@ -94,7 +94,7 @@ function addToSidebar(idx, dataArray) {
 
     link = document.createElement('a');
     const data_dir = isArchivePortal() ? "hydro_stn_archive" : "hydro_stn_cmip5";
-    link.href = pdp.data_root + "/" + dataURL() + "/" + dataArray[idx].FileName + '.ascii';
+    link.href = pdp.data_root + "/" + dataURL() + "/" + dataArray[idx].FileName;
     link.appendChild(document.createTextNode(dataArray[idx].StationName));
     item.appendChild(link);
 

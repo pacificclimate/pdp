@@ -3,7 +3,7 @@ Babel==2.9.1
 docutils==0.17.1
 gevent==21.1.2
 greenlet==1.1.0
-gunicorn==19.8.1
+gunicorn==19.9.0
 imagesize==1.2.0
 packaging==20.9
 Pygments==2.5.2
@@ -11,6 +11,6 @@ pyparsing==2.4.7
 snowballstemmer==2.1.0
 Sphinx==1.8.5
 sphinxcontrib-websupport==1.1.2
-typing==3.10.0.0
+typing==3.7.4.3
 zope.event==4.5.0
 zope.interface==5.4.0
