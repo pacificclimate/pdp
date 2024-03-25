@@ -65,3 +65,6 @@ target/
 
 # Passwords
 *password*
+.venv
+.cache
+.env.test

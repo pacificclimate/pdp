@@ -1,0 +1,96 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "pdp"
+version = "4.4.0"
+description = "PCIC's Data Portal (pdp): the server software to run the entire web application"
+keywords = [
+    "opendap",
+    "dods",
+    "dap",
+    "open",
+    "data",
+    "science",
+    "climate",
+    "meteorology",
+    "downscaling",
+    "modelling",
+]
+#packages=["pdp", "pdp.portals"] // TODO: work this out
+license = "GNU General Public License v3 (GPLv3)"
+authors = ["James Hiebert <hiebert@uvic.ca>", "Rod Glover <rglover@uvic.ca>"]
+readme = "README.md"
+homepage = "http://www.pacificclimate.org/"
+repository = "https://github.com/pacificclimate/pdp"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Environment :: Web Environment",
+    "Framework :: Flask",
+    "Natural Language :: English",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 2.7",
+    "Topic :: Internet",
+    "Topic :: Internet :: WWW/HTTP :: WSGI",
+    "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Atmospheric Science",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+# TODO: really? should this just be gunicorn/flask now?
+# [tool.poetry.scripts]
+# serve = "scripts/rast_serve"
+
+[[tool.poetry.source]]
+name = "pcic-pypi"
+url = "https://pypi.pacificclimate.org/simple/"
+priority = "supplemental"
+
+[tool.poetry.group.initial.dependencies]
+# These dependencies must be installed before those in any other groups,
+# including the main dependencies.  This is required to install GDAL 3.0.4.
+pip = "22.3.1"
+setuptools = "<58"
+numpy = "<=1.21"   # Required by GDAL 3.0.4, but not declared in that package
+
+[tool.poetry.dependencies]
+python = "~3.8"
+pdp-util = { git = "https://github.com/pacificclimate/pdp_util", rev = "generate-metadata" }
+Beaker = "^1.9.0"
+Flask = "^2.0.3"
+Genshi = "0.7.5"
+netCDF4 = "1.6.5"
+static = "1.1.1"
+xlrd = "^1.1.0"
+jsmin = "^3.0.1"
+
+[tool.poetry.group.deploy.dependencies]
+gunicorn = "^19.9.0"
+GitPython = "^2.1.15"
+Sphinx = "^1.8.5"
+wheel = "^0.43.0"
+twine = "^5.0.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = ">=4.1.1"
+"testing.postgresql" = "*"
+
+[tool.poetry.group.black.dependencies]
+black = ">=23.11.0"
+
+[tool.pytest.ini_options]
+markers = [
+    "bulk_data: marks tests that use bulk_data set from storage server (deselect with '-m \"not bulk_data\"')",
+    "crmpdb: marks tests that use a crmp database (deselect with '-m \"not crmpdb\"')",
+    "local_only: marks tests that will only work on local machines and not in github actions (deselect with '-m \"not local_only\"')",
+    "slow: marks tests that are slow (deselect with '-m \"not slow\"')",
+    "veryslow: marks tests that are very slow (deselect with '-m \"not veryslow\"')",
+]

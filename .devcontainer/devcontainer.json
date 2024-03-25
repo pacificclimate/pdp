@@ -1,0 +1,74 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.245.0/containers/python-3
+{
+	"name": "Pdp Compose Dev Container",
+	"dockerComposeFile": ["../docker/local-run/docker-compose.yaml", "./docker-compose.override.yaml"],
+	"service": "frontend",
+	"workspaceFolder": "/workspace",
+	// Configure tool-specific properties.
+	"customizations": {
+	  // Configure properties specific to VS Code.
+	  "vscode": {
+		// Set *default* container specific settings.json values on container create.
+		"settings": {
+			"terminal.integrated.defaultProfile.linux": "bash",
+			"terminal.integrated.profiles.linux": { "bash": { "path": "/bin/bash" } },
+		  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+		  "python.linting.enabled": true,
+		  "python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
+		  "python.formatting.blackPath": "/usr/local/py-utils/bin/black",
+		  "python.formatting.yapfPath": "/usr/local/py-utils/bin/yapf",
+		  "python.linting.banditPath": "/usr/local/py-utils/bin/bandit",
+		  "python.linting.mypyPath": "/usr/local/py-utils/bin/mypy",
+		  "python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
+		  "python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
+		  "python.linting.pylintPath": "/usr/local/py-utils/bin/pylint"
+		},
+  
+		// VSCODE ONLY: Add the IDs of extensions you want installed when the container is created.
+		"extensions": [
+			"ms-python.python",
+			"ms-python.vscode-pylance",
+			"tamasfe.even-better-toml",
+			"github.vscode-github-actions",
+			"ms-vscode.makefile-tools"
+		]
+	  }
+	},
+  
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	//"forwardPorts": [48423],
+  
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "bash ./.devcontainer/post-install.sh",
+	"postStartCommand": "bash ./.devcontainer/post-start.sh",
+  
+	"features": {
+	  "docker-in-docker": "latest",
+	  //"ghcr.io/devcontainers/features/git:1": {},
+	  // add python to container
+	  "ghcr.io/devcontainers/features/python:1": {
+		"version": "3.11"
+	  }
+	},
+	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	// PDP specific: this is the default user in the pdp-base-minimal container, I can't seem to work out
+	// how to override. It may not be necessary but it might be nice to centralize on a standard user.
+	"remoteUser": "dockremap",
+  
+	"remoteEnv": {
+	  //		"PATH": "${containerEnv:PATH}:${containerEnv:HOME}/.local/bin"
+	},
+	"mounts": [
+	  // Re-use local SSH keys (useful if you use SSH keys for Git repo access or other SSH work)
+	  "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
+	  // Re-use local Git configuration
+	  "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached"
+	],
+
+	// "runArgs": [
+	// // allow container to be treated with no network isolation
+	// 	"--network=host",
+	// 	// give a nicer name to the container
+	// 	"--name", "${localEnv:USER}_pdp_devcontainer"]
+  }
