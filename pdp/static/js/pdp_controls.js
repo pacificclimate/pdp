@@ -248,7 +248,7 @@ function getRasterAccordionMenu(ensembleName, leafNameMapping) {
     return div;
 }
 
-// Some portals (vic_app and canada_ex_app) display two versions of the same
+// Some portals (hydro_stn_app and canada_ex_app) display two versions of the same
 // dataset: an up-to-date version, and an archive of the older version that was
 // previously displayed on the site and is only maintained for comparison or 
 // compatibility with other old data.
