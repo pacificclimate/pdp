@@ -159,7 +159,6 @@ setup(
     package_data={
         "pdp": [
             "templates/*.html",
-            "resources/hydro_stn_archive.yaml",
             "resources/hydro_stn_cmip5.yaml",
         ]
         + recursive_list("pdp/", "pdp/static")

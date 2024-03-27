@@ -10,7 +10,6 @@ from ga_wsgi_client import AnalyticsMiddleware
 
 # Station portals
 import portals.pcds as pcds
-import portals.hydro_stn_archive as hydro_stn_archive
 import portals.hydro_stn_cmip5 as hydro_stn_cmip5
 
 # Raster portals
@@ -26,7 +25,7 @@ import portals.vic_gen2 as vic_gen2
 
 apps = (bc_prism, bccaq2, vic_gen2,
         gridded_observations, pcds,
-        hydro_stn_archive, hydro_stn_cmip5, bccaq2_cmip6,
+        hydro_stn_cmip5, bccaq2_cmip6,
         bccaq2_canesm5, mbcn_cmip6, mbcn_canesm5)
 
 
