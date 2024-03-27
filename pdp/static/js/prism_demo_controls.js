@@ -9,9 +9,9 @@ function getPRISMControls(ensemble_name) {
     div = pdp.createDiv('', 'control');
     form = pdp.createForm(undefined, undefined, undefined);
     fieldset = pdp.createFieldset("filterset", "Dataset Selection");
-    varMapping = { 'tmin': "Minimum Temperature",
-                   'tmax': "Maximum Temperature",
-                   'pr': "Precipitation"
+    varMapping = { 'tmin': "Mean Daily Minimum Temperature",
+                   'tmax': "Mean Daily Maximum Temperature",
+                   'pr': "Total Precipitation"
                  };
     fieldset.appendChild(getRasterAccordionMenu(ensemble_name, varMapping));
     form.appendChild(fieldset);
