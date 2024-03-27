@@ -33,13 +33,8 @@
  * download. The directory the backend serves data from should contain a file named
  * filename, so that the backend can serve the data the frontend assumes is present.
  *
- * DATA COLLECTIONS
- * This portal serves two different collections of data - routed flows using CMIP3
- * data as an input, and routed flows using CMIP5 data as an input. The two data
- * collections each draw upon their own station metadata and file metadata, but
- * otherwise behave identically.
- * Which data collection is displayed is a function of the URL used to access this
- * portal, and is determined with the isArchivePortal() function.
+ * DATA COLLECTION
+ * This portal serves one collection of data - routed flows using CMIP5 data as an input.
  */
 
 
@@ -83,7 +78,7 @@
             }
         });
 
-        dataServices.getRoutedFlowMetadata(isArchivePortal()).done(function (data) {
+        dataServices.getRoutedFlowMetadata().done(function (data) {
             var inProj = new OpenLayers.Projection("EPSG:4326");
 
             dataArray = $.csv.toObjects(data);
@@ -93,7 +88,7 @@
 
                 row.idx = idx;
                 parser = document.createElement('a');
-                parser.href = pdp.data_root + "/" + dataURL() + "/" + row.FileName;
+                parser.href = pdp.data_root + "/hydro_stn_cmip5/" + row.FileName;
                 row.url = parser.href;
                 pt = new OpenLayers.Geometry.Point(
                     parseFloat(row.Longitude),
@@ -128,15 +123,6 @@
             show_permalinks(url_list, 'ascii');
         });
         
-                // the archive and current portals link to eachother.
-        if(isArchivePortal()) {
-            //archive portal. link to new portal, add archive disclaimer.
-            addPortalLink("hydro_stn_cmip5", "Main Modeled Streamflow Portal");
-            document.getElementById("pdp-controls").appendChild(getArchiveDisclaimer());
-        } else {
-        	// new data portal; link to old one.
-        	addPortalLink("hydro_stn_archive", "Archive Modeled Streamflow Portal");
-        }
     }
 
     condExport(module, hydro_stn_app, 'hydro_stn_app');
