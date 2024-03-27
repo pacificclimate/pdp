@@ -2,19 +2,9 @@
 /*global $, jQuery, OpenLayers, pdp, init_vic_map, processNcwmsLayerMetadata, getVICControls, getRasterDownloadOptions, RasterDownloadLink, MetadataDownloadLink*/
 
 /* 
-This front end displays data output by the VIC-GL model.
-There are two such data ensembles; one made with CMIP3 modeled
-input, and one made with CMIP5 modeled input downscaled by the
-BCCAQ2. The CMIP5 dataset is the newest, most up-to-date one,
-but the CMIP3-based data is provided for archive purposes.
-
-Data display and UI are similar for both datasets; they 
-differ only in URL, starting dataset, and data ensemble.
-
-CMIP3 data:
-	backend: vic_gen1
-	url_base: hydro_model_archive
-	ensemble: vic_gen1
+This front end displays data output by the VIC-GL model. The
+data ensemble is made with CMIP5 modeled input downscaled by the
+BCCAQ2.
 
 CMIP5 data:
 	backend: vic_gen2
@@ -29,8 +19,7 @@ CMIP5 data:
         var map, ncwmsLayer, selectionLayer, catalogUrl, catalog_request, catalog,
             dlLink, mdLink, capabilities_request, ncwms_capabilities;
         
-        // the two portals have different initial maps
-        map = init_vic_map(isArchivePortal());
+        map = init_vic_map();
         window.map = map;
 
         ncwmsLayer = map.getClimateLayer();
@@ -44,22 +33,10 @@ CMIP5 data:
             .appendChild(getVICControls(pdp.ensemble_name));
         document.getElementById("pdp-controls")
             .appendChild(getRasterDownloadOptions('first', 'last'));
-            
-        // the archive and current portals link to eachother.
-        if(isArchivePortal()) {
-            //archive portal. link to new portal, add archive disclaimer.
-            addPortalLink("hydro_model_out", "Main Hydrologic Model Output Portal");
-            document.getElementById("pdp-controls").appendChild(getArchiveDisclaimer());
-        } else {
-        	// new data portal; link to old one.
-        	addPortalLink("hydro_model_archive", "Archive Hydrologic Model Output Portal");
-        }
 
         // Data Download Link
-        dlLink = new RasterDownloadLink($('#download-timeseries'),
-                                        ncwmsLayer, undefined, 'nc',
-                                        isArchivePortal ? 'sm' : "BASEFLOW",
-                                        '', '', '');
+        dlLink = new RasterDownloadLink($('#download-timeseries'), ncwmsLayer, undefined, 'nc',
+                                        "BASEFLOW", '', '', '');
         $('#data-format-selector').change(
             function (evt) {
                 dlLink.onExtensionChange($(this).val());
@@ -100,7 +77,7 @@ CMIP5 data:
                        );
         mdLink.trigger();
 
-        // Date picker event for both links
+        // Date picker event
         $("[class^='datepicker']").change(
             function (evt) {
                 dlLink.onTimeChange();

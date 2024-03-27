@@ -2,9 +2,7 @@
 // For tests only, so is a pure Node module
 // Note this does not follow the arrangement for
 // [Jest module "manual mocks"] (https://jestjs.io/docs/en/manual-mocks)
-// Mocks the metadata for the vic gen2 data collection, which is the default
-// for this portal; the archive vic gen1 data also served by this portal is not
-// mocked.
+// Mocks the metadata for the vic gen2 data collection.
 
 var convert = require('xml-js');
 

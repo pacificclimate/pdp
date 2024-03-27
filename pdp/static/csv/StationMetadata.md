@@ -1,14 +1,13 @@
 # Station Metadata
 
 This directory holds CSV resource files that contain metadata about the stations at which routed flow
-data is available. This metadata is used by the Hydro Station portals to display stations for which a user
-can download routed data. There are currently two different portals serving data.
+data is available. This metadata is used by the Hydro Station portal to display stations for which a user
+can download routed data.
 
 The actual datafiles for each station are served by the backend. There should be a one-to-one
 correspondance between stations listed in these CSVs and data files available for download.
 
-Currently there are two Hydro Station portals. `routed_flow_metadatav4.csv` describes stations
-for the `hydro_stn_archive` portal; `hydro_stn_cmip5_metadata.csv` describes stations for the
+Currently there is one Hydro Station portal. `hydro_stn_cmip5_metadata.csv` describes stations for the
 `hydro_stn_cmip5` portal.
 
 ## Required Columns

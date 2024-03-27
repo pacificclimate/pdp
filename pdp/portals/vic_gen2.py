@@ -3,9 +3,7 @@ serves output from the VIC Hydrologic Model with CMIP5 input. The spatial
 domain is specific watersheds within BC and the model was run using CMIP5
 forcings tuned with the PNWNAMet forcings.
 
-It shares many characteristics with the CMIP3 VIC data served by the
-pdp.portals.vic_gen1 module. The two datasets are displayed by the same
-portal code, vic_app.js, and map code, vic_map.js.
+The dataset is displayed by the portal code, vic_app.js, and map code, vic_map.js.
 '''
 
 from pdp.portals import make_raster_frontend, data_server

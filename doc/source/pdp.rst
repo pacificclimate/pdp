@@ -32,9 +32,6 @@ The pdp module
 .. automodule:: pdp.portals.gridded_observations
    :members:
 
-.. automodule:: pdp.portals.hydro_stn_archive
-   :members:
-
 .. automodule:: pdp.portals.hydro_stn_cmip5
    :members:
 
@@ -45,9 +42,6 @@ The pdp module
    :members:
 
 .. automodule:: pdp.portals.pcds
-   :members:
-
-.. automodule:: pdp.portals.vic_gen1
    :members:
 
 .. automodule:: pdp.portals.vic_gen2

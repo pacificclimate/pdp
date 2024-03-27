@@ -133,11 +133,9 @@ using `pdp_controls.isArchivePortal()`, that they are *not* currently
 displaying the archived data, because the word "archive" is not present in 
 their self-perceived URL when instantiated by tests. Therefore, they will 
 load the non-archive choice when loading their default dataset for testing, 
-and that is the dataset that needs to be mocked. Portals that currently 
-have "archive" functionality:
-
-- `vic_app`
-- `canada_ex_app`
+and that is the dataset that needs to be mocked. There are no portals that
+currently have "archive" functionality, but they will in the future whenever we
+make new portals to replace the current ones.
 
 ### Backend Mocks For Portal-specific tests
 #### getCatalog
