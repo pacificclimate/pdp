@@ -126,7 +126,16 @@ mocked with information for that particular dataset.
 
 Please note that the testing harness does not set `url_base`, and portals 
 instantiated for testing purposes have a `$(location).href` value of 
-`http://localhost/`.
+`http://localhost/`. This means that portals with an "archive" 
+functionality that display two different sets of data but otherwise behave 
+identically depending on the URL used to access them will always determine, 
+using `pdp_controls.isArchivePortal()`, that they are *not* currently 
+displaying the archived data, because the word "archive" is not present in 
+their self-perceived URL when instantiated by tests. Therefore, they will 
+load the non-archive choice when loading their default dataset for testing, 
+and that is the dataset that needs to be mocked. There are no portals that
+currently have "archive" functionality, but they will in the future whenever we
+make new portals to replace the current ones.
 
 ### Backend Mocks For Portal-specific tests
 #### getCatalog
