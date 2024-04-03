@@ -1,5 +1,13 @@
 # News / Release Notes
 
+## 4.4.1
+
+*Release Date: 3-Apr-2024*
+
+- [Add 1991-2020 PRISM climatologies to BC PRISM portal](https://github.com/pacificclimate/pdp/pull/306)
+- [Remove archived hydrologic data portals](https://github.com/pacificclimate/pdp/pull/312)
+- [Change labels in BC PRISM headings for clarification](https://github.com/pacificclimate/pdp/pull/314)
+
 ## 4.4.0
 
 *Release Date: 17-Oct-2023*
