@@ -3,12 +3,6 @@
 
 "use strict";
 
-// get the the URL of the directory containing the datafiles - 
-// varies by dataset being displayed.
-function dataURL() {
-	return isArchivePortal() ? "hydro_stn_archive" : "hydro_stn_cmip5";
-}
-
 function createClearSelectionButton() {
     var button;
     button = pdp.createInputElement("button", undefined, "reset", "reset", "Reset Selection");
@@ -93,8 +87,7 @@ function addToSidebar(idx, dataArray) {
     });
 
     link = document.createElement('a');
-    const data_dir = isArchivePortal() ? "hydro_stn_archive" : "hydro_stn_cmip5";
-    link.href = pdp.data_root + "/" + dataURL() + "/" + dataArray[idx].FileName;
+    link.href = pdp.data_root + "/hydro_stn_cmip5/" + dataArray[idx].FileName;
     link.appendChild(document.createTextNode(dataArray[idx].StationName));
     item.appendChild(link);
 
@@ -120,7 +113,6 @@ function createSearchBox(id, cssClass, data, select_callback) {
 }
 
 condExport(module, {
-	dataURL: dataURL, 
     createClearSelectionButton: createClearSelectionButton,
     getHydroStnControls: getHydroStnControls,
     addToSidebar: addToSidebar,

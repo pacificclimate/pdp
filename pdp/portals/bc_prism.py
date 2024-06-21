@@ -47,11 +47,11 @@ class PrismEnsembleLister(EnsembleMemberLister):
                     "Climatological averages {}-{}".format(
                         timeset.start_date.year, timeset.end_date.year
                     ),
-                    "{} means".format(resolution_name(timeset.time_resolution))
+                    "{}".format(resolution_name(timeset.time_resolution))
                 )
             else:
                 descriptors = (
-                    "Timeseries {}-{}".format(
+                    "Averages {}-{}".format(
                         timeset.start_date.year, timeset.end_date.year
                     ),
                     resolution_name(timeset.time_resolution)

@@ -402,7 +402,7 @@ def test_nc_raster_response(pcic_data_portal, url):
         ('downscaled_canesm5', 'bccaq2_canesm5'),
         ('downscaled_cmip6_multi', 'mbcn_cmip6'),
         ('downscaled_canesm5_multi', 'mbcn_canesm5'),
-        ('hydro_model_archive', 'vic_gen1'),
+        ('hydro_model_out', 'vic_gen2'),
         ('gridded_observations', 'gridded-obs-met-data')
     ])
 def test_menu_json(pcic_data_portal, portal, ensemble):
@@ -418,12 +418,12 @@ def test_menu_json(pcic_data_portal, portal, ensemble):
 @pytest.mark.slow
 @pytest.mark.bulk_data
 def test_hydro_stn_data_catalog(pcic_data_portal):
-    url = '/data/hydro_stn_archive/catalog.json'
+    url = '/data/hydro_stn_cmip5/catalog.json'
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/json'
-    assert '/08KE009_Fraser.csv' in resp.body.decode("utf-8")
+    assert '/hydro_stn/LARMA.csv' in resp.body.decode("utf-8")
     data = json.loads(resp.body)
     assert len(data) > 0
 
@@ -431,26 +431,24 @@ def test_hydro_stn_data_catalog(pcic_data_portal):
 @pytest.mark.slow
 @pytest.mark.bulk_data
 def test_hydro_stn_data_csv_csv(pcic_data_portal):
-    url = '/data/hydro_stn_archive/BCHSCA_Campbell.csv'
+    url = '/data/hydro_stn_cmip5/RVC.csv'
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
-    storage_root = "/storage/data/projects/dataportal/data/hydrology/vic_gen1_followup/vic_gen1_routed"
+    storage_root = "/storage/data/projects/dataportal/data/hydrology/vic_cmip5/merged"
     url_id = os.path.basename(url)
     storage_path = storage_root + "/" + url_id
     assert is_valid_orca_csv_url(storage_path, resp)
-
+    
     orca_req = Request.blank(resp.location)
     orca_resp = orca_req.get_response()
     assert orca_resp.status == '200 OK'
     assert orca_resp.content_type == 'text/csv'
     for line in orca_resp.app_iter[0].decode("utf-8").split("\n"):
-        expected = '"1955/01/01",32.631008,32.631008,32.631008,'\
-                   '33.079967,33.079967,33.079967,59.947227,59.947227,'\
-                   '59.947227,43.419338,43.419338,43.419338,63.866467,'\
-                   '63.866467,63.866467,43.944351,43.944351,43.944351,'\
-                   '57.583118,57.583118,102.247162,102.247162,'\
-                   '102.247162,63.068111'
-        if line.rstrip() == expected:
+        expected = '1955/01/01, 198.560531616, 150.387130737, 192.676101685, '\
+                   '219.072235107, 149.236831665, 187.566864014, 145.519927979, '\
+                   '150.252120972, 192.810394287, 219.105148315, 149.223098755, '\
+                   '187.070281982, 145.611068726'
+        if line.strip() == expected:
             assert True
             return
 
@@ -458,46 +456,27 @@ def test_hydro_stn_data_csv_csv(pcic_data_portal):
 
 
 @pytest.mark.bulk_data
-def test_hydro_model_archive_catalog(pcic_data_portal):
-    url = '/hydro_model_archive/catalog/'
+def test_hydro_model_out_catalog(pcic_data_portal):
+    url = '/hydro_model_out/catalog/'
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/json'
-    assert 'hydro_model_archive/5var_day_HadCM_B1_run1_19500101-'\
-        '20981231.nc' in resp.body.decode("utf-8")
+    assert 'hydro_model_out/allwsbc.HadGEM2-ES_rcp85_r1i1p1.1945to2099.'\
+        'SNOW_MELT.nc' in resp.body.decode("utf-8")
     data = json.loads(resp.body)
     assert len(data) > 0
 
 
 @pytest.mark.bulk_data
 @pytest.mark.parametrize('url', [
-    '{}HadCM_A1B_run1_19500101-20991231.nc.nc?sm[0:1][0:1][0:1]&',
-    '{}CSIRO35_A2_run1_19500101-20981231.nc.nc?bf[0:1][0:1][0:1]&',
-    '{}MIROC3.2_B1_run1_19500101-20991231.nc.nc?swe[0:1][0:1][0:1]&',
-    '{}BASE_historical_run1_19500101-20061231.nc.nc?aet[0:1][0:1][0:1]&'
+    '{}HadGEM2-ES_rcp85_r1i1p1.1945to2099.SNOW_MELT.nc.nc?SNOW_MELT[0:1][0:1][0:1]&',
+    '{}CCSM4_rcp45_r2i1p1.1945to2099.PET_NATVEG.nc.nc?PET_NATVEG[0:1][0:1][0:1]&',
+    '{}CNRM-CM5_rcp85_r1i1p1.1945to2099.TRANSP_VEG.nc.nc?TRANSP_VEG[0:1][0:1][0:1]&',
+    '{}TPS_gridded_obs_init.1945to2099.SOIL_MOIST_TOT.nc.nc?SOIL_MOIST_TOT[0:1][0:1][0:1]&'
 ])
-def test_hydro_model_archive_5var(pcic_data_portal, url):
-    base = '/data/hydro_model_archive/5var_day_'
-    req = Request.blank(url.format(base))
-    resp = req.get_response(pcic_data_portal)
-    url_id = os.path.basename(url.format(base)).split(".nc")[0]
-    assert is_valid_orca_nc_url(url_id, resp)
-
-    orca_req = Request.blank(resp.location)
-    orca_resp = orca_req.get_response()
-    assert orca_resp.status == '200 OK'
-    assert orca_resp.content_type == 'application/x-netcdf'
-
-
-@pytest.mark.bulk_data
-@pytest.mark.parametrize('url', [
-    '{}HadCM_A1B_run1_19500101-21001231.nc.nc?pr[0:1][0:1][0:1]&',
-    '{}CSIRO35_A2_run1_19500101-21001231.nc.nc?tasmax[0:1][0:1][0:1]&',
-    '{}MIROC3.2_B1_run1_19500101-21001231.nc.nc?wind[0:1][0:1][0:1]&'
-])
-def test_hydro_model_archive_pr_tasmin_tasmax_wind(pcic_data_portal, url):
-    base = '/data/hydro_model_archive/pr+tasmin+tasmax+wind_day_'
+def test_hydro_model_out_allwsbc(pcic_data_portal, url):
+    base = '/data/hydro_model_out/allwsbc.'
     req = Request.blank(url.format(base))
     resp = req.get_response(pcic_data_portal)
     url_id = os.path.basename(url.format(base)).split(".nc")[0]

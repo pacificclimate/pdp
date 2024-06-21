@@ -8,9 +8,7 @@ Metadata about these files, such as station locations and name,
 is not served by this portal; the front end retrieves it from
 a separate CSV.
 
-This portal is very similar to the hydro_stn_archive portal, which serves
-a similar but older collection of CSVs from a different directory. The two
-portals share a frontend, hydro_stn_app.'''
+This portal uses the hydro_stn_app frontend.'''
 
 import os
 from pkg_resources import resource_filename

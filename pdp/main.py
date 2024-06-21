@@ -9,7 +9,6 @@ from pdp.error import ErrorMiddleware
 
 # Station portals
 import pdp.portals.pcds as pcds
-import pdp.portals.hydro_stn_archive as hydro_stn_archive
 import pdp.portals.hydro_stn_cmip5 as hydro_stn_cmip5
 
 # Raster portals
@@ -20,13 +19,12 @@ import pdp.portals.bccaq2_canesm5 as bccaq2_canesm5
 import pdp.portals.mbcn_cmip6 as mbcn_cmip6
 import pdp.portals.mbcn_canesm5 as mbcn_canesm5
 import pdp.portals.gridded_observations as gridded_observations
-import pdp.portals.vic_gen1 as vic_gen1
 import pdp.portals.vic_gen2 as vic_gen2
 
 
-apps = (bc_prism, bccaq2, vic_gen1, vic_gen2,
+apps = (bc_prism, bccaq2, vic_gen2,
         gridded_observations, pcds,
-        hydro_stn_archive, hydro_stn_cmip5, bccaq2_cmip6,
+        hydro_stn_cmip5, bccaq2_cmip6,
         bccaq2_canesm5, mbcn_cmip6, mbcn_canesm5)
 
 

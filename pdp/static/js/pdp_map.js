@@ -16,16 +16,9 @@ function getBC3005Bounds() {
     return new OpenLayers.Bounds(-236114, 41654.75, 2204236, 1947346.25);
 }
 
-// the vic map displays two datasets with different extents but same projection
-function getBC3005Bounds_vic(archive_portal) {
-	if(archive_portal) {
-		// archive portal's dataset cover watersheds in BC only
-		return new OpenLayers.Bounds(611014.125, 251336.4375, 2070975.0625, 1737664.5625);
-	}
-	else {
-		// new dataset includes entire Columbia watershed south to NV, USA
-		return new OpenLayers.Bounds(611014.125, -400000, 2070975.0625, 1737664.5625);
-	}
+function getBC3005Bounds_vic() {
+	// dataset includes entire Columbia watershed south to NV, USA
+	return new OpenLayers.Bounds(611014.125, -400000, 2070975.0625, 1737664.5625);
 }
 
 function getBC3005Bounds_obs() {
@@ -55,10 +48,9 @@ function BC3005_map_options() {
     return options;
 }
 
-// hydro station portal serves two datasets, each of which uses the BC Albers
-// projection, but they have different extents.
-function BC3005_map_options_stn(archive_portal) {
-    var bounds = getBC3005Bounds_stn(archive_portal),
+
+function BC3005_map_options_stn() {
+    var bounds = getBC3005Bounds_stn(),
         options = {
             restrictedExtent: bounds,
             displayProjection: getProjection(4326),
@@ -69,21 +61,15 @@ function BC3005_map_options_stn(archive_portal) {
 }
 
 
-function getBC3005Bounds_stn(archive_portal) {
-	if(archive_portal) {
-		// archive portal's dataset cover watersheds in BC only
-		return new OpenLayers.Bounds(611014.125, 251336.4375, 2070975.0625, 1737664.5625);
-	}
-	else {
-		// new dataset includes entire Columbia watershed south to NV, USA
-		return new OpenLayers.Bounds(511014.125, -250000, 2170975.0625, 1500000.5625);
-	}
+function getBC3005Bounds_stn() {
+	// dataset includes entire Columbia watershed south to NV, USA
+	return new OpenLayers.Bounds(511014.125, -250000, 2170975.0625, 1500000.5625);
 }
 
 
 
-function BC3005_map_options_vic(archive_portal) {
-    var bounds = getBC3005Bounds_vic(archive_portal),
+function BC3005_map_options_vic() {
+    var bounds = getBC3005Bounds_vic(),
         options = {
             restrictedExtent: bounds,
             displayProjection: getProjection(4326),

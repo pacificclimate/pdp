@@ -1,8 +1,8 @@
 # Hydro Station Resources
 
-This directory contains two yaml files, each of which configures pydap to serve the
-csv files contained in a particular directory. Each Routed Streamflow Portal has its
-own directory, which should contain each datafiles described in that portal's
+This directory contains a yaml file which configures pydap to serve the
+csv files contained in a particular directory. The Routed Streamflow Portal has its
+own directory, which should contain each datafile described in that portal's
 station metadata CSV, and ideally no additional files.
 
 ## Datafile Format

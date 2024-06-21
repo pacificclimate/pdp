@@ -248,11 +248,11 @@ function getRasterAccordionMenu(ensembleName, leafNameMapping) {
     return div;
 }
 
-// Some portals (vic_app and canada_ex_app) display two versions of the same
-// dataset: an up-to-date version, and an archive of the older version that was
-// previously displayed on the site and is only maintained for comparison or 
-// compatibility with other old data.
-// These functions support the portals that display multiple versions of a dataset.
+// These functions support the portals that display multiple versions of a dataset:
+// one up-to-date version, and an archive of the older version that was previously
+// displayed on the site and is only maintained for comparison or compatibility with
+// other old data. While none of the existing portals fit this criterion for now,
+// they will when we decide to replace the existing portals with newer versions.
 function isArchivePortal() {
 	// not a sophisticated function; just checks to see if "archive" is in the URL.
 	return $(location).attr('href').indexOf("archive") != -1;
