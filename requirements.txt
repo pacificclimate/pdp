@@ -38,7 +38,7 @@ Pillow==5.4.1
 ply==3.10
 psycopg2==2.9.6
 pupynere-pdp==2.0.1
-PyCDS==4.4.0
+PyCDS==4.5.0
 PyCRS==1.0.2
 pycrypto==2.6.1
 Pydap==3.2.2
