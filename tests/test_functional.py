@@ -395,6 +395,7 @@ def test_nc_raster_response(pcic_data_portal, url):
     assert orca_resp.content_type == 'application/x-netcdf'
 
 
+@pytest.mark.local_only
 @pytest.mark.parametrize(('portal', 'ensemble'), [
         ('bc_prism', 'bc_prism'),
         ('downscaled_gcms', 'bccaq_version_2'),
@@ -402,7 +403,7 @@ def test_nc_raster_response(pcic_data_portal, url):
         ('downscaled_canesm5', 'bccaq2_canesm5'),
         ('downscaled_cmip6_multi', 'mbcn_cmip6'),
         ('downscaled_canesm5_multi', 'mbcn_canesm5'),
-        ('hydro_model_out', 'vic_gen2'),
+        ('hydro_model_out', 'vicgl_cmip5'),
         ('gridded_observations', 'gridded-obs-met-data')
     ])
 def test_menu_json(pcic_data_portal, portal, ensemble):
