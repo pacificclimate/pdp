@@ -200,7 +200,6 @@ def test_clip_to_date_one(pcic_data_portal):
     req = Request.blank(base_url + urlencode(params))
 
     resp = req.get_response(pcic_data_portal)
-    print(resp.status)
     assert resp.status == '200 OK'
     t = TemporaryFile()
     t.write(resp.body)
