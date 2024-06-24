@@ -35,8 +35,8 @@ class ErrorMiddleware(object):
                                 ]
             start_response(status, response_headers, sys.exc_info())
             logger.error("SQLAlchemyError: {}".format(e.args[0]))
-            yield 'There was an unexpected problem accessing the database\n'
-            yield e.args[0]
+            yield b'There was an unexpected problem accessing the database\n'
+            yield e.args[0].encode()
 
         except EnvironmentError as e:
             # except IOError as e:
@@ -54,8 +54,8 @@ class ErrorMiddleware(object):
                          "  filename {}\n"
                          "{}".format(
                              e.errno, e.strerror, e.filename, e.args[0]))
-            yield 'We had an unexpected problem accessing on-disk resources\n'
-            yield e.args[0]
+            yield b'We had an unexpected problem accessing on-disk resources\n'
+            yield e.args[0] # e.args[0] already in bytes - no need to encode
 
         except Exception as e:
             status = "500 Internal Server Error"
@@ -63,7 +63,7 @@ class ErrorMiddleware(object):
             start_response(status, response_headers, sys.exc_info())
             logger.error("500 Internal Server Error: {}\n{}".format(
                 e.args, traceback.format_exc()))
-            yield 'There was an unhandleable problem with the application\n'
+            yield b'There was an unhandleable problem with the application\n'
             yield e.args[0]
 
         else:
