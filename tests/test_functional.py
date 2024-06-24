@@ -20,7 +20,7 @@ from numpy.testing import assert_almost_equal
 from bs4 import BeautifulSoup
 
 
-def is_valid_orca_nc_url(url_id, resp):
+def assert_is_valid_orca_nc_url(url_id, resp):
     orca_base = os.getenv("ORCA_ROOT")
     with session_scope(os.getenv("DSN")) as sesh:
         q = sesh.query(DataFile.filename).filter(DataFile.filename.contains(url_id))
@@ -31,16 +31,14 @@ def is_valid_orca_nc_url(url_id, resp):
     assert all(dim in resp.location for dim in ["time", "lat", "lon"])
     assert orca_base in resp.location
     assert storage_path in resp.location
-    return True
 
 
-def is_valid_orca_csv_url(storage_path, resp):
+def assert_is_valid_orca_csv_url(storage_path, resp):
     orca_base = os.getenv("ORCA_ROOT")
     assert resp.status == "301 Moved Permanently"
     assert resp.content_type == "text/plain"
     assert orca_base in resp.location
     assert storage_path in resp.location
-    return True
 
 
 @pytest.mark.parametrize('url', [
@@ -330,7 +328,7 @@ def test_climatology_bounds(pcic_data_portal):
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
     url_id = os.path.basename(url).split(".nc")[0]
-    assert is_valid_orca_nc_url(url_id, resp)
+    assert_is_valid_orca_nc_url(url_id, resp)
 
     orca_req = Request.blank(resp.location)
     orca_resp = orca_req.get_response()
@@ -383,7 +381,7 @@ def test_nc_raster_response(pcic_data_portal, url):
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
     url_id = os.path.basename(url).split(".nc")[0]
-    assert is_valid_orca_nc_url(url_id, resp)
+    assert_is_valid_orca_nc_url(url_id, resp)
 
     orca_req = Request.blank(resp.location)
     orca_resp = orca_req.get_response()
@@ -436,7 +434,7 @@ def test_hydro_stn_data_csv(pcic_data_portal):
     storage_root = hydro_stn_config['handlers'][0]['dir']
     url_id = os.path.basename(url)
     storage_path = storage_root + "/" + url_id
-    assert is_valid_orca_csv_url(storage_path, resp)
+    assert_is_valid_orca_csv_url(storage_path, resp)
     
     orca_req = Request.blank(resp.location)
     orca_resp = orca_req.get_response()
@@ -479,7 +477,7 @@ def test_hydro_model_out_allwsbc(pcic_data_portal, url):
     req = Request.blank(url.format(base))
     resp = req.get_response(pcic_data_portal)
     url_id = os.path.basename(url.format(base)).split(".nc")[0]
-    assert is_valid_orca_nc_url(url_id, resp)
+    assert_is_valid_orca_nc_url(url_id, resp)
 
     orca_req = Request.blank(resp.location)
     orca_resp = orca_req.get_response()
@@ -504,7 +502,7 @@ def test_empty_hyperslabs(pcic_data_portal, projection, length):
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
     url_id = os.path.basename(url).split(".nc")[0]
-    assert is_valid_orca_nc_url(url_id, resp)
+    assert_is_valid_orca_nc_url(url_id, resp)
 
     orca_req = Request.blank(resp.location)
     orca_resp = orca_req.get_response()
@@ -541,7 +539,7 @@ def test_nonrecord_variables(pcic_data_portal, file, expected_mean):
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
     url_id = os.path.basename(url).split(".nc")[0]
-    assert is_valid_orca_nc_url(url_id, resp)
+    assert_is_valid_orca_nc_url(url_id, resp)
 
     orca_req = Request.blank(resp.location)
     orca_resp = orca_req.get_response()
