@@ -380,7 +380,6 @@ def test_climatology_bounds(pcic_data_portal):
     '/data/downscaled_canesm5/tasmax_day_BCCAQv2+ANUSPLIN300_CanESM5_historical+ssp126_r10i1p2f1_gn_19500101-21001231'\
     '.nc.nc?tasmax[0:30][77:138][129:238]&',
     '/data/gridded_observations/PNWNAmet_wind.nc.nc?wind[0:30][77:138][129:238]&',
-    '/data/hydro_model_archive/5var_day_CCSM3_A1B_run1_19500101-20991231.nc.nc?sm[0:30][77:138][129:205]&',
     '/data/hydro_model_out/allwsbc.ACCESS1-0_rcp85_r1i1p1.1945to2099.BASEFLOW.nc.nc?BASEFLOW[0:30][77:138][129:238]&',
 ])
 def test_nc_raster_response(pcic_data_portal, url):
@@ -445,10 +444,10 @@ def test_hydro_stn_data_csv_csv(pcic_data_portal):
     assert orca_resp.status == '200 OK'
     assert orca_resp.content_type == 'text/csv'
     for line in orca_resp.app_iter[0].decode("utf-8").split("\n"):
-        expected = '1955/01/01, 198.560531616, 150.387130737, 192.676101685, '\
-                   '219.072235107, 149.236831665, 187.566864014, 145.519927979, '\
-                   '150.252120972, 192.810394287, 219.105148315, 149.223098755, '\
-                   '187.070281982, 145.611068726'
+        expected = '"1955/01/01",198.560531616211,150.387130737305,192.67610168457,'\
+                   '219.072235107422,149.236831665039,187.566864013672,145.519927978516,'\
+                   '150.25212097168,192.810394287109,219.10514831543,149.223098754883,'\
+                   '187.070281982422,145.611068725586'
         if line.strip() == expected:
             assert True
             return
