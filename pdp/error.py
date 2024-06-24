@@ -35,8 +35,8 @@ class ErrorMiddleware(object):
                                 ]
             start_response(status, response_headers, sys.exc_info())
             logger.error("SQLAlchemyError: {}".format(e.args[0]))
-            yield b'There was an unexpected problem accessing the database\n'
-            yield e.args[0].encode()
+            yield 'There was an unexpected problem accessing the database\n'
+            yield e.args[0]
 
         except EnvironmentError as e:
             # except IOError as e:
@@ -63,7 +63,7 @@ class ErrorMiddleware(object):
             start_response(status, response_headers, sys.exc_info())
             logger.error("500 Internal Server Error: {}\n{}".format(
                 e.args, traceback.format_exc()))
-            yield b'There was an unhandleable problem with the application\n'
+            yield 'There was an unhandleable problem with the application\n'
             yield e.args[0]
 
         else:
