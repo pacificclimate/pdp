@@ -121,13 +121,13 @@
             const result = {};
             if (lines[0] === "Dataset {") { // Response comes from THREDDS
                 // Ignore header information from lines 0-4
-                for (const i = 5; i < lines.length - 1; i += 3) {
+                for (let i = 5; i < lines.length - 1; i += 3) {
                     // Only use coordinate name as key
                     result[lines[i].substring(0,3)] = JSON.parse("[" + lines[i + 1] + "]");
                 }
             }
             else { // Response comes from PyDAP
-                for (const i = 0; i < lines.length - 1; i += 2) {
+                for (let i = 0; i < lines.length - 1; i += 2) {
                     result[lines[i]] = JSON.parse(lines[i + 1]);
                 }
             }
