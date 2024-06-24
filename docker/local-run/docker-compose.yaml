@@ -55,6 +55,7 @@ services:
     environment:
       # Specific to backend
       - ORCA_ROOT=http://pdp.localhost:5000/orca
+      - THREDDS_ROOT=https://marble-dev01.pcic.uvic.ca/twitcher/ows/proxy/thredds/dodsC/datasets
       - APP_MODULE=pdp.wsgi:backend
       - GUNICORN_WORKER_CLASS=gevent
     entrypoint: /codebase/docker/local-run/entrypoint-be.sh
