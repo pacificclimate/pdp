@@ -30,12 +30,11 @@ Our initial PCDS portal was developed against the stable Pydap hosted here:
 https://code.google.com/p/pydap/
 
 Our initial raster portal was developed against the development version of Pydap hosted here:
-https://bitbucked.org/robertodealmeida/pydap
+https://bitbucket.org/robertodealmeida/pydap
 
 But now he's developing on github with a branch that looks pretty similar to the inital stable version:
 https://github.com/robertodealmeida/pydap
 
-Where to go? Nobody knows. I fear that we may need to maintain our own fork in perpetuity.
 
 THREDDS
 -------
