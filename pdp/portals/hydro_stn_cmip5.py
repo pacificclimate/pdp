@@ -37,11 +37,7 @@ class HydroStationDataServer(object):
     '''
 
     def __init__(self, config):
-        self._config = config
-
-    @property
-    def config(self):
-        return self._config
+        self.config = config
 
     def __call__(self, environ, start_response):
         with open(resource_filename('pdp', 'resources/hydro_stn_cmip5.yaml')) as hydro_stn_yaml:
