@@ -4,6 +4,7 @@ from tempfile import TemporaryFile, NamedTemporaryFile
 from zipfile import ZipFile
 import csv
 import json
+import yaml
 import os
 from pkg_resources import resource_filename
 import static
