@@ -87,7 +87,7 @@ function addToSidebar(idx, dataArray) {
     });
 
     link = document.createElement('a');
-    link.href = pdp.data_root + "/hydro_stn_cmip5/" + dataArray[idx].FileName;
+    link.href = `${pdp.data_root}/hydro_stn_cmip5/${dataArray[idx].FileName}`;
     link.appendChild(document.createTextNode(dataArray[idx].StationName));
     item.appendChild(link);
 
