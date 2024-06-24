@@ -430,11 +430,13 @@ def test_hydro_stn_data_catalog(pcic_data_portal):
 
 @pytest.mark.slow
 @pytest.mark.bulk_data
-def test_hydro_stn_data_csv_csv(pcic_data_portal):
+def test_hydro_stn_data_csv(pcic_data_portal):
     url = '/data/hydro_stn_cmip5/RVC.csv'
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
-    storage_root = "/storage/data/projects/dataportal/data/hydrology/vic_cmip5/merged"
+    with open(resource_filename('pdp', 'resources/hydro_stn_cmip5.yaml')) as hydro_stn_yaml:
+        hydro_stn_config = yaml.safe_load(hydro_stn_yaml)
+    storage_root = hydro_stn_config['handlers'][0]['dir']
     url_id = os.path.basename(url)
     storage_path = storage_root + "/" + url_id
     assert is_valid_orca_csv_url(storage_path, resp)

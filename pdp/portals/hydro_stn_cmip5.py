@@ -11,6 +11,8 @@ a separate CSV.
 This portal uses the hydro_stn_app frontend.'''
 
 import os
+import yaml
+
 from pkg_resources import resource_filename
 
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
@@ -42,7 +44,9 @@ class HydroStationDataServer(object):
         return self._config
 
     def __call__(self, environ, start_response):
-        storage_root = '/storage/data/projects/dataportal/data/hydrology/vic_cmip5/merged'
+        with open(resource_filename('pdp', 'resources/hydro_stn_cmip5.yaml')) as hydro_stn_yaml:
+            hydro_stn_config = yaml.safe_load(hydro_stn_yaml)
+        storage_root = hydro_stn_config['handlers'][0]['dir']
         req = Request(environ)
         if req.path_info == '/catalog.json':
             urls = [self.config['data_root'] + '/hydro_stn/' + csv for csv in os.listdir(storage_root)]
