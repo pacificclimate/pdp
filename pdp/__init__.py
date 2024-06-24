@@ -32,7 +32,7 @@ def get_config_from_environment():
         'data_root': 'http://tools.pacificclimate.org/dataportal/data',
         'title': '',
         'ensemble_name': '',
-        'thredds_root': 'https://docker-dev03.pcic.uvic.ca/twitcher/ows/proxy/thredds/dodsC/datasets',
+        'thredds_root': 'https://marble-dev01.pcic.uvic.ca/twitcher/ows/proxy/thredds/dodsC/datasets',
         'orca_root': 'https://services.pacificclimate.org/orca',
         'dsn': 'postgresql://user:pass@host/database',
         'pcds_dsn': 'postgresql://user:pass@host/database',
