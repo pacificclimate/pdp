@@ -85,19 +85,13 @@ class ErrorMiddleware(object):
                 # TODO: get everyone to send expected generators,
                 # remove this failsafe code.  
                 if isinstance(response_iter, bytes):
-                    print("Caught bytes where generator expected:")
-                    print(response_iter)
                     yield response_iter
                 elif isinstance(response_iter, str):
-                    print("caught string where generator expected:")
-                    print(response_iter)
                     yield response_iter.encode()
                 elif isinstance(response_iter, Response):
-                    print("caught Response where generator expected, status {}".format(response_iter.status_code))
                     if response_iter.status_code == 301:
                         # this is a redirect to the ORCA server, provided
                         # by pdp_util's RasterServer. Send it on to the browser.
-                        print("Sending ORCA redirect to the browser")
                         status = "301 Moved Permanently"
                         response_headers = [
                             ("content-type", "text/plain"),
@@ -107,10 +101,7 @@ class ErrorMiddleware(object):
                         start_response(status, response_headers)
                     elif response_iter.status_code == 200:
                         for block in response_iter.iter_lines():
-                            print(block)
                             yield(block)
-                    else:
-                        print(response_iter.headers)
                         
                 else:
                     #received a generator, as expected. Send its data.
