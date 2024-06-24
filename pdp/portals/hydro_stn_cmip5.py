@@ -45,7 +45,7 @@ class HydroStationDataServer(object):
         storage_root = '/storage/data/projects/dataportal/data/hydrology/vic_cmip5/merged'
         req = Request(environ)
         if req.path_info == '/catalog.json':
-            urls = [self.config['root_url'] + csv for csv in os.listdir(storage_root)]
+            urls = [self.config['data_root'] + '/hydro_stn/' + csv for csv in os.listdir(storage_root)]
             res = Response(
                 body=dumps(urls, indent=4),
                 content_type='application/json',
@@ -53,7 +53,8 @@ class HydroStationDataServer(object):
             )
             return res(environ, start_response)
         else:
-            url = build_orca_url(self.config['orca_root'], self.config['thredds_root'], storage_root, req)
+            thredds_root = self.config['thredds_root'].replace('dodsC', 'fileServer') # Use HTTP instead of OPeNDAP for CSV files
+            url = build_orca_url(self.config['orca_root'], thredds_root, storage_root, req)
             return Response(status_code=301, location=url)
 
 def build_orca_url(orca_root, thredds_root, storage_root, req):
@@ -64,8 +65,6 @@ def build_orca_url(orca_root, thredds_root, storage_root, req):
         return f'{orca_root}/?filepath={filepath}&thredds_base={thredds_root}&targets={req.query_string}&outfile={req.path_info.strip("/.")}'
 
 def mk_backend(config):
-    config['root_url'] = config['data_root'].rstrip('/') + '/'
-    config['thredds_root'] = config['thredds_root'].replace('dodsC', 'fileServer')  # Use HTTP instead of OpenDAP requests
     data_server = HydroStationDataServer(config)
     return data_server
 
