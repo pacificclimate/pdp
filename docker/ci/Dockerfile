@@ -1,4 +1,5 @@
-FROM pcic/pdp-base-minimal-unsafe:pdp-python3 # Replace with new release tag when this branch of pdp-docker has been merged
+# TODO: Replace pdp-base-minimal tag with new release tag when this branch of pdp-docker has been merged
+FROM pcic/pdp-base-minimal-unsafe:pdp-python3
 
 COPY ./ ${USER_DIR}
 

@@ -2,7 +2,8 @@
 # Dockerfile to run the PCIC data portal   #
 ############################################
 
-FROM pcic/pdp-base-minimal:pdp-python3 # Replace with new release tag when this branch of pdp-docker has been merged
+# TODO: Replace pdp-base-minimal tag with new release tag when this branch of pdp-docker has been merged
+FROM pcic/pdp-base-minimal:pdp-python3
 LABEL Maintainer="James Hiebert <hiebert@uvic.ca>"
 
 USER root
