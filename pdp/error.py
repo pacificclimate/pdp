@@ -69,21 +69,6 @@ class ErrorMiddleware(object):
         else:
             # Catch error that happen while generating a streamed response
             try:
-                # in theory, this block should be receiving an iterable
-                # that can be stepped over and streamed to the browser.
-                # in practice, the upgrade to python 3 has resulted in
-                # the reception of non-iterable types. 
-                # These ifs catch and convert the non-iterable
-                # objects for a graceful recovery, while logging an error 
-                # message so that the coder can track down the source of 
-                # the unexpected type.
-                # The else is the previous behaviour)
-                # So far the following types have been observed:
-                # * bytes - sometimes sent by the front end
-                # * strings - sometimes sent by backend API calls
-                # * Response objects - not yet clear who is sending these
-                # TODO: get everyone to send expected generators,
-                # remove this failsafe code.  
                 if isinstance(response_iter, bytes):
                     yield response_iter
                 elif isinstance(response_iter, str):
