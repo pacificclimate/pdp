@@ -2,7 +2,8 @@
 # Dockerfile to run the PCIC data portal   #
 ############################################
 
-FROM pcic/pdp-base-minimal:1.0.0
+# TODO: Replace pdp-base-minimal tag with new release tag when this branch of pdp-docker has been merged
+FROM pcic/pdp-base-minimal:pdp-python3
 LABEL Maintainer="James Hiebert <hiebert@uvic.ca>"
 
 USER root
@@ -21,14 +22,14 @@ ADD --chown=${USERNAME}:${GROUPNAME} . ${USER_DIR}/
 
 # Install dependencies. Note: Base image already contains several of the
 # heaviest ones.
-RUN pip install -r requirements.txt -r deploy_requirements.txt
+RUN pip3 install -r requirements.txt -r deploy_requirements.txt
 
 # Install and build the docs
 # Must pre-install to provide dependencies and version number
 # for build_spinx
-RUN pip install .
-RUN python setup.py build_sphinx
-RUN pip install .
+RUN pip3 install .
+RUN python3 setup.py build_sphinx
+RUN pip3 install .
 
 # gunicorn.conf is set up so that one can tune gunicorn settings when
 # running the container by setting environment an variable

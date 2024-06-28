@@ -1,3 +1,4 @@
+#Note: this script's update to python 3 has not been tested
 import sys
 from argparse import ArgumentParser
 from logging import basicConfig, DEBUG
@@ -22,6 +23,6 @@ if __name__ == '__main__':
     basicConfig(format='%(levelname)s:%(name)s:%(asctime)s %(message)s',
                 stream=sys.stdout, level=DEBUG)
 
-    print 'Starting server on port {}'.format(args.port)
+    print('Starting server on port {}'.format(args.port))
     server = pywsgi.WSGIServer(('0.0.0.0', args.port), dev_server)
     server.serve_forever()

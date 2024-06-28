@@ -35,7 +35,7 @@ def streaming_app(environ, start_response):
 
 
 def error_instantiating_app(environ, start_response):
-    raise Exception("Foo", "Bar")
+    raise Exception(b"Foo", b"Bar")
     start_response('200 OK', [])
     return ["We'll never get", "here"]
 
@@ -46,7 +46,7 @@ def test_operational_error():
     resp = req.get_response(app, catch_exc_info=True)
     assert resp.status_code == 503
     assert 'Retry-After' in resp.headers
-    assert 'accessing the database' in resp.body
+    assert b'accessing the database' in resp.body
 
 
 def test_io_error():
@@ -64,7 +64,7 @@ def test_stream_error():
 
     assert resp.status_code == 500
     for x in resp.app_iter:
-        print x
+        print(x)
 
 
 def test_500():
@@ -73,7 +73,7 @@ def test_500():
     resp = req.get_response(app, catch_exc_info=True)
 
     assert resp.status_code == 500
-    assert "There was an unhandleable problem with the application" \
+    assert b"There was an unhandleable problem with the application" \
         in resp.body
 
 

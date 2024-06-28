@@ -3,11 +3,8 @@
 
 "use strict";
 
-function show_permalinks(base_urls, extension) {
-    var url_list, d, p;
-    url_list = $.map(base_urls, function (url) {
-        return url + "." + extension;
-    });
+function show_permalinks(url_list) {
+    var d, p;
     d = pdp.createDiv("permalink-dialog");
     p = d.appendChild(document.createElement("p"));
     p.appendChild(document.createTextNode(url_list.join("\n")));

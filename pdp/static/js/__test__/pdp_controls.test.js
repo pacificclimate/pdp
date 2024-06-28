@@ -99,7 +99,7 @@ describe('Download links', () => {
     });
 
     describe('MetadataDownloadLink', function() {
-        const metadata_url = `${data_root}/${portal}/catalog/${filename}.${extension}.das`;
+        const metadata_url = `${data_root}/${portal}/${filename}.${extension}.das`;
 
         describe('mock app setup', function() {
             var dlLink;
