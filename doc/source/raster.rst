@@ -153,6 +153,8 @@ Some of the larger datasets have been packed in accordance with the `netCDF stan
     
 The `scale_factor` and `add_offset` values are documented in the metadata of a packed variable.
 
+Please note that in the past, we have offered an additional "ArcInfo/ASCII Grid" format, which consisted of a Zip archive containing one .asc file and one .prj (projection) file representing a map at each timestamp; however, this format is no longer offered as of the latest version of the data portal.
+
 .. _power-user:
 
 Power user HOWTO
@@ -206,7 +208,7 @@ At present, there are eight pages for which one can retrieve catalogs: ``bc_pris
 
 Metadata and Data
 ^^^^^^^^^^^^^^^^^
-All of our multidimensional raster data is made available via `Open-source Project for a Network Data Access Protocol (OPeNDAP) <http://opendap.org/>`_, the specification of which can be found `here <http://www.opendap.org/pdf/ESE-RFC-004v1.2.pdf>`_. Requests are serviced by our deployment of the `Pydap server <http://www.pydap.org/>`_ which PCIC has heavily modified and rewritten to be able to stream large data requests.
+All of our multidimensional raster data is made available via `Open-source Project for a Network Data Access Protocol (OPeNDAP) <http://opendap.org/>`_, the specification of which can be found `here <http://www.opendap.org/pdf/ESE-RFC-004v1.2.pdf>`_. Requests are serviced by our deployment of the `THREDDS server <https://www.unidata.ucar.edu/software/tds/current/>`_ which, when used in conjunction with our OPeNDAP Request Compiler Application (ORCA), allows PCIC to be able to stream large data requests.
 
 The *structure* and *attributes* of a dataset can be retrieved using OPeNDAP by making a `DDS or DAS <http://www.opendap.org/api/pguide-html/pguide_6.html>`_ request respectively. For example, to determine how many timesteps are available from one of the BCSD datasets, one can make a DDS request against that dataset as such: ::
 
@@ -363,61 +365,4 @@ To construct a proper DAP selection, please refer to the `DAP specification <htt
 
 Note that for this example the temperature values are all packed integer values and to obtain the proper value you may need to apply a floating point offset and/or scale factor which are available in the DAS response and the netcdf data response.
 
-Download multiple variables
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-For users that are interested in downloading multiple variables for a single dataset, this *is* possible for certain datasets. The web user interface does not expose this functionality, but if you are willing to do some scripting or URL hacking, you'll be rewarded with a faster download.
-
-To determine whether your dataset of interest contains multiple variables, check by reading the `Dataset Descriptor Structure (DDS) <http://docs.opendap.org/index.php/UserGuideOPeNDAPMessages>`_. You can get this by making a request to the dataset of interest with the ".dds" suffix appended to the end. E.g. the following DDS request shows that the dataset in question contains 3 independent variables (pr, tasmax, tasmin) and 3 axis variables (lon ,lat, time). All of those are requestable in a single request. ::
-
-  james@basalt:~$ curl 'https://data.pacificclimate.org/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.nc.dds'
-  Dataset {
-  Float64 lon[lon = 1068];
-    Float64 lat[lat = 510];
-    Float64 time[time = 55152];
-    Grid {
-        Array:
-            Float32 pr[time = 55152][lat = 510][lon = 1068];
-        Maps:
-            Float64 time[time = 55152];
-            Float64 lat[lat = 510];
-            Float64 lon[lon = 1068];
-    } pr;
-    Grid {
-        Array:
-            Float32 tasmax[time = 55152][lat = 510][lon = 1068];
-        Maps:
-            Float64 time[time = 55152];
-            Float64 lat[lat = 510];
-            Float64 lon[lon = 1068];
-    } tasmax;
-    Grid {
-        Array:
-            Float32 tasmin[time = 55152][lat = 510][lon = 1068];
-        Maps:
-            Float64 time[time = 55152];
-            Float64 lat[lat = 510];
-            Float64 lon[lon = 1068];
-    } tasmin;
-    } pr%2Btasmax%2Btasmin_day_BCCAQ%2BANUSPLIN300%2BMPI-ESM-LR_historical%2Brcp26_r3i1p1_19500101-21001231%2Enc;
-
-To request multiple variables in a single request, you need to use multiple comma separated variable requests in
-the query params. That format looks like this: ::
-
-  [dataset_url].[response_extension]?[variable_name_0][subset_spec],[variable_name_1][subset_spec],...
-
-So if the base dataset that you want to download is
-https://data.pacificclimate.org/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.nc,
-and you want to download the NetCDF response, so your extension will
-be '.nc'.
-
-Assume you just want the first 100 timesteps ([0:99]) and a 50x50
-square somewhere in the middle ([250:299][500:549]).
-
-Putting that all together, it will look something like this: ::
-
-  https://data.pacificclimate.org/data/downscaled_gcms_archive/pr+tasmax+tasmin_day_BCCAQ+ANUSPLIN300+MPI-ESM-LR_historical+rcp26_r3i1p1_19500101-21001231.nc.nc?tasmax[0:99][250:299][500:549],tasmin[0:99][250:299][500:549],pr[0:99][250:299][500:549]
-
-It's not quite as easy as clicking a few buttons on the web page, but
-depending on your use case, you can evaluate whether it's worth your
-effort to script together these multi-variable requests.
+Please note that in the past, we have allowed users to download multiple variables for a single dataset using a single request; however, this functionality is no longer supported as of the latest version of the data portal.

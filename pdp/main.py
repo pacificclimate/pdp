@@ -3,24 +3,23 @@
 from pkg_resources import resource_filename
 
 import static
-from werkzeug.wsgi import DispatcherMiddleware
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 from pdp.error import ErrorMiddleware
-from ga_wsgi_client import AnalyticsMiddleware
 
 # Station portals
-import portals.pcds as pcds
-import portals.hydro_stn_cmip5 as hydro_stn_cmip5
+import pdp.portals.pcds as pcds
+import pdp.portals.hydro_stn_cmip5 as hydro_stn_cmip5
 
 # Raster portals
-import portals.bc_prism as bc_prism
-import portals.bccaq2_downscale as bccaq2
-import portals.bccaq2_cmip6 as bccaq2_cmip6
-import portals.bccaq2_canesm5 as bccaq2_canesm5
-import portals.mbcn_cmip6 as mbcn_cmip6
-import portals.mbcn_canesm5 as mbcn_canesm5
-import portals.gridded_observations as gridded_observations
-import portals.vic_gen2 as vic_gen2
+import pdp.portals.bc_prism as bc_prism
+import pdp.portals.bccaq2_downscale as bccaq2
+import pdp.portals.bccaq2_cmip6 as bccaq2_cmip6
+import pdp.portals.bccaq2_canesm5 as bccaq2_canesm5
+import pdp.portals.mbcn_cmip6 as mbcn_cmip6
+import pdp.portals.mbcn_canesm5 as mbcn_canesm5
+import pdp.portals.gridded_observations as gridded_observations
+import pdp.portals.vic_gen2 as vic_gen2
 
 
 apps = (bc_prism, bccaq2, vic_gen2,
@@ -29,7 +28,7 @@ apps = (bc_prism, bccaq2, vic_gen2,
         bccaq2_canesm5, mbcn_cmip6, mbcn_canesm5)
 
 
-def initialize_frontend(global_config, use_analytics=False):
+def initialize_frontend(global_config):
     '''Frontend server with all portal pages and required resources
     '''
 
@@ -48,12 +47,10 @@ def initialize_frontend(global_config, use_analytics=False):
 
     wsgi_app = DispatcherMiddleware(static_app, mounts)
 
-    if use_analytics:
-        wsgi_app = AnalyticsMiddleware(wsgi_app, global_config['analytics'])
     return ErrorMiddleware(wsgi_app)
 
 
-def initialize_backend(global_config, use_analytics=False):
+def initialize_backend(global_config):
     '''Backend DispatcherMiddleware with all data servers
     '''
     mounts = {
@@ -64,15 +61,13 @@ def initialize_backend(global_config, use_analytics=False):
     static_app = static.Cling(resource_filename('pdp', 'static'))
     wsgi_app = DispatcherMiddleware(static_app, mounts)
 
-    if use_analytics:
-        wsgi_app = AnalyticsMiddleware(wsgi_app, global_config['analytics'])
     return ErrorMiddleware(wsgi_app)
 
 
-def initialize_dev_server(global_config, use_analytics=False):
+def initialize_dev_server(global_config):
     '''Development server
     '''
     return DispatcherMiddleware(
-        initialize_frontend(global_config, use_analytics),
-        {'/data': initialize_backend(global_config, use_analytics)}
+        initialize_frontend(global_config),
+        {'/data': initialize_backend(global_config)}
     )

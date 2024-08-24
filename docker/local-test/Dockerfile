@@ -1,4 +1,5 @@
-FROM pcic/pdp-base-minimal:1.0.0
+# TODO: Replace pdp-base-minimal tag with new release tag when this branch of pdp-docker has been merged
+FROM pcic/pdp-base-minimal:pdp-python3
 
 USER root
 # TODO: Move into pdp-base-minimal?

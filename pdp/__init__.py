@@ -32,6 +32,8 @@ def get_config_from_environment():
         'data_root': 'http://tools.pacificclimate.org/dataportal/data',
         'title': '',
         'ensemble_name': '',
+        'thredds_root': 'https://marble-dev01.pcic.uvic.ca/twitcher/ows/proxy/thredds/dodsC/datasets',
+        'orca_root': 'https://services.pacificclimate.org/orca',
         'dsn': 'postgresql://user:pass@host/database',
         'pcds_dsn': 'postgresql://user:pass@host/database',
         'js_min': 'False',
@@ -40,8 +42,6 @@ def get_config_from_environment():
         'old_ncwms_url': 'https://services.pacificclimate.org/ncWMS-PCIC/',
         'na_tiles_url': 'https://services.pacificclimate.org/mapproxy/service',
         'bc_basemap_url': 'http://142.104.230.53:30790/osm-bc-lite-test/$${z}/$${x}/$${y}.png',
-        'use_analytics': 'True',
-        'analytics': 'UA-20166041-3'  # change for production
     }
     config = {
         key: os.environ.get(key.upper(), default)
@@ -49,7 +49,6 @@ def get_config_from_environment():
     }
     # evaluate a few config items that need to be objects (not strings)
     config['js_min'] = (config['js_min'] == 'True')
-    config['use_analytics'] = (config['use_analytics'] == 'True')
     return config
 
 
@@ -102,7 +101,7 @@ def parse_version(type_):
 
 
 def _parse_version(full_version, type_):
-    regex = ur"^((?:\w+\.?)+)\+?(.*)\.(\w{6})$"
+    regex = r"^((?:\w+\.?)+)\+?(.*)\.(\w{6})$"
     matches = re.match(regex, full_version)
     if matches:
         version, branch, sha = matches.groups()

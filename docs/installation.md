@@ -39,7 +39,7 @@ procedures in our Docker infrastructure mentioned just above.
 
 ***These instructions have not been tested on a workstation.*** YMMV.
 
-1. We're assuming you have Python 2.7 installed. If not, install it.
+1. We're assuming you have Python 3.8 installed. If not, install it.
 
 1. Install system-level dependencies.
 
@@ -47,7 +47,7 @@ procedures in our Docker infrastructure mentioned just above.
    apt-get install libhdf5-dev libgdal-dev libnetcdf-dev
    ```
 
-1. Create a Python 2.7 virtual environment and activate it.
+1. Create a Python 3.8 virtual environment and activate it.
 
 1. Install Python build packages.
 
@@ -66,8 +66,8 @@ procedures in our Docker infrastructure mentioned just above.
 1. Install Python dependencies (separate install for GDAL is required).
 
    ```
-   pip install --no-binary :all: numpy==1.16.6 Cython==0.22 gdal==2.2
-   pip install --no-binary :all: h5py==2.7.1
+   pip install --no-binary :all: numpy==1.16.6
+   pip install --no-binary :all: h5py==2.7.1 gdal==3.0.4
    pip install -r requirements.txt -r test_requirements.txt -r deploy_requirements.txt
    pip install -e .
    ```
