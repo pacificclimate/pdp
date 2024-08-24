@@ -33,7 +33,7 @@ numpy==1.21
 olefile==0.46
 openid2rp==1.12
 Paste==3.7.1
-git+https://github.com/pacificclimate/pdp_util@generate-metadata # actually using a custom version, will be changed when new release is created
+pdp_util==3.0.0
 Pillow==5.4.1
 ply==3.10
 psycopg2==2.9.6
