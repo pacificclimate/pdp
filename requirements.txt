@@ -29,7 +29,7 @@ itsdangerous==0.24
 Jinja2==2.11.3
 keyring==10.6.0
 keyrings.alt==3.0
-Mako==1.1.4
+Mako==1.2.2
 MarkupSafe==1.0
 modelmeta==0.3.0
 nchelpers==5.5.7
