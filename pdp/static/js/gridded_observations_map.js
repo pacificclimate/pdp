@@ -35,8 +35,8 @@ function init_obs_map() {
   map = new OpenLayers.Map("pdp-map", options);
 
   defaults = {
-    dataset: "wind_day_TPS_NWNA_v1_historical_19450101-20121231",
-    variable: "wind",
+    dataset: "tasmax_day_PCIC_BLEND_v1_historical_19500101-20121231_Canada",
+    variable: "tasmax",
   };
 
   params = {
