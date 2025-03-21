@@ -11,7 +11,9 @@ var makeMockGet = mockHelpers.makeMockGet;
 // Mocking presently only for wind_day_TPS_NWNA_v1_historical_19450101-20121231
 
 var catalog = {
-    "wind_day_TPS_NWNA_v1_historical_19450101-20121231": "https://data.fake.org/data/gridded_observations/PNWNAmet_wind.nc"};
+    "tasmax_day_PCIC_BLEND_v1_historical_19500101-20121231_Canada":
+      "https://data.fake.org/data/gridded_observations/PCIC_BLEND_tasmax.nc",
+  };
 var getCatalog = makeMockGet('Catalog', catalog);
 
 
