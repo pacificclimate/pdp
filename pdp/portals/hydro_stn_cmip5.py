@@ -10,42 +10,62 @@ a separate CSV.
 
 This portal uses the hydro_stn_app frontend.'''
 
+import os
+import yaml
+
 from pkg_resources import resource_filename
 
-from werkzeug import DispatcherMiddleware
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 from pdp_util.map import MapApp
-from pydap.wsgi.app import DapServer
 
 from pdp.minify import wrap_mini
 from pdp.portals import updateConfig
+
+from simplejson import dumps
+from webob.request import Request
+from webob.response import Response
 
 __all__ = ['url_base', 'mk_frontend', 'mk_backend']
 
 url_base = '/hydro_stn_cmip5'
 
 
-class HydroStationDataServer(DapServer):
-    '''WSGI app which is a subclass of PyDap's DapServer that directly
-    configures the app's root_url
+class HydroStationDataServer(object):
+    '''WSGI app to create URLs that redirect to the ORCA application to obtain data
+    from THREDDS server
     '''
 
-    def __init__(self, filepath, root_url):
-        self.root_url = root_url
-        return super(HydroStationDataServer, self).__init__(filepath)
+    def __init__(self, config):
+        self.config = config
 
-    @property
-    def config(self):
-        super(HydroStationDataServer, self).config
-        self._config['root_url'] = self.root_url
-        return self._config
+    def __call__(self, environ, start_response):
+        with open(resource_filename('pdp', 'resources/hydro_stn_cmip5.yaml')) as hydro_stn_yaml:
+            hydro_stn_config = yaml.safe_load(hydro_stn_yaml)
+        storage_root = hydro_stn_config['handlers'][0]['dir']
+        req = Request(environ)
+        if req.path_info == '/catalog.json':
+            urls = [self.config['data_root'] + '/hydro_stn/' + csv for csv in os.listdir(storage_root)]
+            res = Response(
+                body=dumps(urls, indent=4),
+                content_type='application/json',
+                charset='utf-8',
+            )
+            return res(environ, start_response)
+        else:
+            thredds_root = self.config['thredds_root'].replace('dodsC', 'fileServer') # Use HTTP instead of OPeNDAP for CSV files
+            url = build_orca_url(self.config['orca_root'], thredds_root, storage_root, req)
+            return Response(status_code=301, location=url)
 
+def build_orca_url(orca_root, thredds_root, storage_root, req):
+    filepath = storage_root + req.path_info
+    if req.query_string == '':
+        return f'{orca_root}/?filepath={filepath}&thredds_base={thredds_root}&outfile={req.path_info.strip("/.")}'
+    else:
+        return f'{orca_root}/?filepath={filepath}&thredds_base={thredds_root}&targets={req.query_string}&outfile={req.path_info.strip("/.")}'
 
 def mk_backend(config):
-    data_server = HydroStationDataServer(
-            resource_filename('pdp', 'resources/hydro_stn_cmip5.yaml'),
-            config['data_root'].rstrip('/') + '/'
-    )
+    data_server = HydroStationDataServer(config)
     return data_server
 
 

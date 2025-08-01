@@ -1,6 +1,7 @@
 import sys
 import logging
 import traceback
+from webob.response import Response
 
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -21,7 +22,11 @@ class ErrorMiddleware(object):
     def __call__(self, environ, start_response):
         # Catch errors that happen while calling the rest of the application
         try:
-            response_iter = self.wrapped_app(environ, start_response)
+            def custom_start_response(status, headers, exc_info=None):
+                headers.append(("Access-Control-Allow-Origin", "*"))
+                return start_response(status, headers, exc_info)
+
+            response_iter = self.wrapped_app(environ, custom_start_response)
 
         except SQLAlchemyError as e:
             status = "503 Service Unavailable"
@@ -29,9 +34,9 @@ class ErrorMiddleware(object):
                                 ("Retry-After", "3600")  # one hour
                                 ]
             start_response(status, response_headers, sys.exc_info())
-            logger.error("SQLAlchemyError: {}".format(e.message))
-            yield 'There was an unexpected problem accessing the database\n'
-            yield e.message
+            logger.error("SQLAlchemyError: {}".format(e.args[0]))
+            yield b'There was an unexpected problem accessing the database\n'
+            yield e.args[0].encode()
 
         except EnvironmentError as e:
             # except IOError as e:
@@ -48,9 +53,9 @@ class ErrorMiddleware(object):
                          "  strerr: {}\n"
                          "  filename {}\n"
                          "{}".format(
-                             e.errno, e.strerror, e.filename, e.message))
-            yield 'We had an unexpected problem accessing on-disk resources\n'
-            yield e.message
+                             e.errno, e.strerror, e.filename, e.args[0]))
+            yield b'We had an unexpected problem accessing on-disk resources\n'
+            yield e.args[0] # e.args[0] already in bytes - no need to encode
 
         except Exception as e:
             status = "500 Internal Server Error"
@@ -58,22 +63,42 @@ class ErrorMiddleware(object):
             start_response(status, response_headers, sys.exc_info())
             logger.error("500 Internal Server Error: {}\n{}".format(
                 e.args, traceback.format_exc()))
-            yield 'There was an unhandleable problem with the application\n'
-            yield e.message
+            yield b'There was an unhandleable problem with the application\n'
+            yield e.args[0]
 
         else:
-
             # Catch error that happen while generating a streamed response
             try:
-                for block in response_iter:
-                    yield block
+                if isinstance(response_iter, bytes):
+                    yield response_iter
+                elif isinstance(response_iter, str):
+                    yield response_iter.encode()
+                elif isinstance(response_iter, Response):
+                    if response_iter.status_code == 301:
+                        # this is a redirect to the ORCA server, provided
+                        # by pdp_util's RasterServer. Send it on to the browser.
+                        status = "301 Moved Permanently"
+                        response_headers = [
+                            ("content-type", "text/plain"),
+                            ("Location", response_iter.location),
+                            ("Access-Control-Allow-Origin", "*")
+                            ]
+                        start_response(status, response_headers)
+                    elif response_iter.status_code == 200:
+                        for block in response_iter.iter_lines():
+                            yield(block)
+                        
+                else:
+                    #received a generator, as expected. Send its data.
+                    for block in response_iter:
+                        yield block
 
             except Exception as e:
                 status = "500 Internal Server Error"
                 response_headers = [("content-type", "text/plain")]
                 start_response(status, response_headers, sys.exc_info())
                 yield "There was a serious problem while generating the "\
-                    "streamed response\n{}\n".format(e.args)
+                    "streamed response\n{}\n".format(e.args).encode()
                 yield traceback.format_exc()
                 msg = "Exception raised during streamed response: {}\n{}"\
                       .format(e.args, traceback.format_exc())

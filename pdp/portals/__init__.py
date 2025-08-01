@@ -1,4 +1,4 @@
-from werkzeug import DispatcherMiddleware
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 from pdp_util import session_scope
 from pdp_util.raster import db_raster_configurator, RasterServer, RasterCatalog
@@ -29,6 +29,8 @@ def raster_conf(dsn, global_config, ensemble_name, data_base=None):
             sesh, "Download Data", 0.1, 0, ensemble_name,
             root_url=root_url
         )
+    conf["thredds_root"] = global_config["thredds_root"]
+    conf["orca_root"] = global_config["orca_root"]
     return conf
 
 

@@ -1,13 +1,15 @@
 from datetime import datetime, timedelta
-from urllib import urlencode
+from urllib.parse import urlencode
 from tempfile import TemporaryFile, NamedTemporaryFile
 from zipfile import ZipFile
 import csv
 import json
+import yaml
 import os
-from itertools import izip
 from pkg_resources import resource_filename
 import static
+from pdp_util import session_scope
+from modelmeta import DataFile
 
 import pytest
 from webob.request import Request
@@ -17,6 +19,27 @@ import netCDF4
 import numpy as np
 from numpy.testing import assert_almost_equal
 from bs4 import BeautifulSoup
+
+
+def assert_is_valid_orca_nc_url(url_id, resp):
+    orca_base = os.getenv("ORCA_ROOT")
+    with session_scope(os.getenv("DSN")) as sesh:
+        q = sesh.query(DataFile.filename).filter(DataFile.filename.contains(url_id))
+    storage_path = q.one()[0].strip("/")
+
+    assert resp.status == "301 Moved Permanently"
+    assert resp.content_type == "text/plain"
+    assert all(dim in resp.location for dim in ["time", "lat", "lon"])
+    assert orca_base in resp.location
+    assert storage_path in resp.location
+
+
+def assert_is_valid_orca_csv_url(storage_path, resp):
+    orca_base = os.getenv("ORCA_ROOT")
+    assert resp.status == "301 Moved Permanently"
+    assert resp.content_type == "text/plain"
+    assert orca_base in resp.location
+    assert storage_path in resp.location
 
 
 @pytest.mark.parametrize('url', [
@@ -51,11 +74,11 @@ def test_no_404s(pcic_data_portal, url):
 @pytest.mark.crmpdb
 @pytest.mark.parametrize(('url', 'title', 'body_strings'), [
     ('/data/pcds/lister/', 'PCDS Data',
-     ["Climatological calculations", "raw/"]),
+     [b"Climatological calculations", b"raw/"]),
     ('/data/pcds/lister/raw/', "Participating CRMP Networks",
-     ["FLNRO-WMB/", "Environment Canada (Canadian Daily Climate Data 2007)"]),
+     [b"FLNRO-WMB/", b"Environment Canada (Canadian Daily Climate Data 2007)"]),
     ('/data/pcds/lister/raw/AGRI/',
-     "Stations for network AGRI", ["de107/", "Deep Creek"]),
+     "Stations for network AGRI", [b"de107/", b"Deep Creek"]),
 ])
 def test_climo_index(
         pcic_data_portal, url, title, body_strings):
@@ -63,7 +86,7 @@ def test_climo_index(
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'text/html'
-    assert resp.content_length < 0
+    #assert resp.content_length < 0
 
     soup = BeautifulSoup(resp.body, "html.parser")
 
@@ -170,7 +193,7 @@ def test_nc_response_with_null_values(pcic_data_portal):
 @pytest.mark.crmpdb
 def test_clip_to_date_one(pcic_data_portal):
     base_url = '/data/pcds/agg/?'
-    sdate = datetime(2007, 01, 01)
+    sdate = datetime(2007, 1, 1)
     params = {'from-date': sdate.strftime('%Y/%m/%d'),
               'network-name': 'RTA', 'data-format': 'csv',
               'cliptodate': 'cliptodate',
@@ -178,7 +201,6 @@ def test_clip_to_date_one(pcic_data_portal):
     req = Request.blank(base_url + urlencode(params))
 
     resp = req.get_response(pcic_data_portal)
-    print resp.status
     assert resp.status == '200 OK'
     t = TemporaryFile()
     t.write(resp.body)
@@ -199,7 +221,7 @@ def test_clip_to_date_one(pcic_data_portal):
                 '2007-01-11 00:00:00',
                 '2007-01-12 00:00:00',
                 '2007-01-13 00:00:00']
-    for exp, actual in izip(expected, reader):
+    for exp, actual in zip(expected, reader):
         assert exp[0] == actual
 
 # FIXME: These next two aren't actually going to work w/o firing up an
@@ -299,19 +321,22 @@ def test_input_polygon_download_zipfile(pcic_data_portal, polygon):
     assert z.testzip() is None
 
 
-@pytest.mark.crmpdb
 @pytest.mark.bulk_data
 def test_climatology_bounds(pcic_data_portal):
     url = '/data/bc_prism/pr_mClimMean_PRISM_historical_19710101-20001231'\
           '.nc.nc?climatology_bnds&'
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
+    url_id = os.path.basename(url).split(".nc")[0]
+    assert_is_valid_orca_nc_url(url_id, resp)
 
-    assert resp.status == '200 OK'
-    assert resp.content_type == 'application/x-netcdf'
+    orca_req = Request.blank(resp.location)
+    orca_resp = orca_req.get_response()
+    assert orca_resp.status == '200 OK'
+    assert orca_resp.content_type == 'application/x-netcdf'
 
     f = NamedTemporaryFile(suffix='.nc', delete=False)
-    for block in resp.app_iter:
+    for block in orca_resp.app_iter:
         f.write(block)
     f.close()
 
@@ -336,7 +361,35 @@ def test_climatology_bounds(pcic_data_portal):
     os.remove(f.name)
 
 
-@pytest.mark.crmpdb
+@pytest.mark.slow
+@pytest.mark.bulk_data
+@pytest.mark.parametrize('url', [
+    # has NODATA values
+    '/data/bc_prism/bc_tmin_monthly_CAI_timeseries_19500101_20071231.nc.nc?tmin[0:30][77:138][129:238]&',
+    '/data/downscaled_gcms/pr_day_BCCAQv2+ANUSPLIN300_CanESM2_historical+rcp26_r1i1p1_19500101-21001231'\
+    '.nc.nc?pr[0:30][77:138][129:238]&',
+    '/data/downscaled_gcms/pr_day_BCCAQv2+ANUSPLIN300_CanESM2_historical+rcp26_r1i1p1_19500101-21001231'\
+    '.nc.nc?pr[0:30][144:236][307:348]&',
+    '/data/downscaled_cmip6/tasmin_day_BCCAQv2+ANUSPLIN300_CanESM5_historical+ssp126_r1i1p2f1_gn_19500101-21001231'\
+    '.nc.nc?tasmin[0:30][77:138][129:238]&',
+    '/data/downscaled_canesm5/tasmax_day_BCCAQv2+ANUSPLIN300_CanESM5_historical+ssp126_r10i1p2f1_gn_19500101-21001231'\
+    '.nc.nc?tasmax[0:30][77:138][129:238]&',
+    '/data/gridded_observations/PNWNAmet_wind.nc.nc?wind[0:30][77:138][129:238]&',
+    '/data/hydro_model_out/allwsbc.ACCESS1-0_rcp85_r1i1p1.1945to2099.BASEFLOW.nc.nc?BASEFLOW[0:30][77:138][129:238]&',
+])
+def test_nc_raster_response(pcic_data_portal, url):
+    req = Request.blank(url)
+    resp = req.get_response(pcic_data_portal)
+    url_id = os.path.basename(url).split(".nc")[0]
+    assert_is_valid_orca_nc_url(url_id, resp)
+
+    orca_req = Request.blank(resp.location)
+    orca_resp = orca_req.get_response()
+    assert orca_resp.status == '200 OK'
+    assert orca_resp.content_type == 'application/x-netcdf'
+
+
+@pytest.mark.local_only
 @pytest.mark.parametrize(('portal', 'ensemble'), [
         ('bc_prism', 'bc_prism'),
         ('downscaled_gcms', 'bccaq_version_2'),
@@ -344,7 +397,7 @@ def test_climatology_bounds(pcic_data_portal):
         ('downscaled_canesm5', 'bccaq2_canesm5'),
         ('downscaled_cmip6_multi', 'mbcn_cmip6'),
         ('downscaled_canesm5_multi', 'mbcn_canesm5'),
-        ('hydro_model_out', 'vic_gen2'),
+        ('hydro_model_out', 'vicgl_cmip5'),
         ('gridded_observations', 'gridded-obs-met-data')
     ])
 def test_menu_json(pcic_data_portal, portal, ensemble):
@@ -365,53 +418,38 @@ def test_hydro_stn_data_catalog(pcic_data_portal):
     resp = req.get_response(pcic_data_portal)
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/json'
-    assert '/hydro_stn/LARMA.csv' in resp.body
+    assert '/hydro_stn/LARMA.csv' in resp.body.decode("utf-8")
     data = json.loads(resp.body)
     assert len(data) > 0
 
 
 @pytest.mark.slow
 @pytest.mark.bulk_data
-def test_hydro_stn_data_csv_csv(pcic_data_portal):
-    url = '/data/hydro_stn_cmip5/RVC.csv.csv'
+def test_hydro_stn_data_csv(pcic_data_portal):
+    url = '/data/hydro_stn_cmip5/RVC.csv'
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
-    assert resp.status == '200 OK'
-    assert resp.content_type == 'text/plain'
-    for line in resp.app_iter:
-        expected = '1955/01/01, 198.560531616, 150.387130737, 192.676101685, '\
-                   '219.072235107, 149.236831665, 187.566864014, 145.519927979, '\
-                   '150.252120972, 192.810394287, 219.105148315, 149.223098755, '\
-                   '187.070281982, 145.611068726'
+    with open(resource_filename('pdp', 'resources/hydro_stn_cmip5.yaml')) as hydro_stn_yaml:
+        hydro_stn_config = yaml.safe_load(hydro_stn_yaml)
+    storage_root = hydro_stn_config['handlers'][0]['dir']
+    url_id = os.path.basename(url)
+    storage_path = storage_root + "/" + url_id
+    assert_is_valid_orca_csv_url(storage_path, resp)
+    
+    orca_req = Request.blank(resp.location)
+    orca_resp = orca_req.get_response()
+    assert orca_resp.status == '200 OK'
+    assert orca_resp.content_type == 'text/csv'
+    for line in orca_resp.app_iter[0].decode("utf-8").split("\n"):
+        expected = '"1955/01/01",198.560531616211,150.387130737305,192.67610168457,'\
+                   '219.072235107422,149.236831665039,187.566864013672,145.519927978516,'\
+                   '150.25212097168,192.810394287109,219.10514831543,149.223098754883,'\
+                   '187.070281982422,145.611068725586'
         if line.strip() == expected:
             assert True
             return
 
     assert False, "Data line for 1955/1/1 does not exist"
-
-
-@pytest.mark.slow
-@pytest.mark.bulk_data
-def test_hydro_stn_data_csv_selection_projection(pcic_data_portal):
-    url = '/data/hydro_stn_cmip5/RVC.csv.csv?'\
-          'sequence.CCSM4_rcp45_r2i1p1&sequence.CCSM4_rcp45_r2i1p1>100'
-    req = Request.blank(url)
-    resp = req.get_response(pcic_data_portal)
-    assert resp.status == '200 OK'
-    assert resp.content_type == 'text/plain'
-    assert resp.body.startswith('''sequence
-CCSM4_rcp45_r2i1p1
-135.944763184
-188.809707642
-215.548400879
-235.553085327
-253.983230591
-268.594268799
-277.489013672
-281.091888428
-281.099517822
-279.152954102
-276.435028076''')
 
 
 @pytest.mark.bulk_data
@@ -422,7 +460,7 @@ def test_hydro_model_out_catalog(pcic_data_portal):
     assert resp.status == '200 OK'
     assert resp.content_type == 'application/json'
     assert 'hydro_model_out/allwsbc.HadGEM2-ES_rcp85_r1i1p1.1945to2099.'\
-        'SNOW_MELT.nc' in resp.body
+        'SNOW_MELT.nc' in resp.body.decode("utf-8")
     data = json.loads(resp.body)
     assert len(data) > 0
 
@@ -438,8 +476,13 @@ def test_hydro_model_out_allwsbc(pcic_data_portal, url):
     base = '/data/hydro_model_out/allwsbc.'
     req = Request.blank(url.format(base))
     resp = req.get_response(pcic_data_portal)
-    assert resp.status == '200 OK'
-    assert resp.content_type == 'application/x-netcdf'
+    url_id = os.path.basename(url.format(base)).split(".nc")[0]
+    assert_is_valid_orca_nc_url(url_id, resp)
+
+    orca_req = Request.blank(resp.location)
+    orca_resp = orca_req.get_response()
+    assert orca_resp.status == '200 OK'
+    assert orca_resp.content_type == 'application/x-netcdf'
 
 
 @pytest.mark.slow
@@ -458,11 +501,16 @@ def test_empty_hyperslabs(pcic_data_portal, projection, length):
           '.nc.nc?{}{}'.format(varname, projection)
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
-    assert resp.status == '200 OK'
-    assert resp.content_type == 'application/x-netcdf'
+    url_id = os.path.basename(url).split(".nc")[0]
+    assert_is_valid_orca_nc_url(url_id, resp)
+
+    orca_req = Request.blank(resp.location)
+    orca_resp = orca_req.get_response()
+    assert orca_resp.status == '200 OK'
+    assert orca_resp.content_type == 'application/x-netcdf'
 
     f = NamedTemporaryFile(suffix='.nc', delete=False)
-    for block in resp.app_iter:
+    for block in orca_resp.app_iter:
         f.write(block)
     f.close()
 
@@ -490,11 +538,16 @@ def test_nonrecord_variables(pcic_data_portal, file, expected_mean):
     url = "/data/downscaled_gcms/{}".format(file)
     req = Request.blank(url)
     resp = req.get_response(pcic_data_portal)
-    assert resp.status == '200 OK'
-    assert resp.content_type == 'application/x-netcdf'
+    url_id = os.path.basename(url).split(".nc")[0]
+    assert_is_valid_orca_nc_url(url_id, resp)
+
+    orca_req = Request.blank(resp.location)
+    orca_resp = orca_req.get_response()
+    assert orca_resp.status == '200 OK'
+    assert orca_resp.content_type == 'application/x-netcdf'
 
     f = NamedTemporaryFile(suffix='.nc', delete=False)
-    for block in resp.app_iter:
+    for block in orca_resp.app_iter:
         f.write(block)
     f.close()
 

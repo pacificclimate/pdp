@@ -1,3 +1,4 @@
+#Note: this script's update to python 3 has not been tested
 import sys
 from argparse import ArgumentParser
 from multiprocessing import Process, cpu_count
@@ -47,5 +48,5 @@ if __name__ == '__main__':
     for i in range(num_proc):
         Process(target=serve_forever, args=(listener, )).start()
 
-    print 'Starting server on port {}'.format(args.port)
+    print('Starting server on port {}'.format(args.port))
     serve_forever(listener)

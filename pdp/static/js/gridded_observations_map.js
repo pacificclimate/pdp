@@ -4,124 +4,134 @@
 "use strict";
 
 function init_obs_map() {
-    var options, mapControls, selLayerName, selectionLayer, panelControls,
-        defaults, map, params, datalayerName, cb, ncwms;
+  var options,
+    mapControls,
+    selLayerName,
+    selectionLayer,
+    panelControls,
+    defaults,
+    map,
+    params,
+    datalayerName,
+    cb,
+    ncwms;
 
-    // Map Config
-    options = na4326_map_options();
-    options.tileManager = null;
+  // Map Config
+  options = na4326_map_options();
+  options.tileManager = null;
 
-    // Map Controls
-    mapControls = getBasicControls();
-    selLayerName = "Box Selection";
-    selectionLayer = getBoxLayer(selLayerName);
-    panelControls = getEditingToolbar([getHandNav(), getBoxEditor(selectionLayer), getPointEditor(selectionLayer)]);
-    mapControls.push(panelControls);
+  // Map Controls
+  mapControls = getBasicControls();
+  selLayerName = "Box Selection";
+  selectionLayer = getBoxLayer(selLayerName);
+  panelControls = getEditingToolbar([
+    getHandNav(),
+    getBoxEditor(selectionLayer),
+    getPointEditor(selectionLayer),
+  ]);
+  mapControls.push(panelControls);
 
-    options.controls = mapControls;
-    map = new OpenLayers.Map('pdp-map', options);
+  options.controls = mapControls;
+  map = new OpenLayers.Map("pdp-map", options);
 
-    defaults = {
-        dataset: "wind_day_TPS_NWNA_v1_historical_19450101-20121231",
-        variable: "wind"
-    };
+  defaults = {
+    dataset: "tasmax_day_PCIC_BLEND_v1_historical_19500101-20121231_Canada",
+    variable: "tasmax",
+  };
 
-    params = {
-        layers: defaults.dataset + "/" + defaults.variable,
-        transparent: 'true',
-        numcolorbands: 249,
-        version: '1.1.1',
-        srs: "EPSG:4326",
-        TIME: "1997-03-17T00:00:00Z",
-    };
+  params = {
+    layers: defaults.dataset + "/" + defaults.variable,
+    transparent: "true",
+    numcolorbands: 249,
+    version: "1.1.1",
+    srs: "EPSG:4326",
+    TIME: "1997-03-17T00:00:00Z",
+  };
 
-    datalayerName = "Climate raster";
-    ncwms =  new OpenLayers.Layer.WMS(
-        datalayerName,
-        pdp.ncwms_url,
-        params,
-        {
-            maxExtent: getNA4326Bounds(),
-            buffer: 1,
-            ratio: 1.5,
-            opacity: 0.7,
-            transitionEffect: null,
-            tileSize: new OpenLayers.Size(512, 512)
-        }
-    );
+  datalayerName = "Climate raster";
+  ncwms = new OpenLayers.Layer.WMS(datalayerName, pdp.ncwms_url, params, {
+    maxExtent: getNA4326Bounds(),
+    buffer: 1,
+    ratio: 1.5,
+    opacity: 0.7,
+    transitionEffect: null,
+    tileSize: new OpenLayers.Size(512, 512),
+  });
 
-    map.addLayers(
-        [
-            ncwms,
-            selectionLayer,
-            getNaBaseLayer(pdp.na_tiles_url, 'North America OpenStreetMap', 'osm')
-        ]
-    );
+  map.addLayers([
+    ncwms,
+    selectionLayer,
+    getNaBaseLayer(pdp.na_tiles_url, "North America OpenStreetMap", "osm"),
+  ]);
 
-    document.getElementById("pdp-map").appendChild(getOpacitySlider(ncwms));
-    map.zoomToExtent(getNA4326Bounds(), true);
+  document.getElementById("pdp-map").appendChild(getOpacitySlider(ncwms));
+  map.zoomToExtent(getNA4326Bounds(), true);
 
-    map.getClimateLayer = function () {
-        return map.getLayersByName(datalayerName)[0];
-    };
-    map.getSelectionLayer = function () {
-        return map.getLayersByName(selLayerName)[0];
-    };
+  map.getClimateLayer = function () {
+    return map.getLayersByName(datalayerName)[0];
+  };
+  map.getSelectionLayer = function () {
+    return map.getLayersByName(selLayerName)[0];
+  };
 
-    cb = new Colorbar("pdpColorbar", ncwms);
-    cb.refresh_values();
+  cb = new Colorbar("pdpColorbar", ncwms);
+  cb.refresh_values();
 
-    function set_map_title(layer_name) {
-        // 'this' must be bound to the ncwms layer object
-        var d = new Date(this.params.TIME), date;
-        if (layer_name.match(/_yr_/)) { // is yearly
-            date = d.getFullYear();
-        } else {
-            date = d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + (d.getDate() + 1);
-        }
-        $('#map-title').html(layer_name + '<br />' + date);
-        return true;
+  function set_map_title(layer_name) {
+    // 'this' must be bound to the ncwms layer object
+    var d = new Date(this.params.TIME),
+      date;
+    if (layer_name.match(/_yr_/)) {
+      // is yearly
+      date = d.getFullYear();
+    } else {
+      date =
+        d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + (d.getDate() + 1);
     }
-    ncwms.events.register('change', ncwms, set_map_title);
+    $("#map-title").html(layer_name + "<br />" + date);
+    return true;
+  }
+  ncwms.events.register("change", ncwms, set_map_title);
 
-    ncwms.events.registerPriority('change', ncwms, function (layer_id) {
-        dataServices.getMetadata(layer_id).done(function (data) {
-            var newParams = {};
-            var min, max;
-            var layer_var = layer_id.split('/')[1];
-            if(layer_var === "pr"){
-              newParams["LOGSCALE"] = true;
-              min = 1;
-              max = data.max;
-              newParams["STYLES"] = "default/blueheat";
-              newParams["BELOWMINCOLOR"] = 'extend';
-            }
-            else {
-              newParams["LOGSCALE"] = "false";
-              newParams["STYLES"] = "default/x-Rainbow";
-              min = data.min;
-              max = data.max;
-            }
-            newParams["COLORSCALERANGE"] = `${min},${max}`;
-            delete ncwms.params.LOGSCALE;
-            delete ncwms.params.STYLES;
-            ncwms.mergeNewParams(newParams); //update logscale
-            ncwms.redraw(); // this does a layer redraw
-            cb.force_update(min, max, data.units); // must be called AFTER ncwms params updated
-        });
+  ncwms.events.registerPriority("change", ncwms, function (layer_id) {
+    dataServices.getMetadata(layer_id).done(function (data) {
+      var newParams = {};
+      var min, max;
+      var layer_var = layer_id.split("/")[1];
+      if (layer_var === "pr") {
+        newParams["LOGSCALE"] = true;
+        min = 1;
+        max = data.max;
+        newParams["STYLES"] = "default/blueheat";
+        newParams["BELOWMINCOLOR"] = "extend";
+      } else {
+        newParams["LOGSCALE"] = "false";
+        newParams["STYLES"] = "default/x-Rainbow";
+        min = data.min;
+        max = data.max;
+      }
+      newParams["COLORSCALERANGE"] = `${min},${max}`;
+      delete ncwms.params.LOGSCALE;
+      delete ncwms.params.STYLES;
+      ncwms.mergeNewParams(newParams); //update logscale
+      ncwms.redraw(); // this does a layer redraw
+      cb.force_update(min, max, data.units); // must be called AFTER ncwms params updated
     });
+  });
 
-    ncwms.events.triggerEvent('change', defaults.dataset + "/" + defaults.variable);
+  ncwms.events.triggerEvent(
+    "change",
+    defaults.dataset + "/" + defaults.variable
+  );
 
-    // Expose ncwms as a global
-    (function (globals) {
-        globals.ncwms = ncwms;
-    }(window));
+  // Expose ncwms as a global
+  (function (globals) {
+    globals.ncwms = ncwms;
+  })(window);
 
-    return map;
+  return map;
 }
 
-
 condExport(module, {
-    init_obs_map: init_obs_map
+  init_obs_map: init_obs_map,
 });
