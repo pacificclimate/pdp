@@ -16,7 +16,11 @@
     "xml-js": "^1.6.11"
   },
   "scripts": {
-    "reinstall": "rm -rf ./node_modules && npm install",
+    "reinstall": "npm ci",
     "test": "jest"
+  },
+  "engines": {
+    "node": "24.x",
+    "npm": "12.x"
   }
 }
